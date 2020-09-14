@@ -14,7 +14,7 @@ class Tests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
+        HealthKitReporter().pribShit()
         XCTAssert(true, "Pass")
     }
     

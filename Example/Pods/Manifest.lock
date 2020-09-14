@@ -1,0 +1,16 @@
+PODS:
+  - HealthKitReporter (0.1.0)
+
+DEPENDENCIES:
+  - HealthKitReporter (from `../`)
+
+EXTERNAL SOURCES:
+  HealthKitReporter:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  HealthKitReporter: 101f590db77a0c3153df14478144b85879d6fba8
+
+PODFILE CHECKSUM: 23abae3089785275304b0626e117fcbe304f3915
+
+COCOAPODS: 1.9.3

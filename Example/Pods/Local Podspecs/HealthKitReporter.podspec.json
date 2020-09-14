@@ -1,0 +1,22 @@
+{
+  "name": "HealthKitReporter",
+  "version": "0.1.0",
+  "summary": "A short description of HealthKitReporter.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Victor Kachalov/HealthKitReporter",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Victor Kachalov": "victor.kachalov@thryve.de"
+  },
+  "source": {
+    "git": "https://github.com/Victor Kachalov/HealthKitReporter.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "HealthKitReporter/Classes/**/*"
+}

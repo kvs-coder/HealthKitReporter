@@ -1,0 +1,6 @@
+framework module HealthKitReporter {
+  umbrella header "HealthKitReporter-umbrella.h"
+
+  export *
+  module * { export * }
+}

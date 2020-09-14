@@ -22,7 +22,7 @@ pod 'HealthKitReporter'
 
 ## Author
 
-Victor Kachalov, victor.kachalov@thryve.de
+Victor Kachalov, victorkachalov@gmail.com
 
 ## License
 
