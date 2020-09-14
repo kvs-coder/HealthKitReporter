@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'HealthKitReporter_Example' do
+  pod 'HealthKitReporter', :path => '../'
+
+  target 'HealthKitReporter_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
