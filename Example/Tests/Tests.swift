@@ -14,7 +14,6 @@ class Tests: XCTestCase {
     }
     
     func testExample() {
-        HealthKitReporter().pribShit()
         XCTAssert(true, "Pass")
     }
     

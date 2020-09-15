@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		17CB34F6250F791B00838699 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F5250F791B00838699 /* Date+Extensions.swift */; };
+		17CB34F8250F7B4500838699 /* HKType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F7250F7B4500838699 /* HKType.swift */; };
+		17CB34FA250F818F00838699 /* HK+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F9250F818F00838699 /* HK+Extensions.swift */; };
+		17CB34FC250FA0B000838699 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34FB250FA0B000838699 /* Model.swift */; };
+		17CB3501250FA22C00838699 /* NSPredicate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */; };
 		1BB37D34E5F48888A5C051AD9AE21C9D /* Pods-HealthKitReporter_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A2928A4F62607E28C214719CE56A176 /* Pods-HealthKitReporter_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D095DA112AF90AB75DFD4484A214215 /* Pods-HealthKitReporter_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */; };
@@ -16,7 +21,7 @@
 		9EF9A02EEE3BA943B259F5CE9469FEF2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		B102DF75C35963420AB33D8269899D81 /* HealthKitReporter-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1418EAB84877F65C010D2DD616A65D44 /* HealthKitReporter-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D679FAEC8D57E3786E2520FA2A1B9307 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		FB71B38C6A178CE25F5DF5E05045754A /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54934F71744F30E62E976300E6D6BAA /* ReplaceMe.swift */; };
+		FB71B38C6A178CE25F5DF5E05045754A /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,28 +42,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HealthKitReporter_Example.framework; path = "Pods-HealthKitReporter_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10ED9239B0ED1C13D65048DF6C2EDD88 /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1418EAB84877F65C010D2DD616A65D44 /* HealthKitReporter-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HealthKitReporter-umbrella.h"; sourceTree = "<group>"; };
+		17CB34F5250F791B00838699 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		17CB34F7250F7B4500838699 /* HKType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKType.swift; sourceTree = "<group>"; };
+		17CB34F9250F818F00838699 /* HK+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HK+Extensions.swift"; sourceTree = "<group>"; };
+		17CB34FB250FA0B000838699 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Extensions.swift"; sourceTree = "<group>"; };
 		19106C382C9023657C61D1BE14E407E2 /* Pods-HealthKitReporter_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Tests.modulemap"; sourceTree = "<group>"; };
-		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Example-umbrella.h"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		3437F34D44A783E1EFFA682E39474B09 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		3437F34D44A783E1EFFA682E39474B09 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		3893D52BF738F0CD1893DBF22997BD58 /* HealthKitReporter.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = HealthKitReporter.modulemap; sourceTree = "<group>"; };
-		414D7DD0DA5581301732C4FA52D8A2E7 /* HealthKitReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = HealthKitReporter.framework; path = HealthKitReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		414D7DD0DA5581301732C4FA52D8A2E7 /* HealthKitReporter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HealthKitReporter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44193B23B1FADB45496E1AA11C5B3002 /* Pods-HealthKitReporter_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HealthKitReporter_Tests-Info.plist"; sourceTree = "<group>"; };
 		4B41AA02842340FAE870ED55A3E10581 /* Pods-HealthKitReporter_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-HealthKitReporter_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		4F7AB517F06E1D1713499728AC55C83C /* HealthKitReporter-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "HealthKitReporter-dummy.m"; sourceTree = "<group>"; };
 		50AA0CA84AA46A85BDCFA91A07CA472E /* HealthKitReporter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HealthKitReporter.release.xcconfig; sourceTree = "<group>"; };
 		54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Tests-umbrella.h"; sourceTree = "<group>"; };
 		620026A50D6F3042580BA62B0F2A5E24 /* HealthKitReporter.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = HealthKitReporter.debug.xcconfig; sourceTree = "<group>"; };
-		71D8BEAF4ADFF6BB7D99C7D261B03A10 /* Pods_HealthKitReporter_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_HealthKitReporter_Tests.framework; path = "Pods-HealthKitReporter_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		71D8BEAF4ADFF6BB7D99C7D261B03A10 /* Pods_HealthKitReporter_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		775C0010DC236F50A09CDEE5E5B878F4 /* Pods-HealthKitReporter_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HealthKitReporter_Tests-dummy.m"; sourceTree = "<group>"; };
 		859C0FD784EA382944470E55EC51F72F /* Pods-HealthKitReporter_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HealthKitReporter_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		9602EB29FFFC99DDBC1B33C58FBA8B04 /* Pods-HealthKitReporter_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-HealthKitReporter_Example-frameworks.sh"; sourceTree = "<group>"; };
 		989097361B77629199333A71012885BA /* Pods-HealthKitReporter_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HealthKitReporter_Example-Info.plist"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B4665EC9F0AB7C6F5920DFFC6369A299 /* Pods-HealthKitReporter_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		BA526D72C16C6C80D67D285E6CE11803 /* Pods-HealthKitReporter_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Example.modulemap"; sourceTree = "<group>"; };
 		BFA0D072B8047DA9E144F9E577A0E8C7 /* HealthKitReporter-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HealthKitReporter-prefix.pch"; sourceTree = "<group>"; };
@@ -68,8 +78,8 @@
 		D4755EC74B169D2FA28AC646D8EE2033 /* Pods-HealthKitReporter_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HealthKitReporter_Example-dummy.m"; sourceTree = "<group>"; };
 		E58E764D298A13A6D23E438089A52F4D /* Pods-HealthKitReporter_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HealthKitReporter_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		E66BFAA856AE9B9B4C90D91FC25EDC39 /* HealthKitReporter.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = HealthKitReporter.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		F54934F71744F30E62E976300E6D6BAA /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = HealthKitReporter/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
+		E66BFAA856AE9B9B4C90D91FC25EDC39 /* HealthKitReporter.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = HealthKitReporter.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthKitReporter.swift; path = HealthKitReporter/Classes/HealthKitReporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +110,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17CB34FD250FA15600838699 /* Decorator */ = {
+			isa = PBXGroup;
+			children = (
+				17CB34F5250F791B00838699 /* Date+Extensions.swift */,
+				17CB34F9250F818F00838699 /* HK+Extensions.swift */,
+				17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */,
+			);
+			path = Decorator;
+			sourceTree = "<group>";
+		};
 		1B4D5707885DF5F6A16D9EB25EC9D18E /* Pods-HealthKitReporter_Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,7 +156,10 @@
 		658DE510FAFFF267F80CCDB3575F73F3 /* HealthKitReporter */ = {
 			isa = PBXGroup;
 			children = (
-				F54934F71744F30E62E976300E6D6BAA /* ReplaceMe.swift */,
+				17CB34FD250FA15600838699 /* Decorator */,
+				17CB34FB250FA0B000838699 /* Model.swift */,
+				17CB34F7250F7B4500838699 /* HKType.swift */,
+				F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */,
 				C97B85C185FC0E98C9FE5642D9176804 /* Pod */,
 				8F7D7E23541E930B99A5A62AB334DF56 /* Support Files */,
 			);
@@ -375,8 +398,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17CB34FA250F818F00838699 /* HK+Extensions.swift in Sources */,
+				17CB34F8250F7B4500838699 /* HKType.swift in Sources */,
 				7351128AFE6D2C348D5CC138E73673A2 /* HealthKitReporter-dummy.m in Sources */,
-				FB71B38C6A178CE25F5DF5E05045754A /* ReplaceMe.swift in Sources */,
+				17CB3501250FA22C00838699 /* NSPredicate+Extensions.swift in Sources */,
+				17CB34FC250FA0B000838699 /* Model.swift in Sources */,
+				17CB34F6250F791B00838699 /* Date+Extensions.swift in Sources */,
+				FB71B38C6A178CE25F5DF5E05045754A /* HealthKitReporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,7 +450,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/HealthKitReporter/HealthKitReporter-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_MODULE_NAME = HealthKitReporter;
@@ -487,7 +515,7 @@
 				GCC_PREFIX_HEADER = "Target Support Files/HealthKitReporter/HealthKitReporter-prefix.pch";
 				INFOPLIST_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_MODULE_NAME = HealthKitReporter;
@@ -589,8 +617,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
