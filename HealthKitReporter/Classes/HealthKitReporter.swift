@@ -8,7 +8,6 @@ enum HealthKitError: Error {
     case invalidValue(String = "Invalid value")
 }
 
-
 public class HealthKitReporter {
     private let healthStore: HKHealthStore
 
@@ -27,22 +26,10 @@ public class HealthKitReporter {
         healthStore.requestAuthorization(toShare: typesToWrite, read: typesToRead, completion: completionHandler)
     }
     public func queryCharacteristics() throws -> Characteristics {
-        let biologicalSex = try healthStore
-            .biologicalSex()
-            .biologicalSex
-            .string
-        let birthday = try healthStore
-            .dateOfBirthComponents()
-            .date?
-            .formatted(with: Date.yyyyMMdd)
-        let bloodType = try healthStore
-            .bloodType()
-            .bloodType
-            .string
-        let skinType = try healthStore
-            .fitzpatrickSkinType()
-            .skinType
-            .string
+        let biologicalSex = try healthStore.biologicalSex()
+        let birthday = try healthStore.dateOfBirthComponents()
+        let bloodType = try healthStore.bloodType()
+        let skinType = try healthStore.fitzpatrickSkinType()
         return Characteristics(
             biologicalSex: biologicalSex,
             birthday: birthday,
@@ -52,77 +39,61 @@ public class HealthKitReporter {
     }
     public func queryStatistics(
         type: HKSampleType,
-        start: Date,
-        end: Date,
-        options: HKQueryOptions,
+        predicate: NSPredicate,
         completionHandler: @escaping (Statistics?, Error?) -> Void
     ) throws {
         guard let quantityType = type as? HKQuantityType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
         }
-        let predicate = HKQuery.predicateForSamples(
-            withStart: start,
-            end: end,
-            options: options
-        )
         let query = HKStatisticsQuery(
             quantityType: quantityType,
             quantitySamplePredicate: predicate,
-            options: quantityType.statisticsOptions) { (_, data, error) in
-                guard
-                    error == nil,
-                    let result = data
-                    else {
-                        completionHandler(nil, error)
-                        return
-                }
-                do {
-                    let (value, unit) = try result.parsed()
-                    let statistics = Statistics(
-                        identifier: result.quantityType.identifier,
-                        value: value,
-                        startDate: result.startDate.formatted(with: Date.yyyyMMddTHHmmssZZZZZ),
-                        endDate: result.endDate.formatted(with: Date.yyyyMMddTHHmmssZZZZZ),
-                        unit: unit)
-                    completionHandler(statistics, nil)
-                } catch {
-                    completionHandler(nil, error)
-                }
+            options: quantityType.statisticsOptions
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler(nil, error)
+                return
+            }
+            let statistics = Statistics(statistics: result)
+            completionHandler(statistics, nil)
         }
         healthStore.execute(query)
     }
     public func querySamples(
         type: HKSampleType,
-        start: Date,
-        end: Date,
-        options: HKQueryOptions,
+        predicate: NSPredicate,
+        sortDescriptors: [NSSortDescriptor],
+        limit: Int = HKObjectQueryNoLimit,
         completionHandler: @escaping ([Sample], Error?) -> Void
     ) {
-        let predicate = HKQuery.predicateForSamples(
-            withStart: start,
-            end: end,
-            options: options
-        )
         let query = HKSampleQuery(
             sampleType: type,
             predicate: predicate,
-            limit: HKObjectQueryNoLimit,
-            sortDescriptors: sortDescriptors) { (_, samples, error) in
-                guard error == nil else {
-                    logError(error)
-                    return
+            limit: limit,
+            sortDescriptors: sortDescriptors
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler([], error)
+                return
+            }
+            var samples = [Sample]()
+            for element in result {
+                if let quantitySample = element as? HKQuantitySample {
+                    let sample = Sample(quantitySample: quantitySample)
+                    samples.append(sample)
                 }
-                logDebug("\(recent) last upload: \(lastUpload)")
-                if let samples = samples {
-                    if #available(iOS 13.0, *) {
-                        for sample in samples {
-                            if let series = sample as? HKHeartbeatSeriesSample {
-                                self.queryHeartbeat(series: series, completionHandler: completionHandler)
-                            }
-                        }
-                    }
-                    parser.parse(samples: samples, completion: completionHandler)
+                if let categorySample = element as? HKCategorySample {
+                    let sample = Sample(categorySample: categorySample)
+                    samples.append(sample)
                 }
+            }
+            completionHandler(samples, nil)
         }
         healthStore.execute(query)
     }

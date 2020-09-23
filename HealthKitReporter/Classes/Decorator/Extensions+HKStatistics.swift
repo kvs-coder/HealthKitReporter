@@ -1,84 +1,14 @@
 //
-//  HK+Extensions.swift
+//  Extensions+HKStatistics.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 14.09.20.
+//  Created by Florian on 15.09.20.
 //
 
 import Foundation
 import HealthKit
 
-extension HKBiologicalSex {
-    var string: String {
-        switch self {
-        case .notSet:
-            return "na"
-        case .female:
-            return "Female"
-        case .male:
-            return "Male"
-        case .other:
-            return "Other"
-        }
-    }
-}
-extension HKBloodType {
-    var string: String {
-        switch self {
-        case .notSet:
-            return "na"
-        case .aPositive:
-            return "A+"
-        case .aNegative:
-            return "A-"
-        case .bPositive:
-            return "B+"
-        case .bNegative:
-            return "B-"
-        case .abPositive:
-            return "AB+"
-        case .abNegative:
-            return "AB-"
-        case .oPositive:
-            return "O+"
-        case .oNegative:
-            return "O-"
-        }
-    }
-}
-extension HKFitzpatrickSkinType {
-    var string: String {
-        switch self {
-        case .notSet:
-            return "na"
-        case .I:
-            return "I"
-        case .II:
-            return "II"
-        case .III:
-            return "III"
-        case .IV:
-            return "IV"
-        case .V:
-            return "V"
-        case .VI:
-            return "VI"
-        }
-    }
-}
-extension HKQuantityType {
-    var statisticsOptions: HKStatisticsOptions {
-        switch self.aggregationStyle {
-        case .cumulative:
-            return .cumulativeSum
-        case .discreteArithmetic,
-             .discreteTemporallyWeighted,
-             .discreteEquivalentContinuousLevel:
-            return .discreteAverage
-        }
-    }
-}
-extension HKStatistics {
+extension HKStatistics: HealthKitParsable {
     func parsed() throws -> (value: Double, unit: String) {
         if #available(iOS 13.0, *) {
             if self.quantityType == HKObjectType

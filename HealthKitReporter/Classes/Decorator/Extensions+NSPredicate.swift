@@ -1,5 +1,5 @@
 //
-//  NSPredicate+Extensions.swift
+//  Extensions+NSPredicate.swift
 //  HealthKitReporter
 //
 //  Created by Florian on 14.09.20.

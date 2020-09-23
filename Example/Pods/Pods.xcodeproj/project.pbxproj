@@ -8,11 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		17CB34F6250F791B00838699 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F5250F791B00838699 /* Date+Extensions.swift */; };
-		17CB34F8250F7B4500838699 /* HKType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F7250F7B4500838699 /* HKType.swift */; };
-		17CB34FA250F818F00838699 /* HK+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34F9250F818F00838699 /* HK+Extensions.swift */; };
-		17CB34FC250FA0B000838699 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB34FB250FA0B000838699 /* Model.swift */; };
-		17CB3501250FA22C00838699 /* NSPredicate+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */; };
+		17300E3E25125C9F00C643E4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3025125C9F00C643E4 /* Model.swift */; };
+		17300E3F25125C9F00C643E4 /* HKType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3125125C9F00C643E4 /* HKType.swift */; };
+		17300E4025125C9F00C643E4 /* Extensions+HKBloodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */; };
+		17300E4125125C9F00C643E4 /* Extensions+HKStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */; };
+		17300E4225125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */; };
+		17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3625125C9F00C643E4 /* Extensions+HKCategorySample.swift */; };
+		17300E4425125C9F00C643E4 /* Extensions+HKQuantityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3725125C9F00C643E4 /* Extensions+HKQuantityType.swift */; };
+		17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3825125C9F00C643E4 /* Extensions+NSPredicate.swift */; };
+		17300E4625125C9F00C643E4 /* Extensions+HKQuantitiySample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3925125C9F00C643E4 /* Extensions+HKQuantitiySample.swift */; };
+		17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3A25125C9F00C643E4 /* Extensions+Date.swift */; };
+		17300E4825125C9F00C643E4 /* Extensions+HKBiologicalSex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3B25125C9F00C643E4 /* Extensions+HKBiologicalSex.swift */; };
+		17300E4925125C9F00C643E4 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 17300E3C25125C9F00C643E4 /* .gitkeep */; };
+		17300E4A25125C9F00C643E4 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3D25125C9F00C643E4 /* HealthKitReporter.swift */; };
 		1BB37D34E5F48888A5C051AD9AE21C9D /* Pods-HealthKitReporter_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A2928A4F62607E28C214719CE56A176 /* Pods-HealthKitReporter_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D095DA112AF90AB75DFD4484A214215 /* Pods-HealthKitReporter_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */; };
@@ -21,7 +29,6 @@
 		9EF9A02EEE3BA943B259F5CE9469FEF2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		B102DF75C35963420AB33D8269899D81 /* HealthKitReporter-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1418EAB84877F65C010D2DD616A65D44 /* HealthKitReporter-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D679FAEC8D57E3786E2520FA2A1B9307 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		FB71B38C6A178CE25F5DF5E05045754A /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,11 +52,19 @@
 		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10ED9239B0ED1C13D65048DF6C2EDD88 /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1418EAB84877F65C010D2DD616A65D44 /* HealthKitReporter-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HealthKitReporter-umbrella.h"; sourceTree = "<group>"; };
-		17CB34F5250F791B00838699 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
-		17CB34F7250F7B4500838699 /* HKType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HKType.swift; sourceTree = "<group>"; };
-		17CB34F9250F818F00838699 /* HK+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HK+Extensions.swift"; sourceTree = "<group>"; };
-		17CB34FB250FA0B000838699 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
-		17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPredicate+Extensions.swift"; sourceTree = "<group>"; };
+		17300E3025125C9F00C643E4 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		17300E3125125C9F00C643E4 /* HKType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HKType.swift; sourceTree = "<group>"; };
+		17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKBloodType.swift"; sourceTree = "<group>"; };
+		17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKStatistics.swift"; sourceTree = "<group>"; };
+		17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKFitzpatrickSkinType.swift"; sourceTree = "<group>"; };
+		17300E3625125C9F00C643E4 /* Extensions+HKCategorySample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCategorySample.swift"; sourceTree = "<group>"; };
+		17300E3725125C9F00C643E4 /* Extensions+HKQuantityType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKQuantityType.swift"; sourceTree = "<group>"; };
+		17300E3825125C9F00C643E4 /* Extensions+NSPredicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+NSPredicate.swift"; sourceTree = "<group>"; };
+		17300E3925125C9F00C643E4 /* Extensions+HKQuantitiySample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKQuantitiySample.swift"; sourceTree = "<group>"; };
+		17300E3A25125C9F00C643E4 /* Extensions+Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+Date.swift"; sourceTree = "<group>"; };
+		17300E3B25125C9F00C643E4 /* Extensions+HKBiologicalSex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKBiologicalSex.swift"; sourceTree = "<group>"; };
+		17300E3C25125C9F00C643E4 /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
+		17300E3D25125C9F00C643E4 /* HealthKitReporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
 		19106C382C9023657C61D1BE14E407E2 /* Pods-HealthKitReporter_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Tests.modulemap"; sourceTree = "<group>"; };
 		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -79,7 +94,6 @@
 		DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HealthKitReporter_Example-dummy.m"; sourceTree = "<group>"; };
 		E58E764D298A13A6D23E438089A52F4D /* Pods-HealthKitReporter_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-HealthKitReporter_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		E66BFAA856AE9B9B4C90D91FC25EDC39 /* HealthKitReporter.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = HealthKitReporter.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HealthKitReporter.swift; path = HealthKitReporter/Classes/HealthKitReporter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,12 +124,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		17CB34FD250FA15600838699 /* Decorator */ = {
+		17300E2F25125C9F00C643E4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				17CB34F5250F791B00838699 /* Date+Extensions.swift */,
-				17CB34F9250F818F00838699 /* HK+Extensions.swift */,
-				17CB3500250FA22C00838699 /* NSPredicate+Extensions.swift */,
+				17300E3D25125C9F00C643E4 /* HealthKitReporter.swift */,
+				17300E3025125C9F00C643E4 /* Model.swift */,
+				17300E3125125C9F00C643E4 /* HKType.swift */,
+				17300E3225125C9F00C643E4 /* Decorator */,
+				17300E3C25125C9F00C643E4 /* .gitkeep */,
+			);
+			name = Classes;
+			path = HealthKitReporter/Classes;
+			sourceTree = "<group>";
+		};
+		17300E3225125C9F00C643E4 /* Decorator */ = {
+			isa = PBXGroup;
+			children = (
+				17300E3925125C9F00C643E4 /* Extensions+HKQuantitiySample.swift */,
+				17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */,
+				17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */,
+				17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */,
+				17300E3625125C9F00C643E4 /* Extensions+HKCategorySample.swift */,
+				17300E3725125C9F00C643E4 /* Extensions+HKQuantityType.swift */,
+				17300E3825125C9F00C643E4 /* Extensions+NSPredicate.swift */,
+				17300E3A25125C9F00C643E4 /* Extensions+Date.swift */,
+				17300E3B25125C9F00C643E4 /* Extensions+HKBiologicalSex.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -156,10 +189,7 @@
 		658DE510FAFFF267F80CCDB3575F73F3 /* HealthKitReporter */ = {
 			isa = PBXGroup;
 			children = (
-				17CB34FD250FA15600838699 /* Decorator */,
-				17CB34FB250FA0B000838699 /* Model.swift */,
-				17CB34F7250F7B4500838699 /* HKType.swift */,
-				F54934F71744F30E62E976300E6D6BAA /* HealthKitReporter.swift */,
+				17300E2F25125C9F00C643E4 /* Classes */,
 				C97B85C185FC0E98C9FE5642D9176804 /* Pod */,
 				8F7D7E23541E930B99A5A62AB334DF56 /* Support Files */,
 			);
@@ -373,6 +403,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17300E4925125C9F00C643E4 /* .gitkeep in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,13 +429,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17CB34FA250F818F00838699 /* HK+Extensions.swift in Sources */,
-				17CB34F8250F7B4500838699 /* HKType.swift in Sources */,
+				17300E4825125C9F00C643E4 /* Extensions+HKBiologicalSex.swift in Sources */,
+				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,
+				17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */,
+				17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */,
+				17300E4425125C9F00C643E4 /* Extensions+HKQuantityType.swift in Sources */,
+				17300E4A25125C9F00C643E4 /* HealthKitReporter.swift in Sources */,
+				17300E3F25125C9F00C643E4 /* HKType.swift in Sources */,
 				7351128AFE6D2C348D5CC138E73673A2 /* HealthKitReporter-dummy.m in Sources */,
-				17CB3501250FA22C00838699 /* NSPredicate+Extensions.swift in Sources */,
-				17CB34FC250FA0B000838699 /* Model.swift in Sources */,
-				17CB34F6250F791B00838699 /* Date+Extensions.swift in Sources */,
-				FB71B38C6A178CE25F5DF5E05045754A /* HealthKitReporter.swift in Sources */,
+				17300E4625125C9F00C643E4 /* Extensions+HKQuantitiySample.swift in Sources */,
+				17300E3E25125C9F00C643E4 /* Model.swift in Sources */,
+				17300E4025125C9F00C643E4 /* Extensions+HKBloodType.swift in Sources */,
+				17300E4125125C9F00C643E4 /* Extensions+HKStatistics.swift in Sources */,
+				17300E4225125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +494,7 @@
 				PRODUCT_NAME = HealthKitReporter;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -522,6 +560,7 @@
 				PRODUCT_NAME = HealthKitReporter;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
