@@ -293,4 +293,39 @@ public class HealthKitReader {
         }
         healthStore.execute(query)
     }
+    public func correlationQuery(
+        type: HealthKitType,
+        predicate: NSPredicate?,
+        typePredicates: [HealthKitType : NSPredicate]?,
+        completionHandler: @escaping ([Correlation], Error?) -> Void
+    ) throws {
+        guard let correlationType = type.rawValue as? HKCorrelationType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        }
+        var samplePredicates = [HKSampleType: NSPredicate]()
+        if let predicates = typePredicates {
+            for (key, value) in predicates {
+                if let sampleType = key.rawValue as? HKSampleType {
+                    samplePredicates[sampleType] = value
+                }
+            }
+        }
+        let query = HKCorrelationQuery(
+            type: correlationType,
+            predicate: predicate,
+            samplePredicates: samplePredicates
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler([], error)
+                return
+            }
+            for element in result {
+
+            }
+        }
+        healthStore.execute(query)
+    }
 }

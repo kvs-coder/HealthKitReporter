@@ -204,3 +204,16 @@ public struct Source: Codable {
         self.bundleIdentifier = source.bundleIdentifier
     }
 }
+public struct Device: Codable {
+    init(device: HKDevice) {
+
+    }
+}
+public struct SourceRevision: Codable {
+    init(sourceRevision: HKSourceRevision) {
+        
+    }
+}
+public struct Correlation: Codable {
+    
+}
