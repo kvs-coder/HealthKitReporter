@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension HKStatistics: HealthKitParsable {
+extension HKStatistics {
     func parsed() throws -> (value: Double, unit: String) {
         if #available(iOS 13.0, *) {
             if self.quantityType == HKObjectType

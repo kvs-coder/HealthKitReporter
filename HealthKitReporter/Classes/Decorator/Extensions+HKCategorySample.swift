@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKCategorySample: HealthKitParsable {
-    func parsed() throws -> (value: Double, unit: String) {
+extension HKCategorySample {
+    func parsed() throws -> (value: Double, status: String) {
         if #available(iOS 13.0, *) {
             if self.categoryType == HKObjectType.categoryType(forIdentifier: .audioExposureEvent) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: self.value) {

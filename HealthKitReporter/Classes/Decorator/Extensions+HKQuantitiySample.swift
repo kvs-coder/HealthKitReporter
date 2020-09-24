@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension HKQuantitySample: HealthKitParsable {
+extension HKQuantitySample {
     func parsed() throws -> (value: Double, unit: String) {
         switch self.quantityType {
         case HKObjectType.quantityType(forIdentifier: .stepCount):
