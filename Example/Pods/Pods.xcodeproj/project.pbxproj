@@ -138,17 +138,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1727AA2C251D30CF00560461 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				17300E3025125C9F00C643E4 /* HealthKitModel.swift */,
+				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1727AA2D251D30D800560461 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
+			);
+			path = Error;
+			sourceTree = "<group>";
+		};
 		17300E2F25125C9F00C643E4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				171FC542251BD8F0003F3910 /* HealthKitReporter.swift */,
-				17633C61251D18F200A361C6 /* HealthKitParser.swift */,
-				17300E3D25125C9F00C643E4 /* HealthKitReader.swift */,
-				17633C52251D09A200A361C6 /* HealthKitWriter.swift */,
-				171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */,
-				17300E3025125C9F00C643E4 /* HealthKitModel.swift */,
-				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
-				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
+				177BDDB1251D312D005F96AC /* Service */,
+				177BDDB0251D3121005F96AC /* Parser */,
+				1727AA2D251D30D800560461 /* Error */,
+				1727AA2C251D30CF00560461 /* Model */,
 				17300E3225125C9F00C643E4 /* Decorator */,
 			);
 			name = Classes;
@@ -172,6 +186,24 @@
 				1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */,
 			);
 			path = Decorator;
+			sourceTree = "<group>";
+		};
+		177BDDB0251D3121005F96AC /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				17633C61251D18F200A361C6 /* HealthKitParser.swift */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		177BDDB1251D312D005F96AC /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				17633C52251D09A200A361C6 /* HealthKitWriter.swift */,
+				171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */,
+				17300E3D25125C9F00C643E4 /* HealthKitReader.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		1B4D5707885DF5F6A16D9EB25EC9D18E /* Pods-HealthKitReporter_Example */ = {
