@@ -81,6 +81,9 @@ public enum HealthKitType: RawRepresentable, CaseIterable {
     case activitySummary
     case workoutType
     case electrocardiogramType
+    case cda
+    case bloodPressure
+    case food
 
     public var rawValue: HKObjectType? {
         switch self {
@@ -244,6 +247,12 @@ public enum HealthKitType: RawRepresentable, CaseIterable {
             } else {
                 return nil
             }
+        case .cda:
+            return HKObjectType.documentType(forIdentifier: .CDA)
+        case .food:
+            return HKObjectType.correlationType(forIdentifier: .food)
+        case .bloodPressure:
+            return HKObjectType.correlationType(forIdentifier: .bloodPressure)
         }
     }
 
