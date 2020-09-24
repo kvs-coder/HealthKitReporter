@@ -29,6 +29,8 @@ extension HKBloodType {
             return "O+"
         case .oNegative:
             return "O-"
+        @unknown default:
+            fatalError()
         }
     }
 }

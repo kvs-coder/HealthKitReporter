@@ -19,6 +19,8 @@ extension HKBiologicalSex {
             return "Male"
         case .other:
             return "Other"
+        @unknown default:
+            fatalError()
         }
     }
 }

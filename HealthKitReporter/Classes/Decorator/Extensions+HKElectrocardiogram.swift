@@ -46,6 +46,8 @@ extension HKElectrocardiogram {
             return "inconclusiveOther"
         case .unrecognized:
             return "unrecognized"
+        @unknown default:
+            fatalError()
         }
     }
     func symptomsStatus() -> String {
@@ -56,6 +58,8 @@ extension HKElectrocardiogram {
             return "none"
         case .present:
             return "present"
+        @unknown default:
+            fatalError()
         }
     }
 }

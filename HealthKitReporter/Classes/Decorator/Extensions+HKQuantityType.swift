@@ -17,6 +17,8 @@ extension HKQuantityType {
              .discreteTemporallyWeighted,
              .discreteEquivalentContinuousLevel:
             return .discreteAverage
+        @unknown default:
+            fatalError()
         }
     }
 }

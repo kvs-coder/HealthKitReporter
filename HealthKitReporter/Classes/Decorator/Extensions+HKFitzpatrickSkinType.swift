@@ -25,6 +25,8 @@ extension HKFitzpatrickSkinType {
             return "V"
         case .VI:
             return "VI"
+        @unknown default:
+            fatalError()
         }
     }
 }

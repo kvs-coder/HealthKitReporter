@@ -16,6 +16,8 @@ extension HKCategorySample: HealthKitParsable {
                     switch value {
                     case .loudEnvironment:
                         return (Double(self.value), "loudEnvironment")
+                    @unknown default:
+                        fatalError()
                     }
                 }
             }
@@ -30,6 +32,8 @@ extension HKCategorySample: HealthKitParsable {
                     return (Double(1), "asleep")
                 case .awake:
                     return (Double(2), "awake")
+                @unknown default:
+                    fatalError()
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .sexualActivity):
@@ -56,6 +60,8 @@ extension HKCategorySample: HealthKitParsable {
                     return (Double(4), "heavy")
                 case .none:
                     return (Double(5), "none")
+                @unknown default:
+                    fatalError()
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .ovulationTestResult):
@@ -69,6 +75,8 @@ extension HKCategorySample: HealthKitParsable {
                     return (Double(3), "indeterminate")
                 case .estrogenSurge:
                     return (Double(4), "estrogenSurge")
+                @unknown default:
+                    fatalError()
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality):
@@ -84,6 +92,8 @@ extension HKCategorySample: HealthKitParsable {
                     return (Double(4), "watery")
                 case .eggWhite:
                     return (Double(5), "eggWhite")
+                @unknown default:
+                    fatalError()
                 }
             }
         default:
