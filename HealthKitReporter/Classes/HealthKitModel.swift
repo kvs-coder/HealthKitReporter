@@ -195,3 +195,12 @@ public struct Characteristics: Codable {
         self.skinType = skinType.skinType.string
     }
 }
+public struct Source: Codable {
+    let name: String
+    let bundleIdentifier: String
+
+    init(source: HKSource) {
+        self.name = source.name
+        self.bundleIdentifier = source.bundleIdentifier
+    }
+}

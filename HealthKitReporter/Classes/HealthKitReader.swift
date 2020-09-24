@@ -1,27 +1,29 @@
 import Foundation
 import HealthKit
 
-enum HealthKitError: Error {
-    case notAvailable(String = "HealthKit data is not available")
-    case unknown(String = "Unknown")
-    case invalidType(String = "Invalid type")
-    case invalidOption(String = "Invalid option")
-    case invalidValue(String = "Invalid value")
-}
-
 public class HealthKitReader {
+    public typealias ActivitySummaryQueryHanlder = (
+        HKActivitySummaryQuery, [HKActivitySummary]?, Error?
+    ) -> Void
+    public typealias AnchoredObjectQueryHandler = (
+        HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
+    ) -> Void
+    public typealias HKStatisticsCollectionHandler = (
+        HKStatisticsCollection?, Error?
+    ) -> Void
+
     private let healthStore: HKHealthStore
 
-    public init(healthStore: HKHealthStore) {
+    init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
 
-    public func authorizeHealthKit(
-        typesToRead: [HealthKitType],
+    public func requestAuthorization(
+        toRead: [HealthKitType],
         completionHandler: @escaping (Bool, Error?) -> Void
     ) throws {
         var setOfReadTypes = Set<HKObjectType>()
-        for type in typesToRead {
+        for type in toRead {
             guard let objectType = type.rawValue else {
                 throw HealthKitError.invalidType(
                     "Type \(type) has not HKObjectType representation"
@@ -35,7 +37,7 @@ public class HealthKitReader {
             completion: completionHandler
         )
     }
-    public func queryCharacteristics() throws -> Characteristics {
+    public func characteristicsQuery() throws -> Characteristics {
         let biologicalSex = try healthStore.biologicalSex()
         let birthday = try healthStore.dateOfBirthComponents()
         let bloodType = try healthStore.bloodType()
@@ -47,7 +49,7 @@ public class HealthKitReader {
             skinType: skinType
         )
     }
-    public func queryStatistics(
+    public func statisticsQuery(
         type: HealthKitType,
         predicate: NSPredicate,
         completionHandler: @escaping (Statistics?, Error?) -> Void
@@ -72,12 +74,55 @@ public class HealthKitReader {
         }
         healthStore.execute(query)
     }
-    public func querySamples(
+    public func statisticsCollectionQuery(
         type: HealthKitType,
-        predicate: NSPredicate,
+        quantitySamplePredicate: NSPredicate?,
+        anchorDate: Date,
+        enumeratwFrom: Date,
+        enumerateTo: Date,
+        intervalComponents: DateComponents,
+        monitorUpdates: Bool = false,
+        enumerationBlock: @escaping (Statistics?, Error?) -> Void
+    ) throws {
+        guard let quantityType = type.rawValue as? HKQuantityType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
+        }
+        let resultsHandler: HKStatisticsCollectionHandler = { (data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                enumerationBlock(nil, error)
+                return
+            }
+            result.enumerateStatistics(from: enumeratwFrom, to: enumerateTo) { (data, stop) in
+                let statistics = Statistics(statistics: data)
+                enumerationBlock(statistics, nil)
+            }
+        }
+        let query = HKStatisticsCollectionQuery(
+            quantityType: quantityType,
+            quantitySamplePredicate: quantitySamplePredicate,
+            options: quantityType.statisticsOptions,
+            anchorDate: anchorDate,
+            intervalComponents: intervalComponents
+        )
+        query.initialResultsHandler = { (_, result, error) in
+            resultsHandler(result, error)
+        }
+        if monitorUpdates {
+            query.statisticsUpdateHandler = { (_, _, result, error) in
+                resultsHandler(result, error)
+            }
+        }
+        healthStore.execute(query)
+    }
+    public func sampleQuery(
+        type: HealthKitType,
+        predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int = HKObjectQueryNoLimit,
-        completionHandler: @escaping ([Sample], Error?) -> Void
+        resultsHandler: @escaping ([Sample], Error?) -> Void
     ) throws {
         guard let sampleType = type.rawValue as? HKSampleType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
@@ -92,40 +137,31 @@ public class HealthKitReader {
                 error == nil,
                 let result = data
             else {
-                completionHandler([], error)
+                resultsHandler([], error)
                 return
             }
             var samples = [Sample]()
+            let parser = HealthKitParser()
             for element in result {
-                if let quantitySample = element as? HKQuantitySample {
-                    let sample = Quantitiy(quantitySample: quantitySample)
+                if let sample = parser.parse(element: element) {
                     samples.append(sample)
-                }
-                if let categorySample = element as? HKCategorySample {
-                    let sample = Category(categorySample: categorySample)
-                    samples.append(sample)
-                }
-                if #available(iOS 14.0, *) {
-                    if let electrocardiogram = element as? HKElectrocardiogram {
-                        let sample = Electrocardiogram(electrocardiogram: electrocardiogram)
-                        samples.append(sample)
-                    }
                 }
             }
-            completionHandler(samples, nil)
+            resultsHandler(samples, nil)
         }
         healthStore.execute(query)
     }
     @available(iOS 13.0, *)
-    public func querySeries(
-        type: HealthKitType,
-        predicate: NSPredicate,
+    public func heartbeatSeriesQuery(
+        predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int = HKObjectQueryNoLimit,
-        completionHandler: @escaping ([Serie], Error?) -> Void
+        dataHandler: @escaping (HeartbeatSerie?, Error?) -> Void
     ) throws {
-        guard let sampleType = type.rawValue as? HKSampleType else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        guard let sampleType = HealthKitType.heartbeatSeries.rawValue as? HKSampleType else {
+            throw HealthKitError.invalidType(
+                "HealthKitType.heartbeatSeries can not be represented as HKSampleType"
+            )
         }
         let query = HKSampleQuery(
             sampleType: sampleType,
@@ -137,10 +173,9 @@ public class HealthKitReader {
                 error == nil,
                 let result = data
             else {
-                completionHandler([], error)
+                dataHandler(nil, error)
                 return
             }
-            var series = [Serie]()
             for element in result {
                 if let seriesSample = element as? HKHeartbeatSeriesSample {
                     var ibiArray = [Double]()
@@ -149,7 +184,7 @@ public class HealthKitReader {
                         heartbeatSeries: seriesSample
                     ) { (query, timeSinceSeriesStart, precededByGap, done, error) in
                         guard error == nil else {
-                            completionHandler([], error)
+                            dataHandler(nil, error)
                             return
                         }
                         ibiArray.append(timeSinceSeriesStart)
@@ -163,34 +198,98 @@ public class HealthKitReader {
                                 ibiArray: ibiArray,
                                 indexArray: indexes
                             )
-                            series.append(serie)
+                            dataHandler(serie, nil)
                         }
                     }
                     healthStore.execute(heartbeatSeriesQuery)
                 }
             }
-            completionHandler(series, nil)
         }
         healthStore.execute(query)
     }
     public func queryActivitySummary(
-        predicate: NSPredicate,
+        predicate: NSPredicate?,
+        monitorUpdates: Bool = false,
         completionHandler: @escaping ([ActivitySummary], Error?) -> Void
     ) {
-        let query = HKActivitySummaryQuery(predicate: predicate) { (query, data, error) in
+        let resultsHandler: ActivitySummaryQueryHanlder = { (_, data, error) in
             guard
                 error == nil,
                 let result = data
-                else {
+            else {
                 completionHandler([], error)
                 return
             }
-            var summaries = [ActivitySummary]()
-            for element in result {
-                let activitySummary = ActivitySummary(activitySummary: element)
-                summaries.append(activitySummary)
-            }
+            let summaries = result.map { ActivitySummary(activitySummary: $0) }
             completionHandler(summaries, nil)
+        }
+        let query = HKActivitySummaryQuery(predicate: predicate, resultsHandler: resultsHandler)
+        if monitorUpdates {
+            query.updateHandler = resultsHandler
+        }
+        healthStore.execute(query)
+    }
+    public func anchoredObjectQuery(
+        type: HealthKitType,
+        predicate: NSPredicate?,
+        anchor: HKQueryAnchor? = HKQueryAnchor(fromValue: Int(HKAnchoredObjectQueryNoAnchor)),
+        limit: Int = HKObjectQueryNoLimit,
+        monitorUpdates: Bool = false,
+        completionHandler: @escaping ([Sample], Error?) -> Void
+    ) throws {
+        guard let sampleType = type.rawValue as? HKSampleType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        }
+        let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler([], error)
+                return
+            }
+            var samples = [Sample]()
+            let parser = HealthKitParser()
+            for element in result {
+                if let sample = parser.parse(element: element) {
+                    samples.append(sample)
+                }
+            }
+            completionHandler(samples, nil)
+        }
+        let query = HKAnchoredObjectQuery(
+            type: sampleType,
+            predicate: predicate,
+            anchor: anchor,
+            limit: limit,
+            resultsHandler: resultsHandler
+        )
+        if monitorUpdates {
+            query.updateHandler = resultsHandler
+        }
+        healthStore.execute(query)
+    }
+    public func sourceQuery(
+        type: HealthKitType,
+        predicate: NSPredicate?,
+        completionHandler: @escaping ([Source], Error?) -> Void
+    ) throws {
+        guard let sampleType = type.rawValue as? HKSampleType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        }
+        let query = HKSourceQuery(
+            sampleType: sampleType,
+            samplePredicate: predicate
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler([], error)
+                return
+            }
+            let sources = result.map { Source(source: $0) }
+            completionHandler(sources, nil)
         }
         healthStore.execute(query)
     }
