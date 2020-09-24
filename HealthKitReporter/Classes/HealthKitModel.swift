@@ -12,12 +12,13 @@ protocol HealthKitParsable {
     func parsed() throws -> (value: Double, unit: String)
 }
 
-public struct Statistics: Codable {
-    let identifier: String
-    let value: Double
-    let startDate: String?
-    let endDate: String?
-    let unit: String
+public struct Statistics: Sample {
+    public let identifier: String
+    public let value: Double
+    public let startDate: String?
+    public let endDate: String?
+    public let unit: String
+    let sources: [Source]?
 
     init(statistics: HKStatistics) {
         self.identifier = statistics.quantityType.identifier
@@ -27,6 +28,7 @@ public struct Statistics: Codable {
         self.endDate = statistics.endDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
+        self.sources = statistics.sources?.map { Source(source: $0 )}
         do {
             let (value, unit) = try statistics.parsed()
             self.value = value
@@ -37,9 +39,7 @@ public struct Statistics: Codable {
         }
     }
 }
-public protocol Serie: Codable {
-
-}
+public protocol Serie: Codable {}
 
 public struct HeartbeatSerie: Serie {
     let ibiArray: [Double]
@@ -83,6 +83,7 @@ public protocol Sample: Codable {
     var value: Double { get }
     var startDate: String? { get }
     var endDate: String? { get }
+    var unit: String { get }
 }
 
 public struct Quantitiy: Sample {
@@ -90,7 +91,9 @@ public struct Quantitiy: Sample {
     public let value: Double
     public let startDate: String?
     public let endDate: String?
-    let unit: String
+    public let unit: String
+    let device: Device?
+    let sourceRevision: SourceRevision
 
     init(quantitySample: HKQuantitySample) {
         self.identifier = quantitySample.quantityType.identifier
@@ -100,6 +103,8 @@ public struct Quantitiy: Sample {
         self.endDate = quantitySample.endDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
+        self.device = Device(device: quantitySample.device)
+        self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
         do {
             let (value, unit) = try quantitySample.parsed()
             self.value = value
@@ -115,7 +120,9 @@ public struct Category: Sample {
     public let value: Double
     public let startDate: String?
     public let endDate: String?
-    let status: String
+    public let unit: String
+    let device: Device?
+    let sourceRevision: SourceRevision
 
     init(categorySample: HKCategorySample) {
         self.identifier = categorySample.categoryType.identifier
@@ -125,13 +132,15 @@ public struct Category: Sample {
         self.endDate = categorySample.endDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
+        self.device = Device(device: categorySample.device)
+        self.sourceRevision = SourceRevision(sourceRevision: categorySample.sourceRevision)
         do {
-            let (value, status) = try categorySample.parsed()
+            let (value, unit) = try categorySample.parsed()
             self.value = value
-            self.status = status
+            self.unit = unit
         } catch {
             self.value = -1
-            self.status = "unknown"
+            self.unit = "unknown"
         }
     }
 }
@@ -141,12 +150,14 @@ public struct Electrocardiogram: Sample {
     public let value: Double
     public let startDate: String?
     public let endDate: String?
-    let unit: String
+    public let unit: String
     let classification: String
     let numberOfMeasurements: Int
     let frequency: Double
     let frequencyUnit: String
     let symptomStatus: String
+    let device: Device?
+    let sourceRevision: SourceRevision
 
     init(electrocardiogram: HKElectrocardiogram) {
         self.identifier = HealthKitType
@@ -162,6 +173,8 @@ public struct Electrocardiogram: Sample {
         self.classification = electrocardiogram.classification()
         self.symptomStatus = electrocardiogram.symptomsStatus()
         self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
+        self.device = Device(device: electrocardiogram.device)
+        self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
         do {
             let averageHeartRate = try electrocardiogram.averageHeartRate()
             let samplingFrequency = try electrocardiogram.samplingFrequency()
@@ -205,13 +218,37 @@ public struct Source: Codable {
     }
 }
 public struct Device: Codable {
-    init(device: HKDevice) {
+    let name: String?
+    let manufacturer: String?
+    let model: String?
+    let hardwareVersion: String?
+    let firmwareVersion: String?
+    let softwareVersion: String?
+    let localIdentifier: String?
+    let udiDeviceIdentifier: String?
 
+    init(device: HKDevice?) {
+        self.name = device?.name
+        self.manufacturer = device?.manufacturer
+        self.model = device?.model
+        self.hardwareVersion = device?.hardwareVersion
+        self.firmwareVersion = device?.firmwareVersion
+        self.softwareVersion = device?.softwareVersion
+        self.localIdentifier = device?.localIdentifier
+        self.udiDeviceIdentifier = device?.udiDeviceIdentifier
     }
 }
 public struct SourceRevision: Codable {
+    let source: Source
+    let version: String?
+    let productType: String?
+    let systemVersion: String
+
     init(sourceRevision: HKSourceRevision) {
-        
+        self.source = Source(source: sourceRevision.source)
+        self.version = sourceRevision.version
+        self.productType = sourceRevision.productType
+        self.systemVersion = sourceRevision.systemVersion
     }
 }
 public struct Correlation: Codable {
