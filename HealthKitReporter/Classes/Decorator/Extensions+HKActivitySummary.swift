@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension HKActivitySummary: HealthKitHarmonizable {
+extension HKActivitySummary: Harmonizable {
     public struct Harmonized: Codable {
         let activeEnergyBurned: Double
         let activeEnergyBurnedGoal: Double

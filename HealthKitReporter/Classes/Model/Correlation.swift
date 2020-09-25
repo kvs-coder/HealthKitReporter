@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Correlation: Sample {
+public struct Correlation: Identifiable {
     public let identifier: String
     public let harmonized: HKCorrelation.Harmonized
 

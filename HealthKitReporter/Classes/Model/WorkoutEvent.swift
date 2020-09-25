@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutEvent: Codable {
+public struct WorkoutEvent: Sample, Writable {
     public let type: String
     public let startDate: String
     public let endDate: String

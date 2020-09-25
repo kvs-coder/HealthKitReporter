@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension HKCategorySample: HealthKitHarmonizable {
+extension HKCategorySample: Harmonizable {
     public struct Harmonized: Codable {
         let value: Int
         let description: String

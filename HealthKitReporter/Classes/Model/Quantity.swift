@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Quantitiy: Sample {
+public struct Quantitiy: Identifiable, Sample, Writable {
     public let identifier: String
     public let startDate: String
     public let endDate: String

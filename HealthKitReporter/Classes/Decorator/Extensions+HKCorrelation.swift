@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension HKCorrelation: HealthKitHarmonizable {
+extension HKCorrelation: Harmonizable {
     public struct Harmonized: Codable {
         let quantitySamples: [Quantitiy]
         let categorySamples: [Category]

@@ -1,5 +1,5 @@
 //
-//  HealthKitHarmonizable.swift
+//  Harmonizable.swift
 //  HealthKitReporter
 //
 //  Created by Florian on 25.09.20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol HealthKitHarmonizable {
+protocol Harmonizable {
     associatedtype Harmonized: Codable
 
     func harmonize() throws -> Harmonized

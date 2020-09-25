@@ -61,6 +61,6 @@ public class HealthKitWriter {
         )
     }
     public func delete(object: HKObject) {
-        healthStore.delete(object, withCompletion: <#T##(Bool, Error?) -> Void#>)
+        //healthStore.delete(object, withCompletion: <#T##(Bool, Error?) -> Void#>)
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
-public struct Electrocardiogram: Sample {
+public struct Electrocardiogram: Identifiable, Sample {
     public let identifier: String
     public let startDate: String
     public let endDate: String

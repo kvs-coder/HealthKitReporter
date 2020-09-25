@@ -9,5 +9,6 @@ import Foundation
 import HealthKit
 
 public protocol Sample: Codable {
-    var identifier: String { get }
+    var startDate: String { get }
+    var endDate: String { get }
 }

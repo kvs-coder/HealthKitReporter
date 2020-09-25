@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct ActivitySummary: Sample {
+public struct ActivitySummary: Identifiable {
     public let identifier: String
     public let date: String?
     public let harmonized: HKActivitySummary.Harmonized
