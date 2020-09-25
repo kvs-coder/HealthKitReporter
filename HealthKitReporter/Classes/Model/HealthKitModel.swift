@@ -228,11 +228,29 @@ public struct SourceRevision: Codable {
 }
 public struct Correlation: Codable {
     public let identifier: String
-    var quantitySamples: [Quantitiy] = []
-    var categorySamples: [Category] = []
+    let quantitySamples: [Quantitiy]
+    let categorySamples: [Category]
 
-    init(correlation: HKCorrelation) {
+    init(correlation: HKCorrelation, objects: Set<HKSample>) {
         self.identifier = correlation.correlationType.identifier
+        var quantityArray = [Quantitiy]()
+        if let quantitySamples = objects as? Set<HKQuantitySample> {
+            for element in quantitySamples {
+                if let parsed = try? element.parsed() {
+                    quantityArray.append(parsed)
+                }
+            }
+        }
+        self.quantitySamples = quantityArray
+        var categoryArray = [Category]()
+        if let categorySamples = objects as? Set<HKCategorySample> {
+            for element in categorySamples {
+                if let parsed = try? element.parsed() {
+                    categoryArray.append(parsed)
+                }
+            }
+        }
+        self.categorySamples = categoryArray
     }
 }
 
