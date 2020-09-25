@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-class HealthKitLauncher {
+public class HealthKitLauncher {
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
