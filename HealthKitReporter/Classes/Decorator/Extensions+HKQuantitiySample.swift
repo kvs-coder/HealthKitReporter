@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKQuantitySample: HealthKitHarmonizable {
-    struct Harmonized: Codable {
+    public struct Harmonized: Codable {
         let value: Double
         let unit: String
     }

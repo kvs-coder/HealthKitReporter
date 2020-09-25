@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKWorkout: HealthKitHarmonizable {
-    struct Harmonized: Codable {
+    public struct Harmonized: Codable {
         let totalEnergyBurned: Double?
         let totalEnergyBurnedUnit: String
         let totalDistance: Double?

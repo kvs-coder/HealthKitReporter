@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKStatistics: HealthKitHarmonizable {
-    struct Harmonized: Codable {
+    public struct Harmonized: Codable {
         let summary: Double?
         let average: Double?
         let recent: Double?

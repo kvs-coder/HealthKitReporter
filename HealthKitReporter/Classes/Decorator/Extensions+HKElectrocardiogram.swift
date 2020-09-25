@@ -10,7 +10,7 @@ import HealthKit
 
 @available(iOS 14.0, *)
 extension HKElectrocardiogram: HealthKitHarmonizable {
-    struct Harmonized: Codable {
+    public struct Harmonized: Codable {
         let averageHeartRate: Double
         let averageHeartRateUnit: String
         let samplingFrequency: Double

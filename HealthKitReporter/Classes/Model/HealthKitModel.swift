@@ -14,10 +14,10 @@ public protocol Sample: Codable {
 
 public struct Statistics: Sample {
     public let identifier: String
-    let startDate: String?
-    let endDate: String?
-    let harmonized: HKStatistics.Harmonized
-    let sources: [Source]?
+    public let startDate: String?
+    public let endDate: String?
+    public let harmonized: HKStatistics.Harmonized
+    public let sources: [Source]?
 
     init(statistics: HKStatistics) throws {
         self.identifier = statistics.quantityType.identifier
@@ -33,14 +33,14 @@ public struct Statistics: Sample {
 }
 
 public struct HeartbeatSerie: Codable {
-    let ibiArray: [Double]
-    let indexArray: [Int]
+    public let ibiArray: [Double]
+    public let indexArray: [Int]
 }
 
 public struct ActivitySummary: Sample {
     public let identifier: String
-    let date: String?
-    let harmonized: HKActivitySummary.Harmonized
+    public let date: String?
+    public let harmonized: HKActivitySummary.Harmonized
 
     init(activitySummary: HKActivitySummary) throws {
         self.identifier = HealthKitType
@@ -57,11 +57,11 @@ public struct ActivitySummary: Sample {
 
 public struct Quantitiy: Sample {
     public let identifier: String
-    let startDate: String?
-    let endDate: String?
-    let device: Device?
-    let sourceRevision: SourceRevision
-    let harmonized: HKQuantitySample.Harmonized
+    public let startDate: String?
+    public let endDate: String?
+    public let device: Device?
+    public let sourceRevision: SourceRevision
+    public let harmonized: HKQuantitySample.Harmonized
 
     init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
@@ -78,11 +78,11 @@ public struct Quantitiy: Sample {
 }
 public struct Category: Sample {
     public let identifier: String
-    let startDate: String?
-    let endDate: String?
-    let device: Device?
-    let sourceRevision: SourceRevision
-    let harmonized: HKCategorySample.Harmonized
+    public let startDate: String?
+    public let endDate: String?
+    public let device: Device?
+    public let sourceRevision: SourceRevision
+    public let harmonized: HKCategorySample.Harmonized
 
     init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier
@@ -100,12 +100,12 @@ public struct Category: Sample {
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Sample {
     public let identifier: String
-    let startDate: String?
-    let endDate: String?
-    let device: Device?
-    let sourceRevision: SourceRevision
-    let numberOfMeasurements: Int
-    let harmonized: HKElectrocardiogram.Harmonized
+    public let startDate: String?
+    public let endDate: String?
+    public let device: Device?
+    public let sourceRevision: SourceRevision
+    public let numberOfMeasurements: Int
+    public let harmonized: HKElectrocardiogram.Harmonized
 
     init(electrocardiogram: HKElectrocardiogram) throws {
         self.identifier = HealthKitType
@@ -125,10 +125,10 @@ public struct Electrocardiogram: Sample {
     }
 }
 public struct Characteristics: Codable {
-    let biologicalSex: String
-    let birthday: String?
-    let bloodType: String
-    let skinType: String
+    public let biologicalSex: String
+    public let birthday: String?
+    public let bloodType: String
+    public let skinType: String
 
     init(
         biologicalSex: HKBiologicalSexObject,
@@ -143,8 +143,8 @@ public struct Characteristics: Codable {
     }
 }
 public struct Source: Codable {
-    let name: String
-    let bundleIdentifier: String
+    public let name: String
+    public let bundleIdentifier: String
 
     init(source: HKSource) {
         self.name = source.name
@@ -152,14 +152,14 @@ public struct Source: Codable {
     }
 }
 public struct Device: Codable {
-    let name: String?
-    let manufacturer: String?
-    let model: String?
-    let hardwareVersion: String?
-    let firmwareVersion: String?
-    let softwareVersion: String?
-    let localIdentifier: String?
-    let udiDeviceIdentifier: String?
+    public let name: String?
+    public let manufacturer: String?
+    public let model: String?
+    public let hardwareVersion: String?
+    public let firmwareVersion: String?
+    public let softwareVersion: String?
+    public let localIdentifier: String?
+    public let udiDeviceIdentifier: String?
 
     init(device: HKDevice?) {
         self.name = device?.name
@@ -173,10 +173,10 @@ public struct Device: Codable {
     }
 }
 public struct SourceRevision: Codable {
-    let source: Source
-    let version: String?
-    let productType: String?
-    let systemVersion: String
+    public let source: Source
+    public let version: String?
+    public let productType: String?
+    public let systemVersion: String
 
     init(sourceRevision: HKSourceRevision) {
         self.source = Source(source: sourceRevision.source)
@@ -187,7 +187,7 @@ public struct SourceRevision: Codable {
 }
 public struct Correlation: Sample {
     public let identifier: String
-    let harmonized: HKCorrelation.Harmonized
+    public let harmonized: HKCorrelation.Harmonized
 
     init(correlation: HKCorrelation) throws {
         self.identifier = correlation.correlationType.identifier
@@ -196,14 +196,14 @@ public struct Correlation: Sample {
 }
 public struct Workout: Sample {
     public let identifier: String
-    let startDate: String?
-    let endDate: String?
-    let workoutName: String
-    let device: Device?
-    let sourceRevision: SourceRevision
-    let duration: Double
-    let events: [WorkoutEvent]
-    let harmonized: HKWorkout.Harmonized
+    public let startDate: String?
+    public let endDate: String?
+    public let workoutName: String
+    public let device: Device?
+    public let sourceRevision: SourceRevision
+    public let duration: Double
+    public let events: [WorkoutEvent]
+    public let harmonized: HKWorkout.Harmonized
 
     init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
@@ -222,10 +222,10 @@ public struct Workout: Sample {
     }
 }
 public struct WorkoutEvent: Codable {
-    let type: String
-    let startDate: String?
-    let endDate: String?
-    let duration: Double
+    public let type: String
+    public let startDate: String?
+    public let endDate: String?
+    public let duration: Double
 
     init(workoutEvent: HKWorkoutEvent) {
         self.type = String(describing: workoutEvent.type)
