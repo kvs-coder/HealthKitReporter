@@ -10,6 +10,7 @@ import HealthKit
 
 extension HKWorkout: HealthKitHarmonizable {
     public struct Harmonized: Codable {
+        let value: Int
         let totalEnergyBurned: Double?
         let totalEnergyBurnedUnit: String
         let totalDistance: Double?
@@ -46,6 +47,7 @@ extension HKWorkout: HealthKitHarmonizable {
             throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
         }
         return Harmonized(
+            value: Int(self.workoutActivityType.rawValue),
             totalEnergyBurned: totalEnergyBurned,
             totalEnergyBurnedUnit: totalEnergyBurnedUnit.unitString,
             totalDistance: totalDistance,

@@ -19,7 +19,7 @@ extension Date {
     func formatted(
         with format: String,
         timezone: TimeZone? = TimeZone.current
-    ) -> String? {
+    ) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         dateFormatter.timeZone = timezone

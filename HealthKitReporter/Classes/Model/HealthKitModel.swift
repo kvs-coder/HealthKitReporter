@@ -14,8 +14,8 @@ public protocol Sample: Codable {
 
 public struct Statistics: Sample {
     public let identifier: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let harmonized: HKStatistics.Harmonized
     public let sources: [Source]?
 
@@ -57,8 +57,8 @@ public struct ActivitySummary: Sample {
 
 public struct Quantitiy: Sample {
     public let identifier: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: HKQuantitySample.Harmonized
@@ -78,8 +78,8 @@ public struct Quantitiy: Sample {
 }
 public struct Category: Sample {
     public let identifier: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: HKCategorySample.Harmonized
@@ -96,12 +96,39 @@ public struct Category: Sample {
         self.sourceRevision = SourceRevision(sourceRevision: categorySample.sourceRevision)
         self.harmonized = try categorySample.harmonize()
     }
+
+    func asOriginal() throws -> HKCategorySample {
+        guard let type = HKObjectType.categoryType(
+            forIdentifier: HKCategoryTypeIdentifier(rawValue: identifier)
+        ) else {
+            throw HealthKitError.invalidType(
+                "Category type identifier: \(identifier) could not be foramtted"
+            )
+        }
+        guard
+            let start = startDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ),
+            let end = endDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ)
+        else {
+            throw HealthKitError.invalidValue(
+                "Category start: \(startDate) and end: \(endDate) could not be formatted"
+            )
+        }
+        return HKCategorySample(
+            type: type,
+            value: harmonized.value,
+            start: start,
+            end: end,
+            device: device?.asOriginal(),
+            metadata: harmonized.metadata
+        )
+    }
+
 }
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Sample {
     public let identifier: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let numberOfMeasurements: Int
@@ -171,6 +198,19 @@ public struct Device: Codable {
         self.localIdentifier = device?.localIdentifier
         self.udiDeviceIdentifier = device?.udiDeviceIdentifier
     }
+
+    func asOriginal() -> HKDevice {
+        return HKDevice(
+            name: name,
+            manufacturer: manufacturer,
+            model: model,
+            hardwareVersion: hardwareVersion,
+            firmwareVersion: firmwareVersion,
+            softwareVersion: softwareVersion,
+            localIdentifier: localIdentifier,
+            udiDeviceIdentifier: udiDeviceIdentifier
+        )
+    }
 }
 public struct SourceRevision: Codable {
     public let source: Source
@@ -196,13 +236,13 @@ public struct Correlation: Sample {
 }
 public struct Workout: Sample {
     public let identifier: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let workoutName: String
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let duration: Double
-    public let events: [WorkoutEvent]
+    public let workoutEvents: [WorkoutEvent]
     public let harmonized: HKWorkout.Harmonized
 
     public init(workout: HKWorkout) throws {
@@ -217,25 +257,67 @@ public struct Workout: Sample {
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.workoutName = String(describing: workout.workoutActivityType)
         self.duration = workout.duration
-        var events = [WorkoutEvent]()
-        if let workoutEvents = workout.workoutEvents {
-            for element in workoutEvents {
+        var workoutEvents = [WorkoutEvent]()
+        if let events = workout.workoutEvents {
+            for element in events {
                 do {
                     let workoutEvent = try WorkoutEvent(workoutEvent: element)
-                    events.append(workoutEvent)
+                    workoutEvents.append(workoutEvent)
                 } catch {
                     continue
                 }
             }
         }
-        self.events = events
+        self.workoutEvents = workoutEvents
         self.harmonized = try workout.harmonize()
+    }
+
+    func asOriginal() throws -> HKWorkout {
+        guard let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.value)) else {
+            throw HealthKitError.invalidType(
+                "Workout type: \(harmonized.value) could not be foramtted"
+            )
+        }
+        guard
+            let start = startDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ),
+            let end = endDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ)
+        else {
+            throw HealthKitError.invalidValue(
+                "Category start: \(startDate) and end: \(endDate) could not be formatted"
+            )
+        }
+        return HKWorkout(
+            activityType: activityType,
+            start: start,
+            end: end,
+            workoutEvents: try workoutEvents.map({ try $0.asOriginal() }),
+            totalEnergyBurned: harmonized.totalEnergyBurned != nil
+                ? HKQuantity(
+                    unit: HKUnit.init(from: harmonized.totalEnergyBurnedUnit),
+                    doubleValue: harmonized.totalEnergyBurned!
+                )
+                : nil,
+            totalDistance: harmonized.totalDistance != nil
+                ? HKQuantity(
+                    unit: HKUnit.init(from: harmonized.totalDistanceUnit),
+                    doubleValue: harmonized.totalDistance!
+                )
+                : nil,
+            totalSwimmingStrokeCount: harmonized.totalSwimmingStrokeCount != nil
+                ? HKQuantity(
+                    unit: HKUnit.init(from: harmonized.totalSwimmingStrokeCountUnit),
+                    doubleValue: harmonized.totalSwimmingStrokeCount!
+                )
+                : nil,
+            device: device?.asOriginal(),
+            metadata: harmonized.metadata
+        )
     }
 }
 public struct WorkoutEvent: Codable {
     public let type: String
-    public let startDate: String?
-    public let endDate: String?
+    public let startDate: String
+    public let endDate: String
     public let duration: Double
     public let harmonized: HKWorkoutEvent.Harmonized
 
@@ -251,5 +333,26 @@ public struct WorkoutEvent: Codable {
             .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
         self.duration = workoutEvent.dateInterval.duration
         self.harmonized = try workoutEvent.harmonize()
+    }
+
+    func asOriginal() throws -> HKWorkoutEvent {
+        guard let type = HKWorkoutEventType(rawValue: harmonized.value) else {
+            throw HealthKitError.invalidType(
+                "WorkoutEvent type: \(harmonized.value) could not be foramtted"
+            )
+        }
+        guard
+            let start = startDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ),
+            let end = endDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ)
+        else {
+            throw HealthKitError.invalidValue(
+                "WorkoutEvent start: \(startDate) and end: \(endDate) could not be formatted"
+            )
+        }
+        return HKWorkoutEvent(
+            type: type,
+            dateInterval: DateInterval(start: start, end: end),
+            metadata: harmonized.metadata
+        )
     }
 }

@@ -32,6 +32,7 @@
 		17F3EAC5251E36200035C405 /* Extensions+HKCorrelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */; };
 		17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EACC251E3B650035C405 /* Extensions+HKSample.swift */; };
 		17F3EAD5251E46B40035C405 /* Extensions+HKWorkoutEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EAD4251E46B40035C405 /* Extensions+HKWorkoutEvent.swift */; };
+		17F3EADA251E4B410035C405 /* Extensions+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EAD9251E4B410035C405 /* Extensions+String.swift */; };
 		1BB37D34E5F48888A5C051AD9AE21C9D /* Pods-HealthKitReporter_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A2928A4F62607E28C214719CE56A176 /* Pods-HealthKitReporter_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D095DA112AF90AB75DFD4484A214215 /* Pods-HealthKitReporter_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */; };
@@ -87,6 +88,7 @@
 		17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCorrelation.swift"; sourceTree = "<group>"; };
 		17F3EACC251E3B650035C405 /* Extensions+HKSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSample.swift"; sourceTree = "<group>"; };
 		17F3EAD4251E46B40035C405 /* Extensions+HKWorkoutEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkoutEvent.swift"; sourceTree = "<group>"; };
+		17F3EAD9251E4B410035C405 /* Extensions+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+String.swift"; sourceTree = "<group>"; };
 		19106C382C9023657C61D1BE14E407E2 /* Pods-HealthKitReporter_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Tests.modulemap"; sourceTree = "<group>"; };
 		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */,
 				17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */,
 				17F3EAD4251E46B40035C405 /* Extensions+HKWorkoutEvent.swift */,
+				17F3EAD9251E4B410035C405 /* Extensions+String.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17F3EADA251E4B410035C405 /* Extensions+String.swift in Sources */,
 				17F3EAC5251E36200035C405 /* Extensions+HKCorrelation.swift in Sources */,
 				17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */,
 				17F3EAC0251E32E70035C405 /* HealthKitHarmonizable.swift in Sources */,

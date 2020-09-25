@@ -10,6 +10,7 @@ import HealthKit
 
 extension HKCategorySample: HealthKitHarmonizable {
     public struct Harmonized: Codable {
+        let value: Int
         let description: String
         let metadata: [String: String]?
     }
@@ -62,6 +63,7 @@ extension HKCategorySample: HealthKitHarmonizable {
 
     private func category(description: String) -> Harmonized {
         return Harmonized(
+            value: self.value,
             description: description,
             metadata: self.metadata?.compactMapValues { String(describing: $0 )}
         )
