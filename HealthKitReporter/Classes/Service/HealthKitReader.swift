@@ -69,7 +69,7 @@ public class HealthKitReader {
                 completionHandler(nil, error)
                 return
             }
-            let statistics = Statistics(statistics: result)
+            let statistics = try? result.parsed()
             completionHandler(statistics, nil)
         }
         healthStore.execute(query)
@@ -96,7 +96,7 @@ public class HealthKitReader {
                 return
             }
             result.enumerateStatistics(from: enumeratwFrom, to: enumerateTo) { (data, stop) in
-                let statistics = Statistics(statistics: data)
+                let statistics = try? data.parsed()
                 enumerationBlock(statistics, nil)
             }
         }

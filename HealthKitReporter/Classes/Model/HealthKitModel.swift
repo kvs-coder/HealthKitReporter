@@ -9,7 +9,8 @@ import Foundation
 import HealthKit
 
 protocol HealthKitParsable {
-    func parsed() throws -> (value: Double, unit: String)
+    associatedtype Parseble where Parseble: Sample
+    func parsed() throws -> Parseble
 }
 
 public struct Statistics: Sample {
@@ -20,7 +21,7 @@ public struct Statistics: Sample {
     public let unit: String
     let sources: [Source]?
 
-    init(statistics: HKStatistics) {
+    init(statistics: HKStatistics, value: Double, unit: HKUnit) {
         self.identifier = statistics.quantityType.identifier
         self.startDate = statistics.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -29,14 +30,8 @@ public struct Statistics: Sample {
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
         self.sources = statistics.sources?.map { Source(source: $0 )}
-        do {
-            let (value, unit) = try statistics.parsed()
-            self.value = value
-            self.unit = unit
-        } catch {
-            self.value = -1
-            self.unit = "unknown"
-        }
+        self.unit = unit.unitString
+        self.value = value
     }
 }
 public protocol Serie: Codable {}
@@ -87,7 +82,7 @@ public struct Quantitiy: Sample {
     let device: Device?
     let sourceRevision: SourceRevision
 
-    init(quantitySample: HKQuantitySample) {
+    init(quantitySample: HKQuantitySample, unit: HKUnit) {
         self.identifier = quantitySample.quantityType.identifier
         self.startDate = quantitySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -97,14 +92,8 @@ public struct Quantitiy: Sample {
         )
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
-        do {
-            let (value, unit) = try quantitySample.parsed()
-            self.value = value
-            self.unit = unit
-        } catch {
-            self.value = -1
-            self.unit = "unknown"
-        }
+        self.unit = unit.unitString
+        self.value = quantitySample.quantity.doubleValue(for: unit)
     }
 }
 public struct Category: Sample {
@@ -116,7 +105,7 @@ public struct Category: Sample {
     let device: Device?
     let sourceRevision: SourceRevision
 
-    init(categorySample: HKCategorySample) {
+    init(categorySample: HKCategorySample, value: Double, unit: String) {
         self.identifier = categorySample.categoryType.identifier
         self.startDate = categorySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -126,14 +115,8 @@ public struct Category: Sample {
         )
         self.device = Device(device: categorySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: categorySample.sourceRevision)
-        do {
-            let (value, unit) = try categorySample.parsed()
-            self.value = value
-            self.unit = unit
-        } catch {
-            self.value = -1
-            self.unit = "unknown"
-        }
+        self.value = value
+        self.unit = unit
     }
 }
 @available(iOS 14.0, *)
@@ -245,7 +228,6 @@ public struct SourceRevision: Codable {
 }
 public struct Correlation: Codable {
     public let identifier: String
-    //var samples: [Sample] = []
     var quantitySamples: [Quantitiy] = []
     var categorySamples: [Category] = []
 

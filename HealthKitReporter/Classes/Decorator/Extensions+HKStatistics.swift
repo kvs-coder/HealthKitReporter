@@ -9,7 +9,9 @@ import Foundation
 import HealthKit
 
 extension HKStatistics: HealthKitParsable {
-    func parsed() throws -> (value: Double, unit: String) {
+    typealias Parseble = Statistics
+
+    func parsed() throws -> Statistics {
         if #available(iOS 13.0, *) {
             if self.quantityType == HKObjectType
                 .quantityType(forIdentifier: .environmentalAudioExposure) {
@@ -119,22 +121,34 @@ extension HKStatistics: HealthKitParsable {
         }
     }
 
-    private func mostRecentQuantity(unit: HKUnit) throws -> (value: Double, unit: String) {
+    private func mostRecentQuantity(unit: HKUnit) throws -> Statistics {
         guard let value = self.mostRecentQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return (value, unit.unitString)
+        return Statistics(
+            statistics: self,
+            value: value,
+            unit: unit
+        )
     }
-    private func averageQuantity(unit: HKUnit) throws -> (value: Double, unit: String) {
+    private func averageQuantity(unit: HKUnit) throws -> Statistics {
         guard let value = self.averageQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return (value, unit.unitString)
+        return Statistics(
+            statistics: self,
+            value: value,
+            unit: unit
+        )
     }
-    private func sumQuantity(unit: HKUnit) throws -> (value: Double, unit: String) {
+    private func sumQuantity(unit: HKUnit) throws -> Statistics {
         guard let value = self.sumQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return (value, unit.unitString)
+        return Statistics(
+            statistics: self,
+            value: value,
+            unit: unit
+        )
     }
 }

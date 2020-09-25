@@ -9,7 +9,13 @@ import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
-extension HKElectrocardiogram {
+extension HKElectrocardiogram: HealthKitParsable {
+    typealias Parseble = Electrocardiogram
+
+    func parsed() throws -> Electrocardiogram {
+        return Electrocardiogram(electrocardiogram: self)
+    }
+
     func averageHeartRate() throws -> (value: Double, unit: String) {
         let unit = HKUnit.count().unitDivided(by: HKUnit.minute())
         guard let value = self.averageHeartRate?.doubleValue(for: unit) else {

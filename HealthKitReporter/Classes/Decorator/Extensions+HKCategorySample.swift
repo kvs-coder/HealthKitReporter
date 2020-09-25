@@ -9,13 +9,15 @@ import Foundation
 import HealthKit
 
 extension HKCategorySample: HealthKitParsable {
-    func parsed() throws -> (value: Double, unit: String) {
+    typealias Parseble = Category
+
+    func parsed() throws -> Parseble {
         if #available(iOS 13.0, *) {
             if self.categoryType == HKObjectType.categoryType(forIdentifier: .audioExposureEvent) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: self.value) {
                     switch value {
                     case .loudEnvironment:
-                        return (Double(self.value), "loudEnvironment")
+                        return category(1, "loudEnvironment")
                     @unknown default:
                         fatalError()
                     }
@@ -27,11 +29,11 @@ extension HKCategorySample: HealthKitParsable {
             if let sleepAnalisis = HKCategoryValueSleepAnalysis(rawValue: self.value) {
                 switch sleepAnalisis {
                 case .inBed:
-                    return (Double(0), "inBed")
+                    return category(0, "inBed")
                 case .asleep:
-                    return (Double(1), "asleep")
+                    return category(1, "asleep")
                 case .awake:
-                    return (Double(2), "awake")
+                    return category(2, "awake")
                 @unknown default:
                     fatalError()
                 }
@@ -40,26 +42,26 @@ extension HKCategorySample: HealthKitParsable {
             if let metadata = self.metadata?[HKMetadataKeySexualActivityProtectionUsed] as? Int {
                 switch metadata {
                 case 1:
-                    return (Double(1), "protectionUsed")
+                    return category(1, "protectionUsed")
                 case 2:
-                    return (Double(2), "protectionNotUsed")
+                    return category(2, "protectionNotUsed")
                 default:
-                    return (Double(3), "unspecified")
+                    return category(3, "unspecified")
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .menstrualFlow):
             if let value = HKCategoryValueMenstrualFlow(rawValue: self.value) {
                 switch value {
                 case .unspecified:
-                    return (Double(1), "unspecified")
+                    return category(1, "unspecified")
                 case .light:
-                    return (Double(2), "light")
+                    return category(2, "light")
                 case .medium:
-                    return (Double(3), "medium")
+                    return category(3, "medium")
                 case .heavy:
-                    return (Double(4), "heavy")
+                    return category(4, "heavy")
                 case .none:
-                    return (Double(5), "none")
+                    return category(5, "none")
                 @unknown default:
                     fatalError()
                 }
@@ -68,13 +70,13 @@ extension HKCategorySample: HealthKitParsable {
             if let value = HKCategoryValueOvulationTestResult(rawValue: self.value) {
                 switch value {
                 case .negative:
-                    return (Double(1), "negative")
+                    return category(1, "negative")
                 case .luteinizingHormoneSurge:
-                    return (Double(2), "luteinizingHormoneSurge")
+                    return category(2, "luteinizingHormoneSurge")
                 case .indeterminate:
-                    return (Double(3), "indeterminate")
+                    return category(3, "indeterminate")
                 case .estrogenSurge:
-                    return (Double(4), "estrogenSurge")
+                    return category(4, "estrogenSurge")
                 @unknown default:
                     fatalError()
                 }
@@ -83,15 +85,15 @@ extension HKCategorySample: HealthKitParsable {
             if let value = HKCategoryValueCervicalMucusQuality(rawValue: self.value) {
                 switch value {
                 case .dry:
-                    return (Double(1), "dry")
+                    return category(1, "dry")
                 case .sticky:
-                    return (Double(2), "sticky")
+                    return category(2, "sticky")
                 case .creamy:
-                    return (Double(3), "creamy")
+                    return category(3, "creamy")
                 case .watery:
-                    return (Double(4), "watery")
+                    return category(4, "watery")
                 case .eggWhite:
-                    return (Double(5), "eggWhite")
+                    return category(5, "eggWhite")
                 @unknown default:
                     fatalError()
                 }
@@ -103,6 +105,14 @@ extension HKCategorySample: HealthKitParsable {
         }
         throw HealthKitError.invalidValue(
             "Invalid value for: \(self.categoryType). Can not be recognized"
+        )
+    }
+
+    private func category(_ value: Int, _ unit: String) -> Category {
+        return Category(
+            categorySample: self,
+            value: Double(value),
+            unit: unit
         )
     }
 }
