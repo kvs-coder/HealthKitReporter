@@ -213,6 +213,8 @@
 			isa = PBXGroup;
 			children = (
 				171FC542251BD8F0003F3910 /* HealthKitReporter.swift */,
+				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
+				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
 				177BDDB1251D312D005F96AC /* Service */,
 				1727AA2C251D30CF00560461 /* Model */,
 				17300E3225125C9F00C643E4 /* Decorator */,
@@ -253,8 +255,6 @@
 				171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */,
 				17300E3D25125C9F00C643E4 /* HealthKitReader.swift */,
 				17F3EB42251E7F0F0035C405 /* HealthKitLauncher.swift */,
-				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
-				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
