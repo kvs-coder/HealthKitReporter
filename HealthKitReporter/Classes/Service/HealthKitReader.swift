@@ -322,8 +322,19 @@ public class HealthKitReader {
                 completionHandler([], error)
                 return
             }
+            var correlations = [Correlation]()
+            let parser = HealthKitParser()
             for element in result {
-
+                var correlation = Correlation(correlation: element)
+                for object in element.objects {
+                    if let parsed = parser.parse(element: object) as? Quantitiy {
+                        correlation.quantitySamples.append(parsed)
+                    }
+                    if let parsed = parser.parse(element: object) as? Category {
+                        correlation.categorySamples.append(parsed)
+                    }
+                }
+                correlations.append(correlation)
             }
         }
         healthStore.execute(query)

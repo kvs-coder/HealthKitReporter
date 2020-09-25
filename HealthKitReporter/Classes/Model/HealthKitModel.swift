@@ -78,14 +78,6 @@ public struct ActivitySummary: Codable {
     }
 }
 
-public protocol Sample: Codable {
-    var identifier: String { get }
-    var value: Double { get }
-    var startDate: String? { get }
-    var endDate: String? { get }
-    var unit: String { get }
-}
-
 public struct Quantitiy: Sample {
     public let identifier: String
     public let value: Double
@@ -170,10 +162,10 @@ public struct Electrocardiogram: Sample {
         self.endDate = electrocardiogram.endDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
+        self.device = Device(device: electrocardiogram.device)
         self.classification = electrocardiogram.classification()
         self.symptomStatus = electrocardiogram.symptomsStatus()
         self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
-        self.device = Device(device: electrocardiogram.device)
         self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
         do {
             let averageHeartRate = try electrocardiogram.averageHeartRate()
@@ -252,5 +244,20 @@ public struct SourceRevision: Codable {
     }
 }
 public struct Correlation: Codable {
-    
+    public let identifier: String
+    //var samples: [Sample] = []
+    var quantitySamples: [Quantitiy] = []
+    var categorySamples: [Category] = []
+
+    init(correlation: HKCorrelation) {
+        self.identifier = correlation.correlationType.identifier
+    }
+}
+
+public protocol Sample: Codable {
+    var identifier: String { get }
+    var value: Double { get }
+    var startDate: String? { get }
+    var endDate: String? { get }
+    var unit: String { get }
 }
