@@ -69,8 +69,12 @@ public class HealthKitReader {
                 completionHandler(nil, error)
                 return
             }
-            let statistics = try? result.parsed()
-            completionHandler(statistics, nil)
+            do {
+                let statistics = try Statistics(statistics: result)
+                completionHandler(statistics, nil)
+            } catch {
+                completionHandler(nil, error)
+            }
         }
         healthStore.execute(query)
     }
@@ -96,8 +100,12 @@ public class HealthKitReader {
                 return
             }
             result.enumerateStatistics(from: enumeratwFrom, to: enumerateTo) { (data, stop) in
-                let statistics = try? data.parsed()
-                enumerationBlock(statistics, nil)
+                do {
+                    let statistics = try Statistics(statistics: data)
+                    enumerationBlock(statistics, nil)
+                } catch {
+                    enumerationBlock(nil, error)
+                }
             }
         }
         let query = HKStatisticsCollectionQuery(
@@ -141,10 +149,12 @@ public class HealthKitReader {
                 return
             }
             var samples = [Sample]()
-            let parser = HealthKitParser()
             for element in result {
-                if let sample = parser.parse(element: element) {
+                do {
+                    let sample = try element.parsed()
                     samples.append(sample)
+                } catch {
+                    continue
                 }
             }
             resultsHandler(samples, nil)
@@ -220,7 +230,15 @@ public class HealthKitReader {
                 completionHandler([], error)
                 return
             }
-            let summaries = result.map { ActivitySummary(activitySummary: $0) }
+            var summaries = [ActivitySummary]()
+            for element in result {
+                do {
+                    let summary = try ActivitySummary(activitySummary: element)
+                    summaries.append(summary)
+                } catch {
+                    continue
+                }
+            }
             completionHandler(summaries, nil)
         }
         let query = HKActivitySummaryQuery(predicate: predicate, resultsHandler: resultsHandler)
@@ -249,10 +267,12 @@ public class HealthKitReader {
                 return
             }
             var samples = [Sample]()
-            let parser = HealthKitParser()
             for element in result {
-                if let sample = parser.parse(element: element) {
+                do {
+                    let sample = try element.parsed()
                     samples.append(sample)
+                } catch {
+                    continue
                 }
             }
             completionHandler(samples, nil)
@@ -324,8 +344,12 @@ public class HealthKitReader {
             }
             var correlations = [Correlation]()
             for element in result {
-                let correlation = Correlation(correlation: element, objects: element.objects)
-                correlations.append(correlation)
+                do {
+                    let correlation = try Correlation(correlation: element)
+                    correlations.append(correlation)
+                } catch {
+                    continue
+                }
             }
         }
         healthStore.execute(query)

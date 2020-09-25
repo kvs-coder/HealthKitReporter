@@ -8,20 +8,18 @@
 import Foundation
 import HealthKit
 
-protocol HealthKitParsable {
-    associatedtype Parsable where Parsable: Sample
-    func parsed() throws -> Parsable
+public protocol Sample: Codable {
+    var identifier: String { get }
 }
 
 public struct Statistics: Sample {
     public let identifier: String
-    public let value: Double
-    public let startDate: String?
-    public let endDate: String?
-    public let unit: String
+    let startDate: String?
+    let endDate: String?
+    let harmonized: HKStatistics.Harmonized
     let sources: [Source]?
 
-    init(statistics: HKStatistics, value: Double, unit: HKUnit) {
+    init(statistics: HKStatistics) throws {
         self.identifier = statistics.quantityType.identifier
         self.startDate = statistics.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -30,59 +28,42 @@ public struct Statistics: Sample {
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
         self.sources = statistics.sources?.map { Source(source: $0 )}
-        self.unit = unit.unitString
-        self.value = value
+        self.harmonized = try statistics.harmonize()
     }
 }
-public protocol Serie: Codable {}
 
-public struct HeartbeatSerie: Serie {
+public struct HeartbeatSerie: Codable {
     let ibiArray: [Double]
     let indexArray: [Int]
 }
 
-public struct ActivitySummary: Codable {
-    let activeEnergyBurned: Double
-    let activeEnergyBurnedGoal: Double
-    let activeEnergyBurnedUnit: String
-    let appleExerciseTime: Double
-    let appleExerciseTimeGoal: Double
-    let appleExerciseTimeUnit: String
-    let appleStandHours: Double
-    let appleStandHoursGoal: Double
-    let appleStandHoursUnit: String
+public struct ActivitySummary: Sample {
+    public let identifier: String
     let date: String?
+    let harmonized: HKActivitySummary.Harmonized
 
-    init(activitySummary: HKActivitySummary) {
+    init(activitySummary: HKActivitySummary) throws {
+        self.identifier = HealthKitType
+            .activitySummary
+            .rawValue?
+            .identifier ?? "HKActivitySummaryType"
         self.date = activitySummary
             .dateComponents(for: Calendar.current)
             .date?
             .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
-        let activeEnergyBurned = activitySummary.activeEnergyBurned()
-        self.activeEnergyBurned = activeEnergyBurned.value
-        self.activeEnergyBurnedGoal = activeEnergyBurned.goal
-        self.activeEnergyBurnedUnit = activeEnergyBurned.unit
-        let appleExerciseTime = activitySummary.appleExerciseTime()
-        self.appleExerciseTime = appleExerciseTime.value
-        self.appleExerciseTimeGoal = appleExerciseTime.goal
-        self.appleExerciseTimeUnit = appleExerciseTime.unit
-        let appleStandHours = activitySummary.appleStandHours()
-        self.appleStandHours = appleStandHours.value
-        self.appleStandHoursGoal = appleStandHours.goal
-        self.appleStandHoursUnit = appleStandHours.unit
+        self.harmonized = try activitySummary.harmonize()
     }
 }
 
 public struct Quantitiy: Sample {
     public let identifier: String
-    public let value: Double
-    public let startDate: String?
-    public let endDate: String?
-    public let unit: String
+    let startDate: String?
+    let endDate: String?
     let device: Device?
     let sourceRevision: SourceRevision
+    let harmonized: HKQuantitySample.Harmonized
 
-    init(quantitySample: HKQuantitySample, unit: HKUnit) {
+    init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startDate = quantitySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -92,20 +73,18 @@ public struct Quantitiy: Sample {
         )
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
-        self.unit = unit.unitString
-        self.value = quantitySample.quantity.doubleValue(for: unit)
+        self.harmonized = try quantitySample.harmonize()
     }
 }
 public struct Category: Sample {
     public let identifier: String
-    public let value: Double
-    public let startDate: String?
-    public let endDate: String?
-    public let unit: String
+    let startDate: String?
+    let endDate: String?
     let device: Device?
     let sourceRevision: SourceRevision
+    let harmonized: HKCategorySample.Harmonized
 
-    init(categorySample: HKCategorySample, value: Double, unit: String) {
+    init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier
         self.startDate = categorySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -115,26 +94,20 @@ public struct Category: Sample {
         )
         self.device = Device(device: categorySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: categorySample.sourceRevision)
-        self.value = value
-        self.unit = unit
+        self.harmonized = try categorySample.harmonize()
     }
 }
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Sample {
     public let identifier: String
-    public let value: Double
-    public let startDate: String?
-    public let endDate: String?
-    public let unit: String
-    let classification: String
-    let numberOfMeasurements: Int
-    let frequency: Double
-    let frequencyUnit: String
-    let symptomStatus: String
+    let startDate: String?
+    let endDate: String?
     let device: Device?
     let sourceRevision: SourceRevision
+    let numberOfMeasurements: Int
+    let harmonized: HKElectrocardiogram.Harmonized
 
-    init(electrocardiogram: HKElectrocardiogram) {
+    init(electrocardiogram: HKElectrocardiogram) throws {
         self.identifier = HealthKitType
             .electrocardiogramType
             .rawValue?
@@ -146,23 +119,9 @@ public struct Electrocardiogram: Sample {
             with: Date.yyyyMMddTHHmmssZZZZZ
         )
         self.device = Device(device: electrocardiogram.device)
-        self.classification = electrocardiogram.classification()
-        self.symptomStatus = electrocardiogram.symptomsStatus()
         self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
         self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
-        do {
-            let averageHeartRate = try electrocardiogram.averageHeartRate()
-            let samplingFrequency = try electrocardiogram.samplingFrequency()
-            self.value = averageHeartRate.value
-            self.unit = averageHeartRate.unit
-            self.frequency = samplingFrequency.value
-            self.frequencyUnit = samplingFrequency.unit
-        } catch {
-            self.value = -1
-            self.unit = "unknown"
-            self.frequency = -1
-            self.frequencyUnit = "unknown"
-        }
+        self.harmonized = try electrocardiogram.harmonize()
     }
 }
 public struct Characteristics: Codable {
@@ -226,35 +185,17 @@ public struct SourceRevision: Codable {
         self.systemVersion = sourceRevision.systemVersion
     }
 }
-public struct Correlation: Codable {
+public struct Correlation: Sample {
     public let identifier: String
-    let quantitySamples: [Quantitiy]
-    let categorySamples: [Category]
+    let harmonized: HKCorrelation.Harmonized
 
-    init(correlation: HKCorrelation, objects: Set<HKSample>) {
+    init(correlation: HKCorrelation) throws {
         self.identifier = correlation.correlationType.identifier
-        var quantityArray = [Quantitiy]()
-        if let quantitySamples = objects as? Set<HKQuantitySample> {
-            for element in quantitySamples {
-                if let parsed = try? element.parsed() {
-                    quantityArray.append(parsed)
-                }
-            }
-        }
-        self.quantitySamples = quantityArray
-        var categoryArray = [Category]()
-        if let categorySamples = objects as? Set<HKCategorySample> {
-            for element in categorySamples {
-                if let parsed = try? element.parsed() {
-                    categoryArray.append(parsed)
-                }
-            }
-        }
-        self.categorySamples = categoryArray
+        self.harmonized = try correlation.harmonize()
     }
 }
-public struct Workout {
-    let identifier: String
+public struct Workout: Sample {
+    public let identifier: String
     let startDate: String?
     let endDate: String?
     let workoutName: String
@@ -262,16 +203,9 @@ public struct Workout {
     let sourceRevision: SourceRevision
     let duration: Double
     let events: [WorkoutEvent]
-    let energyBurned: Double?
-    let energyBurnedUnit: String
-    let distance: Double?
-    let distanceUnit: String
-    let swimmingStrokeCount: Double?
-    let swimmingStrokeCountUnit: String
-    let flightsClimbed: Double?
-    let flightsClimbedUnit: String
+    let harmonized: HKWorkout.Harmonized
 
-    init(workout: HKWorkout) {
+    init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
         self.startDate = workout.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -284,7 +218,7 @@ public struct Workout {
         self.workoutName = String(describing: workout.workoutActivityType)
         self.duration = workout.duration
         self.events = workout.workoutEvents?.map { WorkoutEvent(workoutEvent: $0) } ?? []
-
+        self.harmonized = try workout.harmonize()
     }
 }
 public struct WorkoutEvent: Codable {
@@ -305,12 +239,4 @@ public struct WorkoutEvent: Codable {
             .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
         self.duration = workoutEvent.dateInterval.duration
     }
-}
-
-public protocol Sample: Codable {
-    var identifier: String { get }
-    var value: Double { get }
-    var startDate: String? { get }
-    var endDate: String? { get }
-    var unit: String { get }
 }

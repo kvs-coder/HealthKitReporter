@@ -8,10 +8,13 @@
 import Foundation
 import HealthKit
 
-extension HKQuantitySample: HealthKitParsable {
-    typealias Parsable = Quantitiy
+extension HKQuantitySample: HealthKitHarmonizable {
+    struct Harmonized: Codable {
+        let value: Double
+        let unit: String
+    }
 
-    func parsed() throws -> Parsable {
+    func harmonize() throws -> Harmonized {
         switch self.quantityType {
         case HKObjectType.quantityType(forIdentifier: .stepCount):
             return quantity(unit: HKUnit.count())
@@ -106,7 +109,8 @@ extension HKQuantitySample: HealthKitParsable {
         }
     }
 
-    private func quantity(unit: HKUnit) -> Quantitiy {
-        return Quantitiy(quantitySample: self, unit: unit)
+    private func quantity(unit: HKUnit) -> Harmonized {
+        let value = self.quantity.doubleValue(for: unit)
+        return Harmonized(value: value, unit: unit.unitString)
     }
 }

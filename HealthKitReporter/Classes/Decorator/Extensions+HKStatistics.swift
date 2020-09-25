@@ -8,10 +8,15 @@
 import Foundation
 import HealthKit
 
-extension HKStatistics: HealthKitParsable {
-    typealias Parsable = Statistics
+extension HKStatistics: HealthKitHarmonizable {
+    struct Harmonized: Codable {
+        let summary: Double?
+        let average: Double?
+        let recent: Double?
+        let unit: String
+    }
 
-    func parsed() throws -> Statistics {
+    func harmonize() throws -> Harmonized {
         if #available(iOS 13.0, *) {
             if self.quantityType == HKObjectType
                 .quantityType(forIdentifier: .environmentalAudioExposure) {
@@ -121,34 +126,37 @@ extension HKStatistics: HealthKitParsable {
         }
     }
 
-    private func mostRecentQuantity(unit: HKUnit) throws -> Statistics {
+    private func mostRecentQuantity(unit: HKUnit) throws -> Harmonized {
         guard let value = self.mostRecentQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return Statistics(
-            statistics: self,
-            value: value,
-            unit: unit
+        return Harmonized(
+            summary: nil,
+            average: nil,
+            recent: value,
+            unit: unit.unitString
         )
     }
-    private func averageQuantity(unit: HKUnit) throws -> Statistics {
+    private func averageQuantity(unit: HKUnit) throws -> Harmonized {
         guard let value = self.averageQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return Statistics(
-            statistics: self,
-            value: value,
-            unit: unit
+        return Harmonized(
+            summary: nil,
+            average: value,
+            recent: nil,
+            unit: unit.unitString
         )
     }
-    private func sumQuantity(unit: HKUnit) throws -> Statistics {
+    private func sumQuantity(unit: HKUnit) throws -> Harmonized {
         guard let value = self.sumQuantity()?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue()
         }
-        return Statistics(
-            statistics: self,
-            value: value,
-            unit: unit
+        return Harmonized(
+            summary: value,
+            average: nil,
+            recent: nil,
+            unit: unit.unitString
         )
     }
 }

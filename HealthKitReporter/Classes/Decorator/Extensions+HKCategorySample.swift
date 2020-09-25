@@ -8,95 +8,46 @@
 import Foundation
 import HealthKit
 
-extension HKCategorySample: HealthKitParsable {
-    typealias Parsable = Category
+extension HKCategorySample: HealthKitHarmonizable {
+    struct Harmonized: Codable {
+        let description: String
+    }
 
-    func parsed() throws -> Parsable {
+    func harmonize() throws -> Harmonized {
         if #available(iOS 13.0, *) {
             if self.categoryType == HKObjectType.categoryType(forIdentifier: .audioExposureEvent) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: self.value) {
-                    switch value {
-                    case .loudEnvironment:
-                        return category(1, "loudEnvironment")
-                    @unknown default:
-                        fatalError()
-                    }
+                    return Harmonized(description: String(describing: value))
                 }
             }
         }
         switch self.categoryType {
         case HKObjectType.categoryType(forIdentifier: .sleepAnalysis):
-            if let sleepAnalisis = HKCategoryValueSleepAnalysis(rawValue: self.value) {
-                switch sleepAnalisis {
-                case .inBed:
-                    return category(0, "inBed")
-                case .asleep:
-                    return category(1, "asleep")
-                case .awake:
-                    return category(2, "awake")
-                @unknown default:
-                    fatalError()
-                }
+            if let value = HKCategoryValueSleepAnalysis(rawValue: self.value) {
+                return Harmonized(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .sexualActivity):
             if let metadata = self.metadata?[HKMetadataKeySexualActivityProtectionUsed] as? Int {
                 switch metadata {
                 case 1:
-                    return category(1, "protectionUsed")
+                    return Harmonized(description: "protectionUsed")
                 case 2:
-                    return category(2, "protectionNotUsed")
+                    return Harmonized(description: "protectionNotUsed")
                 default:
-                    return category(3, "unspecified")
+                    return Harmonized(description: "unspecified")
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .menstrualFlow):
             if let value = HKCategoryValueMenstrualFlow(rawValue: self.value) {
-                switch value {
-                case .unspecified:
-                    return category(1, "unspecified")
-                case .light:
-                    return category(2, "light")
-                case .medium:
-                    return category(3, "medium")
-                case .heavy:
-                    return category(4, "heavy")
-                case .none:
-                    return category(5, "none")
-                @unknown default:
-                    fatalError()
-                }
+                return Harmonized(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .ovulationTestResult):
             if let value = HKCategoryValueOvulationTestResult(rawValue: self.value) {
-                switch value {
-                case .negative:
-                    return category(1, "negative")
-                case .luteinizingHormoneSurge:
-                    return category(2, "luteinizingHormoneSurge")
-                case .indeterminate:
-                    return category(3, "indeterminate")
-                case .estrogenSurge:
-                    return category(4, "estrogenSurge")
-                @unknown default:
-                    fatalError()
-                }
+                return Harmonized(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality):
             if let value = HKCategoryValueCervicalMucusQuality(rawValue: self.value) {
-                switch value {
-                case .dry:
-                    return category(1, "dry")
-                case .sticky:
-                    return category(2, "sticky")
-                case .creamy:
-                    return category(3, "creamy")
-                case .watery:
-                    return category(4, "watery")
-                case .eggWhite:
-                    return category(5, "eggWhite")
-                @unknown default:
-                    fatalError()
-                }
+                return Harmonized(description: String(describing: value))
             }
         default:
             throw HealthKitError.invalidType(
@@ -105,14 +56,6 @@ extension HKCategorySample: HealthKitParsable {
         }
         throw HealthKitError.invalidValue(
             "Invalid value for: \(self.categoryType). Can not be recognized"
-        )
-    }
-
-    private func category(_ value: Int, _ unit: String) -> Category {
-        return Category(
-            categorySample: self,
-            value: Double(value),
-            unit: unit
         )
     }
 }
