@@ -12,6 +12,7 @@ extension HKCorrelation: HealthKitHarmonizable {
     public struct Harmonized: Codable {
         let quantitySamples: [Quantitiy]
         let categorySamples: [Category]
+        let metadata: [String: String]?
     }
 
     func harmonize() throws -> Harmonized {
@@ -29,6 +30,10 @@ extension HKCorrelation: HealthKitHarmonizable {
                 categoryArray.append(category)
             }
         }
-        return Harmonized(quantitySamples: quantityArray, categorySamples: categoryArray)
+        return Harmonized(
+            quantitySamples: quantityArray,
+            categorySamples: categoryArray,
+            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
+        )
     }
 }

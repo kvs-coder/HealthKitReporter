@@ -12,6 +12,7 @@ extension HKQuantitySample: HealthKitHarmonizable {
     public struct Harmonized: Codable {
         let value: Double
         let unit: String
+        let metadata: [String: String]?
     }
 
     func harmonize() throws -> Harmonized {
@@ -111,6 +112,9 @@ extension HKQuantitySample: HealthKitHarmonizable {
 
     private func quantity(unit: HKUnit) -> Harmonized {
         let value = self.quantity.doubleValue(for: unit)
-        return Harmonized(value: value, unit: unit.unitString)
+        return Harmonized(
+            value: value,
+            unit: unit.unitString,
+            metadata: self.metadata?.compactMapValues { String(describing: $0 )})
     }
 }

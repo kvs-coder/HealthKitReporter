@@ -18,6 +18,7 @@ extension HKWorkout: HealthKitHarmonizable {
         let totalSwimmingStrokeCountUnit: String
         let totalFlightsClimbed: Double?
         let totalFlightsClimbedUnit: String
+        let metadata: [String: String]?
     }
 
     func harmonize() throws -> Harmonized {
@@ -52,7 +53,8 @@ extension HKWorkout: HealthKitHarmonizable {
             totalSwimmingStrokeCount: totalSwimmingStrokeCount,
             totalSwimmingStrokeCountUnit: countUnit.unitString,
             totalFlightsClimbed: totalFlightsClimbed,
-            totalFlightsClimbedUnit: countUnit.unitString
+            totalFlightsClimbedUnit: countUnit.unitString,
+            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }

@@ -15,5 +15,23 @@ public class HealthKitWriter {
         self.healthStore = healthStore
     }
 
-
+    public func requestAuthorization(
+        toWrite: [HealthKitType],
+        completionHandler: @escaping (Bool, Error?) -> Void
+    ) throws {
+        var setOfWriteTypes = Set<HKSampleType>()
+        for type in toWrite {
+            guard let objectType = type.rawValue as? HKSampleType else {
+                throw HealthKitError.invalidType(
+                    "Type \(type) has not HKObjectType representation"
+                )
+            }
+            setOfWriteTypes.insert(objectType)
+        }
+        healthStore.requestAuthorization(
+            toShare: setOfWriteTypes,
+            read: Set(),
+            completion: completionHandler
+        )
+    }
 }

@@ -11,43 +11,44 @@ import HealthKit
 extension HKCategorySample: HealthKitHarmonizable {
     public struct Harmonized: Codable {
         let description: String
+        let metadata: [String: String]?
     }
 
     func harmonize() throws -> Harmonized {
         if #available(iOS 13.0, *) {
             if self.categoryType == HKObjectType.categoryType(forIdentifier: .audioExposureEvent) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: self.value) {
-                    return Harmonized(description: String(describing: value))
+                    return category(description: String(describing: value))
                 }
             }
         }
         switch self.categoryType {
         case HKObjectType.categoryType(forIdentifier: .sleepAnalysis):
             if let value = HKCategoryValueSleepAnalysis(rawValue: self.value) {
-                return Harmonized(description: String(describing: value))
+                return category(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .sexualActivity):
             if let metadata = self.metadata?[HKMetadataKeySexualActivityProtectionUsed] as? Int {
                 switch metadata {
                 case 1:
-                    return Harmonized(description: "protectionUsed")
+                    return category(description: "protectionUsed")
                 case 2:
-                    return Harmonized(description: "protectionNotUsed")
+                    return category(description: "protectionNotUsed")
                 default:
-                    return Harmonized(description: "unspecified")
+                    return category(description: "unspecified")
                 }
             }
         case HKObjectType.categoryType(forIdentifier: .menstrualFlow):
             if let value = HKCategoryValueMenstrualFlow(rawValue: self.value) {
-                return Harmonized(description: String(describing: value))
+                return category(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .ovulationTestResult):
             if let value = HKCategoryValueOvulationTestResult(rawValue: self.value) {
-                return Harmonized(description: String(describing: value))
+                return category(description: String(describing: value))
             }
         case HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality):
             if let value = HKCategoryValueCervicalMucusQuality(rawValue: self.value) {
-                return Harmonized(description: String(describing: value))
+                return category(description: String(describing: value))
             }
         default:
             throw HealthKitError.invalidType(
@@ -56,6 +57,13 @@ extension HKCategorySample: HealthKitHarmonizable {
         }
         throw HealthKitError.invalidValue(
             "Invalid value for: \(self.categoryType). Can not be recognized"
+        )
+    }
+
+    private func category(description: String) -> Harmonized {
+        return Harmonized(
+            description: description,
+            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }

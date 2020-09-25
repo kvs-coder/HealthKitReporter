@@ -19,7 +19,7 @@ public struct Statistics: Sample {
     public let harmonized: HKStatistics.Harmonized
     public let sources: [Source]?
 
-    init(statistics: HKStatistics) throws {
+    public init(statistics: HKStatistics) throws {
         self.identifier = statistics.quantityType.identifier
         self.startDate = statistics.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -42,7 +42,7 @@ public struct ActivitySummary: Sample {
     public let date: String?
     public let harmonized: HKActivitySummary.Harmonized
 
-    init(activitySummary: HKActivitySummary) throws {
+    public init(activitySummary: HKActivitySummary) throws {
         self.identifier = HealthKitType
             .activitySummary
             .rawValue?
@@ -63,7 +63,7 @@ public struct Quantitiy: Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: HKQuantitySample.Harmonized
 
-    init(quantitySample: HKQuantitySample) throws {
+    public init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startDate = quantitySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -84,7 +84,7 @@ public struct Category: Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: HKCategorySample.Harmonized
 
-    init(categorySample: HKCategorySample) throws {
+    public init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier
         self.startDate = categorySample.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -107,7 +107,7 @@ public struct Electrocardiogram: Sample {
     public let numberOfMeasurements: Int
     public let harmonized: HKElectrocardiogram.Harmonized
 
-    init(electrocardiogram: HKElectrocardiogram) throws {
+    public init(electrocardiogram: HKElectrocardiogram) throws {
         self.identifier = HealthKitType
             .electrocardiogramType
             .rawValue?
@@ -130,7 +130,7 @@ public struct Characteristics: Codable {
     public let bloodType: String
     public let skinType: String
 
-    init(
+    public init(
         biologicalSex: HKBiologicalSexObject,
         birthday: DateComponents,
         bloodType: HKBloodTypeObject,
@@ -146,7 +146,7 @@ public struct Source: Codable {
     public let name: String
     public let bundleIdentifier: String
 
-    init(source: HKSource) {
+    public init(source: HKSource) {
         self.name = source.name
         self.bundleIdentifier = source.bundleIdentifier
     }
@@ -161,7 +161,7 @@ public struct Device: Codable {
     public let localIdentifier: String?
     public let udiDeviceIdentifier: String?
 
-    init(device: HKDevice?) {
+    public init(device: HKDevice?) {
         self.name = device?.name
         self.manufacturer = device?.manufacturer
         self.model = device?.model
@@ -178,7 +178,7 @@ public struct SourceRevision: Codable {
     public let productType: String?
     public let systemVersion: String
 
-    init(sourceRevision: HKSourceRevision) {
+    public init(sourceRevision: HKSourceRevision) {
         self.source = Source(source: sourceRevision.source)
         self.version = sourceRevision.version
         self.productType = sourceRevision.productType
@@ -189,7 +189,7 @@ public struct Correlation: Sample {
     public let identifier: String
     public let harmonized: HKCorrelation.Harmonized
 
-    init(correlation: HKCorrelation) throws {
+    public init(correlation: HKCorrelation) throws {
         self.identifier = correlation.correlationType.identifier
         self.harmonized = try correlation.harmonize()
     }
@@ -205,7 +205,7 @@ public struct Workout: Sample {
     public let events: [WorkoutEvent]
     public let harmonized: HKWorkout.Harmonized
 
-    init(workout: HKWorkout) throws {
+    public init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
         self.startDate = workout.startDate.formatted(
             with: Date.yyyyMMddTHHmmssZZZZZ
@@ -227,7 +227,7 @@ public struct WorkoutEvent: Codable {
     public let endDate: String?
     public let duration: Double
 
-    init(workoutEvent: HKWorkoutEvent) {
+    public init(workoutEvent: HKWorkoutEvent) {
         self.type = String(describing: workoutEvent.type)
         self.startDate = workoutEvent
             .dateInterval

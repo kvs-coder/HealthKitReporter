@@ -17,6 +17,7 @@ extension HKElectrocardiogram: HealthKitHarmonizable {
         let samplingFrequencyUnit: String
         let classification: String
         let symptomsStatus: String
+        let metadata: [String: String]?
     }
 
     func harmonize() throws -> Harmonized {
@@ -44,7 +45,8 @@ extension HKElectrocardiogram: HealthKitHarmonizable {
             samplingFrequency: samplingFrequency,
             samplingFrequencyUnit: samplingFrequencyUnit.unitString,
             classification: classification,
-            symptomsStatus: symptomsStatus
+            symptomsStatus: symptomsStatus,
+            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }
