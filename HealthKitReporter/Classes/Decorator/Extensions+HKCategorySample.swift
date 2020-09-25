@@ -9,9 +9,9 @@ import Foundation
 import HealthKit
 
 extension HKCategorySample: HealthKitParsable {
-    typealias Parseble = Category
+    typealias Parsable = Category
 
-    func parsed() throws -> Parseble {
+    func parsed() throws -> Parsable {
         if #available(iOS 13.0, *) {
             if self.categoryType == HKObjectType.categoryType(forIdentifier: .audioExposureEvent) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: self.value) {

@@ -10,6 +10,7 @@ import HealthKit
 
 public class HealthKitReporter {
     public let reader: HealthKitReader
+    public let writer: HealthKitWriter
     public let observer: HealthKitObserver
 
     public init() throws {
@@ -18,6 +19,7 @@ public class HealthKitReporter {
         }
         let healthStore = HKHealthStore()
         self.reader = HealthKitReader(healthStore: healthStore)
+        self.writer = HealthKitWriter(healthStore: healthStore)
         self.observer = HealthKitObserver(healthStore: healthStore)
     }
 }

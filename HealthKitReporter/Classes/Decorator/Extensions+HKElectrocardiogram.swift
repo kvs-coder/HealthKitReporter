@@ -10,7 +10,7 @@ import HealthKit
 
 @available(iOS 14.0, *)
 extension HKElectrocardiogram: HealthKitParsable {
-    typealias Parseble = Electrocardiogram
+    typealias Parsable = Electrocardiogram
 
     func parsed() throws -> Electrocardiogram {
         return Electrocardiogram(electrocardiogram: self)

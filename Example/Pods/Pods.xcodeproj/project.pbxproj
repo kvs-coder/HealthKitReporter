@@ -28,6 +28,7 @@
 		17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C52251D09A200A361C6 /* HealthKitWriter.swift */; };
 		17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */; };
 		17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C69251D1B4000A361C6 /* HealthKitError.swift */; };
+		17C9D509251E1BEE003BB785 /* Extensions+HKWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */; };
 		1BB37D34E5F48888A5C051AD9AE21C9D /* Pods-HealthKitReporter_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A2928A4F62607E28C214719CE56A176 /* Pods-HealthKitReporter_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D095DA112AF90AB75DFD4484A214215 /* Pods-HealthKitReporter_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */; };
@@ -79,6 +80,7 @@
 		17633C52251D09A200A361C6 /* HealthKitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitWriter.swift; sourceTree = "<group>"; };
 		17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKElectrocardiogram.swift"; sourceTree = "<group>"; };
 		17633C69251D1B4000A361C6 /* HealthKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitError.swift; sourceTree = "<group>"; };
+		17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkout.swift"; sourceTree = "<group>"; };
 		19106C382C9023657C61D1BE14E407E2 /* Pods-HealthKitReporter_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Tests.modulemap"; sourceTree = "<group>"; };
 		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -166,8 +168,8 @@
 		17300E2F25125C9F00C643E4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				170E666C251E1168004E4C6F /* Parser */,
 				171FC542251BD8F0003F3910 /* HealthKitReporter.swift */,
+				170E666C251E1168004E4C6F /* Parser */,
 				177BDDB1251D312D005F96AC /* Service */,
 				1727AA2D251D30D800560461 /* Error */,
 				1727AA2C251D30CF00560461 /* Model */,
@@ -192,6 +194,7 @@
 				17300E3B25125C9F00C643E4 /* Extensions+HKBiologicalSex.swift */,
 				17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */,
 				1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */,
+				17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */,
 				171FC53E251BD7A2003F3910 /* HealthKitObserver.swift in Sources */,
 				1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */,
+				17C9D509251E1BEE003BB785 /* Extensions+HKWorkout.swift in Sources */,
 				17300E4825125C9F00C643E4 /* Extensions+HKBiologicalSex.swift in Sources */,
 				17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */,
 				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,

@@ -9,9 +9,9 @@ import Foundation
 import HealthKit
 
 extension HKQuantitySample: HealthKitParsable {
-    typealias Parseble = Quantitiy
+    typealias Parsable = Quantitiy
 
-    func parsed() throws -> Parseble {
+    func parsed() throws -> Parsable {
         switch self.quantityType {
         case HKObjectType.quantityType(forIdentifier: .stepCount):
             return quantity(unit: HKUnit.count())

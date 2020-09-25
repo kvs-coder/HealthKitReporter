@@ -9,8 +9,8 @@ import Foundation
 import HealthKit
 
 protocol HealthKitParsable {
-    associatedtype Parseble where Parseble: Sample
-    func parsed() throws -> Parseble
+    associatedtype Parsable where Parsable: Sample
+    func parsed() throws -> Parsable
 }
 
 public struct Statistics: Sample {
@@ -251,6 +251,59 @@ public struct Correlation: Codable {
             }
         }
         self.categorySamples = categoryArray
+    }
+}
+public struct Workout {
+    let identifier: String
+    let startDate: String?
+    let endDate: String?
+    let workoutName: String
+    let device: Device?
+    let sourceRevision: SourceRevision
+    let duration: Double
+    let events: [WorkoutEvent]
+    let energyBurned: Double?
+    let energyBurnedUnit: String
+    let distance: Double?
+    let distanceUnit: String
+    let swimmingStrokeCount: Double?
+    let swimmingStrokeCountUnit: String
+    let flightsClimbed: Double?
+    let flightsClimbedUnit: String
+
+    init(workout: HKWorkout) {
+        self.identifier = workout.sampleType.identifier
+        self.startDate = workout.startDate.formatted(
+            with: Date.yyyyMMddTHHmmssZZZZZ
+        )
+        self.endDate = workout.endDate.formatted(
+            with: Date.yyyyMMddTHHmmssZZZZZ
+        )
+        self.device = Device(device: workout.device)
+        self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
+        self.workoutName = String(describing: workout.workoutActivityType)
+        self.duration = workout.duration
+        self.events = workout.workoutEvents?.map { WorkoutEvent(workoutEvent: $0) } ?? []
+
+    }
+}
+public struct WorkoutEvent: Codable {
+    let type: String
+    let startDate: String?
+    let endDate: String?
+    let duration: Double
+
+    init(workoutEvent: HKWorkoutEvent) {
+        self.type = String(describing: workoutEvent.type)
+        self.startDate = workoutEvent
+            .dateInterval
+            .start
+            .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
+        self.endDate = workoutEvent
+            .dateInterval
+            .end
+            .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
+        self.duration = workoutEvent.dateInterval.duration
     }
 }
 

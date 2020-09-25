@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKStatistics: HealthKitParsable {
-    typealias Parseble = Statistics
+    typealias Parsable = Statistics
 
     func parsed() throws -> Statistics {
         if #available(iOS 13.0, *) {
