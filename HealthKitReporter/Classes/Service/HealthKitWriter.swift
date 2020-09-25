@@ -44,7 +44,8 @@ public class HealthKitWriter {
         healthStore.add(
             categorySamples,
             to: try workout.asOriginal(),
-            completion: completion)
+            completion: completion
+        )
     }
     public func addQuantitiy(
         _ samples: [Quantitiy],
@@ -52,10 +53,14 @@ public class HealthKitWriter {
         to workout: Workout,
         completion: @escaping (Bool, Error?) -> Void
     ) throws {
-        let categorySamples = try samples.map { try $0.asOriginal() }
+        let quantitySamples = try samples.map { try $0.asOriginal() }
         healthStore.add(
-            categorySamples,
+            quantitySamples,
             to: try workout.asOriginal(),
-            completion: completion)
+            completion: completion
+        )
+    }
+    public func delete(object: HKObject) {
+        healthStore.delete(object, withCompletion: <#T##(Bool, Error?) -> Void#>)
     }
 }
