@@ -217,7 +217,18 @@ public struct Workout: Sample {
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.workoutName = String(describing: workout.workoutActivityType)
         self.duration = workout.duration
-        self.events = workout.workoutEvents?.map { WorkoutEvent(workoutEvent: $0) } ?? []
+        var events = [WorkoutEvent]()
+        if let workoutEvents = workout.workoutEvents {
+            for element in workoutEvents {
+                do {
+                    let workoutEvent = try WorkoutEvent(workoutEvent: element)
+                    events.append(workoutEvent)
+                } catch {
+                    continue
+                }
+            }
+        }
+        self.events = events
         self.harmonized = try workout.harmonize()
     }
 }
@@ -226,8 +237,9 @@ public struct WorkoutEvent: Codable {
     public let startDate: String?
     public let endDate: String?
     public let duration: Double
+    public let harmonized: HKWorkoutEvent.Harmonized
 
-    public init(workoutEvent: HKWorkoutEvent) {
+    public init(workoutEvent: HKWorkoutEvent) throws {
         self.type = String(describing: workoutEvent.type)
         self.startDate = workoutEvent
             .dateInterval
@@ -238,5 +250,6 @@ public struct WorkoutEvent: Codable {
             .end
             .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
         self.duration = workoutEvent.dateInterval.duration
+        self.harmonized = try workoutEvent.harmonize()
     }
 }
