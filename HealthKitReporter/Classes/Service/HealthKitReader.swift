@@ -56,6 +56,16 @@ public class HealthKitReader {
             completionHandler(dictionary, error)
         }
     }
+    func startWatchApp(
+        with workoutConfiguration: WorkoutConfiguration,
+        completion: @escaping (Bool, Error?) -> Void
+    )  {
+        do {
+            healthStore.startWatchApp(with: try workoutConfiguration.asOriginal(), completion: completion)
+        } catch {
+            completion(false, error)
+        }
+    }
     public func characteristicsQuery() throws -> Characteristics {
         let biologicalSex = try healthStore.biologicalSex()
         let birthday = try healthStore.dateOfBirthComponents()
