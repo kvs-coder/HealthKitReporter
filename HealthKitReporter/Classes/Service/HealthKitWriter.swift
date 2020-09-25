@@ -60,7 +60,42 @@ public class HealthKitWriter {
             completion: completion
         )
     }
-    public func delete(object: HKObject) {
-        //healthStore.delete(object, withCompletion: <#T##(Bool, Error?) -> Void#>)
+    func delete(
+        sample: Sample,
+        completion: @escaping (Bool, Error?) -> Void
+    ) throws {
+        if let quantity = sample as? Quantitiy {
+            healthStore.delete(try quantity.asOriginal(), withCompletion: completion)
+        }
+        if let category = sample as? Category {
+            healthStore.delete(try category.asOriginal(), withCompletion: completion)
+        }
+        if let workout = sample as? Workout {
+            healthStore.delete(try workout.asOriginal(), withCompletion: completion)
+        }
+    }
+    public func deleteObjects(
+        of objectType: HealthKitType,
+        predicate: NSPredicate,
+        completion: @escaping (Bool, Int, Error?) -> Void
+    ) throws {
+        guard let type = objectType.rawValue else {
+            throw HealthKitError.invalidType("Object type was invalid: \(objectType)")
+        }
+        healthStore.deleteObjects(of: type, predicate: predicate, withCompletion: completion)
+    }
+    public func save(
+        sample: Sample,
+        completion: @escaping (Bool, Error?) -> Void
+    ) throws {
+        if let quantity = sample as? Quantitiy {
+            healthStore.save(try quantity.asOriginal(), withCompletion: completion)
+        }
+        if let category = sample as? Category {
+            healthStore.save(try category.asOriginal(), withCompletion: completion)
+        }
+        if let workout = sample as? Workout {
+            healthStore.save(try workout.asOriginal(), withCompletion: completion)
+        }
     }
 }

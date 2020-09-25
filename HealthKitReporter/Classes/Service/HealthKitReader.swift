@@ -37,6 +37,25 @@ public class HealthKitReader {
             completion: completionHandler
         )
     }
+    public func preferredUnits(
+        for quantityTypes: [HealthKitType],
+        completionHandler: @escaping ([String: String], Error?) -> Void
+    ) throws {
+        var setOfTypes = Set<HKQuantityType>()
+        for type in quantityTypes {
+            guard let objectType = type.rawValue as? HKQuantityType else {
+                throw HealthKitError.invalidType(
+                    "Type \(type) has not HKQuantityType representation"
+                )
+            }
+            setOfTypes.insert(objectType)
+        }
+        healthStore.preferredUnits(for: setOfTypes) { (dictionary, error) in
+            let mapped = dictionary.map { ($0.key.identifier, $0.value.unitString) }
+            let dictionary = Dictionary(uniqueKeysWithValues: mapped)
+            completionHandler(dictionary, error)
+        }
+    }
     public func characteristicsQuery() throws -> Characteristics {
         let biologicalSex = try healthStore.biologicalSex()
         let birthday = try healthStore.dateOfBirthComponents()
