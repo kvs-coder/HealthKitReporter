@@ -1,5 +1,5 @@
 //
-//  Extensions+WorkoutConfiguration.swift
+//  Extensions+HKWorkoutConfiguration.swift
 //  HealthKitReporter
 //
 //  Created by Florian on 25.09.20.
