@@ -101,7 +101,7 @@ public class HealthKitReader {
         type: HealthKitType,
         quantitySamplePredicate: NSPredicate?,
         anchorDate: Date,
-        enumeratwFrom: Date,
+        enumerateFrom: Date,
         enumerateTo: Date,
         intervalComponents: DateComponents,
         monitorUpdates: Bool = false,
@@ -118,7 +118,7 @@ public class HealthKitReader {
                 enumerationBlock(nil, error)
                 return
             }
-            result.enumerateStatistics(from: enumeratwFrom, to: enumerateTo) { (data, stop) in
+            result.enumerateStatistics(from: enumerateFrom, to: enumerateTo) { (data, stop) in
                 do {
                     let statistics = try Statistics(statistics: data)
                     enumerationBlock(statistics, nil)
