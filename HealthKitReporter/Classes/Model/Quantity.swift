@@ -10,20 +10,16 @@ import HealthKit
 
 public struct Quantitiy: Identifiable, Sample, Writable {
     public let identifier: String
-    public let startDate: String
-    public let endDate: String
+    public let startTimestamp: Double
+    public let endTimestamp: Double
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: HKQuantitySample.Harmonized
 
     public init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
-        self.startDate = quantitySample.startDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
-        self.endDate = quantitySample.endDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
+        self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
+        self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
         self.harmonized = try quantitySample.harmonize()
@@ -39,22 +35,14 @@ public struct Quantitiy: Identifiable, Sample, Writable {
                 "Quantitiy type identifier: \(identifier) could not be foramtted"
             )
         }
-        guard
-            let start = startDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ),
-            let end = endDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ)
-        else {
-            throw HealthKitError.invalidValue(
-                "Quantitiy start: \(startDate) and end: \(endDate) could not be formatted"
-            )
-        }
         return HKQuantitySample(
             type: type,
             quantity: HKQuantity(
                 unit: HKUnit.init(from: harmonized.unit),
                 doubleValue: harmonized.value
             ),
-            start: start,
-            end: end,
+            start: startTimestamp.asDate,
+            end: endTimestamp.asDate,
             device: device?.asOriginal(),
             metadata: harmonized.metadata
         )

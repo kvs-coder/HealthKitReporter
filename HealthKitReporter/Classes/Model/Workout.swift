@@ -10,8 +10,8 @@ import HealthKit
 
 public struct Workout: Identifiable, Sample, Writable {
     public let identifier: String
-    public let startDate: String
-    public let endDate: String
+    public let startTimestamp: Double
+    public let endTimestamp: Double
     public let workoutName: String
     public let device: Device?
     public let sourceRevision: SourceRevision
@@ -21,12 +21,8 @@ public struct Workout: Identifiable, Sample, Writable {
 
     public init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
-        self.startDate = workout.startDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
-        self.endDate = workout.endDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
+        self.startTimestamp = workout.startDate.timeIntervalSince1970
+        self.endTimestamp = workout.endDate.timeIntervalSince1970
         self.device = Device(device: workout.device)
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.workoutName = String(describing: workout.workoutActivityType)
@@ -52,18 +48,10 @@ public struct Workout: Identifiable, Sample, Writable {
                 "Workout type: \(harmonized.value) could not be foramtted"
             )
         }
-        guard
-            let start = startDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ),
-            let end = endDate.asDate(format: Date.yyyyMMddTHHmmssZZZZZ)
-        else {
-            throw HealthKitError.invalidValue(
-                "Category start: \(startDate) and end: \(endDate) could not be formatted"
-            )
-        }
         return HKWorkout(
             activityType: activityType,
-            start: start,
-            end: end,
+            start: startTimestamp.asDate,
+            end: endTimestamp.asDate,
             workoutEvents: try workoutEvents.map({ try $0.asOriginal() }),
             totalEnergyBurned: harmonized.totalEnergyBurned != nil
                 ? HKQuantity(

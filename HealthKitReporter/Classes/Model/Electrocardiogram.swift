@@ -11,8 +11,8 @@ import HealthKit
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Identifiable, Sample {
     public let identifier: String
-    public let startDate: String
-    public let endDate: String
+    public let startTimestamp: Double
+    public let endTimestamp: Double
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let numberOfMeasurements: Int
@@ -23,12 +23,8 @@ public struct Electrocardiogram: Identifiable, Sample {
             .electrocardiogramType
             .rawValue?
             .identifier ?? "HKElectrocardiogram"
-        self.startDate = electrocardiogram.startDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
-        self.endDate = electrocardiogram.endDate.formatted(
-            with: Date.yyyyMMddTHHmmssZZZZZ
-        )
+        self.startTimestamp = electrocardiogram.startDate.timeIntervalSince1970
+        self.endTimestamp = electrocardiogram.endDate.timeIntervalSince1970
         self.device = Device(device: electrocardiogram.device)
         self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
         self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
