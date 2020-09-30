@@ -70,7 +70,7 @@ public class HealthKitReader {
     }
     public func statisticsQuery(
         type: HealthKitType,
-        predicate: NSPredicate,
+        predicate: NSPredicate? = .allSamples,
         completionHandler: @escaping (Statistics?, Error?) -> Void
     ) throws {
         guard let quantityType = type.rawValue as? HKQuantityType else {
@@ -99,7 +99,7 @@ public class HealthKitReader {
     }
     public func statisticsCollectionQuery(
         type: HealthKitType,
-        quantitySamplePredicate: NSPredicate?,
+        quantitySamplePredicate: NSPredicate? = .allSamples,
         anchorDate: Date,
         enumerateFrom: Date,
         enumerateTo: Date,
@@ -146,7 +146,7 @@ public class HealthKitReader {
     }
     public func sampleQuery(
         type: HealthKitType,
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping ([Sample], Error?) -> Void
@@ -182,7 +182,7 @@ public class HealthKitReader {
     }
     @available(iOS 13.0, *)
     public func heartbeatSeriesQuery(
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor],
         limit: Int = HKObjectQueryNoLimit,
         dataHandler: @escaping (HeartbeatSerie?, Error?) -> Void
@@ -237,7 +237,7 @@ public class HealthKitReader {
         healthStore.execute(query)
     }
     public func queryActivitySummary(
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         monitorUpdates: Bool = false,
         completionHandler: @escaping ([ActivitySummary], Error?) -> Void
     ) {
@@ -268,7 +268,7 @@ public class HealthKitReader {
     }
     public func anchoredObjectQuery(
         type: HealthKitType,
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         anchor: HKQueryAnchor? = HKQueryAnchor(fromValue: Int(HKAnchoredObjectQueryNoAnchor)),
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
@@ -310,7 +310,7 @@ public class HealthKitReader {
     }
     public func sourceQuery(
         type: HealthKitType,
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         completionHandler: @escaping ([Source], Error?) -> Void
     ) throws {
         guard let sampleType = type.rawValue as? HKSampleType else {
@@ -334,7 +334,7 @@ public class HealthKitReader {
     }
     public func correlationQuery(
         type: HealthKitType,
-        predicate: NSPredicate?,
+        predicate: NSPredicate? = .allSamples,
         typePredicates: [HealthKitType : NSPredicate]?,
         completionHandler: @escaping ([Correlation], Error?) -> Void
     ) throws {
