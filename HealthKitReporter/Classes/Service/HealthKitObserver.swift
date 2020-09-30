@@ -19,9 +19,13 @@ public class HealthKitObserver {
         type: HealthKitType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping (String?, Error?) -> Void
-    ) throws {
+    ) {
         guard let sampleType = type.rawValue as? HKSampleType else {
-            throw HealthKitError.invalidType("Unknown type: \(type)")
+            updateHandler(
+                nil,
+                HealthKitError.invalidType("Unknown type: \(type)")
+            )
+            return
         }
         let query = HKObserverQuery(
             sampleType: sampleType,
@@ -47,9 +51,13 @@ public class HealthKitObserver {
         type: HealthKitType,
         frequency: HKUpdateFrequency,
         completionHandler: @escaping (Bool, Error?) -> Void
-    ) throws {
+    ) {
         guard let objectType = type.rawValue else {
-            throw HealthKitError.invalidType("Unknown type: \(type)")
+            completionHandler(
+                false,
+                HealthKitError.invalidType("Unknown type: \(type)")
+            )
+            return
         }
         healthStore.enableBackgroundDelivery(
             for: objectType,
@@ -65,9 +73,13 @@ public class HealthKitObserver {
     public func disableBackgroundDelivery(
         type: HealthKitType,
         completionHandler: @escaping (Bool, Error?) -> Void
-    ) throws {
+    ) {
         guard let objectType = type.rawValue else {
-            throw HealthKitError.invalidType("Unknown type: \(type)")
+            completionHandler(
+                false,
+                HealthKitError.invalidType("Unknown type: \(type)")
+            )
+            return
         }
         healthStore.disableBackgroundDelivery(
             for: objectType,

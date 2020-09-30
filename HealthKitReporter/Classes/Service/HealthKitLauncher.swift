@@ -18,7 +18,7 @@ public class HealthKitLauncher {
     public func startWatchApp(
         with workoutConfiguration: WorkoutConfiguration,
         completion: @escaping (Bool, Error?) -> Void
-    )  {
+    ) {
         do {
             healthStore.startWatchApp(
                 with: try workoutConfiguration.asOriginal(),
