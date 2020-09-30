@@ -2,7 +2,7 @@
 //  Extensions+HKCategoryself.swift
 //  HealthKitReporter
 //
-//  Created by KVS on 15.09.20.
+//  Created by Victor on 15.09.20.
 //
 
 import Foundation

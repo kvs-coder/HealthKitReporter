@@ -2,7 +2,7 @@
 //  HealthKitReporter.swift
 //  HealthKitReporter
 //
-//  Created by KVS on 23.09.20.
+//  Created by Victor on 23.09.20.
 //
 
 import Foundation

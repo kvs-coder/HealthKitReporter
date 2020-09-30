@@ -2,7 +2,7 @@
 //  WorkoutEvent.swift
 //  HealthKitReporter
 //
-//  Created by KVS on 25.09.20.
+//  Created by Victor on 25.09.20.
 //
 
 import Foundation
