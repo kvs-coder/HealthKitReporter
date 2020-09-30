@@ -2,7 +2,7 @@
 //  Harmonizable.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 25.09.20.
+//  Created by KVS on 25.09.20.
 //
 
 import Foundation

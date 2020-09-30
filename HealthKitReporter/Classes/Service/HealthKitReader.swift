@@ -1,3 +1,10 @@
+//
+//  HealthKitReader.swift
+//  HealthKitReader
+//
+//  Created by KVS on 23.09.20.
+//
+
 import Foundation
 import HealthKit
 

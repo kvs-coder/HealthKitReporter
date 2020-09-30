@@ -2,7 +2,7 @@
 //  Extensions+Date.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 14.09.20.
+//  Created by KVS on 14.09.20.
 //
 
 import Foundation
