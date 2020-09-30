@@ -9,13 +9,13 @@ import Foundation
 import HealthKit
 
 public class HealthKitReader {
-    public typealias ActivitySummaryQueryHanlder = (
+    typealias ActivitySummaryQueryHanlder = (
         HKActivitySummaryQuery, [HKActivitySummary]?, Error?
     ) -> Void
-    public typealias AnchoredObjectQueryHandler = (
+    typealias AnchoredObjectQueryHandler = (
         HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
     ) -> Void
-    public typealias HKStatisticsCollectionHandler = (
+    typealias HKStatisticsCollectionHandler = (
         HKStatisticsCollection?, Error?
     ) -> Void
 

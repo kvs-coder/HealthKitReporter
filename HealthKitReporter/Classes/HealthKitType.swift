@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+/// **HealthKitType** HK type wrapper as an enum
 public enum HealthKitType: RawRepresentable, CaseIterable {
     public typealias RawValue = HKObjectType?
 
@@ -85,6 +86,7 @@ public enum HealthKitType: RawRepresentable, CaseIterable {
     case bloodPressure
     case food
 
+    /// Represent an enum case as an optional **HKObjectType**
     public var rawValue: HKObjectType? {
         switch self {
         case .unknown:

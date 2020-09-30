@@ -8,13 +8,19 @@
 import Foundation
 import HealthKit
 
+/// **HealthKitWriter** class for HK writing operations
 public class HealthKitWriter {
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
-
+    /**
+     Requests authorization for writing Objects in HK.
+     - Parameter toWrite: an array of **HealthKitType** types to read
+     - Parameter completion: dffsd
+     - Throws: `HealthKitError.notAvailable`
+     */
     public func requestAuthorization(
         toWrite: [HealthKitType],
         completion: @escaping (Bool, Error?) -> Void
