@@ -43,6 +43,20 @@ public class HealthKitWriter {
             completion: completion
         )
     }
+    public func isAuthorizedToWrite(type: HealthKitType) throws -> Bool {
+        guard let objectType = type.rawValue else {
+            throw HealthKitError.invalidType("Invalid type: \(type)")
+        }
+        let status = healthStore.authorizationStatus(for: objectType)
+        switch status {
+        case .notDetermined, .sharingDenied:
+            return false
+        case .sharingAuthorized:
+            return true
+        @unknown default:
+            throw HealthKitError.notAvailable("Invalid status")
+        }
+    }
     public func addCategory(
         _ samples: [Category],
         from: Device?,
