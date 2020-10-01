@@ -28,6 +28,7 @@
 		17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */; };
 		17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C69251D1B4000A361C6 /* HealthKitError.swift */; };
 		179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179DA3AA252502A7003A2C22 /* Extensions+Double.swift */; };
+		17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7CE09252624ED00417634 /* Extensions+Encodable.swift */; };
 		17C9D509251E1BEE003BB785 /* Extensions+HKWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */; };
 		17F3EAC0251E32E70035C405 /* Harmonizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EABF251E32E70035C405 /* Harmonizable.swift */; };
 		17F3EAC5251E36200035C405 /* Extensions+HKCorrelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */; };
@@ -103,6 +104,7 @@
 		17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKElectrocardiogram.swift"; sourceTree = "<group>"; };
 		17633C69251D1B4000A361C6 /* HealthKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitError.swift; sourceTree = "<group>"; };
 		179DA3AA252502A7003A2C22 /* Extensions+Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Double.swift"; sourceTree = "<group>"; };
+		17A7CE09252624ED00417634 /* Extensions+Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Encodable.swift"; sourceTree = "<group>"; };
 		17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkout.swift"; sourceTree = "<group>"; };
 		17F3EABF251E32E70035C405 /* Harmonizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Harmonizable.swift; sourceTree = "<group>"; };
 		17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCorrelation.swift"; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 				17F3EAD9251E4B410035C405 /* Extensions+String.swift */,
 				17F3EB38251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift */,
 				179DA3AA252502A7003A2C22 /* Extensions+Double.swift */,
+				17A7CE09252624ED00417634 /* Extensions+Encodable.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -571,6 +574,7 @@
 				17F3EADF251E6D340035C405 /* Workout.swift in Sources */,
 				17F3EB43251E7F0F0035C405 /* HealthKitLauncher.swift in Sources */,
 				17F3EAF3251E6DA90035C405 /* Device.swift in Sources */,
+				17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */,
 				17F3EAEE251E6D960035C405 /* SourceRevision.swift in Sources */,
 				17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */,
 				17300E4A25125C9F00C643E4 /* HealthKitReader.swift in Sources */,

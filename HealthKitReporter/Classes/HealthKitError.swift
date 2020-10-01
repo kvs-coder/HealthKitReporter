@@ -14,4 +14,5 @@ enum HealthKitError: Error {
     case invalidOption(String = "Invalid option")
     case invalidValue(String = "Invalid value")
     case parsingFailed(String = "Parsing failed")
+    case badEncoding(String)
 }
