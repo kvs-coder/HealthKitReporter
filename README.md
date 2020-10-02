@@ -75,8 +75,9 @@ override func viewDidLoad() {
 }
 ```
 
-```json
 Here is a sample response for steps:
+
+```json
 
 {
   "sourceRevision" : {
