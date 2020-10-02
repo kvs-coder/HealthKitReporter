@@ -33,7 +33,6 @@ public class HealthKitWriter {
      Requests authorization for writing Objects in HK.
      - Parameter toWrite: an array of **HealthKitType** types to read
      - Parameter completion: returns a block with information about authorization window being displayed
-     - Throws: `HealthKitError.notAvailable`
      */
     public func requestAuthorization(
         toWrite: [HealthKitType],
@@ -78,7 +77,7 @@ public class HealthKitWriter {
         }
     }
     /**
-     Add category samples from device to a workout
+     Adds category samples from device to a workout
      - Parameter samples: **Category** samples
      - Parameter from: **Device** device (optional)
      - Parameter workout: **Workout** workout
@@ -102,7 +101,7 @@ public class HealthKitWriter {
         }
     }
     /**
-     Add quantitiy samples from device to a workout
+     Adds quantitiy samples from device to a workout
      - Parameter samples: **Quantitiy** samples
      - Parameter from: **Device** device (optional)
      - Parameter workout: **Workout** workout
@@ -126,7 +125,7 @@ public class HealthKitWriter {
         }
     }
     /**
-     Delete the previosly created sample
+     Deletes the previosly created sample
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
@@ -149,7 +148,7 @@ public class HealthKitWriter {
         }
     }
     /**
-     Delete objects of type with predicate
+     Deletes objects of type with predicate
      - Parameter objectType: **HealthKitType** type
      - Parameter predicate: **NSPredicate** predicate for deletion
      - Parameter completion: block notifies about deletion operation status
@@ -171,7 +170,7 @@ public class HealthKitWriter {
         healthStore.deleteObjects(of: type, predicate: predicate, withCompletion: completion)
     }
     /**
-     Save the created sample
+     Saves the created sample
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */

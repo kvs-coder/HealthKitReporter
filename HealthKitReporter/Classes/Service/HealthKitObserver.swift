@@ -17,8 +17,7 @@ public class HealthKitObserver {
     public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
     /**
      - Parameters:
-        - success: the status
-        - id: the deleted object id
+        - identifier: the object type identifier
         - error: error (optional)
     */
     public typealias ObserverUpdateHandler = (_ identifier: String?, _ error: Error?) -> Void
@@ -91,7 +90,7 @@ public class HealthKitObserver {
         )
     }
     /**
-     Disable All background notifications about changes in AppleHealth
+     Disables All background notifications about changes in AppleHealth
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
     public func disableAllBackgroundDelivery(
@@ -100,7 +99,7 @@ public class HealthKitObserver {
         healthStore.disableAllBackgroundDelivery(completion: completionHandler)
     }
     /**
-     Disable All background notifications about changes in AppleHealth
+     Disables All background notifications about changes in AppleHealth
      - Parameter type: **HealthKitType** type
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */

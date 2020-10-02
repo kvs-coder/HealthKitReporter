@@ -9,15 +9,27 @@ import Foundation
 import HealthKit
 
 public class HealthKitLauncher {
+    /**
+     - Parameters:
+        - success: the status
+        - error: error (optional)
+    */
+    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
+
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
 
+    /**
+     Starts Watch App.
+     - Parameter workoutConfiguration: **WorkoutConfiguration** workout configuration
+     - Parameter completion: returns a block with samples
+     */
     public func startWatchApp(
         with workoutConfiguration: WorkoutConfiguration,
-        completion: @escaping (Bool, Error?) -> Void
+        completion: @escaping StatusCompletionBlock
     ) {
         do {
             healthStore.startWatchApp(
