@@ -195,14 +195,20 @@ func application(
 ) -> Bool {
     do {
         let reporter = try HealthKitReporter()
-        reporter.manager.requestAuthorization(toRead: [.stepCount], toWrite: [.stepCount]) { (success, error) in
+        reporter.manager.requestAuthorization(
+            toRead: [.stepCount],
+            toWrite: [.stepCount]
+        ) { (success, error) in
             if success && error == nil {
                 reporter.observer.observerQuery(type: .stepCount) { (identifier, error) in
                     if error == nil {
                         print("updates for \(identifier)")
                     }
                 }
-                reporter.observer.enableBackgroundDelivery(type: .stepCount, frequency: .daily) { (success, error) in
+                reporter.observer.enableBackgroundDelivery(
+                    type: .stepCount,
+                    frequency: .daily
+                ) { (success, error) in
                     if error == nil {
                         print("enabled")
                     }
