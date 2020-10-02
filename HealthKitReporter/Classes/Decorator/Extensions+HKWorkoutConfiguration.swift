@@ -9,13 +9,8 @@ import Foundation
 import HealthKit
 
 extension HKWorkoutConfiguration: Harmonizable {
-    public struct Harmonized: Codable {
-        let activityValue: Int
-        let locationValue: Int
-        let swimmingValue: Int
-        let value: Double
-        let unit: String
-    }
+    typealias Harmonized = WorkoutConfiguration.Harmonized
+
     func harmonize() throws -> Harmonized {
         let unit = HKUnit.meter()
         guard let value = self.lapLength?.doubleValue(for: unit) else {

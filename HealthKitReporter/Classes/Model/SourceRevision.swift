@@ -20,4 +20,16 @@ public struct SourceRevision: Codable {
         self.productType = sourceRevision.productType
         self.systemVersion = sourceRevision.systemVersion
     }
+
+    public init(
+        source: Source,
+        version: String?,
+        productType: String?,
+        systemVersion: String
+    ) {
+        self.source = source
+        self.version = version
+        self.productType = productType
+        self.systemVersion = systemVersion
+    }
 }

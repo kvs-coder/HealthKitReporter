@@ -29,6 +29,26 @@ public struct Device: Codable, Writable {
         self.udiDeviceIdentifier = device?.udiDeviceIdentifier
     }
 
+    public init(
+        name: String?,
+        manufacturer: String?,
+        model: String?,
+        hardwareVersion: String?,
+        firmwareVersion: String?,
+        softwareVersion: String?,
+        localIdentifier: String?,
+        udiDeviceIdentifier: String?
+    ) {
+        self.name = name
+        self.manufacturer = manufacturer
+        self.model = model
+        self.hardwareVersion = hardwareVersion
+        self.firmwareVersion = firmwareVersion
+        self.softwareVersion = softwareVersion
+        self.localIdentifier = localIdentifier
+        self.udiDeviceIdentifier = udiDeviceIdentifier
+    }
+
     func asOriginal() -> HKDevice {
         return HKDevice(
             name: name,

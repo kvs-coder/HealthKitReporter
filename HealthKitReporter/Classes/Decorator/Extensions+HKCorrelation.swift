@@ -9,11 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKCorrelation: Harmonizable {
-    public struct Harmonized: Codable {
-        let quantitySamples: [Quantitiy]
-        let categorySamples: [Category]
-        let metadata: [String: String]?
-    }
+    typealias Harmonized = Correlation.Harmonized
 
     func harmonize() throws -> Harmonized {
         var quantityArray = [Quantitiy]()

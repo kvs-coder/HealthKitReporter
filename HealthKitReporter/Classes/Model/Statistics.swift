@@ -9,10 +9,29 @@ import Foundation
 import HealthKit
 
 public struct Statistics: Identifiable, Sample {
+    public struct Harmonized: Codable {
+        public let summary: Double?
+        public let average: Double?
+        public let recent: Double?
+        public let unit: String
+
+        public init(
+            summary: Double?,
+            average: Double?,
+            recent: Double?,
+            unit: String
+        ) {
+            self.summary = summary
+            self.average = average
+            self.recent = recent
+            self.unit = unit
+        }
+    }
+
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
-    public let harmonized: HKStatistics.Harmonized
+    public let harmonized: Harmonized
     public let sources: [Source]?
 
     public init(statistics: HKStatistics) throws {

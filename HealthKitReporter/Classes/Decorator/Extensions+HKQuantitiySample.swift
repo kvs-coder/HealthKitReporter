@@ -9,11 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKQuantitySample: Harmonizable {
-    public struct Harmonized: Codable {
-        let value: Double
-        let unit: String
-        let metadata: [String: String]?
-    }
+    typealias Harmonized = Quantitiy.Harmonized
 
     func harmonize() throws -> Harmonized {
         switch self.quantityType {

@@ -9,11 +9,21 @@ import Foundation
 import HealthKit
 
 public struct WorkoutEvent: Sample, Writable {
+    public struct Harmonized: Codable {
+        public let value: Int
+        public let metadata: [String: String]?
+
+        public init(value: Int, metadata: [String: String]?) {
+            self.value = value
+            self.metadata = metadata
+        }
+    }
+
     public let type: String
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let duration: Double
-    public let harmonized: HKWorkoutEvent.Harmonized
+    public let harmonized: Harmonized
 
     public init(workoutEvent: HKWorkoutEvent) throws {
         self.type = String(describing: workoutEvent.type)

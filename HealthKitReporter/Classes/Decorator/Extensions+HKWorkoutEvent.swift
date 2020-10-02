@@ -9,10 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKWorkoutEvent: Harmonizable {
-    public struct Harmonized: Codable {
-        let value: Int
-        let metadata: [String: String]?
-    }
+    typealias Harmonized = WorkoutEvent.Harmonized
 
     func harmonize() throws -> Harmonized {
         return Harmonized(

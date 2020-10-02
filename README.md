@@ -29,7 +29,7 @@ The reporter instance contains several properties:
 * launcher
 * observer
 
-Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipaulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, launcher is responsible to laun a WatchApp you make.
+Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipaulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, launcher is responsible to launch a WatchApp you make.
 
 If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case reader and writer have authorization methods with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manullly allow this in Apple Health App.
 

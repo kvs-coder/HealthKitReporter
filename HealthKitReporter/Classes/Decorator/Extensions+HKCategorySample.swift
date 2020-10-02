@@ -9,11 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKCategorySample: Harmonizable {
-    public struct Harmonized: Codable {
-        let value: Int
-        let description: String
-        let metadata: [String: String]?
-    }
+    typealias Harmonized = Category.Harmonized
 
     func harmonize() throws -> Harmonized {
         if #available(iOS 13.0, *) {

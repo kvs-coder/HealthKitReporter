@@ -9,17 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKActivitySummary: Harmonizable {
-    public struct Harmonized: Codable {
-        let activeEnergyBurned: Double
-        let activeEnergyBurnedGoal: Double
-        let activeEnergyBurnedUnit: String
-        let appleExerciseTime: Double
-        let appleExerciseTimeGoal: Double
-        let appleExerciseTimeUnit: String
-        let appleStandHours: Double
-        let appleStandHoursGoal: Double
-        let appleStandHoursUnit: String
-    }
+    typealias Harmonized = ActivitySummary.Harmonized
 
     func harmonize() throws -> Harmonized {
         let activeEnergyBurnedUnit = HKUnit.largeCalorie()

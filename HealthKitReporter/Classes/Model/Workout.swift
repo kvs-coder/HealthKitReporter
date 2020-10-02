@@ -9,6 +9,43 @@ import Foundation
 import HealthKit
 
 public struct Workout: Identifiable, Sample, Writable {
+    public struct Harmonized: Codable {
+        public let value: Int
+        public let totalEnergyBurned: Double?
+        public let totalEnergyBurnedUnit: String
+        public let totalDistance: Double?
+        public let totalDistanceUnit: String
+        public let totalSwimmingStrokeCount: Double?
+        public let totalSwimmingStrokeCountUnit: String
+        public let totalFlightsClimbed: Double?
+        public let totalFlightsClimbedUnit: String
+        public let metadata: [String: String]?
+
+        public init(
+            value: Int,
+            totalEnergyBurned: Double?,
+            totalEnergyBurnedUnit: String,
+            totalDistance: Double?,
+            totalDistanceUnit: String,
+            totalSwimmingStrokeCount: Double?,
+            totalSwimmingStrokeCountUnit: String,
+            totalFlightsClimbed: Double?,
+            totalFlightsClimbedUnit: String,
+            metadata: [String: String]?
+        ) {
+            self.value = value
+            self.totalEnergyBurned = totalEnergyBurned
+            self.totalEnergyBurnedUnit = totalEnergyBurnedUnit
+            self.totalDistance = totalDistance
+            self.totalDistanceUnit = totalDistanceUnit
+            self.totalSwimmingStrokeCount = totalSwimmingStrokeCount
+            self.totalSwimmingStrokeCountUnit = totalSwimmingStrokeCountUnit
+            self.totalFlightsClimbed = totalFlightsClimbed
+            self.totalFlightsClimbedUnit = totalFlightsClimbedUnit
+            self.metadata = metadata
+        }
+    }
+
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
@@ -17,7 +54,7 @@ public struct Workout: Identifiable, Sample, Writable {
     public let sourceRevision: SourceRevision
     public let duration: Double
     public let workoutEvents: [WorkoutEvent]
-    public let harmonized: HKWorkout.Harmonized
+    public let harmonized: Harmonized
 
     public init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier

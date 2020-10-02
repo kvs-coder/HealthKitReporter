@@ -9,12 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKStatistics: Harmonizable {
-    public struct Harmonized: Codable {
-        let summary: Double?
-        let average: Double?
-        let recent: Double?
-        let unit: String
-    }
+    typealias Harmonized = Statistics.Harmonized
 
     func harmonize() throws -> Harmonized {
         if #available(iOS 13.0, *) {

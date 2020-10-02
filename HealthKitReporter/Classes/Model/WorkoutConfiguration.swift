@@ -9,7 +9,29 @@ import Foundation
 import HealthKit
 
 public struct WorkoutConfiguration: Writable {
-    public let harmonized: HKWorkoutConfiguration.Harmonized
+    public struct Harmonized: Codable {
+        public let activityValue: Int
+        public let locationValue: Int
+        public let swimmingValue: Int
+        public let value: Double
+        public let unit: String
+
+        public init(
+            activityValue: Int,
+            locationValue: Int,
+            swimmingValue: Int,
+            value: Double,
+            unit: String
+        ) {
+            self.activityValue = activityValue
+            self.locationValue = locationValue
+            self.swimmingValue = swimmingValue
+            self.value = value
+            self.unit = unit
+        }
+    }
+
+    public let harmonized: Harmonized
 
     init(workoutConfiguration: HKWorkoutConfiguration) throws {
         self.harmonized = try workoutConfiguration.harmonize()

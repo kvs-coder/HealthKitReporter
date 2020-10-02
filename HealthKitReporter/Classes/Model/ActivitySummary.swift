@@ -9,9 +9,21 @@ import Foundation
 import HealthKit
 
 public struct ActivitySummary: Identifiable {
+    public struct Harmonized: Codable {
+        public let activeEnergyBurned: Double
+        public let activeEnergyBurnedGoal: Double
+        public let activeEnergyBurnedUnit: String
+        public let appleExerciseTime: Double
+        public let appleExerciseTimeGoal: Double
+        public let appleExerciseTimeUnit: String
+        public let appleStandHours: Double
+        public let appleStandHoursGoal: Double
+        public let appleStandHoursUnit: String
+    }
+
     public let identifier: String
     public let date: String?
-    public let harmonized: HKActivitySummary.Harmonized
+    public let harmonized: Harmonized
 
     public init(activitySummary: HKActivitySummary) throws {
         self.identifier = HealthKitType

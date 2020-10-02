@@ -16,4 +16,9 @@ public struct Source: Codable {
         self.name = source.name
         self.bundleIdentifier = source.bundleIdentifier
     }
+
+    public init(name: String, bundleIdentifier: String) {
+        self.name = name
+        self.bundleIdentifier = bundleIdentifier
+    }
 }

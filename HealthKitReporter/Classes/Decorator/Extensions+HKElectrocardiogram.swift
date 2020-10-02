@@ -10,15 +10,7 @@ import HealthKit
 
 @available(iOS 14.0, *)
 extension HKElectrocardiogram: Harmonizable {
-    public struct Harmonized: Codable {
-        let averageHeartRate: Double
-        let averageHeartRateUnit: String
-        let samplingFrequency: Double
-        let samplingFrequencyUnit: String
-        let classification: String
-        let symptomsStatus: String
-        let metadata: [String: String]?
-    }
+    typealias Harmonized = Electrocardiogram.Harmonized
 
     func harmonize() throws -> Harmonized {
         let averageHeartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())

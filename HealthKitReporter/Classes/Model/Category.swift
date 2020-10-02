@@ -9,12 +9,28 @@ import Foundation
 import HealthKit
 
 public struct Category: Identifiable, Sample, Writable {
+    public struct Harmonized: Codable {
+        public let value: Int
+        public let description: String
+        public let metadata: [String: String]?
+
+        public init(
+            value: Int,
+            description: String,
+            metadata: [String: String]?
+        ) {
+            self.value = value
+            self.description = description
+            self.metadata = metadata 
+        }
+    }
+
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let device: Device?
     public let sourceRevision: SourceRevision
-    public let harmonized: HKCategorySample.Harmonized
+    public let harmonized: Harmonized
 
     public init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier

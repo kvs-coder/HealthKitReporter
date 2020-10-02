@@ -9,12 +9,28 @@ import Foundation
 import HealthKit
 
 public struct Quantitiy: Identifiable, Sample, Writable {
+    public struct Harmonized: Codable {
+        public let value: Double
+        public let unit: String
+        public let metadata: [String: String]?
+
+        public init(
+            value: Double,
+            unit: String,
+            metadata: [String: String]?
+        ) {
+            self.value = value
+            self.unit = unit
+            self.metadata = metadata
+        }
+    }
+
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let device: Device?
     public let sourceRevision: SourceRevision
-    public let harmonized: HKQuantitySample.Harmonized
+    public let harmonized: Harmonized
 
     public init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
@@ -23,6 +39,22 @@ public struct Quantitiy: Identifiable, Sample, Writable {
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
         self.harmonized = try quantitySample.harmonize()
+    }
+
+    public init(
+        identifier: String,
+        startTimestamp: Double,
+        endTimestamp: Double,
+        device: Device?,
+        sourceRevision: SourceRevision,
+        harmonized: Harmonized
+    ) {
+        self.identifier = identifier
+        self.startTimestamp = startTimestamp
+        self.endTimestamp = endTimestamp
+        self.device = device
+        self.sourceRevision = sourceRevision
+        self.harmonized = harmonized
     }
 
     func asOriginal() throws -> HKQuantitySample {

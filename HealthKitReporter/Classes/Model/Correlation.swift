@@ -9,8 +9,24 @@ import Foundation
 import HealthKit
 
 public struct Correlation: Identifiable {
+    public struct Harmonized: Codable {
+        public let quantitySamples: [Quantitiy]
+        public let categorySamples: [Category]
+        public let metadata: [String: String]?
+
+        public init(
+            quantitySamples: [Quantitiy],
+            categorySamples: [Category],
+            metadata: [String: String]?
+        ) {
+            self.quantitySamples = quantitySamples
+            self.categorySamples = categorySamples
+            self.metadata = metadata
+        }
+    }
+
     public let identifier: String
-    public let harmonized: HKCorrelation.Harmonized
+    public let harmonized: Harmonized
 
     public init(correlation: HKCorrelation) throws {
         self.identifier = correlation.correlationType.identifier
