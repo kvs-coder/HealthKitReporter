@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		1716C45525278E190037EA4E /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 1716C45425278E190037EA4E /* CHANGELOG.md */; };
 		171FC53E251BD7A2003F3910 /* HealthKitObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */; };
 		171FC543251BD8F0003F3910 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC542251BD8F0003F3910 /* HealthKitReporter.swift */; };
 		1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */; };
@@ -84,6 +85,7 @@
 		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10ED9239B0ED1C13D65048DF6C2EDD88 /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1418EAB84877F65C010D2DD616A65D44 /* HealthKitReporter-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "HealthKitReporter-umbrella.h"; sourceTree = "<group>"; };
+		1716C45425278E190037EA4E /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitObserver.swift; sourceTree = "<group>"; };
 		171FC542251BD8F0003F3910 /* HealthKitReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
 		1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSourceRevision.swift"; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 			children = (
 				E66BFAA856AE9B9B4C90D91FC25EDC39 /* HealthKitReporter.podspec */,
 				3437F34D44A783E1EFFA682E39474B09 /* LICENSE */,
+				1716C45425278E190037EA4E /* CHANGELOG.md */,
 				27617830750DC147AFDBE7EA9D445C3A /* README.md */,
 			);
 			name = Pod;
@@ -520,6 +523,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1716C45525278E190037EA4E /* CHANGELOG.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
