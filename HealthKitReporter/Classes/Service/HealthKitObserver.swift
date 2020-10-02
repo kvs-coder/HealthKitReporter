@@ -9,16 +9,35 @@ import Foundation
 import HealthKit
 
 public class HealthKitObserver {
+    /**
+     - Parameters:
+        - success: the status
+        - error: error (optional)
+    */
+    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
+    /**
+     - Parameters:
+        - success: the status
+        - id: the deleted object id
+        - error: error (optional)
+    */
+    public typealias ObserverUpdateHandler = (_ identifier: String?, _ error: Error?) -> Void
+
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
-
+    /**
+     Sets observer query for type
+     - Parameter type: **HealthKitType** type
+     - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
+     - Parameter updateHandler: is called as soon any change happened in AppleHealth App
+     */
     public func observerQuery(
         type: HealthKitType,
         predicate: NSPredicate? = nil,
-        updateHandler: @escaping (String?, Error?) -> Void
+        updateHandler: @escaping ObserverUpdateHandler
     ) {
         guard let sampleType = type.rawValue as? HKSampleType else {
             updateHandler(
@@ -47,10 +66,16 @@ public class HealthKitObserver {
         }
         healthStore.execute(query)
     }
+    /**
+     Enables background notifications about changes in AppleHealth
+     - Parameter type: **HealthKitType** type
+     - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
+     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     */
     public func enableBackgroundDelivery(
         type: HealthKitType,
         frequency: HKUpdateFrequency,
-        completionHandler: @escaping (Bool, Error?) -> Void
+        completionHandler: @escaping StatusCompletionBlock
     ) {
         guard let objectType = type.rawValue else {
             completionHandler(
@@ -65,14 +90,23 @@ public class HealthKitObserver {
             withCompletion: completionHandler
         )
     }
+    /**
+     Disable All background notifications about changes in AppleHealth
+     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     */
     public func disableAllBackgroundDelivery(
-        completionHandler: @escaping (Bool, Error?) -> Void
+        completionHandler: @escaping StatusCompletionBlock
     ) {
         healthStore.disableAllBackgroundDelivery(completion: completionHandler)
     }
+    /**
+     Disable All background notifications about changes in AppleHealth
+     - Parameter type: **HealthKitType** type
+     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     */
     public func disableBackgroundDelivery(
         type: HealthKitType,
-        completionHandler: @escaping (Bool, Error?) -> Void
+        completionHandler: @escaping StatusCompletionBlock
     ) {
         guard let objectType = type.rawValue else {
             completionHandler(
