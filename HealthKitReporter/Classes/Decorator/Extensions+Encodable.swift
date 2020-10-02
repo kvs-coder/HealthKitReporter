@@ -8,7 +8,7 @@
 import Foundation
 
 extension Encodable {
-    func encoded() throws -> String{
+    public func encoded() throws -> String{
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         let data = try encoder.encode(self)

@@ -4,10 +4,6 @@
 //
 //  Created by Victor on 23.09.20.
 //
-// <key>NSHealthShareUsageDescription</key>
-// <string>This app needs permission to share your health data</string>
-// <key>NSHealthUpdateUsageDescription</key>
-// <string>This app needs permission to update your health data</string>
 
 import Foundation
 import HealthKit
