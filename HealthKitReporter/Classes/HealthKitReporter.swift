@@ -16,8 +16,8 @@ public class HealthKitReporter {
     public let writer: HealthKitWriter
     /// **HealthKitObserver** is reponsible for observing in HK
     public let observer: HealthKitObserver
-    /// **HealthKitLauncher** is reponsible for launching a WatchApp
-    public let launcher: HealthKitLauncher
+    /// **HealthKitManager** is reponsible for authorization and other operations
+    public let manager: HealthKitManager
     /**
      Inits the instance of **HealthKitReporter** class.
      Every time when called, the new instance of **HKHealthStore** is created.
@@ -33,6 +33,6 @@ public class HealthKitReporter {
         self.reader = HealthKitReader(healthStore: healthStore)
         self.writer = HealthKitWriter(healthStore: healthStore)
         self.observer = HealthKitObserver(healthStore: healthStore)
-        self.launcher = HealthKitLauncher(healthStore: healthStore)
+        self.manager = HealthKitManager(healthStore: healthStore)
     }
 }

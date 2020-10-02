@@ -17,12 +17,6 @@ public class HealthKitReader {
     public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
     /**
      - Parameters:
-        - dictionary: dictionary of correponding type identifier (key) and unit (value)
-        - error: error (optional)
-    */
-    public typealias PreferredUnitsCompeltion = (_ dictionary: [String: String], _ error: Error?) -> Void
-    /**
-     - Parameters:
         - statistics: statistics (optional)
         - error: error (optional)
     */
@@ -72,62 +66,6 @@ public class HealthKitReader {
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
-    }
-    /**
-     Requests authorization for reading Objects in HK.
-     - Parameter toRead: an array of **HealthKitType** types to read
-     - Parameter completion: returns a block with information about authorization window being displayed
-     */
-    public func requestAuthorization(
-        toRead: [HealthKitType],
-        completionHandler: @escaping StatusCompletionBlock
-    ) {
-        var setOfReadTypes = Set<HKObjectType>()
-        for type in toRead {
-            guard let objectType = type.rawValue else {
-                completionHandler(
-                    false,
-                    HealthKitError.invalidType(
-                        "Type \(type) has not HKObjectType representation"
-                    )
-                )
-                return
-            }
-            setOfReadTypes.insert(objectType)
-        }
-        healthStore.requestAuthorization(
-            toShare: Set(),
-            read: setOfReadTypes,
-            completion: completionHandler
-        )
-    }
-    /**
-     Queries preferred units.
-     - Parameter quantityTypes: an array of **HealthKitType** types
-     - Parameter completion: returns a block with information preferred units
-     */
-    public func preferredUnits(
-        for quantityTypes: [HealthKitType],
-        completion: @escaping PreferredUnitsCompeltion
-    ) {
-        var setOfTypes = Set<HKQuantityType>()
-        for type in quantityTypes {
-            guard let objectType = type.rawValue as? HKQuantityType else {
-                completion(
-                    [:],
-                    HealthKitError.invalidType(
-                        "Type \(type) has not HKQuantityType representation"
-                    )
-                )
-                return
-            }
-            setOfTypes.insert(objectType)
-        }
-        healthStore.preferredUnits(for: setOfTypes) { (dictionary, error) in
-            let mapped = dictionary.map { ($0.key.identifier, $0.value.unitString) }
-            let dictionary = Dictionary(uniqueKeysWithValues: mapped)
-            completion(dictionary, error)
-        }
     }
     /**
      Queries user's characteristics.

@@ -68,12 +68,12 @@ public class HealthKitObserver {
     /**
      Enables background notifications about changes in AppleHealth
      - Parameter type: **HealthKitType** type
-     - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
+     - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
     public func enableBackgroundDelivery(
         type: HealthKitType,
-        frequency: HKUpdateFrequency,
+        frequency: HKUpdateFrequency = .hourly,
         completionHandler: @escaping StatusCompletionBlock
     ) {
         guard let objectType = type.rawValue else {

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import HealthKitReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        do {
+            let reporter = try HealthKitReporter()
+            reporter.manager.requestAuthorization(toRead: [.stepCount], toWrite: [.stepCount]) { (success, error) in
+                if success && error == nil {
+                    reporter.observer.observerQuery(type: .stepCount) { (identifier, error) in
+                        if error == nil {
+                            print("updates for \(identifier)")
+                        }
+                    }
+                    reporter.observer.enableBackgroundDelivery(type: .stepCount, frequency: .daily) { (success, error) in
+                        if error == nil {
+                            print("enabled")
+                        }
+                    }
+                }
+            }
+        } catch {
+            print(error)
+        }
         return true
     }
 }

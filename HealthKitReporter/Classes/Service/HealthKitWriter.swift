@@ -30,33 +30,6 @@ public class HealthKitWriter {
         self.healthStore = healthStore
     }
     /**
-     Requests authorization for writing Objects in HK.
-     - Parameter toWrite: an array of **HealthKitType** types to write
-     - Parameter completion: returns a block with information about authorization window being displayed
-     */
-    public func requestAuthorization(
-        toWrite: [HealthKitType],
-        completion: @escaping StatusCompletionBlock
-    ) {
-        var setOfWriteTypes = Set<HKSampleType>()
-        for type in toWrite {
-            guard let objectType = type.rawValue as? HKSampleType else {
-                completion(
-                    false, HealthKitError.invalidType(
-                        "Type \(type) has not HKObjectType representation"
-                    )
-                )
-                return
-            }
-            setOfWriteTypes.insert(objectType)
-        }
-        healthStore.requestAuthorization(
-            toShare: setOfWriteTypes,
-            read: Set(),
-            completion: completion
-        )
-    }
-    /**
      Checks authorization for writing Objects in HK.
      - Parameter type: **HealthKitType** type to check
      - Throws: `HealthKitError.notAvailable` `HealthKitError.invalidType`
