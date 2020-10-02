@@ -19,9 +19,25 @@ At first in your app's entitlements select HealthKit. and in your app's info.pli
 <string>WHY_YOU_NEED_TO_USE_DATA</string>
 ```
 
+### Common usage
+
+You create a <i>HealthKitReporter</i> instance surrounded by do catch block. If Apple Health is not supported by the device (i.e. iPad) the catch block will be called.
+
+The reporter instance contains several properties:
+* reader
+* writer
+* launcher
+* observer
+
+Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipaulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, launcher is responsible to laun a WatchApp you make.
+
+If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case reader and writer have authorization methods with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manullly allow this in Apple Health App.
+
 ### Reading Data
 Create a <i>HealthKitReporter</i> instance.
+
 Authorize deisred types to read, like step count.
+
 If authorization was successfull (the authorization window was shown) call sample query with type step count.
 
 ```swift

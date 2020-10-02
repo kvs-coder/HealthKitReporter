@@ -31,7 +31,7 @@ public class HealthKitWriter {
     }
     /**
      Requests authorization for writing Objects in HK.
-     - Parameter toWrite: an array of **HealthKitType** types to read
+     - Parameter toWrite: an array of **HealthKitType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
     public func requestAuthorization(
