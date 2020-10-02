@@ -75,6 +75,36 @@ override func viewDidLoad() {
 }
 ```
 
+```json
+Here is a sample response for steps:
+
+{
+  "sourceRevision" : {
+    "productType" : "iPhone8,1",
+    "systemVersion" : "14.0.0",
+    "source" : {
+      "name" : "John’s iPhone",
+      "bundleIdentifier" : "com.apple.health.47609E07-490D-4E5F-8E68-9D8904E9BA08"
+    },
+    "version" : "14.0"
+  },
+  "harmonized" : {
+    "value" : 298,
+    "unit" : "count"
+  },
+  "device" : {
+    "softwareVersion" : "14.0",
+    "manufacturer" : "Apple Inc.",
+    "model" : "iPhone",
+    "name" : "iPhone",
+    "hardwareVersion" : "iPhone8,1"
+  },
+  "endTimestamp" : 1601066077.5886581,
+  "identifier" : "HKQuantityTypeIdentifierStepCount",
+  "startTimestamp" : 1601065755.8829093
+}
+```
+
 ### Writing Data
 Create a <i>HealthKitReporter</i> instance.
 
