@@ -190,13 +190,6 @@ Important to notice, if you want to enable background deliveries with notificati
 
 ```swift
 func application(
-_ application: UIApplication,
-didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-)
-```
-
-```swift
-func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
 ) -> Bool {
