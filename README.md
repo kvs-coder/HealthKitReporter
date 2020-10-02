@@ -186,10 +186,14 @@ Authorize deisred types to write, like step count.
 
 If authorization was successfull (the authorization window was shown) call save method with type step count.
 
-Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method _func application(
+Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method
+
+```swift
+func application(
 _ application: UIApplication,
 didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-)_.
+)
+```
 
 ```swift
 func application(
