@@ -9,12 +9,10 @@ import Foundation
 import HealthKit
 
 public enum SeriesType: Int, OriginalType {
-    public typealias Object = HKSeriesType
-
     case heartbeatSeries
     case route
 
-    var original: Object? {
+    var original: HKSeriesType? {
         switch self {
         case .heartbeatSeries:
             if #available(iOS 13.0, *) {

@@ -9,11 +9,9 @@ import Foundation
 import HealthKit
 
 public enum DocumentType: Int, OriginalType {
-    public typealias Object = HKDocumentType
-
     case cda
 
-    var original: Object? {
+    var original: HKDocumentType? {
         switch self {
         case .cda:
             return HKObjectType.documentType(forIdentifier: .CDA)

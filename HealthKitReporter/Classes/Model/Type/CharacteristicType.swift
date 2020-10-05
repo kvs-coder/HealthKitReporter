@@ -9,14 +9,12 @@ import Foundation
 import HealthKit
 
 public enum CharacteristicType: Int, OriginalType {
-    public typealias Object = HKCharacteristicType
-
     case fitzpatrickSkinType
     case dateOfBirth
     case bloodType
     case biologicalSex
 
-    var original: Object? {
+    var original: HKCharacteristicType? {
         switch self {
         case .fitzpatrickSkinType:
             return  HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)

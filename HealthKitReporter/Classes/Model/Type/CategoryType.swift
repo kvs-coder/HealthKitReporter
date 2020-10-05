@@ -9,8 +9,6 @@ import Foundation
 import HealthKit
 
 public enum CategoryType: Int, OriginalType {
-    public typealias Object = HKCategoryType
-    
     case sleepAnalysis
     case appleStandHour
     case sexualActivity
@@ -20,7 +18,7 @@ public enum CategoryType: Int, OriginalType {
     case cervicalMucusQuality
     case audioExposureEvent
 
-    var original: Object? {
+    var original: HKCategoryType? {
         switch self {
         case .sleepAnalysis:
             return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)

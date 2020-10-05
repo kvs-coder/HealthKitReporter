@@ -9,11 +9,9 @@ import Foundation
 import HealthKit
 
 public enum ActivitySummaryType: Int, OriginalType {
-    public typealias Object = HKActivitySummaryType
-
     case activitySummaryType
 
-    var original: Object? {
+    var original: HKActivitySummaryType? {
         switch self {
         case .activitySummaryType:
             return HKObjectType.activitySummaryType()
