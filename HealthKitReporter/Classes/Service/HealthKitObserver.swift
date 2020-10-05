@@ -33,12 +33,12 @@ public class HealthKitObserver {
      - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
      - Parameter updateHandler: is called as soon any change happened in AppleHealth App
      */
-    public func observerQuery(
-        type: HealthKitType,
+    public func observerQuery<T>(
+        type: T,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverUpdateHandler
-    ) {
-        guard let sampleType = type.rawValue as? HKSampleType else {
+    ) where T: ObjectType {
+        guard let sampleType = type.original as? HKSampleType else {
             updateHandler(
                 nil,
                 HealthKitError.invalidType("Unknown type: \(type)")
@@ -71,12 +71,12 @@ public class HealthKitObserver {
      - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
-    public func enableBackgroundDelivery(
-        type: HealthKitType,
+    public func enableBackgroundDelivery<T>(
+        type: T,
         frequency: HKUpdateFrequency = .hourly,
         completionHandler: @escaping StatusCompletionBlock
-    ) {
-        guard let objectType = type.rawValue else {
+    ) where T: ObjectType {
+        guard let objectType = type.original else {
             completionHandler(
                 false,
                 HealthKitError.invalidType("Unknown type: \(type)")
@@ -103,11 +103,11 @@ public class HealthKitObserver {
      - Parameter type: **HealthKitType** type
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
-    public func disableBackgroundDelivery(
-        type: HealthKitType,
+    public func disableBackgroundDelivery<T>(
+        type: T,
         completionHandler: @escaping StatusCompletionBlock
-    ) {
-        guard let objectType = type.rawValue else {
+    ) where T: ObjectType {
+        guard let objectType = type.original else {
             completionHandler(
                 false,
                 HealthKitError.invalidType("Unknown type: \(type)")

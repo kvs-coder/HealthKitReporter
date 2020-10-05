@@ -18,16 +18,17 @@ class ViewController: UIViewController {
     private func write() {
         do {
             let reporter = try HealthKitReporter()
+            let types = [QuantityType.stepCount]
             reporter.manager.requestAuthorization(
-                toRead: [.stepCount],
-                toWrite: [.stepCount]
+                toRead: types,
+                toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    guard let identifier = HealthKitType.stepCount.rawValue?.identifier else {
+                    guard let identifier = QuantityType.stepCount.original?.identifier else {
                         return
                     }
                     let now = Date()
-                    let quantity = Quantitiy(
+                    let quantity = Quantity(
                         identifier: identifier,
                         startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
                         endTimestamp: now.timeIntervalSince1970,
@@ -45,7 +46,7 @@ class ViewController: UIViewController {
                             version: "1.0.0",
                             productType: "CocoaPod",
                             systemVersion: "1.0.0.0"),
-                        harmonized: Quantitiy.Harmonized(
+                        harmonized: Quantity.Harmonized(
                             value: 123.0,
                             unit: "count",
                             metadata: nil
@@ -70,12 +71,13 @@ class ViewController: UIViewController {
     private func read() {
         do {
             let reporter = try HealthKitReporter()
+            let types = [QuantityType.stepCount]
             reporter.manager.requestAuthorization(
-                toRead: [.stepCount],
-                toWrite: [.stepCount]
+                toRead: types,
+                toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.reader.sampleQuery(type: .stepCount) { (results, error) in
+                    reporter.reader.sampleQuery(type: QuantityType.stepCount) { (results, error) in
                         if error == nil {
                             for element in results {
                                 do {

@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum QuantityType: Int, OriginalType {
+public enum QuantityType: Int, ObjectType {
     case heartRateVariabilitySDNN
     case bodyMassIndex
     case bodyFatPercentage
@@ -64,7 +64,7 @@ public enum QuantityType: Int, OriginalType {
     case environmentalAudioExposure
     case headphoneAudioExposure
 
-    var original: HKQuantityType? {
+    public var original: HKQuantityType? {
         switch self {
         case .heartRateVariabilitySDNN:
             return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)

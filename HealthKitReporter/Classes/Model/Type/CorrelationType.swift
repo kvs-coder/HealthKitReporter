@@ -8,11 +8,11 @@
 import Foundation
 import HealthKit
 
-public enum CorrelationType: Int, OriginalType {
+public enum CorrelationType: Int, ObjectType {
     case bloodPressure
     case food
 
-    var original: HKCorrelationType? {
+    public var original: HKCorrelationType? {
         switch self {
         case .food:
             return HKObjectType.correlationType(forIdentifier: .food)

@@ -8,10 +8,10 @@
 import Foundation
 import HealthKit
 
-public enum WorkoutType: Int, OriginalType {
+public enum WorkoutType: Int, ObjectType {
     case workoutType
 
-    var original: HKWorkoutType? {
+    public var original: HKWorkoutType? {
         switch self {
         case .workoutType:
             return HKObjectType.workoutType()

@@ -9,10 +9,10 @@ import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
-public enum ElectrocardiogramType: Int, OriginalType {
+public enum ElectrocardiogramType: Int, ObjectType {
     case electrocardiogramType
 
-    var original: HKElectrocardiogramType? {
+    public var original: HKElectrocardiogramType? {
         switch self {
         case .electrocardiogramType:
             return HKObjectType.electrocardiogramType()

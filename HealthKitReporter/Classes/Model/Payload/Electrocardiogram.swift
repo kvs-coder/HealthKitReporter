@@ -47,9 +47,9 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let harmonized: Harmonized
 
     public init(electrocardiogram: HKElectrocardiogram) throws {
-        self.identifier = HealthKitType
+        self.identifier = ElectrocardiogramType
             .electrocardiogramType
-            .rawValue?
+            .original?
             .identifier ?? "HKElectrocardiogram"
         self.startTimestamp = electrocardiogram.startDate.timeIntervalSince1970
         self.endTimestamp = electrocardiogram.endDate.timeIntervalSince1970

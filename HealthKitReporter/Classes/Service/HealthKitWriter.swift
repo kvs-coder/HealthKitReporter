@@ -35,8 +35,8 @@ public class HealthKitWriter {
      - Throws: `HealthKitError.notAvailable` `HealthKitError.invalidType`
      - Returns: true if allowed to write and false if  not
      */
-    public func isAuthorizedToWrite(type: HealthKitType) throws -> Bool {
-        guard let objectType = type.rawValue else {
+    public func isAuthorizedToWrite<T>(type: T) throws -> Bool where T: ObjectType {
+        guard let objectType = type.original else {
             throw HealthKitError.invalidType("Invalid type: \(type)")
         }
         let status = healthStore.authorizationStatus(for: objectType)
@@ -81,7 +81,7 @@ public class HealthKitWriter {
      - Parameter completion: block notifies about operation status
      */
     public func addQuantitiy(
-        _ samples: [Quantitiy],
+        _ samples: [Quantity],
         from: Device?,
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
@@ -107,7 +107,7 @@ public class HealthKitWriter {
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            if let quantity = sample as? Quantitiy {
+            if let quantity = sample as? Quantity {
                 healthStore.delete(try quantity.asOriginal(), withCompletion: completion)
             }
             if let category = sample as? Category {
@@ -127,12 +127,12 @@ public class HealthKitWriter {
      - Parameter completion: block notifies about deletion operation status
      */
     @available(iOS, introduced: 9.0, deprecated: 12.0, message: "No longer supported")
-    public func deleteObjects(
-        of objectType: HealthKitType,
+    public func deleteObjects<T>(
+        of objectType: T,
         predicate: NSPredicate,
         completion: @escaping DeletionCompletionBlock
-    ) {
-        guard let type = objectType.rawValue else {
+    ) where T: ObjectType {
+        guard let type = objectType.original else {
             completion(
                 false,
                 -1,
@@ -152,7 +152,7 @@ public class HealthKitWriter {
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            if let quantity = sample as? Quantitiy {
+            if let quantity = sample as? Quantity {
                 healthStore.save(try quantity.asOriginal(), withCompletion: completion)
             }
             if let category = sample as? Category {

@@ -26,9 +26,9 @@ public struct ActivitySummary: Identifiable {
     public let harmonized: Harmonized
 
     public init(activitySummary: HKActivitySummary) throws {
-        self.identifier = HealthKitType
-            .activitySummary
-            .rawValue?
+        self.identifier = ActivitySummaryType
+            .activitySummaryType
+            .original?
             .identifier ?? "HKActivitySummaryType"
         self.date = activitySummary
             .dateComponents(for: Calendar.current)

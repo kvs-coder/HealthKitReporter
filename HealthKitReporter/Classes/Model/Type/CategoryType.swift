@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum CategoryType: Int, OriginalType {
+public enum CategoryType: Int, ObjectType {
     case sleepAnalysis
     case appleStandHour
     case sexualActivity
@@ -18,7 +18,7 @@ public enum CategoryType: Int, OriginalType {
     case cervicalMucusQuality
     case audioExposureEvent
 
-    var original: HKCategoryType? {
+    public var original: HKCategoryType? {
         switch self {
         case .sleepAnalysis:
             return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)

@@ -33,14 +33,14 @@ public class HealthKitManager {
      - Parameter toWrite: an array of **HealthKitType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
-    public func requestAuthorization(
-        toRead: [HealthKitType],
-        toWrite: [HealthKitType],
+    public func requestAuthorization<T>(
+        toRead: [T],
+        toWrite: [T],
         completion: @escaping StatusCompletionBlock
-    ) {
+    ) where T: ObjectType {
         var setOfReadTypes = Set<HKObjectType>()
         for type in toRead {
-            guard let objectType = type.rawValue else {
+            guard let objectType = type.original else {
                 completion(
                     false,
                     HealthKitError.invalidType(
@@ -53,7 +53,7 @@ public class HealthKitManager {
         }
         var setOfWriteTypes = Set<HKSampleType>()
         for type in toWrite {
-            guard let objectType = type.rawValue as? HKSampleType else {
+            guard let objectType = type.original as? HKSampleType else {
                 completion(
                     false, HealthKitError.invalidType(
                         "Type \(type) has not HKObjectType representation"
@@ -75,12 +75,12 @@ public class HealthKitManager {
      - Parameter completion: returns a block with information preferred units
      */
     public func preferredUnits(
-        for quantityTypes: [HealthKitType],
+        for quantityTypes: [QuantityType],
         completion: @escaping PreferredUnitsCompeltion
     ) {
         var setOfTypes = Set<HKQuantityType>()
         for type in quantityTypes {
-            guard let objectType = type.rawValue as? HKQuantityType else {
+            guard let objectType = type.original else {
                 completion(
                     [:],
                     HealthKitError.invalidType(

@@ -8,10 +8,10 @@
 import Foundation
 import HealthKit
 
-public enum ActivitySummaryType: Int, OriginalType {
+public enum ActivitySummaryType: Int, ObjectType {
     case activitySummaryType
 
-    var original: HKActivitySummaryType? {
+    public var original: HKActivitySummaryType? {
         switch self {
         case .activitySummaryType:
             return HKObjectType.activitySummaryType()

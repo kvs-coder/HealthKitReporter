@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKQuantitySample: Harmonizable {
-    typealias Harmonized = Quantitiy.Harmonized
+    typealias Harmonized = Quantity.Harmonized
 
     func harmonize() throws -> Harmonized {
         switch self.quantityType {
