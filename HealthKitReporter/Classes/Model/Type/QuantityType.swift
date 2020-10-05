@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum QuantityType: Int, Original {
+public enum QuantityType: Int, OriginalType {
     public typealias Object = HKQuantityType
 
     case heartRateVariabilitySDNN
@@ -66,127 +66,123 @@ public enum QuantityType: Int, Original {
     case environmentalAudioExposure
     case headphoneAudioExposure
 
-    public func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
         case .heartRateVariabilitySDNN:
-            return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)!
+            return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
         case .bodyMassIndex:
-            return HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!
+            return HKObjectType.quantityType(forIdentifier: .bodyMassIndex)
         case .bodyFatPercentage:
-            return HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)!
+            return HKObjectType.quantityType(forIdentifier: .bodyFatPercentage)
         case .heartRate:
-            return HKObjectType.quantityType(forIdentifier: .heartRate)!
+            return HKObjectType.quantityType(forIdentifier: .heartRate)
         case .respiratoryRate:
-            return HKObjectType.quantityType(forIdentifier: .respiratoryRate)!
+            return HKObjectType.quantityType(forIdentifier: .respiratoryRate)
         case .oxygenSaturation:
-            return HKObjectType.quantityType(forIdentifier: .oxygenSaturation)!
+            return HKObjectType.quantityType(forIdentifier: .oxygenSaturation)
         case .bodyTemperature:
-            return HKObjectType.quantityType(forIdentifier: .bodyTemperature)!
+            return HKObjectType.quantityType(forIdentifier: .bodyTemperature)
         case .basalBodyTemperature:
-            return HKObjectType.quantityType(forIdentifier: .basalBodyTemperature)!
+            return HKObjectType.quantityType(forIdentifier: .basalBodyTemperature)
         case .bloodPressureSystolic:
-            return HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)!
+            return HKObjectType.quantityType(forIdentifier: .bloodPressureSystolic)
         case .bloodPressureDiastolic:
-            return HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)!
+            return HKObjectType.quantityType(forIdentifier: .bloodPressureDiastolic)
         case .bloodGlucose:
-            return HKObjectType.quantityType(forIdentifier: .bloodGlucose)!
+            return HKObjectType.quantityType(forIdentifier: .bloodGlucose)
         case .height:
-            return HKObjectType.quantityType(forIdentifier: .height)!
+            return HKObjectType.quantityType(forIdentifier: .height)
         case .bodyMass:
-            return HKObjectType.quantityType(forIdentifier: .bodyMass)!
+            return HKObjectType.quantityType(forIdentifier: .bodyMass)
         case .restingHeartRate:
-            return HKObjectType.quantityType(forIdentifier: .restingHeartRate)!
+            return HKObjectType.quantityType(forIdentifier: .restingHeartRate)
         case .vo2Max:
-            return HKObjectType.quantityType(forIdentifier: .vo2Max)!
+            return HKObjectType.quantityType(forIdentifier: .vo2Max)
         case .waistCircumference:
-            return HKObjectType.quantityType(forIdentifier: .waistCircumference)!
+            return HKObjectType.quantityType(forIdentifier: .waistCircumference)
         case .stepCount:
-            return HKObjectType.quantityType(forIdentifier: .stepCount)!
+            return HKObjectType.quantityType(forIdentifier: .stepCount)
         case .distanceSwimming:
-            return HKObjectType.quantityType(forIdentifier: .distanceSwimming)!
+            return HKObjectType.quantityType(forIdentifier: .distanceSwimming)
         case .distanceWalkingRunning:
-            return HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!
+            return HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
         case .distanceCycling:
-            return HKObjectType.quantityType(forIdentifier: .distanceCycling)!
+            return HKObjectType.quantityType(forIdentifier: .distanceCycling)
         case .basalEnergyBurned:
-            return HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)!
+            return HKObjectType.quantityType(forIdentifier: .basalEnergyBurned)
         case .activeEnergyBurned:
-            return HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!
+            return HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)
         case .flightsClimbed:
-            return HKObjectType.quantityType(forIdentifier: .flightsClimbed)!
+            return HKObjectType.quantityType(forIdentifier: .flightsClimbed)
         case .appleExerciseTime:
-            return HKObjectType.quantityType(forIdentifier: .appleExerciseTime)!
+            return HKObjectType.quantityType(forIdentifier: .appleExerciseTime)
         case .dietaryEnergyConsumed:
-            return HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)
         case .dietaryCarbohydrates:
-            return HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryCarbohydrates)
         case .dietaryFiber:
-            return HKObjectType.quantityType(forIdentifier: .dietaryFiber)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryFiber)
         case .dietarySugar:
-            return HKObjectType.quantityType(forIdentifier: .dietarySugar)!
+            return HKObjectType.quantityType(forIdentifier: .dietarySugar)
         case .dietaryFatTotal:
-            return HKObjectType.quantityType(forIdentifier: .dietaryFatTotal)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryFatTotal)
         case .dietaryFatSaturated:
-            return HKObjectType.quantityType(forIdentifier: .dietaryFatSaturated)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryFatSaturated)
         case .dietaryProtein:
-            return HKObjectType.quantityType(forIdentifier: .dietaryProtein)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryProtein)
         case .dietaryVitaminA:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminA)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminA)
         case .dietaryThiamin:
-            return HKObjectType.quantityType(forIdentifier: .dietaryThiamin)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryThiamin)
         case .dietaryRiboflavin:
-            return HKObjectType.quantityType(forIdentifier: .dietaryRiboflavin)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryRiboflavin)
         case .dietaryNiacin:
-            return HKObjectType.quantityType(forIdentifier: .dietaryNiacin)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryNiacin)
         case .dietaryPantothenicAcid:
-            return HKObjectType.quantityType(forIdentifier: .dietaryPantothenicAcid)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryPantothenicAcid)
         case .dietaryVitaminB6:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminB6)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminB6)
         case .dietaryVitaminB12:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminB12)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminB12)
         case .dietaryVitaminC:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminC)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminC)
         case .dietaryVitaminD:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminD)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminD)
         case .dietaryVitaminE:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminE)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminE)
         case .dietaryVitaminK:
-            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminK)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryVitaminK)
         case .dietaryFolate:
-            return HKObjectType.quantityType(forIdentifier: .dietaryFolate)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryFolate)
         case .dietaryCalcium:
-            return HKObjectType.quantityType(forIdentifier: .dietaryCalcium)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryCalcium)
         case .dietaryIron:
-            return HKObjectType.quantityType(forIdentifier: .dietaryIron)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryIron)
         case .dietaryMagnesium:
-            return HKObjectType.quantityType(forIdentifier: .dietaryMagnesium)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryMagnesium)
         case .dietaryPhosphorus:
-            return HKObjectType.quantityType(forIdentifier: .dietaryPhosphorus)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryPhosphorus)
         case .dietaryPotassium:
-            return HKObjectType.quantityType(forIdentifier: .dietaryPotassium)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryPotassium)
         case .dietarySodium:
-            return HKObjectType.quantityType(forIdentifier: .dietarySodium)!
+            return HKObjectType.quantityType(forIdentifier: .dietarySodium)
         case .dietaryZinc:
-            return HKObjectType.quantityType(forIdentifier: .dietaryZinc)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryZinc)
         case .dietaryIodine:
-            return HKObjectType.quantityType(forIdentifier: .dietaryIodine)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryIodine)
         case .dietaryManganese:
-            return HKObjectType.quantityType(forIdentifier: .dietaryManganese)!
+            return HKObjectType.quantityType(forIdentifier: .dietaryManganese)
         case .environmentalAudioExposure:
             if #available(iOS 13.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)!
+                return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)
             } else {
-                throw HealthKitError.notAvailable(
-                    "Not available in iOS lower than iOS 13.0"
-                )
+                return nil
             }
         case .headphoneAudioExposure:
             if #available(iOS 13.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)!
+                return HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)
             } else {
-                throw HealthKitError.notAvailable(
-                    "Not available in iOS lower than iOS 13.0"
-                )
+                return nil
             }
         }
     }

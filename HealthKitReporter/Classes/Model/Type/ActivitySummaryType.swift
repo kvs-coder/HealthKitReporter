@@ -8,14 +8,14 @@
 import Foundation
 import HealthKit
 
-public enum ActivitySummaryType: Int, Original {
+public enum ActivitySummaryType: Int, OriginalType {
     public typealias Object = HKActivitySummaryType
 
-    case activitySummary
+    case activitySummaryType
 
-    func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
-        case .activitySummary:
+        case .activitySummaryType:
             return HKObjectType.activitySummaryType()
         }
     }

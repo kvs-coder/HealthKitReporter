@@ -8,24 +8,22 @@
 import Foundation
 import HealthKit
 
-public enum SeriesType: Int, Original {
+public enum SeriesType: Int, OriginalType {
     public typealias Object = HKSeriesType
 
     case heartbeatSeries
     case route
 
-    func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
         case .heartbeatSeries:
             if #available(iOS 13.0, *) {
-                return HKObjectType.seriesType(forIdentifier: HKDataTypeIdentifierHeartbeatSeries)!
+                return HKObjectType.seriesType(forIdentifier: HKDataTypeIdentifierHeartbeatSeries)
             } else {
-                throw HealthKitError.notAvailable(
-                    "Not available in iOS lower than iOS 13.0"
-                )
+                return nil
             }
         case .route:
-            return HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)!
+            return HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)
         }
     }
 }

@@ -8,15 +8,15 @@
 import Foundation
 import HealthKit
 
-public enum DocumentType: Int, Original {
+public enum DocumentType: Int, OriginalType {
     public typealias Object = HKDocumentType
 
     case cda
 
-    func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
         case .cda:
-            return HKObjectType.documentType(forIdentifier: .CDA)!
+            return HKObjectType.documentType(forIdentifier: .CDA)
         }
     }
 }

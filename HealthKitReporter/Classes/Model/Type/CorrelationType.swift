@@ -8,18 +8,18 @@
 import Foundation
 import HealthKit
 
-public enum CorrelationType: Int, Original {
+public enum CorrelationType: Int, OriginalType {
     public typealias Object = HKCorrelationType
     
     case bloodPressure
     case food
 
-    func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
         case .food:
-            return HKObjectType.correlationType(forIdentifier: .food)!
+            return HKObjectType.correlationType(forIdentifier: .food)
         case .bloodPressure:
-            return HKObjectType.correlationType(forIdentifier: .bloodPressure)!
+            return HKObjectType.correlationType(forIdentifier: .bloodPressure)
         }
     }
 }

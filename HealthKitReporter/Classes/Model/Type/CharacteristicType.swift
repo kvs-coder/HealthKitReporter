@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum CharacteristicType: Int, Original {
+public enum CharacteristicType: Int, OriginalType {
     public typealias Object = HKCharacteristicType
 
     case fitzpatrickSkinType
@@ -16,16 +16,16 @@ public enum CharacteristicType: Int, Original {
     case bloodType
     case biologicalSex
 
-    func asOriginal() throws -> Object {
+    var original: Object? {
         switch self {
         case .fitzpatrickSkinType:
-            return  HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)!
+            return  HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)
         case .dateOfBirth:
-            return HKObjectType.characteristicType(forIdentifier: .dateOfBirth)!
+            return HKObjectType.characteristicType(forIdentifier: .dateOfBirth)
         case .bloodType:
-            return HKObjectType.characteristicType(forIdentifier: .bloodType)!
+            return HKObjectType.characteristicType(forIdentifier: .bloodType)
         case .biologicalSex:
-            return HKObjectType.characteristicType(forIdentifier: .biologicalSex)!
+            return HKObjectType.characteristicType(forIdentifier: .biologicalSex)
         }
     }
 }
