@@ -64,6 +64,7 @@
 		17F3EB39251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EB38251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift */; };
 		17F3EB3E251E7CB60035C405 /* WorkoutConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EB3D251E7CB60035C405 /* WorkoutConfiguration.swift */; };
 		17F3EB43251E7F0F0035C405 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EB42251E7F0F0035C405 /* HealthKitManager.swift */; };
+		17FA9404252BB1F500498846 /* QuantitySampleRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FA9403252BB1F500498846 /* QuantitySampleRetriever.swift */; };
 		1BB37D34E5F48888A5C051AD9AE21C9D /* Pods-HealthKitReporter_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54E896CEBBB0F7AB51775AD8DB2A3240 /* Pods-HealthKitReporter_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4A2928A4F62607E28C214719CE56A176 /* Pods-HealthKitReporter_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D095DA112AF90AB75DFD4484A214215 /* Pods-HealthKitReporter_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB4C8B104BDB5BB5ABE67400176B082 /* Pods-HealthKitReporter_Example-dummy.m */; };
@@ -151,6 +152,7 @@
 		17F3EB38251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkoutConfiguration.swift"; sourceTree = "<group>"; };
 		17F3EB3D251E7CB60035C405 /* WorkoutConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutConfiguration.swift; sourceTree = "<group>"; };
 		17F3EB42251E7F0F0035C405 /* HealthKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
+		17FA9403252BB1F500498846 /* QuantitySampleRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantitySampleRetriever.swift; sourceTree = "<group>"; };
 		19106C382C9023657C61D1BE14E407E2 /* Pods-HealthKitReporter_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-HealthKitReporter_Tests.modulemap"; sourceTree = "<group>"; };
 		27617830750DC147AFDBE7EA9D445C3A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2810499E4BCD5F7A87DDBD10D478C248 /* Pods-HealthKitReporter_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-HealthKitReporter_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 		177BDDB1251D312D005F96AC /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				17FA9402252BB1D500498846 /* Retriever */,
 				17633C52251D09A200A361C6 /* HealthKitWriter.swift */,
 				171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */,
 				17300E3D25125C9F00C643E4 /* HealthKitReader.swift */,
@@ -311,6 +314,14 @@
 				17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */,
 			);
 			path = Type;
+			sourceTree = "<group>";
+		};
+		17FA9402252BB1D500498846 /* Retriever */ = {
+			isa = PBXGroup;
+			children = (
+				17FA9403252BB1F500498846 /* QuantitySampleRetriever.swift */,
+			);
+			path = Retriever;
 			sourceTree = "<group>";
 		};
 		1B4D5707885DF5F6A16D9EB25EC9D18E /* Pods-HealthKitReporter_Example */ = {
@@ -597,6 +608,7 @@
 			files = (
 				17F3EADA251E4B410035C405 /* Extensions+String.swift in Sources */,
 				17F3EB16251E6F280035C405 /* HeartbeatSerie.swift in Sources */,
+				17FA9404252BB1F500498846 /* QuantitySampleRetriever.swift in Sources */,
 				17F3EAC5251E36200035C405 /* Extensions+HKCorrelation.swift in Sources */,
 				17F3EB29251E6FE80035C405 /* Original.swift in Sources */,
 				17B1DC1F252BA5C10013AA9A /* ObjectType.swift in Sources */,

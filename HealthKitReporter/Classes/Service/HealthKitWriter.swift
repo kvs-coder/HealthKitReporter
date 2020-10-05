@@ -31,7 +31,7 @@ public class HealthKitWriter {
     }
     /**
      Checks authorization for writing Objects in HK.
-     - Parameter type: **HealthKitType** type to check
+     - Parameter type: **ObjectType** type to check
      - Throws: `HealthKitError.notAvailable` `HealthKitError.invalidType`
      - Returns: true if allowed to write and false if  not
      */
@@ -122,7 +122,7 @@ public class HealthKitWriter {
     }
     /**
      Deletes objects of type with predicate
-     - Parameter objectType: **HealthKitType** type
+     - Parameter objectType: **ObjectType** type
      - Parameter predicate: **NSPredicate** predicate for deletion
      - Parameter completion: block notifies about deletion operation status
      */

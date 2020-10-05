@@ -20,7 +20,7 @@ public class HealthKitManager {
         - dictionary: dictionary of correponding type identifier (key) and unit (value)
         - error: error (optional)
     */
-    public typealias PreferredUnitsCompeltion = (_ dictionary: [String: String], _ error: Error?) -> Void
+    public typealias PreferredUnitsCompeltion = (_ dictionary: [QuantityType: String], _ error: Error?) -> Void
 
     private let healthStore: HKHealthStore
 
@@ -29,8 +29,8 @@ public class HealthKitManager {
     }
     /**
      Requests authorization for writing Objects in HK.
-     - Parameter toRead: an array of **HealthKitType** types to read
-     - Parameter toWrite: an array of **HealthKitType** types to write
+     - Parameter toRead: an array of **ObjectType** types to read
+     - Parameter toWrite: an array of **ObjectType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
     public func requestAuthorization<T>(
@@ -71,7 +71,7 @@ public class HealthKitManager {
     }
     /**
      Queries preferred units.
-     - Parameter quantityTypes: an array of **HealthKitType** types
+     - Parameter quantityTypes: an array of **QuantityType** types
      - Parameter completion: returns a block with information preferred units
      */
     public func preferredUnits(
@@ -91,9 +91,16 @@ public class HealthKitManager {
             }
             setOfTypes.insert(objectType)
         }
-        healthStore.preferredUnits(for: setOfTypes) { (dictionary, error) in
-            let mapped = dictionary.map { ($0.key.identifier, $0.value.unitString) }
-            let dictionary = Dictionary(uniqueKeysWithValues: mapped)
+        healthStore.preferredUnits(for: setOfTypes) { (result, error) in
+            var dictionary = [QuantityType: String]()
+            for (key, value) in result {
+                do {
+                    let parsed = try key.parsed()
+                    dictionary[parsed] = value.unitString
+                } catch {
+                    continue
+                }
+            }
             completion(dictionary, error)
         }
     }

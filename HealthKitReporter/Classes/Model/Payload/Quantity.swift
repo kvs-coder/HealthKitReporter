@@ -32,13 +32,17 @@ public struct Quantity: Identifiable, Sample, Original {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
-    public init(quantitySample: HKQuantitySample) throws {
+    public init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
-        self.harmonized = try quantitySample.harmonize()
+        self.harmonized = Harmonized(
+            value: quantitySample.quantity.doubleValue(for: unit),
+            unit: unit.unitString,
+            metadata: quantitySample.metadata?.compactMapValues { String(describing: $0 )}
+        )
     }
 
     public init(
