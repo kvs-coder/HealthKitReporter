@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Workout: Identifiable, Sample, Writable {
+public struct Workout: Identifiable, Sample, Original {
     public struct Harmonized: Codable {
         public let value: Int
         public let totalEnergyBurned: Double?

@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Category: Identifiable, Sample, Writable {
+public struct Category: Identifiable, Sample, Original {
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String

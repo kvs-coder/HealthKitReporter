@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutEvent: Sample, Writable {
+public struct WorkoutEvent: Sample, Original {
     public struct Harmonized: Codable {
         public let value: Int
         public let metadata: [String: String]?

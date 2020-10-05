@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Writable {
+protocol Original {
     associatedtype Object: NSObject
 
     func asOriginal() throws -> Object

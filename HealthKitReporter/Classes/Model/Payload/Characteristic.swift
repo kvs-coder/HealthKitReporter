@@ -1,5 +1,5 @@
 //
-//  Characteristics.swift
+//  Characteristic.swift
 //  HealthKitReporter
 //
 //  Created by Victor on 25.09.20.
@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Characteristics: Codable {
+public struct Characteristic: Codable {
     public let biologicalSex: String
     public let birthday: String?
     public let bloodType: String

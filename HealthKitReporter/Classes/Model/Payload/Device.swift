@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Device: Codable, Writable {
+public struct Device: Codable, Original {
     public let name: String?
     public let manufacturer: String?
     public let model: String?

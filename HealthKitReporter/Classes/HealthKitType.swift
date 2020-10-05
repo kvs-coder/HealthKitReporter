@@ -13,6 +13,7 @@ public enum HealthKitType: RawRepresentable, CaseIterable {
     public typealias RawValue = HKObjectType?
 
     case unknown
+    case fitzpatrickSkinType
     case dateOfBirth
     case bloodType
     case biologicalSex
@@ -91,6 +92,8 @@ public enum HealthKitType: RawRepresentable, CaseIterable {
         switch self {
         case .unknown:
             return nil
+        case .fitzpatrickSkinType:
+            return  HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)
         case .dateOfBirth:
             return HKObjectType.characteristicType(forIdentifier: .dateOfBirth)
         case .bloodType:

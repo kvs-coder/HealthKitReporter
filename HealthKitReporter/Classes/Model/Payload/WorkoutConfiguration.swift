@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutConfiguration: Writable {
+public struct WorkoutConfiguration: Original {
     public struct Harmonized: Codable {
         public let activityValue: Int
         public let locationValue: Int
