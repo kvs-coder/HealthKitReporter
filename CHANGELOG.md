@@ -10,3 +10,7 @@
 
 * Distinguish queries between different kind of types
 * Making usage of preferred units as main strategy to write or read data
+
+## [1.1.1] - 21.10.2020.
+
+* Documentation
