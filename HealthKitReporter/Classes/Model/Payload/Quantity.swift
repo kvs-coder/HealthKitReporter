@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Quantitiy: Identifiable, Sample, Writable {
+public struct Quantity: Identifiable, Sample, Original {
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
@@ -31,6 +31,40 @@ public struct Quantitiy: Identifiable, Sample, Writable {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
+
+    public static func collect(
+        results: [HKSample],
+        unit: HKUnit
+    ) -> [Quantity] {
+        var samples = [Quantity]()
+        if let quantitySamples = results as? [HKQuantitySample] {
+            for quantitySample in quantitySamples {
+                do {
+                    let sample = try Quantity(
+                        quantitySample: quantitySample,
+                        unit: unit
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
+    public init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
+        self.identifier = quantitySample.quantityType.identifier
+        self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
+        self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
+        self.device = Device(device: quantitySample.device)
+        self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
+        self.harmonized = Harmonized(
+            value: quantitySample.quantity.doubleValue(for: unit),
+            unit: unit.unitString,
+            metadata: quantitySample.metadata?.compactMapValues { String(describing: $0 )}
+        )
+    }
 
     public init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier

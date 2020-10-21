@@ -12,50 +12,60 @@ import HealthKitReporter
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        read()
+        //read()
+        //write()
     }
 
     private func write() {
         do {
             let reporter = try HealthKitReporter()
+            let types = [QuantityType.stepCount]
             reporter.manager.requestAuthorization(
-                toRead: [.stepCount],
-                toWrite: [.stepCount]
+                toRead: types,
+                toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    guard let identifier = HealthKitType.stepCount.rawValue?.identifier else {
-                        return
-                    }
-                    let now = Date()
-                    let quantity = Quantitiy(
-                        identifier: identifier,
-                        startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
-                        endTimestamp: now.timeIntervalSince1970,
-                        device: Device(
-                            name: "Guy's iPhone",
-                            manufacturer: "Guy",
-                            model: "6.1.1",
-                            hardwareVersion: "some_0",
-                            firmwareVersion: "some_1",
-                            softwareVersion: "some_2",
-                            localIdentifier: "some_3",
-                            udiDeviceIdentifier: "some_4"
-                        ), sourceRevision: SourceRevision(
-                            source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
-                            version: "1.0.0",
-                            productType: "CocoaPod",
-                            systemVersion: "1.0.0.0"),
-                        harmonized: Quantitiy.Harmonized(
-                            value: 123.0,
-                            unit: "count",
-                            metadata: nil
-                        )
-                    )
-                    reporter.writer.save(sample: quantity) { (success, error) in
-                        if success && error == nil {
-                            print("success")
-                        } else {
-                            print(error)
+                    reporter.manager.preferredUnits(for: types) { (dict, error) in
+                        for (type, unit) in dict {
+                            //Do write steps
+                            guard
+                                let identifier = type.identifier,
+                                identifier == QuantityType.stepCount.identifier
+                            else {
+                                return
+                            }
+                            let now = Date()
+                            let quantity = Quantity(
+                                identifier: identifier,
+                                startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
+                                endTimestamp: now.timeIntervalSince1970,
+                                device: Device(
+                                    name: "Guy's iPhone",
+                                    manufacturer: "Guy",
+                                    model: "6.1.1",
+                                    hardwareVersion: "some_0",
+                                    firmwareVersion: "some_1",
+                                    softwareVersion: "some_2",
+                                    localIdentifier: "some_3",
+                                    udiDeviceIdentifier: "some_4"
+                                ), sourceRevision: SourceRevision(
+                                    source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
+                                    version: "1.0.0",
+                                    productType: "CocoaPod",
+                                    systemVersion: "1.0.0.0"),
+                                harmonized: Quantity.Harmonized(
+                                    value: 123.0,
+                                    unit: unit,
+                                    metadata: nil
+                                )
+                            )
+                            reporter.writer.save(sample: quantity) { (success, error) in
+                                if success && error == nil {
+                                    print("success")
+                                } else {
+                                    print(error)
+                                }
+                            }
                         }
                     }
                 } else {
@@ -70,18 +80,30 @@ class ViewController: UIViewController {
     private func read() {
         do {
             let reporter = try HealthKitReporter()
+            let types = [QuantityType.stepCount]
             reporter.manager.requestAuthorization(
-                toRead: [.stepCount],
-                toWrite: [.stepCount]
+                toRead: types,
+                toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.reader.sampleQuery(type: .stepCount) { (results, error) in
+                    reporter.manager.preferredUnits(for: types) { (dict, error) in
                         if error == nil {
-                            for element in results {
-                                do {
-                                    print(try element.encoded())
-                                } catch {
-                                    print(error)
+                            for (type, unit) in dict {
+                                reporter.reader.quantityQuery(
+                                    type: type,
+                                    unit: unit
+                                ) { (results, error) in
+                                    if error == nil {
+                                        for element in results {
+                                            do {
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
+                                        }
+                                    } else {
+                                        print(error)
+                                    }
                                 }
                             }
                         } else {

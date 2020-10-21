@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Workout: Identifiable, Sample, Writable {
+public struct Workout: Identifiable, Sample, Original {
     public struct Harmonized: Codable {
         public let value: Int
         public let totalEnergyBurned: Double?
@@ -55,6 +55,25 @@ public struct Workout: Identifiable, Sample, Writable {
     public let duration: Double
     public let workoutEvents: [WorkoutEvent]
     public let harmonized: Harmonized
+
+    public static func collect(
+        results: [HKSample]
+    ) -> [Workout] {
+        var samples = [Workout]()
+        if let workouts = results as? [HKWorkout] {
+            for workout in workouts {
+                do {
+                    let sample = try Workout(
+                        workout: workout
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
 
     public init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
