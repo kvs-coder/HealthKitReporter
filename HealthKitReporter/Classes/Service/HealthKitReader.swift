@@ -64,6 +64,7 @@ public class HealthKitReader {
 
     private let healthStore: HKHealthStore
     private let quantitySampleRetriever = QuantitySampleRetriever()
+    private let categorySampleRetriever = CategorySampleRetriever()
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore

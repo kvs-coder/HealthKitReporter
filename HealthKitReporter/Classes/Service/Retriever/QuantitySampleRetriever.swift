@@ -19,24 +19,13 @@ class QuantitySampleRetriever {
         _ samples: [Quantity],
         _ error: Error?
     ) -> Void
-    /**
-     - Parameters:
-        - statistics: statistics (optional)
-        - error: error (optional)
-    */
+    typealias SourceCompletionHandler =  (_ sources: [Source], _ error: Error?) -> Void
     typealias StatisticsCompeltionHandler = (
         _ statistics: Statistics?,
         _ error: Error?
     ) -> Void
-    /**
-     Queries samples.
-     - Parameter type: **QuantityType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
-     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter resultsHandler: returns a block with samples
-     */
-    public func sampleQuery(
+
+    func sampleQuery(
         healthStore: HKHealthStore,
         type: QuantityType,
         unit: String,
@@ -80,13 +69,8 @@ class QuantitySampleRetriever {
         }
         healthStore.execute(query)
     }
-    /**
-     Queries statistics.
-     - Parameter type: **ObjectType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter completionHandler: returns a block with statistics
-     */
-    public func statisticsQuery(
+
+    func statisticsQuery(
         healthStore: HKHealthStore,
         type: QuantityType,
         predicate: NSPredicate? = .allSamples,
@@ -122,18 +106,8 @@ class QuantitySampleRetriever {
         }
         healthStore.execute(query)
     }
-    /**
-     Queries statistics collection.
-     - Parameter type: **QuantityType** types
-     - Parameter quantitySamplePredicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter anchorDate: **Date** anchor date
-     - Parameter enumerateFrom: **Date** start enumeration date
-     - Parameter enumerateTo: **Date** end enumeration date
-     - Parameter intervalComponents: **DateComponents** components to set the frequency of a collection appearing
-     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
-     - Parameter enumerationBlock: returns a block with statistics on every iteration
-     */
-    public func statisticsCollectionQuery(
+
+    func statisticsCollectionQuery(
         healthStore: HKHealthStore,
         type: QuantityType,
         quantitySamplePredicate: NSPredicate? = .allSamples,
@@ -190,16 +164,40 @@ class QuantitySampleRetriever {
         }
         healthStore.execute(query)
     }
-    /**
-     Queries objects (with anchors).
-     - Parameter type: **ObjectType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
-     - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
-     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
-     - Parameter completionHandler: returns a block with samples
-     */
-    public func anchoredObjectQuery(
+
+    func sourceQuery(
+        healthStore: HKHealthStore,
+        type: QuantityType,
+        predicate: NSPredicate? = .allSamples,
+        completionHandler: @escaping SourceCompletionHandler
+    ) {
+        guard let sampleType = type.original else {
+            completionHandler(
+                [],
+                HealthKitError.invalidType(
+                    "\(type) can not be represented as HKSampleType"
+                )
+            )
+            return
+        }
+        let query = HKSourceQuery(
+            sampleType: sampleType,
+            samplePredicate: predicate
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let result = data
+            else {
+                completionHandler([], error)
+                return
+            }
+            let sources = result.map { Source(source: $0) }
+            completionHandler(sources, nil)
+        }
+        healthStore.execute(query)
+    }
+
+    func anchoredObjectQuery(
         healthStore: HKHealthStore,
         type: QuantityType,
         unit: String,

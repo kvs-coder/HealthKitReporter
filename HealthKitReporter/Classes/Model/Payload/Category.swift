@@ -32,6 +32,25 @@ public struct Category: Identifiable, Sample, Original {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    public static func collect(
+        results: [HKSample]
+    ) -> [Category]{
+        var samples = [Category]()
+        if let categorySamples = results as? [HKCategorySample] {
+            for categorySample in categorySamples {
+                do {
+                    let sample = try Category(
+                        categorySample: categorySample
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
     public init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier
         self.startTimestamp = categorySample.startDate.timeIntervalSince1970
