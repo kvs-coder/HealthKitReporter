@@ -32,6 +32,27 @@ public struct Quantity: Identifiable, Sample, Original {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    public static func collect(
+        results: [HKSample],
+        unit: HKUnit
+    ) -> [Quantity]{
+        var samples = [Quantity]()
+        if let quantitySamples = results as? [HKQuantitySample] {
+            for quantitySample in quantitySamples {
+                do {
+                    let sample = try Quantity(
+                        quantitySample: quantitySample,
+                        unit: unit
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
     public init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970

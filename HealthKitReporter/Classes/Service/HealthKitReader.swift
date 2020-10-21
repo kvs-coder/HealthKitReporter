@@ -17,16 +17,16 @@ public class HealthKitReader {
     public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
     /**
      - Parameters:
-        - statistics: statistics (optional)
+        - samples: sample array. Empty by default
         - error: error (optional)
     */
-    public typealias StatisticsCompeltionHandler = (_ statistics: Statistics?, _ error: Error?) -> Void
+    public typealias SampleResultsHandler = (_ samples: [Sample], _ error: Error?) -> Void
     /**
      - Parameters:
         - samples: sample array. Empty by default
         - error: error (optional)
     */
-    public typealias SampleResultsHandler = (_ samples: [Sample], _ error: Error?) -> Void
+    public typealias QunatityResultsHandler = (_ samples: [Quantity], _ error: Error?) -> Void
     /**
      - Parameters:
         - serie: heartbeat serie.
@@ -63,6 +63,7 @@ public class HealthKitReader {
     ) -> Void
 
     private let healthStore: HKHealthStore
+    private let quantitySampleRetriever = QuantitySampleRetriever()
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
@@ -83,109 +84,6 @@ public class HealthKitReader {
             bloodType: bloodType,
             skinType: skinType
         )
-    }
-    /**
-     Queries statistics.
-     - Parameter type: **ObjectType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter completionHandler: returns a block with statistics
-     */
-    public func statisticsQuery<T>(
-        type: T,
-        predicate: NSPredicate? = .allSamples,
-        completionHandler: @escaping StatisticsCompeltionHandler
-    ) where T: ObjectType {
-        guard let quantityType = type.original as? HKQuantityType else {
-            completionHandler(
-                nil,
-                HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
-            )
-            return
-        }
-        let query = HKStatisticsQuery(
-            quantityType: quantityType,
-            quantitySamplePredicate: predicate,
-            options: quantityType.statisticsOptions
-        ) { (_, data, error) in
-            guard
-                error == nil,
-                let result = data
-            else {
-                completionHandler(nil, error)
-                return
-            }
-            do {
-                let statistics = try Statistics(statistics: result)
-                completionHandler(statistics, nil)
-            } catch {
-                completionHandler(nil, error)
-            }
-        }
-        healthStore.execute(query)
-    }
-    /**
-     Queries statistics collection.
-     - Parameter type: **QuantityType** types
-     - Parameter quantitySamplePredicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter anchorDate: **Date** anchor date
-     - Parameter enumerateFrom: **Date** start enumeration date
-     - Parameter enumerateTo: **Date** end enumeration date
-     - Parameter intervalComponents: **DateComponents** components to set the frequency of a collection appearing
-     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
-     - Parameter enumerationBlock: returns a block with statistics on every iteration
-     */
-    public func statisticsCollectionQuery(
-        type: QuantityType,
-        quantitySamplePredicate: NSPredicate? = .allSamples,
-        anchorDate: Date,
-        enumerateFrom: Date,
-        enumerateTo: Date,
-        intervalComponents: DateComponents,
-        monitorUpdates: Bool = false,
-        enumerationBlock: @escaping StatisticsCompeltionHandler
-    ) {
-        guard let quantityType = type.original else {
-            enumerationBlock(
-                nil,
-                HealthKitError.invalidType(
-                    "\(type) can not be represented as HKQuantityType"
-                )
-            )
-            return
-        }
-        let resultsHandler: HKStatisticsCollectionHandler = { (data, error) in
-            guard
-                error == nil,
-                let result = data
-            else {
-                enumerationBlock(nil, error)
-                return
-            }
-            result.enumerateStatistics(from: enumerateFrom, to: enumerateTo) { (data, stop) in
-                do {
-                    let statistics = try Statistics(statistics: data)
-                    enumerationBlock(statistics, nil)
-                } catch {
-                    enumerationBlock(nil, error)
-                }
-            }
-        }
-        let query = HKStatisticsCollectionQuery(
-            quantityType: quantityType,
-            quantitySamplePredicate: quantitySamplePredicate,
-            options: quantityType.statisticsOptions,
-            anchorDate: anchorDate,
-            intervalComponents: intervalComponents
-        )
-        query.initialResultsHandler = { (_, result, error) in
-            resultsHandler(result, error)
-        }
-        if monitorUpdates {
-            query.statisticsUpdateHandler = { (_, _, result, error) in
-                resultsHandler(result, error)
-            }
-        }
-        healthStore.execute(query)
     }
     /**
      Queries samples.

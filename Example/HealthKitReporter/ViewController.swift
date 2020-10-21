@@ -77,13 +77,24 @@ class ViewController: UIViewController {
                 toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.reader.sampleQuery(type: QuantityType.stepCount) { (results, error) in
+                    reporter.manager.preferredUnits(for: types) { (dict, error) in
                         if error == nil {
-                            for element in results {
-                                do {
-                                    print(try element.encoded())
-                                } catch {
-                                    print(error)
+                            for (key, value) in dict {
+                                reporter.reader.quantitySampleQuery(
+                                    type: key,
+                                    unit: value
+                                ) { (results, error) in
+                                    if error == nil {
+                                        for element in results {
+                                            do {
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
+                                        }
+                                    } else {
+                                        print(error)
+                                    }
                                 }
                             }
                         } else {

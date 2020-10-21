@@ -10,9 +10,9 @@ import HealthKit
 
 extension HKSample {
     func parsed() throws -> Sample {
-        if let quantitiy = self as? HKQuantitySample {
-            return try Quantity(quantitySample: quantitiy)
-        }
+//        if let quantitiy = self as? HKQuantitySample {
+//            return try Quantity(quantitySample: quantitiy)
+//        }
         if let category = self as? HKCategorySample {
             return try Category(categorySample: category)
         }
