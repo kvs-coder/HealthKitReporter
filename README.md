@@ -96,7 +96,7 @@ Here is a sample response for steps:
     "productType" : "iPhone8,1",
     "systemVersion" : "14.0.0",
     "source" : {
-      "name" : "John’s iPhone",
+      "name" : "Guy’s iPhone",
       "bundleIdentifier" : "com.apple.health.47609E07-490D-4E5F-8E68-9D8904E9BA08"
     },
     "version" : "14.0"
