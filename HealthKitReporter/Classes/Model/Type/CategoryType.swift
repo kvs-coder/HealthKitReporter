@@ -18,6 +18,10 @@ public enum CategoryType: Int, ObjectType {
     case cervicalMucusQuality
     case audioExposureEvent
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKCategoryType? {
         switch self {
         case .sleepAnalysis:

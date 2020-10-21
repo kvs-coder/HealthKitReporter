@@ -9,44 +9,16 @@ import Foundation
 import HealthKit
 
 class QuantitySampleRetriever {
-    typealias AnchoredObjectQueryHandler = (
-        HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
-    ) -> Void
-    typealias StatisticsCollectionHandler = (
-        HKStatisticsCollection?, Error?
-    ) -> Void
-    typealias QuantityResultsHandler = (
-        _ samples: [Quantity],
-        _ error: Error?
-    ) -> Void
-    typealias SourceCompletionHandler =  (_ sources: [Source], _ error: Error?) -> Void
-    typealias StatisticsCompeltionHandler = (
-        _ statistics: Statistics?,
-        _ error: Error?
-    ) -> Void
-
-    func sampleQuery(
-        healthStore: HKHealthStore,
+    func makeSampleQuery(
         type: QuantityType,
         unit: String,
-        predicate: NSPredicate? = .allSamples,
-        sortDescriptors: [NSSortDescriptor] = [
-            NSSortDescriptor(
-                key: HKSampleSortIdentifierStartDate,
-                ascending: false
-            )
-        ],
-        limit: Int = HKObjectQueryNoLimit,
+        predicate: NSPredicate?,
+        sortDescriptors: [NSSortDescriptor],
+        limit: Int,
         resultsHandler: @escaping QuantityResultsHandler
-    ) {
+    ) throws -> HKSampleQuery {
         guard let quantityType = type.original else {
-            resultsHandler(
-                [],
-                HealthKitError.invalidType(
-                    "Invalid HKQuantityType: \(type)"
-                )
-            )
-            return
+            throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
         }
         let query = HKSampleQuery(
             sampleType: quantityType,
@@ -67,23 +39,19 @@ class QuantitySampleRetriever {
             )
             resultsHandler(samples, nil)
         }
-        healthStore.execute(query)
+        return query
     }
 
-    func statisticsQuery(
-        healthStore: HKHealthStore,
+    func makeStatisticsQuery(
         type: QuantityType,
-        predicate: NSPredicate? = .allSamples,
+        unit: String,
+        predicate: NSPredicate?,
         completionHandler: @escaping StatisticsCompeltionHandler
-    ) {
+    ) throws -> HKStatisticsQuery {
         guard let quantityType = type.original else {
-            completionHandler(
-                nil,
-                HealthKitError.invalidType(
-                    "\(type) can not be represented as HKQuantityType"
-                )
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKQuantityType"
             )
-            return
         }
         let query = HKStatisticsQuery(
             quantityType: quantityType,
@@ -98,34 +66,33 @@ class QuantitySampleRetriever {
                 return
             }
             do {
-                let statistics = try Statistics(statistics: result)
+                let statistics = try Statistics(
+                    statistics: result,
+                    unit: HKUnit.init(from: unit)
+                )
                 completionHandler(statistics, nil)
             } catch {
                 completionHandler(nil, error)
             }
         }
-        healthStore.execute(query)
+        return query
     }
 
-    func statisticsCollectionQuery(
-        healthStore: HKHealthStore,
+    func makeStatisticsCollectionQuery(
         type: QuantityType,
-        quantitySamplePredicate: NSPredicate? = .allSamples,
+        unit: String,
+        quantitySamplePredicate: NSPredicate?,
         anchorDate: Date,
         enumerateFrom: Date,
         enumerateTo: Date,
         intervalComponents: DateComponents,
-        monitorUpdates: Bool = false,
+        monitorUpdates: Bool,
         enumerationBlock: @escaping StatisticsCompeltionHandler
-    ) {
+    ) throws -> HKStatisticsCollectionQuery {
         guard let quantityType = type.original else {
-            enumerationBlock(
-                nil,
-                HealthKitError.invalidType(
-                    "\(type) can not be represented as HKQuantityType"
-                )
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKQuantityType"
             )
-            return
         }
         let resultsHandler: StatisticsCollectionHandler = { (data, error) in
             guard
@@ -140,7 +107,10 @@ class QuantitySampleRetriever {
                 to: enumerateTo
             ) { (data, stop) in
                 do {
-                    let statistics = try Statistics(statistics: data)
+                    let statistics = try Statistics(
+                        statistics: data,
+                        unit: HKUnit.init(from: unit)
+                    )
                     enumerationBlock(statistics, nil)
                 } catch {
                     enumerationBlock(nil, error)
@@ -162,23 +132,18 @@ class QuantitySampleRetriever {
                 resultsHandler(result, error)
             }
         }
-        healthStore.execute(query)
+        return query
     }
 
-    func sourceQuery(
-        healthStore: HKHealthStore,
+    func makeSourceQuery(
         type: QuantityType,
-        predicate: NSPredicate? = .allSamples,
+        predicate: NSPredicate?,
         completionHandler: @escaping SourceCompletionHandler
-    ) {
+    ) throws -> HKSourceQuery {
         guard let sampleType = type.original else {
-            completionHandler(
-                [],
-                HealthKitError.invalidType(
-                    "\(type) can not be represented as HKSampleType"
-                )
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKQuantityType"
             )
-            return
         }
         let query = HKSourceQuery(
             sampleType: sampleType,
@@ -194,29 +159,24 @@ class QuantitySampleRetriever {
             let sources = result.map { Source(source: $0) }
             completionHandler(sources, nil)
         }
-        healthStore.execute(query)
+        return query
     }
 
-    func anchoredObjectQuery(
-        healthStore: HKHealthStore,
+    func makeAnchoredObjectQuery(
         type: QuantityType,
         unit: String,
-        predicate: NSPredicate? = .allSamples,
+        predicate: NSPredicate?,
         anchor: HKQueryAnchor? = HKQueryAnchor(
             fromValue: Int(HKAnchoredObjectQueryNoAnchor)
         ),
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
         completionHandler: @escaping QuantityResultsHandler
-    ) {
+    ) throws -> HKAnchoredObjectQuery {
         guard let sampleType = type.original else {
-            completionHandler(
-                [],
-                HealthKitError.invalidType(
-                    "\(type) can not be represented as HKSampleType"
-                )
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKQuantityType"
             )
-            return
         }
         let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in
             guard
@@ -242,6 +202,6 @@ class QuantitySampleRetriever {
         if monitorUpdates {
             query.updateHandler = resultsHandler
         }
-        healthStore.execute(query)
+        return query
     }
 }

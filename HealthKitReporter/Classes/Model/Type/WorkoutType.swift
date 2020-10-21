@@ -11,6 +11,10 @@ import HealthKit
 public enum WorkoutType: Int, ObjectType {
     case workoutType
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKWorkoutType? {
         switch self {
         case .workoutType:

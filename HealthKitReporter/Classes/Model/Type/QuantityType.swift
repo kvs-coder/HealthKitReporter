@@ -64,6 +64,10 @@ public enum QuantityType: Int, ObjectType {
     case environmentalAudioExposure
     case headphoneAudioExposure
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKQuantityType? {
         switch self {
         case .heartRateVariabilitySDNN:

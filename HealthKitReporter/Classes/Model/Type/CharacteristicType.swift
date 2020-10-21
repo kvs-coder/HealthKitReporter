@@ -14,6 +14,10 @@ public enum CharacteristicType: Int, ObjectType {
     case bloodType
     case biologicalSex
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKCharacteristicType? {
         switch self {
         case .fitzpatrickSkinType:

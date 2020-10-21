@@ -66,6 +66,15 @@ public struct Quantity: Identifiable, Sample, Original {
         )
     }
 
+    public init(quantitySample: HKQuantitySample) throws {
+        self.identifier = quantitySample.quantityType.identifier
+        self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
+        self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
+        self.device = Device(device: quantitySample.device)
+        self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
+        self.harmonized = try quantitySample.harmonize()
+    }
+
     public init(
         identifier: String,
         startTimestamp: Double,

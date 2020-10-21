@@ -8,63 +8,110 @@
 import Foundation
 import HealthKit
 
+/**
+ - Parameters:
+ - success: the status
+ - error: error (optional)
+ */
+public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
+/**
+ - Parameters:
+ - samples: sample array. Empty by default
+ - error: error (optional)
+ */
+public typealias SampleResultsHandler = (_ samples: [Sample], _ error: Error?) -> Void
+/**
+ - Parameters:
+ - serie: heartbeat serie.
+ - error: error (optional)
+ */
+public typealias HeartbeatDataHandler = (_ serie: HeartbeatSerie?, _ error: Error?) -> Void
+/**
+ - Parameters:
+ - summaries: summary array. Empty by default
+ - error: error (optional)
+ */
+public typealias ActivitySummaryCompletionHandler = (
+    _ summaries: [ActivitySummary],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - sources: source array. Empty by default
+ - error: error (optional)
+ */
+public typealias SourceCompletionHandler =  (_ sources: [Source], _ error: Error?) -> Void
+/**
+ - Parameters:
+ - correlations: correlation array. Empty by default
+ - error: error (optional)
+ */
+public typealias CorrelationCompletionHandler =  (
+    _ correlations: [Correlation],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - samples: quantity sample array. Empty by default
+ - error: error (optional)
+ */
+public typealias QuantityResultsHandler = (
+    _ samples: [Quantity],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - statistics: statistics. Nil by default
+ - error: error (optional)
+ */
+public typealias StatisticsCompeltionHandler = (
+    _ statistics: Statistics?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - samples: category sample array. Empty by default
+ - error: error (optional)
+ */
+public typealias CategoryResultsHandler = (
+    _ samples: [Category],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - samples: workout sample array. Empty by default
+ - error: error (optional)
+ */
+public typealias WorkoutResultsHandler = (
+    _ samples: [Workout],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - samples: electrocardiogram sample array. Empty by default
+ - error: error (optional)
+ */
+@available(iOS 14.0, *)
+public typealias ElectrocardiogramResultsHandler = (
+    _ samples: [Electrocardiogram],
+    _ error: Error?
+) -> Void
+
+typealias ActivitySummaryUpdateHanlder = (
+    HKActivitySummaryQuery, [HKActivitySummary]?, Error?
+) -> Void
+typealias HKStatisticsCollectionHandler = (
+    HKStatisticsCollection?, Error?
+) -> Void
+typealias AnchoredObjectQueryHandler = (
+    HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
+) -> Void
+typealias StatisticsCollectionHandler = (
+    HKStatisticsCollection?, Error?
+) -> Void
+
 public class HealthKitReader {
-    /**
-     - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - samples: sample array. Empty by default
-        - error: error (optional)
-    */
-    public typealias SampleResultsHandler = (_ samples: [Sample], _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - samples: sample array. Empty by default
-        - error: error (optional)
-    */
-    public typealias QunatityResultsHandler = (_ samples: [Quantity], _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - serie: heartbeat serie.
-        - error: error (optional)
-    */
-    public typealias HeartbeatDataHandler = (_ serie: HeartbeatSerie?, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - summaries: summary array. Empty by default
-        - error: error (optional)
-    */
-    public typealias ActivitySummaryCompletionHandler = (_ summaries: [ActivitySummary], _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - sources: source array. Empty by default
-        - error: error (optional)
-    */
-    public typealias SourceCompletionHandler =  (_ sources: [Source], _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - correlations: correlation array. Empty by default
-        - error: error (optional)
-    */
-    public typealias CorrelationCompletionHandler =  (_ correlations: [Correlation], _ error: Error?) -> Void
-
-    typealias ActivitySummaryUpdateHanlder = (
-        HKActivitySummaryQuery, [HKActivitySummary]?, Error?
-    ) -> Void
-    typealias AnchoredObjectQueryHandler = (
-        HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
-    ) -> Void
-    typealias HKStatisticsCollectionHandler = (
-        HKStatisticsCollection?, Error?
-    ) -> Void
-
     private let healthStore: HKHealthStore
-    private let quantitySampleRetriever = QuantitySampleRetriever()
-    private let categorySampleRetriever = CategorySampleRetriever()
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
@@ -87,7 +134,137 @@ public class HealthKitReader {
         )
     }
     /**
-     Queries samples.
+     Queries quantity types.
+     - Parameter type: **QuantityType** types
+     - Parameter unit: **String** unit
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples
+     */
+    public func quantityQuery(
+        type: QuantityType,
+        unit: String,
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping QuantityResultsHandler
+    ) {
+        do {
+            let query = try QuantitySampleRetriever().makeSampleQuery(
+                type: type,
+                unit: unit,
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                resultsHandler: resultsHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            resultsHandler([], error)
+        }
+    }
+    /**
+     Queries category types.
+     - Parameter type: **CategoryType** types
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples
+     */
+    public func categoryQuery(
+        type: CategoryType,
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping CategoryResultsHandler
+    ) {
+        do {
+            let query = try CategorySampleRetriever().makeSampleQuery(
+                type: type,
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                resultsHandler: resultsHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            resultsHandler([], error)
+        }
+    }
+    /**
+     Queries workouts.
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples
+     */
+    public func workoutQuery(
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping WorkoutResultsHandler
+    ) {
+        do {
+            let query = try WorkoutRetriever().makeSampleQuery(
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                resultsHandler: resultsHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            resultsHandler([], error)
+        }
+    }
+    /**
+     Queries electrocardiogram.
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples
+     */
+    @available(iOS 14.0, *)
+    public func electrocardiogramQuery(
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping ElectrocardiogramResultsHandler
+    ) {
+        do {
+            let query = try ElectrocardiogramRetriever().makeSampleQuery(
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                resultsHandler: resultsHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            resultsHandler([], error)
+        }
+    }
+    /**
+     Queries samples. If samples are quantity types, the SI for units will be used.
      - Parameter type: **ObjectType** types
      - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
@@ -140,6 +317,71 @@ public class HealthKitReader {
             resultsHandler(samples, nil)
         }
         healthStore.execute(query)
+    }
+    /**
+     Queries statistics.
+     - Parameter type: **ObjectType** types
+     - Parameter unit: **String** unit
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter completionHandler: returns a block with statistics
+     */
+    public func statisticsQuery(
+        type: QuantityType,
+        unit: String,
+        predicate: NSPredicate? = .allSamples,
+        completionHandler: @escaping StatisticsCompeltionHandler
+    ) {
+        do {
+            let query = try QuantitySampleRetriever().makeStatisticsQuery(
+                type: type,
+                unit: unit,
+                predicate: predicate,
+                completionHandler: completionHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            completionHandler(nil, error)
+        }
+    }
+    /**
+     Queries statistics collection.
+     - Parameter type: **QuantityType** types
+     - Parameter unit: **String** unit
+     - Parameter quantitySamplePredicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter anchorDate: **Date** anchor date
+     - Parameter enumerateFrom: **Date** start enumeration date
+     - Parameter enumerateTo: **Date** end enumeration date
+     - Parameter intervalComponents: **DateComponents** components to set the frequency of a collection appearing
+     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
+     - Parameter enumerationBlock: returns a block with statistics on every iteration
+     */
+    public func statisticsCollectionQuery(
+        type: QuantityType,
+        unit: String,
+        quantitySamplePredicate: NSPredicate? = .allSamples,
+        anchorDate: Date,
+        enumerateFrom: Date,
+        enumerateTo: Date,
+        intervalComponents: DateComponents,
+        monitorUpdates: Bool = false,
+        enumerationBlock: @escaping StatisticsCompeltionHandler
+    ) {
+        do {
+            let query = try QuantitySampleRetriever().makeStatisticsCollectionQuery(
+                type: type,
+                unit: unit,
+                quantitySamplePredicate: quantitySamplePredicate,
+                anchorDate: anchorDate,
+                enumerateFrom: enumerateFrom,
+                enumerateTo: enumerateTo,
+                intervalComponents: intervalComponents,
+                monitorUpdates: monitorUpdates,
+                enumerationBlock: enumerationBlock
+            )
+            healthStore.execute(query)
+        } catch {
+            enumerationBlock(nil, error)
+        }
     }
     /**
      Queries heartbeat series.

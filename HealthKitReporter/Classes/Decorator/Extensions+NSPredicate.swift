@@ -19,7 +19,7 @@ extension NSPredicate {
     public static func samplesPredicate(
         startDate: Date,
         endDate: Date,
-        options: HKQueryOptions = []
+        options: HKQueryOptions = [.strictStartDate, .strictEndDate]
     ) -> NSPredicate {
         return HKQuery.predicateForSamples(
             withStart: startDate,

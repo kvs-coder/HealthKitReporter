@@ -11,6 +11,10 @@ import HealthKit
 public enum ActivitySummaryType: Int, ObjectType {
     case activitySummaryType
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKActivitySummaryType? {
         switch self {
         case .activitySummaryType:

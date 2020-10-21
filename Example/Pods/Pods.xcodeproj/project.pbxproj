@@ -38,6 +38,7 @@
 		17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7CE09252624ED00417634 /* Extensions+Encodable.swift */; };
 		17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B01B6D25406637001A336F /* CategorySampleRetriever.swift */; };
 		17B01B7325406994001A336F /* WorkoutRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B01B7225406994001A336F /* WorkoutRetriever.swift */; };
+		17B01B8025406DEE001A336F /* ElectrocardiogramRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B01B7F25406DEE001A336F /* ElectrocardiogramRetriever.swift */; };
 		17B1DBFF252BA2BB0013AA9A /* ActivitySummaryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1DBFE252BA2BB0013AA9A /* ActivitySummaryType.swift */; };
 		17B1DC04252BA38D0013AA9A /* WorkoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1DC03252BA38D0013AA9A /* WorkoutType.swift */; };
 		17B1DC09252BA3A30013AA9A /* ElectrocardiogramType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */; };
@@ -128,6 +129,7 @@
 		17A7CE09252624ED00417634 /* Extensions+Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Encodable.swift"; sourceTree = "<group>"; };
 		17B01B6D25406637001A336F /* CategorySampleRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySampleRetriever.swift; sourceTree = "<group>"; };
 		17B01B7225406994001A336F /* WorkoutRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRetriever.swift; sourceTree = "<group>"; };
+		17B01B7F25406DEE001A336F /* ElectrocardiogramRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectrocardiogramRetriever.swift; sourceTree = "<group>"; };
 		17B1DBFE252BA2BB0013AA9A /* ActivitySummaryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySummaryType.swift; sourceTree = "<group>"; };
 		17B1DC03252BA38D0013AA9A /* WorkoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutType.swift; sourceTree = "<group>"; };
 		17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectrocardiogramType.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 				17FA9403252BB1F500498846 /* QuantitySampleRetriever.swift */,
 				17B01B6D25406637001A336F /* CategorySampleRetriever.swift */,
 				17B01B7225406994001A336F /* WorkoutRetriever.swift */,
+				17B01B7F25406DEE001A336F /* ElectrocardiogramRetriever.swift */,
 			);
 			path = Retriever;
 			sourceTree = "<group>";
@@ -632,6 +635,7 @@
 				1791E631252BA16F00ECB614 /* DocumentType.swift in Sources */,
 				17C9D509251E1BEE003BB785 /* Extensions+HKWorkout.swift in Sources */,
 				17300E4825125C9F00C643E4 /* Extensions+HKBiologicalSex.swift in Sources */,
+				17B01B8025406DEE001A336F /* ElectrocardiogramRetriever.swift in Sources */,
 				17F3EB0C251E6EB10035C405 /* Quantity.swift in Sources */,
 				17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */,
 				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,

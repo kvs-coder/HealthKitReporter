@@ -34,6 +34,19 @@ public struct Statistics: Identifiable, Sample {
     public let harmonized: Harmonized
     public let sources: [Source]?
 
+    public init(statistics: HKStatistics, unit: HKUnit) throws {
+        self.identifier = statistics.quantityType.identifier
+        self.startTimestamp = statistics.startDate.timeIntervalSince1970
+        self.endTimestamp = statistics.endDate.timeIntervalSince1970
+        self.sources = statistics.sources?.map { Source(source: $0) }
+        self.harmonized = Harmonized(
+            summary: statistics.sumQuantity()?.doubleValue(for: unit),
+            average: statistics.averageQuantity()?.doubleValue(for: unit),
+            recent: statistics.mostRecentQuantity()?.doubleValue(for: unit),
+            unit: unit.unitString
+        )
+    }
+
     public init(statistics: HKStatistics) throws {
         self.identifier = statistics.quantityType.identifier
         self.startTimestamp = statistics.startDate.timeIntervalSince1970

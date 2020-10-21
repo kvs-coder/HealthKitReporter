@@ -12,6 +12,10 @@ public enum CorrelationType: Int, ObjectType {
     case bloodPressure
     case food
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKCorrelationType? {
         switch self {
         case .food:

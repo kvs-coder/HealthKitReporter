@@ -12,4 +12,6 @@ public protocol ObjectType {
     associatedtype SampleType where SampleType: HKObjectType
 
     var original: SampleType? { get }
+
+    var identifier: String? { get }
 }

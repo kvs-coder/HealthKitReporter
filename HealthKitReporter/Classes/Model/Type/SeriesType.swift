@@ -12,6 +12,10 @@ public enum SeriesType: Int, ObjectType {
     case heartbeatSeries
     case route
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+
     public var original: HKSeriesType? {
         switch self {
         case .heartbeatSeries:

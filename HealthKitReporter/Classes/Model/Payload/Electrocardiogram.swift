@@ -46,6 +46,25 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let numberOfMeasurements: Int
     public let harmonized: Harmonized
 
+    public static func collect(
+        results: [HKSample]
+    ) -> [Electrocardiogram] {
+        var samples = [Electrocardiogram]()
+        if let electrocardiograms = results as? [HKElectrocardiogram] {
+            for electrocardiogram in electrocardiograms {
+                do {
+                    let sample = try Electrocardiogram(
+                        electrocardiogram: electrocardiogram
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
     public init(electrocardiogram: HKElectrocardiogram) throws {
         self.identifier = ElectrocardiogramType
             .electrocardiogramType
