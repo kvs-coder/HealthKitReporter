@@ -34,7 +34,7 @@ public struct Category: Identifiable, Sample, Original {
 
     public static func collect(
         results: [HKSample]
-    ) -> [Category]{
+    ) -> [Category] {
         var samples = [Category]()
         if let categorySamples = results as? [HKCategorySample] {
             for categorySample in categorySamples {

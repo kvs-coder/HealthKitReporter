@@ -35,7 +35,7 @@ public struct Quantity: Identifiable, Sample, Original {
     public static func collect(
         results: [HKSample],
         unit: HKUnit
-    ) -> [Quantity]{
+    ) -> [Quantity] {
         var samples = [Quantity]()
         if let quantitySamples = results as? [HKQuantitySample] {
             for quantitySample in quantitySamples {

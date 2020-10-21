@@ -56,6 +56,25 @@ public struct Workout: Identifiable, Sample, Original {
     public let workoutEvents: [WorkoutEvent]
     public let harmonized: Harmonized
 
+    public static func collect(
+        results: [HKSample]
+    ) -> [Workout] {
+        var samples = [Workout]()
+        if let workouts = results as? [HKWorkout] {
+            for workout in workouts {
+                do {
+                    let sample = try Workout(
+                        workout: workout
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
     public init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
         self.startTimestamp = workout.startDate.timeIntervalSince1970
