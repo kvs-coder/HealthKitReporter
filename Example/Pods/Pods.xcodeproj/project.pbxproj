@@ -14,7 +14,6 @@
 		171FC543251BD8F0003F3910 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC542251BD8F0003F3910 /* HealthKitReporter.swift */; };
 		1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */; };
 		17300E3E25125C9F00C643E4 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3025125C9F00C643E4 /* Sample.swift */; };
-		17300E3F25125C9F00C643E4 /* HealthKitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3125125C9F00C643E4 /* HealthKitType.swift */; };
 		17300E4025125C9F00C643E4 /* Extensions+HKBloodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */; };
 		17300E4125125C9F00C643E4 /* Extensions+HKStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */; };
 		17300E4225125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */; };
@@ -105,7 +104,6 @@
 		171FC542251BD8F0003F3910 /* HealthKitReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
 		1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSourceRevision.swift"; sourceTree = "<group>"; };
 		17300E3025125C9F00C643E4 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
-		17300E3125125C9F00C643E4 /* HealthKitType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitType.swift; sourceTree = "<group>"; };
 		17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKBloodType.swift"; sourceTree = "<group>"; };
 		17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKStatistics.swift"; sourceTree = "<group>"; };
 		17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKFitzpatrickSkinType.swift"; sourceTree = "<group>"; };
@@ -236,7 +234,6 @@
 			isa = PBXGroup;
 			children = (
 				171FC542251BD8F0003F3910 /* HealthKitReporter.swift */,
-				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
 				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
 				177BDDB1251D312D005F96AC /* Service */,
 				1727AA2C251D30CF00560461 /* Model */,
@@ -659,7 +656,6 @@
 				17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */,
 				17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */,
 				17300E4A25125C9F00C643E4 /* HealthKitReader.swift in Sources */,
-				17300E3F25125C9F00C643E4 /* HealthKitType.swift in Sources */,
 				7351128AFE6D2C348D5CC138E73673A2 /* HealthKitReporter-dummy.m in Sources */,
 				17300E4625125C9F00C643E4 /* Extensions+HKQuantitiySample.swift in Sources */,
 				17F3EAF8251E6DD00035C405 /* Source.swift in Sources */,
