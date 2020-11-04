@@ -218,9 +218,10 @@ func application(
 ) -> Bool {
     do {
         let reporter = try HealthKitReporter()
+        let types = [QuantityType.stepCount]
         reporter.manager.requestAuthorization(
-            toRead: [.stepCount],
-            toWrite: [.stepCount]
+            toRead: types,
+            toWrite: types
         ) { (success, error) in
             if success && error == nil {
                 reporter.observer.observerQuery(type: .stepCount) { (identifier, error) in
