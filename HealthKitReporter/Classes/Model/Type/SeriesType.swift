@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum SeriesType: Int, ObjectType {
+public enum SeriesType: Int, CaseIterable, ObjectType {
     case heartbeatSeries
     case route
 

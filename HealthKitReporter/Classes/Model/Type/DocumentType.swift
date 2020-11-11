@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum DocumentType: Int, ObjectType {
+public enum DocumentType: Int, CaseIterable, ObjectType {
     case cda
 
     public var identifier: String? {

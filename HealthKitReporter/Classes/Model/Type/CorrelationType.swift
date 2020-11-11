@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum CorrelationType: Int, ObjectType {
+public enum CorrelationType: Int, CaseIterable, ObjectType {
     case bloodPressure
     case food
 

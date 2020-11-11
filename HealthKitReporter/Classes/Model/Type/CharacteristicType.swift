@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum CharacteristicType: Int, ObjectType {
+public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case fitzpatrickSkinType
     case dateOfBirth
     case bloodType

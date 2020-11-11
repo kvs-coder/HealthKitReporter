@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum QuantityType: Int, ObjectType {
+public enum QuantityType: Int, CaseIterable, ObjectType {
     case heartRateVariabilitySDNN
     case bodyMassIndex
     case bodyFatPercentage

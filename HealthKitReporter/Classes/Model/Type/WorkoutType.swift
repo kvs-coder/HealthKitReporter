@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum WorkoutType: Int, ObjectType {
+public enum WorkoutType: Int, CaseIterable, ObjectType {
     case workoutType
 
     public var identifier: String? {
