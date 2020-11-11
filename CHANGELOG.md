@@ -1,3 +1,7 @@
+## [1.1.2] - 11.11.2020.
+
+* Making error enum public
+
 ## [1.1.1] - 21.10.2020.
 
 * Documentation
