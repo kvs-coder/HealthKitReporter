@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		17CD92D9255C077700F3CD09 /* HealthKitReporterAggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 17CD92DA255C077700F3CD09 /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */;
+			buildPhases = (
+				17CD92E1255C077D00F3CD09 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = HealthKitReporterAggregate;
+			productName = HealthKitReporterAggregate;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		170B384E252B8D6A00A0A299 /* QuantityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170B384D252B8D6A00A0A299 /* QuantityType.swift */; };
@@ -133,6 +147,7 @@
 		17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectrocardiogramType.swift; sourceTree = "<group>"; };
 		17B1DC1E252BA5C10013AA9A /* ObjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectType.swift; sourceTree = "<group>"; };
 		17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkout.swift"; sourceTree = "<group>"; };
+		17CD92EF255C095B00F3CD09 /* build_script.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_script.sh; sourceTree = "<group>"; };
 		17F3EABF251E32E70035C405 /* Harmonizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Harmonizable.swift; sourceTree = "<group>"; };
 		17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCorrelation.swift"; sourceTree = "<group>"; };
 		17F3EACC251E3B650035C405 /* Extensions+HKSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSample.swift"; sourceTree = "<group>"; };
@@ -430,6 +445,7 @@
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
+				17CD92EF255C095B00F3CD09 /* build_script.sh */,
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				FDD3E017DDCCD598F6098E7C7C4827AE /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
@@ -549,8 +565,14 @@
 				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
+					17CD92D9255C077700F3CD09 = {
+						CreatedOnToolsVersion = 12.0.1;
+						DevelopmentTeam = MAVP5V2N7V;
+						ProvisioningStyle = Automatic;
+					};
 					5A02BB0F1AC44F7E176E662038412466 = {
 						LastSwiftMigration = 1200;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -570,6 +592,7 @@
 				5A02BB0F1AC44F7E176E662038412466 /* HealthKitReporter */,
 				28111CA3729B131600777B0AE0E0AF79 /* Pods-HealthKitReporter_Example */,
 				1C83EA59492248E951F52C6A762B305F /* Pods-HealthKitReporter_Tests */,
+				17CD92D9255C077700F3CD09 /* HealthKitReporterAggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -598,6 +621,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		17CD92E1255C077D00F3CD09 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\nsh build_script.sh \"HealthKitReporter\"\n\ncd \"${PROJECT_DIR}/Executables\"\n\nzip -r \"HealthKitReporter.framework.zip\" \"HealthKitReporter.framework\"\n\nopen \"${PROJECT_DIR}/Executables\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		034B32F82D6815889CBED8B6005D661A /* Sources */ = {
@@ -704,12 +747,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 50AA0CA84AA46A85BDCFA91A07CA472E /* HealthKitReporter.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -723,6 +768,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
 				PRODUCT_NAME = HealthKitReporter;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -732,6 +778,24 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		17CD92DB255C077700F3CD09 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		17CD92DC255C077700F3CD09 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -773,12 +837,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 620026A50D6F3042580BA62B0F2A5E24 /* HealthKitReporter.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -792,6 +858,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
 				PRODUCT_NAME = HealthKitReporter;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -1040,6 +1107,15 @@
 			buildConfigurations = (
 				68EA34250F5B99E8AA34D4231BF90CB5 /* Debug */,
 				1489C1908FDEE223F8D3293EED25BFC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		17CD92DA255C077700F3CD09 /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17CD92DB255C077700F3CD09 /* Debug */,
+				17CD92DC255C077700F3CD09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
