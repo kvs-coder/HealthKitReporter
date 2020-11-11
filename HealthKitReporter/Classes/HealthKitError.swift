@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HealthKitError: Error {
+public enum HealthKitError: Error {
     case notAvailable(String = "HealthKit data is not available")
     case unknown(String = "Unknown")
     case invalidType(String = "Invalid type")
