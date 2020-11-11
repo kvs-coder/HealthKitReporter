@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     func asDate(format: String, timezone: TimeZone = TimeZone.current) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format

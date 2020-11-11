@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-extension Date {
+public extension Date {
     static var yyyyMMdd: String {
         return "yyyy-MM-dd"
     }
@@ -26,10 +26,10 @@ extension Date {
         let date = dateFormatter.string(from: self)
         return date
     }
-    public func distance(to other: Date) -> TimeInterval {
+    func distance(to other: Date) -> TimeInterval {
         return other.timeIntervalSinceReferenceDate - self.timeIntervalSinceReferenceDate
     }
-    public func advanced(by n: TimeInterval) -> Date {
+    func advanced(by n: TimeInterval) -> Date {
         return self + n
     }
 }

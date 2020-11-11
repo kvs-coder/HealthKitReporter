@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Double {
+public extension Double {
     var asDate: Date {
         return Date(timeIntervalSince1970: self)
     }
