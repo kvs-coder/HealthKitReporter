@@ -33,10 +33,5 @@ if [ ! -d "$EXECUTABLES_DIR" ]; then
   mkdir -p "${EXECUTABLES_DIR}"
 fi
 
+# Step 6. Copy everything to Executables
 cp -R "${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework" "${EXECUTABLES_DIR}"
-
-# Step 6 Echo directory
-echo "Executables path: ${EXECUTABLES_DIR}"
-
-# Open the project's directory in Finder
-# open "${PROJECT_DIR}/Executables"
