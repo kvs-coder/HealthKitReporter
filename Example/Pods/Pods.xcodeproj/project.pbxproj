@@ -6,20 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		17CD92D9255C077700F3CD09 /* HealthKitReporterAggregate */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 17CD92DA255C077700F3CD09 /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */;
-			buildPhases = (
-				17CD92E1255C077D00F3CD09 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = HealthKitReporterAggregate;
-			productName = HealthKitReporterAggregate;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		170B384E252B8D6A00A0A299 /* QuantityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170B384D252B8D6A00A0A299 /* QuantityType.swift */; };
@@ -565,11 +551,6 @@
 				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
-					17CD92D9255C077700F3CD09 = {
-						CreatedOnToolsVersion = 12.0.1;
-						DevelopmentTeam = MAVP5V2N7V;
-						ProvisioningStyle = Automatic;
-					};
 					5A02BB0F1AC44F7E176E662038412466 = {
 						LastSwiftMigration = 1200;
 						ProvisioningStyle = Automatic;
@@ -592,7 +573,6 @@
 				5A02BB0F1AC44F7E176E662038412466 /* HealthKitReporter */,
 				28111CA3729B131600777B0AE0E0AF79 /* Pods-HealthKitReporter_Example */,
 				1C83EA59492248E951F52C6A762B305F /* Pods-HealthKitReporter_Tests */,
-				17CD92D9255C077700F3CD09 /* HealthKitReporterAggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -621,26 +601,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		17CD92E1255C077D00F3CD09 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\nsh build_script.sh \"HealthKitReporter\"\n\ncd \"${PROJECT_DIR}/Executables\"\n\nzip -r \"HealthKitReporter.framework.zip\" \"HealthKitReporter.framework\"\n\nopen \"${PROJECT_DIR}/Executables\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		034B32F82D6815889CBED8B6005D661A /* Sources */ = {
@@ -778,24 +738,6 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		17CD92DB255C077700F3CD09 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MAVP5V2N7V;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		17CD92DC255C077700F3CD09 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = MAVP5V2N7V;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1107,15 +1049,6 @@
 			buildConfigurations = (
 				68EA34250F5B99E8AA34D4231BF90CB5 /* Debug */,
 				1489C1908FDEE223F8D3293EED25BFC6 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		17CD92DA255C077700F3CD09 /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				17CD92DB255C077700F3CD09 /* Debug */,
-				17CD92DC255C077700F3CD09 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
