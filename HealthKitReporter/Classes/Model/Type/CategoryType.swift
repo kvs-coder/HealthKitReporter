@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public enum CategoryType: Int, CaseIterable, ObjectType {
+public enum CategoryType: Int, ObjectType {
     case sleepAnalysis
     case appleStandHour
     case sexualActivity

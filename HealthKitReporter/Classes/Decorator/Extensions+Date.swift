@@ -9,11 +9,8 @@ import Foundation
 import HealthKit
 
 public extension Date {
-    static var yyyyMMdd: String {
-        return "yyyy-MM-dd"
-    }
-    static var yyyyMMddTHHmmssZZZZZ: String {
-         return "\(yyyyMMdd)'T'HH:mm:ssZZZZZ"
+    static var iso8601: String {
+         return "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
     }
 
     func formatted(

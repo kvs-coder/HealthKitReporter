@@ -8,7 +8,10 @@
 import Foundation
 
 public extension String {
-    func asDate(format: String, timezone: TimeZone = TimeZone.current) -> Date? {
+    func asDate(
+        format: String,
+        timezone: TimeZone = TimeZone.current
+    ) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         dateFormatter.timeZone = timezone

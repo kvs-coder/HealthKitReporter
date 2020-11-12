@@ -21,7 +21,7 @@ public struct Characteristic: Codable {
         skinType: HKFitzpatrickSkinTypeObject
     ) {
         self.biologicalSex = biologicalSex.biologicalSex.string
-        self.birthday = birthday.date?.formatted(with: Date.yyyyMMdd)
+        self.birthday = birthday.date?.formatted(with: Date.iso8601)
         self.bloodType = bloodType.bloodType.string
         self.skinType = skinType.skinType.string
     }

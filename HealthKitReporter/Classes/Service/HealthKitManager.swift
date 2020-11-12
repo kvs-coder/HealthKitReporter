@@ -28,7 +28,7 @@ public class HealthKitManager {
         self.healthStore = healthStore
     }
     /**
-     Requests authorization for writing Objects in HK.
+     Requests authorization for reading/writing Objects in HK.
      - Parameter toRead: an array of **ObjectType** types to read
      - Parameter toWrite: an array of **ObjectType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed

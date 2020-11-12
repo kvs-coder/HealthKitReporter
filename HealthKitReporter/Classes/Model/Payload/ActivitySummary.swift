@@ -33,7 +33,7 @@ public struct ActivitySummary: Identifiable {
         self.date = activitySummary
             .dateComponents(for: Calendar.current)
             .date?
-            .formatted(with: Date.yyyyMMddTHHmmssZZZZZ)
+            .formatted(with: Date.iso8601)
         self.harmonized = try activitySummary.harmonize()
     }
 }
