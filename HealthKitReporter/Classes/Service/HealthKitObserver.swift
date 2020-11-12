@@ -33,11 +33,11 @@ public class HealthKitObserver {
      - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
      - Parameter updateHandler: is called as soon any change happened in AppleHealth App
      */
-    public func observerQuery<T>(
-        type: T,
+    public func observerQuery(
+        type: ObjectType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverUpdateHandler
-    ) where T: ObjectType {
+    ) {
         guard let sampleType = type.original as? HKSampleType else {
             updateHandler(
                 nil,
@@ -71,11 +71,11 @@ public class HealthKitObserver {
      - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
-    public func enableBackgroundDelivery<T>(
-        type: T,
+    public func enableBackgroundDelivery(
+        type: ObjectType,
         frequency: HKUpdateFrequency = .hourly,
         completionHandler: @escaping StatusCompletionBlock
-    ) where T: ObjectType {
+    ) {
         guard let objectType = type.original else {
             completionHandler(
                 false,
@@ -103,10 +103,10 @@ public class HealthKitObserver {
      - Parameter type: **ObjectType** type
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
-    public func disableBackgroundDelivery<T>(
-        type: T,
+    public func disableBackgroundDelivery(
+        type: ObjectType,
         completionHandler: @escaping StatusCompletionBlock
-    ) where T: ObjectType {
+    ) {
         guard let objectType = type.original else {
             completionHandler(
                 false,

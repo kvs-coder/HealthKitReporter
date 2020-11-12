@@ -16,8 +16,8 @@ class CategorySampleRetriever {
         limit: Int,
         resultsHandler: @escaping CategoryResultsHandler
     ) throws -> HKSampleQuery {
-        guard let sampleType = type.original else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        guard let sampleType = type.original as? HKCategoryType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKCategoryType")
         }
         let query = HKSampleQuery(
             sampleType: sampleType,
@@ -43,8 +43,8 @@ class CategorySampleRetriever {
         predicate: NSPredicate?,
         completionHandler: @escaping SourceCompletionHandler
     ) throws -> HKSourceQuery {
-        guard let sampleType = type.original else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        guard let sampleType = type.original as? HKCategoryType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKCategoryType")
         }
         let query = HKSourceQuery(
             sampleType: sampleType,
@@ -71,8 +71,8 @@ class CategorySampleRetriever {
         monitorUpdates: Bool = false,
         completionHandler: @escaping CategoryResultsHandler
     ) throws -> HKAnchoredObjectQuery {
-        guard let sampleType = type.original else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        guard let sampleType = type.original as? HKCategoryType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKCategoryType")
         }
         let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in
             guard

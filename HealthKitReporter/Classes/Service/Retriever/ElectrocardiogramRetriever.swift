@@ -17,9 +17,11 @@ class ElectrocardiogramRetriever {
         resultsHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> HKSampleQuery {
         let electrocardiogramType = ElectrocardiogramType.electrocardiogramType
-        guard let type = electrocardiogramType.original else {
+        guard
+            let type = electrocardiogramType.original as? HKElectrocardiogramType
+        else {
             throw HealthKitError.invalidType(
-                "\(electrocardiogramType) can not be represented as HKSampleType"
+                "\(electrocardiogramType) can not be represented as HKElectrocardiogramType"
             )
         }
         let query = HKSampleQuery(
@@ -51,9 +53,11 @@ class ElectrocardiogramRetriever {
         completionHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> HKAnchoredObjectQuery {
         let electrocardiogramType = ElectrocardiogramType.electrocardiogramType
-        guard let type = electrocardiogramType.original else {
+        guard
+            let type = electrocardiogramType.original as? HKElectrocardiogramType
+        else {
             throw HealthKitError.invalidType(
-                "\(electrocardiogramType) can not be represented as HKSampleType"
+                "\(electrocardiogramType) can not be represented as HKElectrocardiogramType"
             )
         }
         let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in

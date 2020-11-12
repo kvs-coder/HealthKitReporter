@@ -8,14 +8,14 @@
 import Foundation
 import HealthKit
 
-public enum WorkoutType: Int, ObjectType {
+public enum WorkoutType: Int, CaseIterable, ObjectType {
     case workoutType
 
     public var identifier: String? {
         return original?.identifier
     }
 
-    public var original: HKWorkoutType? {
+    public var original: HKObjectType? {
         switch self {
         case .workoutType:
             return HKObjectType.workoutType()

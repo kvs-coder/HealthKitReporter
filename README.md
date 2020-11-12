@@ -205,9 +205,7 @@ reporter.manager.preferredUnits(for: [.stepCount]) { (dictionary, error) in
 
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize deisred types to write, like step count.
-
-If authorization was successfull (the authorization window was shown) call save method with type step count.
+Authorize deisred types to read/write, like step count and sleep analysis.
 
 Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method
 
@@ -218,23 +216,28 @@ func application(
 ) -> Bool {
     do {
         let reporter = try HealthKitReporter()
-        let types = [QuantityType.stepCount]
+        let types: [ObjectType] = [
+            QuantityType.stepCount,
+            CategoryType.sleepAnalysis
+        ]
         reporter.manager.requestAuthorization(
             toRead: types,
             toWrite: types
         ) { (success, error) in
             if success && error == nil {
-                reporter.observer.observerQuery(type: .stepCount) { (identifier, error) in
-                    if error == nil {
-                        print("updates for \(identifier)")
+                for type in types {
+                    reporter.observer.observerQuery(type: type) { (identifier, error) in
+                        if error == nil {
+                            print("updates for \(identifier)")
+                        }
                     }
-                }
-                reporter.observer.enableBackgroundDelivery(
-                    type: .stepCount,
-                    frequency: .daily
-                ) { (success, error) in
-                    if error == nil {
-                        print("enabled")
+                    reporter.observer.enableBackgroundDelivery(
+                        type: type,
+                        frequency: .daily
+                    ) { (success, error) in
+                        if error == nil {
+                            print("enabled")
+                        }
                     }
                 }
             }

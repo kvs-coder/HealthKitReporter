@@ -68,7 +68,7 @@ public enum QuantityType: Int, CaseIterable, ObjectType {
         return original?.identifier
     }
 
-    public var original: HKQuantityType? {
+    public var original: HKObjectType? {
         switch self {
         case .heartRateVariabilitySDNN:
             return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)

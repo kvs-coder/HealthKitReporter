@@ -33,11 +33,11 @@ public class HealthKitManager {
      - Parameter toWrite: an array of **ObjectType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
-    public func requestAuthorization<T>(
-        toRead: [T],
-        toWrite: [T],
+    public func requestAuthorization(
+        toRead: [ObjectType],
+        toWrite: [ObjectType],
         completion: @escaping StatusCompletionBlock
-    ) where T: ObjectType {
+    ) {
         var setOfReadTypes = Set<HKObjectType>()
         for type in toRead {
             guard let objectType = type.original else {
@@ -80,7 +80,7 @@ public class HealthKitManager {
     ) {
         var setOfTypes = Set<HKQuantityType>()
         for type in quantityTypes {
-            guard let objectType = type.original else {
+            guard let objectType = type.original as? HKQuantityType else {
                 completion(
                     [:],
                     HealthKitError.invalidType(

@@ -1,3 +1,9 @@
+## [1.2.0] - 12.11.2020.
+
+* Cross-platform support for Flutter
+* ObjectType as an aggregation type for different types
+* Public extensions
+
 ## [1.1.2] - 11.11.2020.
 
 * Making error enum public
