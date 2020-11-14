@@ -53,7 +53,7 @@ public struct Quantity: Identifiable, Sample, Original {
         return samples
     }
 
-    public init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
+    init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
@@ -66,7 +66,7 @@ public struct Quantity: Identifiable, Sample, Original {
         )
     }
 
-    public init(quantitySample: HKQuantitySample) throws {
+    init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970

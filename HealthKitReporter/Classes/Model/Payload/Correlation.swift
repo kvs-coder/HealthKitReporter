@@ -28,7 +28,7 @@ public struct Correlation: Identifiable {
     public let identifier: String
     public let harmonized: Harmonized
 
-    public init(correlation: HKCorrelation) throws {
+    init(correlation: HKCorrelation) throws {
         self.identifier = correlation.correlationType.identifier
         self.harmonized = try correlation.harmonize()
     }

@@ -52,7 +52,13 @@ class ViewController: UIViewController {
                                     source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
                                     version: "1.0.0",
                                     productType: "CocoaPod",
-                                    systemVersion: "1.0.0.0"),
+                                    systemVersion: "1.0.0.0",
+                                    operatingSystem: SourceRevision.OperatingSystem(
+                                        majorVersion: 1,
+                                        minorVersion: 1,
+                                        patchVersion: 1
+                                    )
+                                ),
                                 harmonized: Quantity.Harmonized(
                                     value: 123.0,
                                     unit: unit,

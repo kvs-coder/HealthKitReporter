@@ -65,7 +65,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         return samples
     }
 
-    public init(electrocardiogram: HKElectrocardiogram) throws {
+    init(electrocardiogram: HKElectrocardiogram) throws {
         self.identifier = ElectrocardiogramType
             .electrocardiogramType
             .original?

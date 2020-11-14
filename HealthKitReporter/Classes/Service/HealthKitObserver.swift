@@ -11,15 +11,15 @@ import HealthKit
 public class HealthKitObserver {
     /**
      - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
+     - success: the status
+     - error: error (optional)
+     */
     public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
     /**
      - Parameters:
-        - identifier: the object type identifier
-        - error: error (optional)
-    */
+     - identifier: the object type identifier
+     - error: error (optional)
+     */
     public typealias ObserverUpdateHandler = (_ identifier: String?, _ error: Error?) -> Void
 
     private let healthStore: HKHealthStore
@@ -73,7 +73,7 @@ public class HealthKitObserver {
      */
     public func enableBackgroundDelivery(
         type: ObjectType,
-        frequency: HKUpdateFrequency = .hourly,
+        frequency: UpdateFrequency = .hourly,
         completionHandler: @escaping StatusCompletionBlock
     ) {
         guard let objectType = type.original else {
@@ -85,7 +85,7 @@ public class HealthKitObserver {
         }
         healthStore.enableBackgroundDelivery(
             for: objectType,
-            frequency: frequency,
+            frequency: frequency.original,
             withCompletion: completionHandler
         )
     }

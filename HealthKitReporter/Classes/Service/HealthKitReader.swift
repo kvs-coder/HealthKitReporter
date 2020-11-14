@@ -590,15 +590,16 @@ public class HealthKitReader {
      Queries correlation.
      - Parameter type: **CorrelationType** type
      - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter typePredicates: **NSPredicate** type predicates (otpional). Nil by default
+     - Parameter typePredicates: type predicates (otpional). Key is the type
+     identifier **String**  and value is **NSPredicate**. Nil by default
      - Parameter completionHandler: returns a block with samples
      */
-    public func correlationQuery<T>(
+    public func correlationQuery(
         type: CorrelationType,
         predicate: NSPredicate? = .allSamples,
-        typePredicates: [T : NSPredicate]? = nil,
+        typePredicates: [String: NSPredicate]? = nil,
         completionHandler: @escaping CorrelationCompletionHandler
-    ) where T: ObjectType {
+    ) {
         guard let correlationType = type.original as? HKCorrelationType else {
             completionHandler(
                 [],
@@ -608,18 +609,10 @@ public class HealthKitReader {
             )
             return
         }
-        var samplePredicates = [HKSampleType: NSPredicate]()
-        if let predicates = typePredicates {
-            for (key, value) in predicates {
-                if let sampleType = key.original as? HKSampleType {
-                    samplePredicates[sampleType] = value
-                }
-            }
-        }
         let query = HKCorrelationQuery(
             type: correlationType,
             predicate: predicate,
-            samplePredicates: samplePredicates
+            samplePredicates: typePredicates?.sampleTypePredicates
         ) { (_, data, error) in
             guard
                 error == nil,

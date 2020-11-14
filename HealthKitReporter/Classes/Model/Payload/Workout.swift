@@ -75,7 +75,7 @@ public struct Workout: Identifiable, Sample, Original {
         return samples
     }
 
-    public init(workout: HKWorkout) throws {
+    init(workout: HKWorkout) throws {
         self.identifier = workout.sampleType.identifier
         self.startTimestamp = workout.startDate.timeIntervalSince1970
         self.endTimestamp = workout.endDate.timeIntervalSince1970
@@ -96,6 +96,28 @@ public struct Workout: Identifiable, Sample, Original {
         }
         self.workoutEvents = workoutEvents
         self.harmonized = try workout.harmonize()
+    }
+
+    public init(
+        identifier: String,
+        startTimestamp: Double,
+        endTimestamp: Double,
+        workoutName: String,
+        device: Device?,
+        sourceRevision: SourceRevision,
+        duration: Double,
+        workoutEvents: [WorkoutEvent],
+        harmonized: Harmonized
+    ) {
+        self.identifier = identifier
+        self.startTimestamp = startTimestamp
+        self.endTimestamp = endTimestamp
+        self.workoutName = workoutName
+        self.device = device
+        self.sourceRevision = sourceRevision
+        self.duration = duration
+        self.workoutEvents = workoutEvents
+        self.harmonized = harmonized
     }
 
     func asOriginal() throws -> HKWorkout {

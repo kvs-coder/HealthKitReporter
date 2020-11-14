@@ -14,7 +14,7 @@ public struct Characteristic: Codable {
     public let bloodType: String
     public let skinType: String
 
-    public init(
+    init(
         biologicalSex: HKBiologicalSexObject,
         birthday: DateComponents,
         bloodType: HKBloodTypeObject,

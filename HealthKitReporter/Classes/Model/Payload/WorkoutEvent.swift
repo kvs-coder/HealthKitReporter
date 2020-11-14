@@ -25,7 +25,7 @@ public struct WorkoutEvent: Sample, Original {
     public let duration: Double
     public let harmonized: Harmonized
 
-    public init(workoutEvent: HKWorkoutEvent) throws {
+    init(workoutEvent: HKWorkoutEvent) throws {
         self.type = String(describing: workoutEvent.type)
         self.startTimestamp = workoutEvent
             .dateInterval
@@ -37,6 +37,20 @@ public struct WorkoutEvent: Sample, Original {
             .timeIntervalSince1970
         self.duration = workoutEvent.dateInterval.duration
         self.harmonized = try workoutEvent.harmonize()
+    }
+
+    public init(
+        type: String,
+        startTimestamp: Double,
+        endTimestamp: Double,
+        duration: Double,
+        harmonized: Harmonized
+    ) {
+        self.type = type
+        self.startTimestamp = startTimestamp
+        self.endTimestamp = endTimestamp
+        self.duration = duration
+        self.harmonized = harmonized
     }
 
     func asOriginal() throws -> HKWorkoutEvent {

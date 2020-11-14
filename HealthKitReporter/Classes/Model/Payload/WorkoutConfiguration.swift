@@ -33,6 +33,34 @@ public struct WorkoutConfiguration: Original {
 
     public let harmonized: Harmonized
 
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> WorkoutConfiguration {
+        guard
+            let activityValue = dictionary["activityValue"] as? Int,
+            let locationValue = dictionary["locationValue"] as? Int,
+            let swimmingValue = dictionary["swimmingValue"] as? Int,
+            let value = dictionary["value"] as? Double,
+            let unit = dictionary["unit"] as? String
+        else {
+            throw HealthKitError.invalidValue(
+                "Invalid dictionary: \(dictionary)"
+            )
+        }
+        let harmonized = Harmonized(
+            activityValue: activityValue,
+            locationValue: locationValue,
+            swimmingValue: swimmingValue,
+            value: value,
+            unit: unit
+        )
+        return WorkoutConfiguration(harmonized: harmonized)
+    }
+
+    public init(harmonized: Harmonized) {
+        self.harmonized = harmonized
+    }
+
     init(workoutConfiguration: HKWorkoutConfiguration) throws {
         self.harmonized = try workoutConfiguration.harmonize()
     }

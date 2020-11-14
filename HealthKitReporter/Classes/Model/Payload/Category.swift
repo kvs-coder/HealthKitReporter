@@ -51,7 +51,7 @@ public struct Category: Identifiable, Sample, Original {
         return samples
     }
 
-    public init(categorySample: HKCategorySample) throws {
+    init(categorySample: HKCategorySample) throws {
         self.identifier = categorySample.categoryType.identifier
         self.startTimestamp = categorySample.startDate.timeIntervalSince1970
         self.endTimestamp = categorySample.endDate.timeIntervalSince1970

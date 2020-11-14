@@ -25,7 +25,7 @@ public struct ActivitySummary: Identifiable {
     public let date: String?
     public let harmonized: Harmonized
 
-    public init(activitySummary: HKActivitySummary) throws {
+    init(activitySummary: HKActivitySummary) throws {
         self.identifier = ActivitySummaryType
             .activitySummaryType
             .original?

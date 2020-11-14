@@ -18,7 +18,7 @@ public struct Device: Codable, Original {
     public let localIdentifier: String?
     public let udiDeviceIdentifier: String?
 
-    public init(device: HKDevice?) {
+    init(device: HKDevice?) {
         self.name = device?.name
         self.manufacturer = device?.manufacturer
         self.model = device?.model

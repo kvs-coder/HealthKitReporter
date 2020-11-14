@@ -33,6 +33,8 @@
 		1791E627252B9F4B00ECB614 /* SeriesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E626252B9F4B00ECB614 /* SeriesType.swift */; };
 		1791E62C252BA03300ECB614 /* CorrelationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E62B252BA03300ECB614 /* CorrelationType.swift */; };
 		1791E631252BA16F00ECB614 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E630252BA16F00ECB614 /* DocumentType.swift */; };
+		179D113D255EF66500AEAF63 /* Extensions+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */; };
+		179D1147255EFB2A00AEAF63 /* UpdateFrequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */; };
 		179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179DA3AA252502A7003A2C22 /* Extensions+Double.swift */; };
 		17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7CE09252624ED00417634 /* Extensions+Encodable.swift */; };
 		17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B01B6D25406637001A336F /* CategorySampleRetriever.swift */; };
@@ -123,6 +125,8 @@
 		1791E626252B9F4B00ECB614 /* SeriesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesType.swift; sourceTree = "<group>"; };
 		1791E62B252BA03300ECB614 /* CorrelationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrelationType.swift; sourceTree = "<group>"; };
 		1791E630252BA16F00ECB614 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
+		179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Dictionary.swift"; sourceTree = "<group>"; };
+		179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFrequency.swift; sourceTree = "<group>"; };
 		179DA3AA252502A7003A2C22 /* Extensions+Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Double.swift"; sourceTree = "<group>"; };
 		17A7CE09252624ED00417634 /* Extensions+Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Encodable.swift"; sourceTree = "<group>"; };
 		17B01B6D25406637001A336F /* CategorySampleRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySampleRetriever.swift; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 				17B1DC1E252BA5C10013AA9A /* ObjectType.swift */,
 				17F3EB2D251E70890035C405 /* Identifiable.swift */,
 				17F3EABF251E32E70035C405 /* Harmonizable.swift */,
+				179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -267,6 +272,7 @@
 				17F3EB38251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift */,
 				179DA3AA252502A7003A2C22 /* Extensions+Double.swift */,
 				17A7CE09252624ED00417634 /* Extensions+Encodable.swift */,
+				179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -642,11 +648,13 @@
 				17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */,
 				17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */,
 				17B1DBFF252BA2BB0013AA9A /* ActivitySummaryType.swift in Sources */,
+				179D113D255EF66500AEAF63 /* Extensions+Dictionary.swift in Sources */,
 				17F3EAE9251E6D790035C405 /* Correlation.swift in Sources */,
 				17F3EAFD251E6DEC0035C405 /* Characteristic.swift in Sources */,
 				17B1DC04252BA38D0013AA9A /* WorkoutType.swift in Sources */,
 				179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */,
 				1791E622252B9DD900ECB614 /* CharacteristicType.swift in Sources */,
+				179D1147255EFB2A00AEAF63 /* UpdateFrequency.swift in Sources */,
 				17300E4425125C9F00C643E4 /* Extensions+HKQuantityType.swift in Sources */,
 				17F3EB3E251E7CB60035C405 /* WorkoutConfiguration.swift in Sources */,
 				17F3EADF251E6D340035C405 /* Workout.swift in Sources */,
