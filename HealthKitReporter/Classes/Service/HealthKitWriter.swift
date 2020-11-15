@@ -102,7 +102,7 @@ public class HealthKitWriter {
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
-    func delete(
+    public func delete(
         sample: Sample,
         completion: @escaping StatusCompletionBlock
     ) {

@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutConfiguration: Original {
+public struct WorkoutConfiguration {
     public struct Harmonized: Codable {
         public let activityValue: Int
         public let locationValue: Int
@@ -64,7 +64,9 @@ public struct WorkoutConfiguration: Original {
     init(workoutConfiguration: HKWorkoutConfiguration) throws {
         self.harmonized = try workoutConfiguration.harmonize()
     }
-
+}
+// MARK: - Original
+extension WorkoutConfiguration: Original {
     func asOriginal() throws -> HKWorkoutConfiguration {
         let configuration = HKWorkoutConfiguration()
         if let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.activityValue)) {

@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutEvent: Sample, Original {
+public struct WorkoutEvent: Sample {
     public struct Harmonized: Codable {
         public let value: Int
         public let metadata: [String: String]?
@@ -52,7 +52,9 @@ public struct WorkoutEvent: Sample, Original {
         self.duration = duration
         self.harmonized = harmonized
     }
-
+}
+// MARK: - Original
+extension WorkoutEvent: Original {
     func asOriginal() throws -> HKWorkoutEvent {
         guard let type = HKWorkoutEventType(rawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
@@ -66,6 +68,43 @@ public struct WorkoutEvent: Sample, Original {
                 end: endTimestamp.asDate
             ),
             metadata: harmonized.metadata
+        )
+    }
+}
+// MARK: - Payload
+extension WorkoutEvent.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws ->  WorkoutEvent.Harmonized {
+        guard let value = dictionary["value"] as? Int else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let metadata = dictionary["value"] as? [String: String]
+        return  WorkoutEvent.Harmonized(value: value, metadata: metadata)
+    }
+}
+// MARK: - Payload
+extension WorkoutEvent: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> WorkoutEvent {
+        guard
+            let type = dictionary["type"] as? String,
+            let startDate = (dictionary["startDate"] as? String)?
+                .asDate(format: Date.iso8601),
+            let endDate = (dictionary["endDate"] as? String)?
+                .asDate(format: Date.iso8601),
+            let duration = dictionary["duration"] as? Double,
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return WorkoutEvent(
+            type: type,
+            startTimestamp: startDate.timeIntervalSince1970,
+            endTimestamp: endDate.timeIntervalSince1970,
+            duration: duration,
+            harmonized: try WorkoutEvent.Harmonized.make(from: harmonized)
         )
     }
 }

@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit electrocardiogram types
+ */
 @available(iOS 14.0, *)
 public enum ElectrocardiogramType: Int, CaseIterable, ObjectType {
     case electrocardiogramType

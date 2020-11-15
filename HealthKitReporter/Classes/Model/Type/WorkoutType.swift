@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit workout types
+ */
 public enum WorkoutType: Int, CaseIterable, ObjectType {
     case workoutType
 

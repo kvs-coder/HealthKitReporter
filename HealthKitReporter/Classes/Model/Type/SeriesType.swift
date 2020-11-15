@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit series types
+ */
 public enum SeriesType: Int, CaseIterable, ObjectType {
     case heartbeatSeries
     case route

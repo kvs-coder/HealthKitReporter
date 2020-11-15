@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit qunatitiy types
+ */
 public enum QuantityType: Int, CaseIterable, ObjectType {
     case heartRateVariabilitySDNN
     case bodyMassIndex

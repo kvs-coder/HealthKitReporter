@@ -28,6 +28,8 @@
 		17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C52251D09A200A361C6 /* HealthKitWriter.swift */; };
 		17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */; };
 		17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C69251D1B4000A361C6 /* HealthKitError.swift */; };
+		1780AC002561649B008F2328 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780ABFF2561649B008F2328 /* Payload.swift */; };
+		1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */; };
 		1791E61A252B9CC800ECB614 /* CategoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E619252B9CC800ECB614 /* CategoryType.swift */; };
 		1791E622252B9DD900ECB614 /* CharacteristicType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E621252B9DD900ECB614 /* CharacteristicType.swift */; };
 		1791E627252B9F4B00ECB614 /* SeriesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E626252B9F4B00ECB614 /* SeriesType.swift */; };
@@ -120,6 +122,8 @@
 		17633C52251D09A200A361C6 /* HealthKitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitWriter.swift; sourceTree = "<group>"; };
 		17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKElectrocardiogram.swift"; sourceTree = "<group>"; };
 		17633C69251D1B4000A361C6 /* HealthKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitError.swift; sourceTree = "<group>"; };
+		1780ABFF2561649B008F2328 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
+		1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+DateComponents.swift"; sourceTree = "<group>"; };
 		1791E619252B9CC800ECB614 /* CategoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryType.swift; sourceTree = "<group>"; };
 		1791E621252B9DD900ECB614 /* CharacteristicType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacteristicType.swift; sourceTree = "<group>"; };
 		1791E626252B9F4B00ECB614 /* SeriesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesType.swift; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 				17F3EB2D251E70890035C405 /* Identifiable.swift */,
 				17F3EABF251E32E70035C405 /* Harmonizable.swift */,
 				179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */,
+				1780ABFF2561649B008F2328 /* Payload.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -273,6 +278,7 @@
 				179DA3AA252502A7003A2C22 /* Extensions+Double.swift */,
 				17A7CE09252624ED00417634 /* Extensions+Encodable.swift */,
 				179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */,
+				1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -635,6 +641,7 @@
 				17F3EB07251E6E8B0035C405 /* Category.swift in Sources */,
 				17B1DC09252BA3A30013AA9A /* ElectrocardiogramType.swift in Sources */,
 				17F3EB39251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift in Sources */,
+				1780AC002561649B008F2328 /* Payload.swift in Sources */,
 				171FC53E251BD7A2003F3910 /* HealthKitObserver.swift in Sources */,
 				17F3EAE4251E6D5A0035C405 /* WorkoutEvent.swift in Sources */,
 				1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */,
@@ -644,6 +651,7 @@
 				17B01B8025406DEE001A336F /* ElectrocardiogramRetriever.swift in Sources */,
 				17F3EB0C251E6EB10035C405 /* Quantity.swift in Sources */,
 				17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */,
+				1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */,
 				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,
 				17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */,
 				17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */,
@@ -731,7 +739,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
@@ -768,7 +776,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Tests/Pods-HealthKitReporter_Tests.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -803,7 +811,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
@@ -839,7 +847,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -999,7 +1007,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Tests/Pods-HealthKitReporter_Tests.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -1034,7 +1042,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";

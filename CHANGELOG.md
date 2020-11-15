@@ -1,3 +1,7 @@
+## [1.2.1] - 15.11.2020.
+
+* More public extensions for Flutter support
+
 ## [1.2.0] - 12.11.2020.
 
 * Cross-platform support for Flutter

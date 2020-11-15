@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit document types
+ */
 public enum DocumentType: Int, CaseIterable, ObjectType {
     case cda
 

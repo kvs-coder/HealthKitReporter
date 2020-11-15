@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Workout: Identifiable, Sample, Original {
+public struct Workout: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let value: Int
         public let totalEnergyBurned: Double?
@@ -119,7 +119,9 @@ public struct Workout: Identifiable, Sample, Original {
         self.workoutEvents = workoutEvents
         self.harmonized = harmonized
     }
-
+}
+// MARK: - Original
+extension Workout: Original {
     func asOriginal() throws -> HKWorkout {
         guard let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.value)) else {
             throw HealthKitError.invalidType(
@@ -154,3 +156,76 @@ public struct Workout: Identifiable, Sample, Original {
         )
     }
 }
+// MARK: - Payload
+extension Workout: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> Workout {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startDate = (dictionary["startDate"] as? String)?
+                .asDate(format: Date.iso8601),
+            let endDate = (dictionary["endDate"] as? String)?
+                .asDate(format: Date.iso8601),
+            let workoutName = dictionary["workoutName"] as? String,
+            let duration = dictionary["duration"] as? Double,
+            let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let device = dictionary["device"] as? [String: Any]
+        let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
+        return Workout(
+            identifier: identifier,
+            startTimestamp: startDate.timeIntervalSince1970,
+            endTimestamp: endDate.timeIntervalSince1970,
+            workoutName: workoutName,
+            device: device != nil
+                ? try Device.make(from: device!)
+                : nil,
+            sourceRevision: try SourceRevision.make(from: sourceRevision),
+            duration: duration,
+            workoutEvents: workoutEvents != nil
+                ? try workoutEvents!.map {
+                    try WorkoutEvent.make(from: $0)
+                }
+                : [],
+            harmonized: try Harmonized.make(from: harmonized)
+        )
+    }
+}
+// MARK: - Payload
+extension Workout.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> Workout.Harmonized {
+        guard
+            let value = (dictionary["value"] as? String)?.integer,
+            let totalEnergyBurnedUnit = dictionary["totalEnergyBurnedUnit"] as? String,
+            let totalDistanceUnit = dictionary["totalDistanceUnit"] as? String,
+            let totalSwimmingStrokeCountUnit = dictionary["totalSwimmingStrokeCountUnit"] as? String,
+            let totalFlightsClimbedUnit = dictionary["totalFlightsClimbedUnit"] as? String,
+            let metadata = dictionary["metadata"] as? [String: String]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let totalEnergyBurned = (dictionary["totalEnergyBurned"] as? String)?.double
+        let totalDistance = (dictionary["totalDistance"] as? String)?.double
+        let totalSwimmingStrokeCount = (dictionary["totalSwimmingStrokeCount"] as? String)?.double
+        let totalFlightsClimbed = (dictionary["totalFlightsClimbed"] as? String)?.double
+        return Workout.Harmonized(
+            value: value,
+            totalEnergyBurned: totalEnergyBurned,
+            totalEnergyBurnedUnit: totalEnergyBurnedUnit,
+            totalDistance: totalDistance,
+            totalDistanceUnit: totalDistanceUnit,
+            totalSwimmingStrokeCount: totalSwimmingStrokeCount,
+            totalSwimmingStrokeCountUnit: totalSwimmingStrokeCountUnit,
+            totalFlightsClimbed: totalFlightsClimbed,
+            totalFlightsClimbedUnit: totalFlightsClimbedUnit,
+            metadata: metadata
+        )
+    }
+}
+

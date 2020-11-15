@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit category types
+ */
 public enum CategoryType: Int, CaseIterable, ObjectType {
     case sleepAnalysis
     case appleStandHour

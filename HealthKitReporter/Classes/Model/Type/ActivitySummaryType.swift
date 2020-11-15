@@ -8,6 +8,9 @@
 import Foundation
 import HealthKit
 
+/**
+ All HealthKit activity summary types
+ */
 public enum ActivitySummaryType: Int, CaseIterable, ObjectType {
     case activitySummaryType
 
