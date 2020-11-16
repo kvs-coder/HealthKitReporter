@@ -10,27 +10,21 @@ import HealthKit
 
 public struct WorkoutConfiguration {
     public struct Harmonized: Codable {
-        public let activityValue: Int
-        public let locationValue: Int
-        public let swimmingValue: Int
         public let value: Double
         public let unit: String
 
         public init(
-            activityValue: Int,
-            locationValue: Int,
-            swimmingValue: Int,
             value: Double,
             unit: String
         ) {
-            self.activityValue = activityValue
-            self.locationValue = locationValue
-            self.swimmingValue = swimmingValue
             self.value = value
             self.unit = unit
         }
     }
 
+    public let activityValue: Int
+    public let locationValue: Int
+    public let swimmingValue: Int
     public let harmonized: Harmonized
 
     public static func make(
@@ -48,20 +42,33 @@ public struct WorkoutConfiguration {
             )
         }
         let harmonized = Harmonized(
-            activityValue: activityValue,
-            locationValue: locationValue,
-            swimmingValue: swimmingValue,
             value: value,
             unit: unit
         )
-        return WorkoutConfiguration(harmonized: harmonized)
+        return WorkoutConfiguration(
+            activityValue: activityValue,
+            locationValue: locationValue,
+            swimmingValue: swimmingValue,
+            harmonized: harmonized
+        )
     }
 
-    public init(harmonized: Harmonized) {
+    public init(
+        activityValue: Int,
+        locationValue: Int,
+        swimmingValue: Int,
+        harmonized: Harmonized
+    ) {
+        self.activityValue = activityValue
+        self.locationValue = locationValue
+        self.swimmingValue = swimmingValue
         self.harmonized = harmonized
     }
 
     init(workoutConfiguration: HKWorkoutConfiguration) throws {
+        self.activityValue = Int(workoutConfiguration.activityType.rawValue)
+        self.locationValue = workoutConfiguration.locationType.rawValue
+        self.swimmingValue = workoutConfiguration.swimmingLocationType.rawValue
         self.harmonized = try workoutConfiguration.harmonize()
     }
 }
@@ -69,13 +76,13 @@ public struct WorkoutConfiguration {
 extension WorkoutConfiguration: Original {
     func asOriginal() throws -> HKWorkoutConfiguration {
         let configuration = HKWorkoutConfiguration()
-        if let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.activityValue)) {
+        if let activityType = HKWorkoutActivityType(rawValue: UInt(activityValue)) {
             configuration.activityType = activityType
         }
-        if let locationType = HKWorkoutSessionLocationType(rawValue: harmonized.locationValue) {
+        if let locationType = HKWorkoutSessionLocationType(rawValue: locationValue) {
             configuration.locationType = locationType
         }
-        if let swimmingLocationType = HKWorkoutSwimmingLocationType(rawValue: harmonized.swimmingValue) {
+        if let swimmingLocationType = HKWorkoutSwimmingLocationType(rawValue: swimmingValue) {
             configuration.swimmingLocationType = swimmingLocationType
         }
         configuration.lapLength = HKQuantity(
