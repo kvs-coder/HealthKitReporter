@@ -17,10 +17,10 @@ public class HealthKitManager {
     public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
     /**
      - Parameters:
-        - dictionary: dictionary of correponding type identifier (key) and unit (value)
+        - preferredUnits: an array of **PreferredUnit**
         - error: error (optional)
     */
-    public typealias PreferredUnitsCompeltion = (_ dictionary: [QuantityType: String], _ error: Error?) -> Void
+    public typealias PreferredUnitsCompeltion = (_ preferredUnits: [PreferredUnit], _ error: Error?) -> Void
 
     private let healthStore: HKHealthStore
 
@@ -82,7 +82,7 @@ public class HealthKitManager {
         for type in quantityTypes {
             guard let objectType = type.original as? HKQuantityType else {
                 completion(
-                    [:],
+                    [],
                     HealthKitError.invalidType(
                         "Type \(type) has not HKQuantityType representation"
                     )
@@ -92,16 +92,12 @@ public class HealthKitManager {
             setOfTypes.insert(objectType)
         }
         healthStore.preferredUnits(for: setOfTypes) { (result, error) in
-            var dictionary = [QuantityType: String]()
-            for (key, value) in result {
-                do {
-                    let parsed = try key.parsed()
-                    dictionary[parsed] = value.unitString
-                } catch {
-                    continue
-                }
+            guard error == nil else {
+                completion([], error)
+                return
             }
-            completion(dictionary, error)
+            let preferredUnits = PreferredUnit.collect(from: result)
+            completion(preferredUnits, nil)
         }
     }
     /**

@@ -28,6 +28,7 @@
 		17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C52251D09A200A361C6 /* HealthKitWriter.swift */; };
 		17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */; };
 		17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C69251D1B4000A361C6 /* HealthKitError.swift */; };
+		176D69F12562F9DA00075CF4 /* PreferredUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176D69F02562F9DA00075CF4 /* PreferredUnit.swift */; };
 		1780AC002561649B008F2328 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780ABFF2561649B008F2328 /* Payload.swift */; };
 		1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */; };
 		1791E61A252B9CC800ECB614 /* CategoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E619252B9CC800ECB614 /* CategoryType.swift */; };
@@ -122,6 +123,7 @@
 		17633C52251D09A200A361C6 /* HealthKitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitWriter.swift; sourceTree = "<group>"; };
 		17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKElectrocardiogram.swift"; sourceTree = "<group>"; };
 		17633C69251D1B4000A361C6 /* HealthKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitError.swift; sourceTree = "<group>"; };
+		176D69F02562F9DA00075CF4 /* PreferredUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferredUnit.swift; sourceTree = "<group>"; };
 		1780ABFF2561649B008F2328 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+DateComponents.swift"; sourceTree = "<group>"; };
 		1791E619252B9CC800ECB614 /* CategoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryType.swift; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 				17F3EABF251E32E70035C405 /* Harmonizable.swift */,
 				179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */,
 				1780ABFF2561649B008F2328 /* Payload.swift */,
+				176D69F02562F9DA00075CF4 /* PreferredUnit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -672,6 +675,7 @@
 				17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */,
 				1791E62C252BA03300ECB614 /* CorrelationType.swift in Sources */,
 				17F3EAEE251E6D960035C405 /* SourceRevision.swift in Sources */,
+				176D69F12562F9DA00075CF4 /* PreferredUnit.swift in Sources */,
 				17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */,
 				17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */,
 				17300E4A25125C9F00C643E4 /* HealthKitReader.swift in Sources */,
