@@ -1,4 +1,4 @@
-## [1.2.1] - 15.11.2020.
+## [1.2.1] - 18.11.2020.
 
 * Correlation fix
 * Fix with SampleType
