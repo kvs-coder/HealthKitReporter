@@ -11,7 +11,7 @@ import HealthKit
 /**
  All HealthKit category types
  */
-public enum CategoryType: Int, CaseIterable, ObjectType {
+public enum CategoryType: Int, CaseIterable, SampleType {
     case sleepAnalysis
     case appleStandHour
     case sexualActivity

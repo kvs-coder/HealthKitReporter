@@ -11,7 +11,7 @@ import HealthKit
 /**
  All HealthKit correlation types
  */
-public enum CorrelationType: Int, CaseIterable, ObjectType {
+public enum CorrelationType: Int, CaseIterable, SampleType {
     case bloodPressure
     case food
 

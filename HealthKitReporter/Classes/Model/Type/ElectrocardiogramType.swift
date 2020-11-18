@@ -15,10 +15,6 @@ import HealthKit
 public enum ElectrocardiogramType: Int, CaseIterable, ObjectType {
     case electrocardiogramType
 
-    public var identifier: String? {
-        return original?.identifier
-    }
-
     public var original: HKObjectType? {
         switch self {
         case .electrocardiogramType:

@@ -14,10 +14,6 @@ import HealthKit
 public enum ActivitySummaryType: Int, CaseIterable, ObjectType {
     case activitySummaryType
 
-    public var identifier: String? {
-        return original?.identifier
-    }
-
     public var original: HKObjectType? {
         switch self {
         case .activitySummaryType:

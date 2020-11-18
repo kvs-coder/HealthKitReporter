@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         do {
             let reporter = try HealthKitReporter()
-            let types: [ObjectType] = [
+            let types: [SampleType] = [
                 QuantityType.stepCount,
                 CategoryType.sleepAnalysis
             ]

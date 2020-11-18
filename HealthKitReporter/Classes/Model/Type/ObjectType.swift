@@ -13,10 +13,6 @@ public protocol ObjectType {
      Represents type as an original **HKObjectType**
      */
     var original: HKObjectType? { get }
-    /**
-     Extracts an original identifier
-     */
-    var identifier: String? { get }
 }
 
 public extension ObjectType {
@@ -27,7 +23,7 @@ public extension ObjectType {
     static func make(
         from identifier: String
     ) throws -> Self where Self: CaseIterable {
-        let first = Self.allCases.first { identifier == $0.identifier }
+        let first = Self.allCases.first { identifier == $0.original?.identifier }
         guard let result = first else {
             throw HealthKitError.invalidIdentifier("Invalid identifier: \(identifier)")
         }

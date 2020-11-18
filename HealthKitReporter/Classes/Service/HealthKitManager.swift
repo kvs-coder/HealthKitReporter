@@ -35,7 +35,7 @@ public class HealthKitManager {
      */
     public func requestAuthorization(
         toRead: [ObjectType],
-        toWrite: [ObjectType],
+        toWrite: [SampleType],
         completion: @escaping StatusCompletionBlock
     ) {
         var setOfReadTypes = Set<HKObjectType>()

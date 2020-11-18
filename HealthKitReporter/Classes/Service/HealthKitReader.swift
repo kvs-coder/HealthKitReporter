@@ -121,11 +121,11 @@ public class HealthKitReader {
      - Throws: `HealthKitError.notAvailable``
      - Returns: **Characteristics** characteristics
      */
-    public func characteristicsQuery() throws -> Characteristic {
-        let biologicalSex = try healthStore.biologicalSex()
-        let birthday = try healthStore.dateOfBirthComponents()
-        let bloodType = try healthStore.bloodType()
-        let skinType = try healthStore.fitzpatrickSkinType()
+    public func characteristicsQuery() -> Characteristic {
+        let biologicalSex = try? healthStore.biologicalSex()
+        let birthday = try? healthStore.dateOfBirthComponents()
+        let bloodType = try? healthStore.bloodType()
+        let skinType = try? healthStore.fitzpatrickSkinType()
         return Characteristic(
             biologicalSex: biologicalSex,
             birthday: birthday,

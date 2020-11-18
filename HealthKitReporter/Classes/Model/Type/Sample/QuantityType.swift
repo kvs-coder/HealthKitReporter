@@ -11,7 +11,7 @@ import HealthKit
 /**
  All HealthKit qunatitiy types
  */
-public enum QuantityType: Int, CaseIterable, ObjectType {
+public enum QuantityType: Int, CaseIterable, SampleType {
     case heartRateVariabilitySDNN
     case bodyMassIndex
     case bodyFatPercentage

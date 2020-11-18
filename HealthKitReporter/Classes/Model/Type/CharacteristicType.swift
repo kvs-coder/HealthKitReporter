@@ -17,10 +17,6 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case bloodType
     case biologicalSex
 
-    public var identifier: String? {
-        return original?.identifier
-    }
-
     public var original: HKObjectType? {
         switch self {
         case .fitzpatrickSkinType:

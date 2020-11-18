@@ -15,10 +15,6 @@ public enum SeriesType: Int, CaseIterable, ObjectType {
     case heartbeatSeries
     case route
 
-    public var identifier: String? {
-        return original?.identifier
-    }
-
     public var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:

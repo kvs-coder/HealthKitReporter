@@ -11,7 +11,7 @@ import HealthKit
 /**
  All HealthKit workout types
  */
-public enum WorkoutType: Int, CaseIterable, ObjectType {
+public enum WorkoutType: Int, CaseIterable, SampleType {
     case workoutType
 
     public var identifier: String? {
