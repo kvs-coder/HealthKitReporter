@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		1732D4512565DE3600454F4E /* HealthKitReporterAggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1732D4522565DE3600454F4E /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */;
+			buildPhases = (
+				1732D4582565DE3A00454F4E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = HealthKitReporterAggregate;
+			productName = HealthKitReporterAggregate;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		179DA3B125250601003A2C22 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 179DA3B025250601003A2C22 /* HealthKit.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -222,6 +236,11 @@
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
+					1732D4512565DE3600454F4E = {
+						CreatedOnToolsVersion = 12.2;
+						DevelopmentTeam = MAVP5V2N7V;
+						ProvisioningStyle = Automatic;
+					};
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = MAVP5V2N7V;
@@ -250,6 +269,7 @@
 			targets = (
 				607FACCF1AFB9204008FA782 /* HealthKitReporter_Example */,
 				607FACE41AFB9204008FA782 /* HealthKitReporter_Tests */,
+				1732D4512565DE3600454F4E /* HealthKitReporterAggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -275,6 +295,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1732D4582565DE3A00454F4E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ..\npod lib lint\ngit tag \"${MARKETING_VERSION}\"\ngit push --tags\npod trunk push HealthKitReporter.podspec\n";
+		};
 		182ECA17E28929626E5E65ED /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -387,6 +424,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1732D4532565DE3600454F4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1732D4542565DE3600454F4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -577,6 +632,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1732D4522565DE3600454F4E /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1732D4532565DE3600454F4E /* Debug */,
+				1732D4542565DE3600454F4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "HealthKitReporter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

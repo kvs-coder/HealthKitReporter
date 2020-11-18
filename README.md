@@ -53,24 +53,28 @@ override func viewDidLoad() {
             toWrite: types
         ) { (success, error) in
             if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (dict, error) in
+                reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
                     if error == nil {
-                        for (type, unit) in dict {
-                            reporter.reader.quantityQuery(
-                                type: type,
-                                unit: unit
-                            ) { (results, error) in
-                                if error == nil {
-                                    for element in results {
-                                        do {
-                                            print(try element.encoded())
-                                        } catch {
-                                            print(error)
+                        for preferredUnit in preferredUnits {
+                            do {
+                                reporter.reader.quantityQuery(
+                                    type: try QuantityType.make(from: preferredUnit.identifier),
+                                    unit: preferredUnit.unit
+                                ) { (results, error) in
+                                    if error == nil {
+                                        for element in results {
+                                            do {
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
                                         }
+                                    } else {
+                                        print(error)
                                     }
-                                } else {
-                                    print(error)
                                 }
+                            } catch {
+                                print(error)
                             }
                         }
                     } else {
@@ -141,8 +145,8 @@ override func viewDidLoad() {
                 reporter.manager.preferredUnits(for: types) { (dict, error) in
                     for (type, unit) in dict {
                         //Do write steps
+                        let identifier = preferredUnit.identifier
                         guard
-                            let identifier = type.identifier,
                             identifier == QuantityType.stepCount.identifier
                         else {
                             return
