@@ -326,10 +326,7 @@
 				17B1DC1E252BA5C10013AA9A /* ObjectType.swift */,
 				17E864B425658AC600859F68 /* Sample */,
 				1791E621252B9DD900ECB614 /* CharacteristicType.swift */,
-				1791E626252B9F4B00ECB614 /* SeriesType.swift */,
-				1791E630252BA16F00ECB614 /* DocumentType.swift */,
 				17B1DBFE252BA2BB0013AA9A /* ActivitySummaryType.swift */,
-				17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */,
 			);
 			path = Type;
 			sourceTree = "<group>";
@@ -342,6 +339,9 @@
 				1791E619252B9CC800ECB614 /* CategoryType.swift */,
 				17B1DC03252BA38D0013AA9A /* WorkoutType.swift */,
 				1791E62B252BA03300ECB614 /* CorrelationType.swift */,
+				1791E626252B9F4B00ECB614 /* SeriesType.swift */,
+				1791E630252BA16F00ECB614 /* DocumentType.swift */,
+				17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -925,7 +925,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -989,7 +989,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.2.2;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

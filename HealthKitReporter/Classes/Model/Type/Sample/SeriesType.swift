@@ -11,10 +11,14 @@ import HealthKit
 /**
  All HealthKit series types
  */
-public enum SeriesType: Int, CaseIterable, ObjectType {
+public enum SeriesType: Int, CaseIterable, SampleType {
     case heartbeatSeries
     case route
 
+    public var identifier: String? {
+        return original?.identifier
+    }
+    
     public var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:

@@ -10,20 +10,6 @@ import HealthKit
 
 /// **HealthKitWriter** class for HK writing operations
 public class HealthKitWriter {
-    /**
-     - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - success: the status
-        - id: the deleted object id
-        - error: error (optional)
-    */
-    public typealias DeletionCompletionBlock = (_ success: Bool, _ id: Int, _ error: Error?) -> Void
-
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {

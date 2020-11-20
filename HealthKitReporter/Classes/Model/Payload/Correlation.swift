@@ -29,9 +29,13 @@ public struct Correlation: Identifiable, Sample {
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let device: Device?
+    public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
     init(correlation: HKCorrelation) throws {
+        self.sourceRevision = SourceRevision(
+            sourceRevision: correlation.sourceRevision
+        )
         self.identifier = correlation.correlationType.identifier
         self.startTimestamp = correlation.startDate.timeIntervalSince1970
         self.endTimestamp = correlation.endDate.timeIntervalSince1970

@@ -1,4 +1,10 @@
-## [1.2.1] - 18.11.2020.
+## [1.2.3] - 18.11.2020.
+
+* SampleTypes in appropriate requests
+* Add Correlation
+
+
+## [1.2.2] - 18.11.2020.
 
 * Correlation fix
 * Fix with SampleType

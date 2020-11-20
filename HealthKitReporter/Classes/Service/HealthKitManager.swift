@@ -8,20 +8,8 @@
 import Foundation
 import HealthKit
 
+/// **HealthKitManager** class for HK managing operations
 public class HealthKitManager {
-    /**
-     - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - preferredUnits: an array of **PreferredUnit**
-        - error: error (optional)
-    */
-    public typealias PreferredUnitsCompeltion = (_ preferredUnits: [PreferredUnit], _ error: Error?) -> Void
-
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
@@ -99,6 +87,13 @@ public class HealthKitManager {
             let preferredUnits = PreferredUnit.collect(from: result)
             completion(preferredUnits, nil)
         }
+    }
+    /**
+     Stops executing the long time query like **ObserverQuery** and **AnchoredQuery**.
+     - Parameter query: **HKQuery** workout configuration
+     */
+    public func stopQuery(_ query: HKQuery) {
+        healthStore.stop(query)
     }
     /**
      Starts Watch App.

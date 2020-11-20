@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ) { (success, error) in
                 if success && error == nil {
                     for type in types {
-                        reporter.observer.observerQuery(type: type) { (identifier, error) in
+                        reporter.observer.observerQuery(type: type) { (query, identifier, error) in
                             if error == nil {
                                 print("updates for \(identifier)")
                             }

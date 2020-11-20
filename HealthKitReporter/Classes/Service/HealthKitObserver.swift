@@ -8,20 +8,8 @@
 import Foundation
 import HealthKit
 
+/// **HealthKitObserver** class for HK observing operations
 public class HealthKitObserver {
-    /**
-     - Parameters:
-     - success: the status
-     - error: error (optional)
-     */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-     - identifier: the object type identifier
-     - error: error (optional)
-     */
-    public typealias ObserverUpdateHandler = (_ identifier: String?, _ error: Error?) -> Void
-
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
@@ -41,6 +29,7 @@ public class HealthKitObserver {
         guard let sampleType = type.original as? HKSampleType else {
             updateHandler(
                 nil,
+                nil,
                 HealthKitError.invalidType("Unknown type: \(type)")
             )
             return
@@ -50,17 +39,18 @@ public class HealthKitObserver {
             predicate: predicate
         ) { (query, completion, error) in
             guard error == nil else {
-                updateHandler(nil, error)
+                updateHandler(query, nil, error)
                 return
             }
             guard let id = query.objectType?.identifier else {
                 updateHandler(
+                    query,
                     nil,
                     HealthKitError.unknown("Unknown object type for query: \(query)")
                 )
                 return
             }
-            updateHandler(id, nil)
+            updateHandler(query, id, nil)
             completion()
         }
         healthStore.execute(query)
