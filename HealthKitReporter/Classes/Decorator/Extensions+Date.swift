@@ -10,7 +10,11 @@ import HealthKit
 
 public extension Date {
     static var iso8601: String {
-        return "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+    }
+
+    var millisecondsSince1970: Double {
+        return self.timeIntervalSince1970 * 1000
     }
 
     func formatted(
@@ -28,5 +32,9 @@ public extension Date {
     }
     func advanced(by n: TimeInterval) -> Date {
         return self + n
+    }
+
+    static func make(from millisecondsSince1970: Double) -> Date {
+        return Date(timeIntervalSince1970: millisecondsSince1970.secondsSince1970)
     }
 }

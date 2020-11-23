@@ -12,8 +12,8 @@ import HealthKitReporter
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        //read()
-        //write()
+        read()
+        write()
     }
 
     private func write() {
