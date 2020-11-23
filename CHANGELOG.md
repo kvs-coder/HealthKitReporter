@@ -1,3 +1,8 @@
+## [1.2.5] - 23.11.2020.
+
+* Dietery water add
+* Fix with Source Revision cinstructor from map
+
 ## [1.2.4] - 23.11.2020.
 
 * Timestamps wide usage for payload (Flutter)
