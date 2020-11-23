@@ -64,6 +64,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
     case dietaryZinc
     case dietaryIodine
     case dietaryManganese
+    case dietaryWater
     case environmentalAudioExposure
     case headphoneAudioExposure
 
@@ -177,6 +178,8 @@ public enum QuantityType: Int, CaseIterable, SampleType {
             return HKObjectType.quantityType(forIdentifier: .dietaryIodine)
         case .dietaryManganese:
             return HKObjectType.quantityType(forIdentifier: .dietaryManganese)
+        case .dietaryWater:
+            return HKObjectType.quantityType(forIdentifier: .dietaryWater)
         case .environmentalAudioExposure:
             if #available(iOS 13.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)
