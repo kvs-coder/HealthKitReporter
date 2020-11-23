@@ -163,10 +163,8 @@ extension Workout: Payload {
     ) throws -> Workout {
         guard
             let identifier = dictionary["identifier"] as? String,
-            let startDate = (dictionary["startDate"] as? String)?
-                .asDate(format: Date.iso8601),
-            let endDate = (dictionary["endDate"] as? String)?
-                .asDate(format: Date.iso8601),
+            let startTimestamp = dictionary["startTimestamp"] as? Double,
+            let endTimestamp = dictionary["endTimestamp"] as? Double,
             let workoutName = dictionary["workoutName"] as? String,
             let duration = dictionary["duration"] as? Double,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
@@ -178,8 +176,8 @@ extension Workout: Payload {
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
         return Workout(
             identifier: identifier,
-            startTimestamp: startDate.timeIntervalSince1970,
-            endTimestamp: endDate.timeIntervalSince1970,
+            startTimestamp: startTimestamp.secondsSince1970,
+            endTimestamp: endTimestamp.secondsSince1970,
             workoutName: workoutName,
             device: device != nil
                 ? try Device.make(from: device!)

@@ -90,10 +90,8 @@ extension WorkoutEvent: Payload {
     ) throws -> WorkoutEvent {
         guard
             let type = dictionary["type"] as? String,
-            let startDate = (dictionary["startDate"] as? String)?
-                .asDate(format: Date.iso8601),
-            let endDate = (dictionary["endDate"] as? String)?
-                .asDate(format: Date.iso8601),
+            let startTimestamp = dictionary["startTimestamp"] as? Double,
+            let endTimestamp = dictionary["endTimestamp"] as? Double,
             let duration = dictionary["duration"] as? Double,
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
@@ -101,8 +99,8 @@ extension WorkoutEvent: Payload {
         }
         return WorkoutEvent(
             type: type,
-            startTimestamp: startDate.timeIntervalSince1970,
-            endTimestamp: endDate.timeIntervalSince1970,
+            startTimestamp: startTimestamp.secondsSince1970,
+            endTimestamp: endTimestamp.secondsSince1970,
             duration: duration,
             harmonized: try WorkoutEvent.Harmonized.make(from: harmonized)
         )
