@@ -86,7 +86,7 @@ extension HKQuantitySample: Harmonizable {
         case HKObjectType.quantityType(forIdentifier: .dietaryManganese):
             return quantity(unit: HKUnit.gram())
         case HKObjectType.quantityType(forIdentifier: .dietaryWater):
-            return quantity(unit: HKUnit.fluidOunceUS())
+            return quantity(unit: HKUnit.gram())
         case HKObjectType.quantityType(forIdentifier: .dietaryPhosphorus):
             return quantity(unit: HKUnit.gram())
         case HKObjectType.quantityType(forIdentifier: .dietaryPotassium):
