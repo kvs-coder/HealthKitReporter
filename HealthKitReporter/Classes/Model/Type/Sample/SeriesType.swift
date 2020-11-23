@@ -8,15 +8,18 @@
 import Foundation
 import HealthKit
 
-public enum SeriesType: Int, ObjectType {
+/**
+ All HealthKit series types
+ */
+public enum SeriesType: Int, CaseIterable, SampleType {
     case heartbeatSeries
     case route
 
     public var identifier: String? {
         return original?.identifier
     }
-
-    public var original: HKSeriesType? {
+    
+    public var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:
             if #available(iOS 13.0, *) {

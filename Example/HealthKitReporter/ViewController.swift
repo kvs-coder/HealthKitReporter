@@ -12,8 +12,8 @@ import HealthKitReporter
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        //read()
-        //write()
+        read()
+        write()
     }
 
     private func write() {
@@ -25,11 +25,11 @@ class ViewController: UIViewController {
                 toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.manager.preferredUnits(for: types) { (dict, error) in
-                        for (type, unit) in dict {
+                    reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
+                        for preferredUnit in preferredUnits {
                             //Do write steps
+                            let identifier = preferredUnit.identifier
                             guard
-                                let identifier = type.identifier,
                                 identifier == QuantityType.stepCount.identifier
                             else {
                                 return
@@ -52,10 +52,16 @@ class ViewController: UIViewController {
                                     source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
                                     version: "1.0.0",
                                     productType: "CocoaPod",
-                                    systemVersion: "1.0.0.0"),
+                                    systemVersion: "1.0.0.0",
+                                    operatingSystem: SourceRevision.OperatingSystem(
+                                        majorVersion: 1,
+                                        minorVersion: 1,
+                                        patchVersion: 1
+                                    )
+                                ),
                                 harmonized: Quantity.Harmonized(
                                     value: 123.0,
-                                    unit: unit,
+                                    unit: preferredUnit.unit,
                                     metadata: nil
                                 )
                             )
@@ -86,24 +92,28 @@ class ViewController: UIViewController {
                 toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.manager.preferredUnits(for: types) { (dict, error) in
+                    reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
                         if error == nil {
-                            for (type, unit) in dict {
-                                reporter.reader.quantityQuery(
-                                    type: type,
-                                    unit: unit
-                                ) { (results, error) in
-                                    if error == nil {
-                                        for element in results {
-                                            do {
-                                                print(try element.encoded())
-                                            } catch {
-                                                print(error)
+                            for preferredUnit in preferredUnits {
+                                do {
+                                    reporter.reader.quantityQuery(
+                                        type: try QuantityType.make(from: preferredUnit.identifier),
+                                        unit: preferredUnit.unit
+                                    ) { (results, error) in
+                                        if error == nil {
+                                            for element in results {
+                                                do {
+                                                    print(try element.encoded())
+                                                } catch {
+                                                    print(error)
+                                                }
                                             }
+                                        } else {
+                                            print(error)
                                         }
-                                    } else {
-                                        print(error)
                                     }
+                                } catch {
+                                    print(error)
                                 }
                             }
                         } else {

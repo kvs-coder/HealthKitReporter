@@ -7,8 +7,12 @@
 
 import Foundation
 
-extension Double {
+public extension Double {
     var asDate: Date {
         return Date(timeIntervalSince1970: self)
+    }
+
+    var secondsSince1970: Double {
+        return (self / 1000)
     }
 }

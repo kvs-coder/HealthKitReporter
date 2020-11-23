@@ -8,7 +8,10 @@
 import Foundation
 import HealthKit
 
-public enum CorrelationType: Int, ObjectType {
+/**
+ All HealthKit correlation types
+ */
+public enum CorrelationType: Int, CaseIterable, SampleType {
     case bloodPressure
     case food
 
@@ -16,7 +19,7 @@ public enum CorrelationType: Int, ObjectType {
         return original?.identifier
     }
 
-    public var original: HKCorrelationType? {
+    public var original: HKObjectType? {
         switch self {
         case .food:
             return HKObjectType.correlationType(forIdentifier: .food)

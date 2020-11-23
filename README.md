@@ -29,7 +29,7 @@ The reporter instance contains several properties:
 * manager
 * observer
 
-Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipaulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, manager is responsible for the authorization of read/write types and launching a WatchApp you make.
+Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, manager is responsible for the authorization of read/write types and launching a WatchApp you make.
 
 If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manullly allow this in Apple Health App.
 
@@ -53,24 +53,28 @@ override func viewDidLoad() {
             toWrite: types
         ) { (success, error) in
             if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (dict, error) in
+                reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
                     if error == nil {
-                        for (type, unit) in dict {
-                            reporter.reader.quantityQuery(
-                                type: type,
-                                unit: unit
-                            ) { (results, error) in
-                                if error == nil {
-                                    for element in results {
-                                        do {
-                                            print(try element.encoded())
-                                        } catch {
-                                            print(error)
+                        for preferredUnit in preferredUnits {
+                            do {
+                                reporter.reader.quantityQuery(
+                                    type: try QuantityType.make(from: preferredUnit.identifier),
+                                    unit: preferredUnit.unit
+                                ) { (results, error) in
+                                    if error == nil {
+                                        for element in results {
+                                            do {
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
                                         }
+                                    } else {
+                                        print(error)
                                     }
-                                } else {
-                                    print(error)
                                 }
+                            } catch {
+                                print(error)
                             }
                         }
                     } else {
@@ -141,8 +145,8 @@ override func viewDidLoad() {
                 reporter.manager.preferredUnits(for: types) { (dict, error) in
                     for (type, unit) in dict {
                         //Do write steps
+                        let identifier = preferredUnit.identifier
                         guard
-                            let identifier = type.identifier,
                             identifier == QuantityType.stepCount.identifier
                         else {
                             return
@@ -205,9 +209,7 @@ reporter.manager.preferredUnits(for: [.stepCount]) { (dictionary, error) in
 
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize deisred types to write, like step count.
-
-If authorization was successfull (the authorization window was shown) call save method with type step count.
+Authorize deisred types to read/write, like step count and sleep analysis.
 
 Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method
 
@@ -218,22 +220,28 @@ func application(
 ) -> Bool {
     do {
         let reporter = try HealthKitReporter()
+        let types: [SampleType] = [
+            QuantityType.stepCount,
+            CategoryType.sleepAnalysis
+        ]
         reporter.manager.requestAuthorization(
-            toRead: [.stepCount],
-            toWrite: [.stepCount]
+            toRead: types,
+            toWrite: types
         ) { (success, error) in
             if success && error == nil {
-                reporter.observer.observerQuery(type: .stepCount) { (identifier, error) in
-                    if error == nil {
-                        print("updates for \(identifier)")
+                for type in types {
+                    reporter.observer.observerQuery(type: type) { (query, identifier, error) in
+                        if error == nil {
+                            print("updates for \(identifier)")
+                        }
                     }
-                }
-                reporter.observer.enableBackgroundDelivery(
-                    type: .stepCount,
-                    frequency: .daily
-                ) { (success, error) in
-                    if error == nil {
-                        print("enabled")
+                    reporter.observer.enableBackgroundDelivery(
+                        type: type,
+                        frequency: .daily
+                    ) { (success, error) in
+                        if error == nil {
+                            print("enabled")
+                        }
                     }
                 }
             }
@@ -270,3 +278,8 @@ Victor Kachalov, victorkachalov@gmail.com
 ## License
 
 HealthKitReporter is available under the MIT license. See the LICENSE file for more info.
+
+## Donation
+If you think that my repo helped you to solve the issues you struggle with, please don't be shy and donate :-)
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/VictorKachalov/5EUR)

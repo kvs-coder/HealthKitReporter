@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-public struct Quantity: Identifiable, Sample, Original {
+public struct Quantity: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
@@ -53,7 +53,7 @@ public struct Quantity: Identifiable, Sample, Original {
         return samples
     }
 
-    public init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
+    init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
@@ -66,7 +66,7 @@ public struct Quantity: Identifiable, Sample, Original {
         )
     }
 
-    public init(quantitySample: HKQuantitySample) throws {
+    init(quantitySample: HKQuantitySample) throws {
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
@@ -90,7 +90,9 @@ public struct Quantity: Identifiable, Sample, Original {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
-
+}
+// MARK: - Original
+extension Quantity: Original {
     func asOriginal() throws -> HKQuantitySample {
         guard
             let type = HKObjectType.quantityType(
@@ -111,6 +113,52 @@ public struct Quantity: Identifiable, Sample, Original {
             end: endTimestamp.asDate,
             device: device?.asOriginal(),
             metadata: harmonized.metadata
+        )
+    }
+}
+// MARK: - Payload
+extension Quantity: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> Quantity {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startTimestamp = dictionary["startTimestamp"] as? Double,
+            let endTimestamp = dictionary["endTimestamp"] as? Double,
+            let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let device = dictionary["device"] as? [String: Any]
+        return Quantity(
+            identifier: identifier,
+            startTimestamp: startTimestamp.secondsSince1970,
+            endTimestamp: endTimestamp.secondsSince1970,
+            device: device != nil
+                ? try Device.make(from: device!)
+                : nil,
+            sourceRevision: try SourceRevision.make(from: sourceRevision),
+            harmonized: try Harmonized.make(from: harmonized)
+        )
+    }
+}
+// MARK: - Payload
+extension Quantity.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> Quantity.Harmonized {
+        guard
+            let value = dictionary["value"] as? Double,
+            let unit = dictionary["unit"] as? String,
+            let metadata = dictionary["metadata"] as? [String: String]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return Quantity.Harmonized(
+            value: value,
+            unit: unit,
+            metadata: metadata
         )
     }
 }

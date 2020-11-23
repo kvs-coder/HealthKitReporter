@@ -17,7 +17,7 @@ class QuantitySampleRetriever {
         limit: Int,
         resultsHandler: @escaping QuantityResultsHandler
     ) throws -> HKSampleQuery {
-        guard let quantityType = type.original else {
+        guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
         }
         let query = HKSampleQuery(
@@ -48,7 +48,7 @@ class QuantitySampleRetriever {
         predicate: NSPredicate?,
         completionHandler: @escaping StatisticsCompeltionHandler
     ) throws -> HKStatisticsQuery {
-        guard let quantityType = type.original else {
+        guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -89,7 +89,7 @@ class QuantitySampleRetriever {
         monitorUpdates: Bool,
         enumerationBlock: @escaping StatisticsCompeltionHandler
     ) throws -> HKStatisticsCollectionQuery {
-        guard let quantityType = type.original else {
+        guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -140,7 +140,7 @@ class QuantitySampleRetriever {
         predicate: NSPredicate?,
         completionHandler: @escaping SourceCompletionHandler
     ) throws -> HKSourceQuery {
-        guard let sampleType = type.original else {
+        guard let sampleType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -173,7 +173,7 @@ class QuantitySampleRetriever {
         monitorUpdates: Bool = false,
         completionHandler: @escaping QuantityResultsHandler
     ) throws -> HKAnchoredObjectQuery {
-        guard let sampleType = type.original else {
+        guard let sampleType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )

@@ -12,7 +12,7 @@ public struct Source: Codable {
     public let name: String
     public let bundleIdentifier: String
 
-    public init(source: HKSource) {
+    init(source: HKSource) {
         self.name = source.name
         self.bundleIdentifier = source.bundleIdentifier
     }
@@ -20,5 +20,23 @@ public struct Source: Codable {
     public init(name: String, bundleIdentifier: String) {
         self.name = name
         self.bundleIdentifier = bundleIdentifier
+    }
+}
+// MARK: - Original
+extension Source: Original {
+    func asOriginal() throws -> HKSource {
+        return HKSource.default()
+    }
+}
+// MARK: - Payload
+extension Source: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Source {
+        guard
+            let name = dictionary["name"] as? String,
+            let bundleIdentifier = dictionary["bundleIdentifier"] as? String
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return Source(name: name, bundleIdentifier: bundleIdentifier)
     }
 }

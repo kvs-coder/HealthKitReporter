@@ -14,10 +14,10 @@ extension HKCorrelation: Harmonizable {
     func harmonize() throws -> Harmonized {
         var quantityArray = [Quantity]()
         if let quantitySamples = objects as? Set<HKQuantitySample> {
-//            for element in quantitySamples {
-//                let quantity = try Quantity(quantitySample: element)
-//                quantityArray.append(quantity)
-//            }
+            for element in quantitySamples {
+                let quantity = try Quantity(quantitySample: element)
+                quantityArray.append(quantity)
+            }
         }
         var categoryArray = [Category]()
         if let categorySamples = objects as? Set<HKCategorySample> {

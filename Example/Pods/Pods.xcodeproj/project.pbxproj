@@ -14,7 +14,6 @@
 		171FC543251BD8F0003F3910 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC542251BD8F0003F3910 /* HealthKitReporter.swift */; };
 		1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */; };
 		17300E3E25125C9F00C643E4 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3025125C9F00C643E4 /* Sample.swift */; };
-		17300E3F25125C9F00C643E4 /* HealthKitType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3125125C9F00C643E4 /* HealthKitType.swift */; };
 		17300E4025125C9F00C643E4 /* Extensions+HKBloodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */; };
 		17300E4125125C9F00C643E4 /* Extensions+HKStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */; };
 		17300E4225125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */; };
@@ -29,11 +28,16 @@
 		17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C52251D09A200A361C6 /* HealthKitWriter.swift */; };
 		17633C5B251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */; };
 		17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17633C69251D1B4000A361C6 /* HealthKitError.swift */; };
+		176D69F12562F9DA00075CF4 /* PreferredUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176D69F02562F9DA00075CF4 /* PreferredUnit.swift */; };
+		1780AC002561649B008F2328 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780ABFF2561649B008F2328 /* Payload.swift */; };
+		1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */; };
 		1791E61A252B9CC800ECB614 /* CategoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E619252B9CC800ECB614 /* CategoryType.swift */; };
 		1791E622252B9DD900ECB614 /* CharacteristicType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E621252B9DD900ECB614 /* CharacteristicType.swift */; };
 		1791E627252B9F4B00ECB614 /* SeriesType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E626252B9F4B00ECB614 /* SeriesType.swift */; };
 		1791E62C252BA03300ECB614 /* CorrelationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E62B252BA03300ECB614 /* CorrelationType.swift */; };
 		1791E631252BA16F00ECB614 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1791E630252BA16F00ECB614 /* DocumentType.swift */; };
+		179D113D255EF66500AEAF63 /* Extensions+Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */; };
+		179D1147255EFB2A00AEAF63 /* UpdateFrequency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */; };
 		179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179DA3AA252502A7003A2C22 /* Extensions+Double.swift */; };
 		17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7CE09252624ED00417634 /* Extensions+Encodable.swift */; };
 		17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B01B6D25406637001A336F /* CategorySampleRetriever.swift */; };
@@ -44,6 +48,7 @@
 		17B1DC09252BA3A30013AA9A /* ElectrocardiogramType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */; };
 		17B1DC1F252BA5C10013AA9A /* ObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B1DC1E252BA5C10013AA9A /* ObjectType.swift */; };
 		17C9D509251E1BEE003BB785 /* Extensions+HKWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */; };
+		17E864B625658B3100859F68 /* SampleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E864B525658B3100859F68 /* SampleType.swift */; };
 		17F3EAC0251E32E70035C405 /* Harmonizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EABF251E32E70035C405 /* Harmonizable.swift */; };
 		17F3EAC5251E36200035C405 /* Extensions+HKCorrelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */; };
 		17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F3EACC251E3B650035C405 /* Extensions+HKSample.swift */; };
@@ -105,7 +110,6 @@
 		171FC542251BD8F0003F3910 /* HealthKitReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
 		1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSourceRevision.swift"; sourceTree = "<group>"; };
 		17300E3025125C9F00C643E4 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
-		17300E3125125C9F00C643E4 /* HealthKitType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitType.swift; sourceTree = "<group>"; };
 		17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKBloodType.swift"; sourceTree = "<group>"; };
 		17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKStatistics.swift"; sourceTree = "<group>"; };
 		17300E3525125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKFitzpatrickSkinType.swift"; sourceTree = "<group>"; };
@@ -120,11 +124,16 @@
 		17633C52251D09A200A361C6 /* HealthKitWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitWriter.swift; sourceTree = "<group>"; };
 		17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKElectrocardiogram.swift"; sourceTree = "<group>"; };
 		17633C69251D1B4000A361C6 /* HealthKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitError.swift; sourceTree = "<group>"; };
+		176D69F02562F9DA00075CF4 /* PreferredUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferredUnit.swift; sourceTree = "<group>"; };
+		1780ABFF2561649B008F2328 /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
+		1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+DateComponents.swift"; sourceTree = "<group>"; };
 		1791E619252B9CC800ECB614 /* CategoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryType.swift; sourceTree = "<group>"; };
 		1791E621252B9DD900ECB614 /* CharacteristicType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacteristicType.swift; sourceTree = "<group>"; };
 		1791E626252B9F4B00ECB614 /* SeriesType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesType.swift; sourceTree = "<group>"; };
 		1791E62B252BA03300ECB614 /* CorrelationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrelationType.swift; sourceTree = "<group>"; };
 		1791E630252BA16F00ECB614 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
+		179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Dictionary.swift"; sourceTree = "<group>"; };
+		179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFrequency.swift; sourceTree = "<group>"; };
 		179DA3AA252502A7003A2C22 /* Extensions+Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Double.swift"; sourceTree = "<group>"; };
 		17A7CE09252624ED00417634 /* Extensions+Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Encodable.swift"; sourceTree = "<group>"; };
 		17B01B6D25406637001A336F /* CategorySampleRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySampleRetriever.swift; sourceTree = "<group>"; };
@@ -135,6 +144,8 @@
 		17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectrocardiogramType.swift; sourceTree = "<group>"; };
 		17B1DC1E252BA5C10013AA9A /* ObjectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectType.swift; sourceTree = "<group>"; };
 		17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkout.swift"; sourceTree = "<group>"; };
+		17CD92EF255C095B00F3CD09 /* build_script.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = build_script.sh; sourceTree = "<group>"; };
+		17E864B525658B3100859F68 /* SampleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleType.swift; sourceTree = "<group>"; };
 		17F3EABF251E32E70035C405 /* Harmonizable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Harmonizable.swift; sourceTree = "<group>"; };
 		17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCorrelation.swift"; sourceTree = "<group>"; };
 		17F3EACC251E3B650035C405 /* Extensions+HKSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSample.swift"; sourceTree = "<group>"; };
@@ -223,11 +234,11 @@
 			children = (
 				17B1DBFD252BA2740013AA9A /* Type */,
 				17B1DBFC252BA25D0013AA9A /* Payload */,
-				17300E3025125C9F00C643E4 /* Sample.swift */,
 				17F3EB28251E6FE80035C405 /* Original.swift */,
-				17B1DC1E252BA5C10013AA9A /* ObjectType.swift */,
-				17F3EB2D251E70890035C405 /* Identifiable.swift */,
 				17F3EABF251E32E70035C405 /* Harmonizable.swift */,
+				179D1146255EFB2A00AEAF63 /* UpdateFrequency.swift */,
+				1780ABFF2561649B008F2328 /* Payload.swift */,
+				176D69F02562F9DA00075CF4 /* PreferredUnit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -236,7 +247,6 @@
 			isa = PBXGroup;
 			children = (
 				171FC542251BD8F0003F3910 /* HealthKitReporter.swift */,
-				17300E3125125C9F00C643E4 /* HealthKitType.swift */,
 				17633C69251D1B4000A361C6 /* HealthKitError.swift */,
 				177BDDB1251D312D005F96AC /* Service */,
 				1727AA2C251D30CF00560461 /* Model */,
@@ -269,6 +279,8 @@
 				17F3EB38251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift */,
 				179DA3AA252502A7003A2C22 /* Extensions+Double.swift */,
 				17A7CE09252624ED00417634 /* Extensions+Encodable.swift */,
+				179D113C255EF66500AEAF63 /* Extensions+Dictionary.swift */,
+				1780AC0425616DA1008F2328 /* Extensions+DateComponents.swift */,
 			);
 			path = Decorator;
 			sourceTree = "<group>";
@@ -288,6 +300,8 @@
 		17B1DBFC252BA25D0013AA9A /* Payload */ = {
 			isa = PBXGroup;
 			children = (
+				17F3EB2D251E70890035C405 /* Identifiable.swift */,
+				17300E3025125C9F00C643E4 /* Sample.swift */,
 				17F3EB01251E6E010035C405 /* Electrocardiogram.swift */,
 				17F3EADE251E6D340035C405 /* Workout.swift */,
 				17F3EAE3251E6D5A0035C405 /* WorkoutEvent.swift */,
@@ -309,17 +323,27 @@
 		17B1DBFD252BA2740013AA9A /* Type */ = {
 			isa = PBXGroup;
 			children = (
-				170B384D252B8D6A00A0A299 /* QuantityType.swift */,
-				1791E619252B9CC800ECB614 /* CategoryType.swift */,
+				17B1DC1E252BA5C10013AA9A /* ObjectType.swift */,
+				17E864B425658AC600859F68 /* Sample */,
 				1791E621252B9DD900ECB614 /* CharacteristicType.swift */,
-				1791E626252B9F4B00ECB614 /* SeriesType.swift */,
-				1791E62B252BA03300ECB614 /* CorrelationType.swift */,
-				1791E630252BA16F00ECB614 /* DocumentType.swift */,
 				17B1DBFE252BA2BB0013AA9A /* ActivitySummaryType.swift */,
-				17B1DC03252BA38D0013AA9A /* WorkoutType.swift */,
-				17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */,
 			);
 			path = Type;
+			sourceTree = "<group>";
+		};
+		17E864B425658AC600859F68 /* Sample */ = {
+			isa = PBXGroup;
+			children = (
+				17E864B525658B3100859F68 /* SampleType.swift */,
+				170B384D252B8D6A00A0A299 /* QuantityType.swift */,
+				1791E619252B9CC800ECB614 /* CategoryType.swift */,
+				17B1DC03252BA38D0013AA9A /* WorkoutType.swift */,
+				1791E62B252BA03300ECB614 /* CorrelationType.swift */,
+				1791E626252B9F4B00ECB614 /* SeriesType.swift */,
+				1791E630252BA16F00ECB614 /* DocumentType.swift */,
+				17B1DC08252BA3A30013AA9A /* ElectrocardiogramType.swift */,
+			);
+			path = Sample;
 			sourceTree = "<group>";
 		};
 		17FA9402252BB1D500498846 /* Retriever */ = {
@@ -433,6 +457,7 @@
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
+				17CD92EF255C095B00F3CD09 /* build_script.sh */,
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				FDD3E017DDCCD598F6098E7C7C4827AE /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
@@ -554,6 +579,7 @@
 				TargetAttributes = {
 					5A02BB0F1AC44F7E176E662038412466 = {
 						LastSwiftMigration = 1200;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -629,6 +655,7 @@
 				17F3EB07251E6E8B0035C405 /* Category.swift in Sources */,
 				17B1DC09252BA3A30013AA9A /* ElectrocardiogramType.swift in Sources */,
 				17F3EB39251E79560035C405 /* Extensions+HKWorkoutConfiguration.swift in Sources */,
+				1780AC002561649B008F2328 /* Payload.swift in Sources */,
 				171FC53E251BD7A2003F3910 /* HealthKitObserver.swift in Sources */,
 				17F3EAE4251E6D5A0035C405 /* WorkoutEvent.swift in Sources */,
 				1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */,
@@ -638,15 +665,19 @@
 				17B01B8025406DEE001A336F /* ElectrocardiogramRetriever.swift in Sources */,
 				17F3EB0C251E6EB10035C405 /* Quantity.swift in Sources */,
 				17633C53251D09A200A361C6 /* HealthKitWriter.swift in Sources */,
+				1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */,
 				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,
 				17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */,
 				17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */,
+				17E864B625658B3100859F68 /* SampleType.swift in Sources */,
 				17B1DBFF252BA2BB0013AA9A /* ActivitySummaryType.swift in Sources */,
+				179D113D255EF66500AEAF63 /* Extensions+Dictionary.swift in Sources */,
 				17F3EAE9251E6D790035C405 /* Correlation.swift in Sources */,
 				17F3EAFD251E6DEC0035C405 /* Characteristic.swift in Sources */,
 				17B1DC04252BA38D0013AA9A /* WorkoutType.swift in Sources */,
 				179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */,
 				1791E622252B9DD900ECB614 /* CharacteristicType.swift in Sources */,
+				179D1147255EFB2A00AEAF63 /* UpdateFrequency.swift in Sources */,
 				17300E4425125C9F00C643E4 /* Extensions+HKQuantityType.swift in Sources */,
 				17F3EB3E251E7CB60035C405 /* WorkoutConfiguration.swift in Sources */,
 				17F3EADF251E6D340035C405 /* Workout.swift in Sources */,
@@ -656,10 +687,10 @@
 				17A7CE0A252624ED00417634 /* Extensions+Encodable.swift in Sources */,
 				1791E62C252BA03300ECB614 /* CorrelationType.swift in Sources */,
 				17F3EAEE251E6D960035C405 /* SourceRevision.swift in Sources */,
+				176D69F12562F9DA00075CF4 /* PreferredUnit.swift in Sources */,
 				17B01B6E25406637001A336F /* CategorySampleRetriever.swift in Sources */,
 				17F3EACD251E3B650035C405 /* Extensions+HKSample.swift in Sources */,
 				17300E4A25125C9F00C643E4 /* HealthKitReader.swift in Sources */,
-				17300E3F25125C9F00C643E4 /* HealthKitType.swift in Sources */,
 				7351128AFE6D2C348D5CC138E73673A2 /* HealthKitReporter-dummy.m in Sources */,
 				17300E4625125C9F00C643E4 /* Extensions+HKQuantitiySample.swift in Sources */,
 				17F3EAF8251E6DD00035C405 /* Source.swift in Sources */,
@@ -708,12 +739,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 50AA0CA84AA46A85BDCFA91A07CA472E /* HealthKitReporter.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -722,11 +755,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
 				PRODUCT_NAME = HealthKitReporter;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -758,7 +791,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Tests/Pods-HealthKitReporter_Tests.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -777,12 +809,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 620026A50D6F3042580BA62B0F2A5E24 /* HealthKitReporter.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -791,11 +825,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/HealthKitReporter/HealthKitReporter.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kvs.HealthKitReporter;
 				PRODUCT_MODULE_NAME = HealthKitReporter;
 				PRODUCT_NAME = HealthKitReporter;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -826,7 +860,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -892,6 +925,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -955,6 +989,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -986,7 +1021,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Tests/Pods-HealthKitReporter_Tests.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
@@ -1021,7 +1055,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.1.0;
 				MODULEMAP_FILE = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";

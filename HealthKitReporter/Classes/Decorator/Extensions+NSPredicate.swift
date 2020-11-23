@@ -8,15 +8,15 @@
 import Foundation
 import HealthKit
 
-extension NSPredicate {
-    public static var allSamples: NSPredicate {
+public extension NSPredicate {
+    static var allSamples: NSPredicate {
         return HKQuery.predicateForSamples(
             withStart: .distantPast,
             end: .distantFuture,
             options: []
         )
     }
-    public static func samplesPredicate(
+    static func samplesPredicate(
         startDate: Date,
         endDate: Date,
         options: HKQueryOptions = [.strictStartDate, .strictEndDate]

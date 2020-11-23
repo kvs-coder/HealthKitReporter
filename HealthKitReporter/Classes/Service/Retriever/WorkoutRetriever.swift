@@ -16,8 +16,8 @@ class WorkoutRetriever {
         resultsHandler: @escaping WorkoutResultsHandler
     ) throws -> HKSampleQuery {
         let workoutType = WorkoutType.workoutType
-        guard let type = workoutType.original else {
-            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKSampleType")
+        guard let type = workoutType.original as? HKWorkoutType else {
+            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKWorkoutType")
         }
         let query = HKSampleQuery(
             sampleType: type,
@@ -45,8 +45,8 @@ class WorkoutRetriever {
         completionHandler: @escaping SourceCompletionHandler
     ) throws -> HKSourceQuery {
         let workoutType = WorkoutType.workoutType
-        guard let type = workoutType.original else {
-            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKSampleType")
+        guard let type = workoutType.original as? HKWorkoutType else {
+            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKWorkoutType")
         }
         let query = HKSourceQuery(
             sampleType: type,
@@ -75,8 +75,8 @@ class WorkoutRetriever {
         completionHandler: @escaping WorkoutResultsHandler
     ) throws -> HKAnchoredObjectQuery {
         let workoutType = WorkoutType.workoutType
-        guard let type = workoutType.original else {
-            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKSampleType")
+        guard let type = workoutType.original as? HKWorkoutType else {
+            throw HealthKitError.invalidType("\(workoutType) can not be represented as HKWorkoutType")
         }
         let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in
             guard

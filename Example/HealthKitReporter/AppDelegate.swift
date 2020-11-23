@@ -19,23 +19,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         do {
             let reporter = try HealthKitReporter()
-            let types = [QuantityType.stepCount]
+            let types: [SampleType] = [
+                QuantityType.stepCount,
+                CategoryType.sleepAnalysis
+            ]
             reporter.manager.requestAuthorization(
                 toRead: types,
                 toWrite: types
             ) { (success, error) in
                 if success && error == nil {
-                    reporter.observer.observerQuery(type: QuantityType.stepCount) { (identifier, error) in
-                        if error == nil {
-                            print("updates for \(identifier)")
+                    for type in types {
+                        reporter.observer.observerQuery(type: type) { (query, identifier, error) in
+                            if error == nil {
+                                print("updates for \(identifier)")
+                            }
                         }
-                    }
-                    reporter.observer.enableBackgroundDelivery(
-                        type: QuantityType.stepCount,
-                        frequency: .daily
-                    ) { (success, error) in
-                        if error == nil {
-                            print("enabled")
+                        reporter.observer.enableBackgroundDelivery(
+                            type: type,
+                            frequency: .daily
+                        ) { (success, error) in
+                            if error == nil {
+                                print("enabled")
+                            }
                         }
                     }
                 }

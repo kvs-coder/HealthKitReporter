@@ -8,36 +8,24 @@
 import Foundation
 import HealthKit
 
+/// **HealthKitManager** class for HK managing operations
 public class HealthKitManager {
-    /**
-     - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - dictionary: dictionary of correponding type identifier (key) and unit (value)
-        - error: error (optional)
-    */
-    public typealias PreferredUnitsCompeltion = (_ dictionary: [QuantityType: String], _ error: Error?) -> Void
-
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
     /**
-     Requests authorization for writing Objects in HK.
+     Requests authorization for reading/writing Objects in HK.
      - Parameter toRead: an array of **ObjectType** types to read
      - Parameter toWrite: an array of **ObjectType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
-    public func requestAuthorization<T>(
-        toRead: [T],
-        toWrite: [T],
+    public func requestAuthorization(
+        toRead: [ObjectType],
+        toWrite: [SampleType],
         completion: @escaping StatusCompletionBlock
-    ) where T: ObjectType {
+    ) {
         var setOfReadTypes = Set<HKObjectType>()
         for type in toRead {
             guard let objectType = type.original else {
@@ -80,9 +68,9 @@ public class HealthKitManager {
     ) {
         var setOfTypes = Set<HKQuantityType>()
         for type in quantityTypes {
-            guard let objectType = type.original else {
+            guard let objectType = type.original as? HKQuantityType else {
                 completion(
-                    [:],
+                    [],
                     HealthKitError.invalidType(
                         "Type \(type) has not HKQuantityType representation"
                     )
@@ -92,17 +80,20 @@ public class HealthKitManager {
             setOfTypes.insert(objectType)
         }
         healthStore.preferredUnits(for: setOfTypes) { (result, error) in
-            var dictionary = [QuantityType: String]()
-            for (key, value) in result {
-                do {
-                    let parsed = try key.parsed()
-                    dictionary[parsed] = value.unitString
-                } catch {
-                    continue
-                }
+            guard error == nil else {
+                completion([], error)
+                return
             }
-            completion(dictionary, error)
+            let preferredUnits = PreferredUnit.collect(from: result)
+            completion(preferredUnits, nil)
         }
+    }
+    /**
+     Stops executing the long time query like **ObserverQuery** and **AnchoredQuery**.
+     - Parameter query: **HKQuery** workout configuration
+     */
+    public func stopQuery(_ query: HKQuery) {
+        healthStore.stop(query)
     }
     /**
      Starts Watch App.

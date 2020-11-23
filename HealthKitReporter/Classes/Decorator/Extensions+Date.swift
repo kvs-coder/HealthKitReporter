@@ -8,12 +8,13 @@
 import Foundation
 import HealthKit
 
-extension Date {
-    static var yyyyMMdd: String {
-        return "yyyy-MM-dd"
+public extension Date {
+    static var iso8601: String {
+        return "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
     }
-    static var yyyyMMddTHHmmssZZZZZ: String {
-         return "\(yyyyMMdd)'T'HH:mm:ssZZZZZ"
+
+    var millisecondsSince1970: Double {
+        return self.timeIntervalSince1970 * 1000
     }
 
     func formatted(
@@ -26,10 +27,14 @@ extension Date {
         let date = dateFormatter.string(from: self)
         return date
     }
-    public func distance(to other: Date) -> TimeInterval {
+    func distance(to other: Date) -> TimeInterval {
         return other.timeIntervalSinceReferenceDate - self.timeIntervalSinceReferenceDate
     }
-    public func advanced(by n: TimeInterval) -> Date {
+    func advanced(by n: TimeInterval) -> Date {
         return self + n
+    }
+
+    static func make(from millisecondsSince1970: Double) -> Date {
+        return Date(timeIntervalSince1970: millisecondsSince1970.secondsSince1970)
     }
 }

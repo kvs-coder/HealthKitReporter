@@ -17,9 +17,6 @@ extension HKWorkoutConfiguration: Harmonizable {
             throw HealthKitError.invalidValue("Value for HKWorkoutConfiguration is invalid")
         }
         return Harmonized(
-            activityValue: Int(self.activityType.rawValue),
-            locationValue: self.locationType.rawValue,
-            swimmingValue: self.swimmingLocationType.rawValue,
             value: value,
             unit: unit.unitString
         )

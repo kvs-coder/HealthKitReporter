@@ -8,14 +8,17 @@
 import Foundation
 import HealthKit
 
-public enum DocumentType: Int, ObjectType {
+/**
+ All HealthKit document types
+ */
+public enum DocumentType: Int, CaseIterable, SampleType {
     case cda
 
     public var identifier: String? {
         return original?.identifier
     }
-
-    public var original: HKDocumentType? {
+    
+    public var original: HKObjectType? {
         switch self {
         case .cda:
             return HKObjectType.documentType(forIdentifier: .CDA)

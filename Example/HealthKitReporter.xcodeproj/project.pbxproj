@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		1732D4512565DE3600454F4E /* HealthKitReporterAggregate */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 1732D4522565DE3600454F4E /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */;
+			buildPhases = (
+				1732D4582565DE3A00454F4E /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = HealthKitReporterAggregate;
+			productName = HealthKitReporterAggregate;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		179DA3B125250601003A2C22 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 179DA3B025250601003A2C22 /* HealthKit.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -33,6 +47,9 @@
 		15F8173830CFE392F3EA6A3D /* Pods_HealthKitReporter_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		179DA3AF25250601003A2C22 /* HealthKitReporter_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthKitReporter_Example.entitlements; sourceTree = "<group>"; };
 		179DA3B025250601003A2C22 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		17B76BF7255C501100A62E96 /* CODE_OF_CONDUCT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CODE_OF_CONDUCT.md; path = ../CODE_OF_CONDUCT.md; sourceTree = "<group>"; };
+		17B76BF8255C501100A62E96 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CONTRIBUTING.md; path = ../CONTRIBUTING.md; sourceTree = "<group>"; };
+		17B76BF9255C501100A62E96 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		18B9502231E7C5A897312197 /* Pods-HealthKitReporter_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKitReporter_Example.debug.xcconfig"; path = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		537879F82DA60D94091A8E1E /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKitReporter_Example.release.xcconfig"; path = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* HealthKitReporter_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthKitReporter_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -138,6 +155,9 @@
 			isa = PBXGroup;
 			children = (
 				8274ECC55EA5E895980E76E1 /* HealthKitReporter.podspec */,
+				17B76BF9255C501100A62E96 /* CHANGELOG.md */,
+				17B76BF7255C501100A62E96 /* CODE_OF_CONDUCT.md */,
+				17B76BF8255C501100A62E96 /* CONTRIBUTING.md */,
 				784CB4452F8A563A8EC84C82 /* README.md */,
 				E99BA72C15D1884C0B1E5444 /* LICENSE */,
 			);
@@ -216,6 +236,11 @@
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
+					1732D4512565DE3600454F4E = {
+						CreatedOnToolsVersion = 12.2;
+						DevelopmentTeam = MAVP5V2N7V;
+						ProvisioningStyle = Automatic;
+					};
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = MAVP5V2N7V;
@@ -244,6 +269,7 @@
 			targets = (
 				607FACCF1AFB9204008FA782 /* HealthKitReporter_Example */,
 				607FACE41AFB9204008FA782 /* HealthKitReporter_Tests */,
+				1732D4512565DE3600454F4E /* HealthKitReporterAggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -269,6 +295,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1732D4582565DE3A00454F4E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ..\npod lib lint\ngit tag \"${MARKETING_VERSION}\"\ngit push --tags\npod trunk push HealthKitReporter.podspec\n";
+		};
 		182ECA17E28929626E5E65ED /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,6 +424,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1732D4532565DE3600454F4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1732D4542565DE3600454F4E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MAVP5V2N7V;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -431,6 +492,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -481,6 +543,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.2.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -569,6 +632,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1732D4522565DE3600454F4E /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1732D4532565DE3600454F4E /* Debug */,
+				1732D4542565DE3600454F4E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "HealthKitReporter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

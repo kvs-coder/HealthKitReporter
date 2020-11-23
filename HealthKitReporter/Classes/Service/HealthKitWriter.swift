@@ -10,20 +10,6 @@ import HealthKit
 
 /// **HealthKitWriter** class for HK writing operations
 public class HealthKitWriter {
-    /**
-     - Parameters:
-        - success: the status
-        - error: error (optional)
-    */
-    public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
-    /**
-     - Parameters:
-        - success: the status
-        - id: the deleted object id
-        - error: error (optional)
-    */
-    public typealias DeletionCompletionBlock = (_ success: Bool, _ id: Int, _ error: Error?) -> Void
-
     private let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
@@ -35,7 +21,7 @@ public class HealthKitWriter {
      - Throws: `HealthKitError.notAvailable` `HealthKitError.invalidType`
      - Returns: true if allowed to write and false if  not
      */
-    public func isAuthorizedToWrite<T>(type: T) throws -> Bool where T: ObjectType {
+    public func isAuthorizedToWrite(type: ObjectType) throws -> Bool {
         guard let objectType = type.original else {
             throw HealthKitError.invalidType("Invalid type: \(type)")
         }
@@ -102,7 +88,7 @@ public class HealthKitWriter {
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
-    func delete(
+    public func delete(
         sample: Sample,
         completion: @escaping StatusCompletionBlock
     ) {
@@ -126,12 +112,11 @@ public class HealthKitWriter {
      - Parameter predicate: **NSPredicate** predicate for deletion
      - Parameter completion: block notifies about deletion operation status
      */
-    @available(iOS, introduced: 9.0, deprecated: 12.0, message: "No longer supported")
-    public func deleteObjects<T>(
-        of objectType: T,
+    public func deleteObjects(
+        of objectType: ObjectType,
         predicate: NSPredicate,
         completion: @escaping DeletionCompletionBlock
-    ) where T: ObjectType {
+    ) {
         guard let type = objectType.original else {
             completion(
                 false,
