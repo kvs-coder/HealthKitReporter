@@ -1,3 +1,8 @@
+## [1.2.4] - 23.11.2020.
+
+* Timestamps wide usage for payload (Flutter)
+
+
 ## [1.2.3] - 18.11.2020.
 
 * SampleTypes in appropriate requests
