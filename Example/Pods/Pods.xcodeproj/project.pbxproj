@@ -13,6 +13,8 @@
 		171FC53E251BD7A2003F3910 /* HealthKitObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */; };
 		171FC543251BD8F0003F3910 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171FC542251BD8F0003F3910 /* HealthKitReporter.swift */; };
 		1727AA1C251D2D1600560461 /* Extensions+HKSourceRevision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */; };
+		1729FB2F256D988E00709F78 /* SeriesSampleRetriever.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1729FB2E256D988E00709F78 /* SeriesSampleRetriever.swift */; };
+		172EDDE2256D9E350002C127 /* WorkoutRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172EDDE1256D9E350002C127 /* WorkoutRoute.swift */; };
 		17300E3E25125C9F00C643E4 /* Sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3025125C9F00C643E4 /* Sample.swift */; };
 		17300E4025125C9F00C643E4 /* Extensions+HKBloodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */; };
 		17300E4125125C9F00C643E4 /* Extensions+HKStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */; };
@@ -109,6 +111,8 @@
 		171FC53D251BD7A2003F3910 /* HealthKitObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitObserver.swift; sourceTree = "<group>"; };
 		171FC542251BD8F0003F3910 /* HealthKitReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitReporter.swift; sourceTree = "<group>"; };
 		1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKSourceRevision.swift"; sourceTree = "<group>"; };
+		1729FB2E256D988E00709F78 /* SeriesSampleRetriever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesSampleRetriever.swift; sourceTree = "<group>"; };
+		172EDDE1256D9E350002C127 /* WorkoutRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutRoute.swift; sourceTree = "<group>"; };
 		17300E3025125C9F00C643E4 /* Sample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sample.swift; sourceTree = "<group>"; };
 		17300E3325125C9F00C643E4 /* Extensions+HKBloodType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKBloodType.swift"; sourceTree = "<group>"; };
 		17300E3425125C9F00C643E4 /* Extensions+HKStatistics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKStatistics.swift"; sourceTree = "<group>"; };
@@ -316,6 +320,7 @@
 				17F3EB15251E6F280035C405 /* HeartbeatSerie.swift */,
 				17F3EB1A251E6F460035C405 /* Statistics.swift */,
 				17F3EB3D251E7CB60035C405 /* WorkoutConfiguration.swift */,
+				172EDDE1256D9E350002C127 /* WorkoutRoute.swift */,
 			);
 			path = Payload;
 			sourceTree = "<group>";
@@ -353,6 +358,7 @@
 				17B01B6D25406637001A336F /* CategorySampleRetriever.swift */,
 				17B01B7225406994001A336F /* WorkoutRetriever.swift */,
 				17B01B7F25406DEE001A336F /* ElectrocardiogramRetriever.swift */,
+				1729FB2E256D988E00709F78 /* SeriesSampleRetriever.swift */,
 			);
 			path = Retriever;
 			sourceTree = "<group>";
@@ -674,6 +680,7 @@
 				179D113D255EF66500AEAF63 /* Extensions+Dictionary.swift in Sources */,
 				17F3EAE9251E6D790035C405 /* Correlation.swift in Sources */,
 				17F3EAFD251E6DEC0035C405 /* Characteristic.swift in Sources */,
+				1729FB2F256D988E00709F78 /* SeriesSampleRetriever.swift in Sources */,
 				17B1DC04252BA38D0013AA9A /* WorkoutType.swift in Sources */,
 				179DA3AB252502A7003A2C22 /* Extensions+Double.swift in Sources */,
 				1791E622252B9DD900ECB614 /* CharacteristicType.swift in Sources */,
@@ -704,6 +711,7 @@
 				17633C4B251CFFD800A361C6 /* Extensions+HKActivitySummary.swift in Sources */,
 				1791E627252B9F4B00ECB614 /* SeriesType.swift in Sources */,
 				17300E4225125C9F00C643E4 /* Extensions+HKFitzpatrickSkinType.swift in Sources */,
+				172EDDE2256D9E350002C127 /* WorkoutRoute.swift in Sources */,
 				17F3EB11251E6EDB0035C405 /* ActivitySummary.swift in Sources */,
 				17633C6A251D1B4000A361C6 /* HealthKitError.swift in Sources */,
 			);
