@@ -339,7 +339,9 @@ public class HealthKitReader {
     }
     /**
      Queries workout route.
-     - Requires: CLLocation permissions
+     - Requires: CLLocation permissions:
+     “Privacy - Location Always and When In Use Usage Description”
+     and “Privacy - Location When In Use Usage Description”.
      - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
