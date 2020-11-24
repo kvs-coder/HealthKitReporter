@@ -150,11 +150,11 @@ extension Quantity.Harmonized: Payload {
     ) throws -> Quantity.Harmonized {
         guard
             let value = dictionary["value"] as? Double,
-            let unit = dictionary["unit"] as? String,
-            let metadata = dictionary["metadata"] as? [String: String]
+            let unit = dictionary["unit"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
+        let metadata = dictionary["metadata"] as? [String: String]
         return Quantity.Harmonized(
             value: value,
             unit: unit,

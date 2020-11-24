@@ -104,6 +104,8 @@ extension HKStatistics: Harmonizable {
         case HKObjectType.quantityType(forIdentifier: .dietaryMagnesium),
              HKObjectType.quantityType(forIdentifier: .dietaryManganese) :
             return try sumQuantity(unit: HKUnit.gram())
+        case HKObjectType.quantityType(forIdentifier: .dietaryWater):
+            return try sumQuantity(unit: HKUnit.gram())
         case HKObjectType.quantityType(forIdentifier: .dietaryPhosphorus):
             return try sumQuantity(unit: HKUnit.gram())
         case HKObjectType.quantityType(forIdentifier: .dietaryPotassium):
