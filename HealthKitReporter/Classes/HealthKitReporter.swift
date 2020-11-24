@@ -52,8 +52,17 @@ public typealias SampleResultsHandler = (
  - serie: heartbeat serie.
  - error: error (optional)
  */
-public typealias HeartbeatDataHandler = (
+public typealias HeartbeatSeriesDataHandler = (
     _ serie: HeartbeatSerie?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - workoutRoute: workout route.
+ - error: error (optional)
+ */
+public typealias WorkoutRouteDataHandler = (
+    _ workoutRoute: WorkoutRoute?,
     _ error: Error?
 ) -> Void
 /**

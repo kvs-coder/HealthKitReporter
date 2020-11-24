@@ -13,7 +13,7 @@ import HealthKit
  */
 public enum SeriesType: Int, CaseIterable, SampleType {
     case heartbeatSeries
-    case route
+    case workoutRoute
 
     public var identifier: String? {
         return original?.identifier
@@ -23,12 +23,18 @@ public enum SeriesType: Int, CaseIterable, SampleType {
         switch self {
         case .heartbeatSeries:
             if #available(iOS 13.0, *) {
-                return HKObjectType.seriesType(forIdentifier: HKDataTypeIdentifierHeartbeatSeries)
+                let heartbeatSeries = HKObjectType.seriesType(
+                    forIdentifier: HKDataTypeIdentifierHeartbeatSeries
+                )
+                return heartbeatSeries ?? HKSeriesType.heartbeat()
             } else {
                 return nil
             }
-        case .route:
-            return HKObjectType.seriesType(forIdentifier: HKWorkoutRouteTypeIdentifier)
+        case .workoutRoute:
+            let workoutRoute = HKObjectType.seriesType(
+                forIdentifier: HKWorkoutRouteTypeIdentifier
+            )
+            return workoutRoute ?? HKSeriesType.workoutRoute()
         }
     }
 }

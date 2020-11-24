@@ -1,3 +1,8 @@
+## [1.2.6] - 24.11.2020.
+
+* Workout Route series query
+* CLLocation usage in Workout Route
+
 ## [1.2.5] - 23.11.2020.
 
 * Dietery water add

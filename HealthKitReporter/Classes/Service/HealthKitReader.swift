@@ -309,7 +309,8 @@ public class HealthKitReader {
      - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with heartbeat serie
+     - Parameter dataHandler: returns a block with heartbeat serie for each
+     iteration until **done** of **HeartbeatSerie**  is True.
      */
     @available(iOS 13.0, *)
     public func heartbeatSeriesQuery(
@@ -321,62 +322,55 @@ public class HealthKitReader {
             )
         ],
         limit: Int = HKObjectQueryNoLimit,
-        dataHandler: @escaping HeartbeatDataHandler
+        dataHandler: @escaping HeartbeatSeriesDataHandler
     ) {
-        guard
-            let sampleType = SeriesType.heartbeatSeries.original as? HKSeriesType
-        else {
-            dataHandler(
-                nil,
-                HealthKitError.invalidType(
-                    "ObjectType.heartbeatSeries can not be represented as HKSeriesType"
-                )
+        do {
+            let query = try SeriesSampleRetriever().makeHeartbeatSeriesQuery(
+                healthStore: healthStore,
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                dataHandler: dataHandler
             )
-            return
+            healthStore.execute(query)
+        } catch {
+            dataHandler(nil, error)
         }
-        let query = HKSampleQuery(
-            sampleType: sampleType,
-            predicate: predicate,
-            limit: limit,
-            sortDescriptors: sortDescriptors
-        ) { [self] (_, data, error) in
-            guard
-                error == nil,
-                let result = data
-            else {
-                dataHandler(nil, error)
-                return
-            }
-            for element in result {
-                if let seriesSample = element as? HKHeartbeatSeriesSample {
-                    var ibiArray = [Double]()
-                    var indexes = [Int]()
-                    let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
-                        heartbeatSeries: seriesSample
-                    ) { (query, timeSinceSeriesStart, precededByGap, done, error) in
-                        guard error == nil else {
-                            dataHandler(nil, error)
-                            return
-                        }
-                        ibiArray.append(timeSinceSeriesStart)
-                        if ibiArray.contains(timeSinceSeriesStart) && precededByGap {
-                            if let firstIndex = ibiArray.firstIndex(of: timeSinceSeriesStart) {
-                                indexes.append(firstIndex)
-                            }
-                        }
-                        if done {
-                            let serie = HeartbeatSerie(
-                                ibiArray: ibiArray,
-                                indexArray: indexes
-                            )
-                            dataHandler(serie, nil)
-                        }
-                    }
-                    healthStore.execute(heartbeatSeriesQuery)
-                }
-            }
+    }
+    /**
+     Queries workout route.
+     - Requires: CLLocation permissions:
+     “Privacy - Location Always and When In Use Usage Description”
+     and “Privacy - Location When In Use Usage Description”.
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter dataHandler: returns a block with heartbeat serie for each
+     iteration until **done** of **WorkoutRoute**  is True.
+     */
+    public func workoutRouteQuery(
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        dataHandler: @escaping WorkoutRouteDataHandler
+    ) {
+        do {
+            let query = try SeriesSampleRetriever().makeWorkoutRouteQuery(
+                healthStore: healthStore,
+                predicate: predicate,
+                sortDescriptors: sortDescriptors,
+                limit: limit,
+                dataHandler: dataHandler
+            )
+            healthStore.execute(query)
+        } catch {
+            dataHandler(nil, error)
         }
-        healthStore.execute(query)
     }
     /**
      Queries activity summary.

@@ -19,6 +19,15 @@ At first in your app's entitlements select HealthKit. and in your app's info.pli
 <string>WHY_YOU_NEED_TO_USE_DATA</string>
 ```
 
+If you plan to use **WorkoutRoute** **Series** please provide additionaly CoreLocation permissions:
+
+```xml
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>WHY_YOU_NEED_TO_ALWAYS_SHARE_LOCATION</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>WHY_YOU_NEED_TO_SHARE_LOCATION</string>
+```
+
 ### Common usage
 
 You create a <i>HealthKitReporter</i> instance surrounded by do catch block. If Apple Health is not supported by the device (i.e. iPad) the catch block will be called.
