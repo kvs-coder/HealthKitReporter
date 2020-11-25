@@ -3,7 +3,7 @@
 ## About
 
 A wrapper above HealthKit Apple's framework for data manipulations.
-The library supports reading values from HealthKit repository and translating them to <i>Codable</i> models allowing to encode the result as a simple JSON payload.
+The library supports manipulating with values from HealthKit repository and translating them to <i>Codable</i> models allowing to encode the result as a simple JSON payload.
 In addition you can write your own HealthKit objects using <i>Codable</i> wrappers which will be translated to <i>HKObjectType</i> objects inside HealthKit repository.
 
 ## Start
@@ -19,7 +19,7 @@ At first in your app's entitlements select HealthKit. and in your app's info.pli
 <string>WHY_YOU_NEED_TO_USE_DATA</string>
 ```
 
-If you plan to use **WorkoutRoute** **Series** please provide additionaly CoreLocation permissions:
+If you plan to use **WorkoutRoute** **Series** please provide additionally CoreLocation permissions:
 
 ```xml
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -40,7 +40,7 @@ The reporter instance contains several properties:
 
 Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, manager is responsible for the authorization of read/write types and launching a WatchApp you make.
 
-If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manullly allow this in Apple Health App.
+If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manually allow this in Apple Health App.
 
 In examples below every operation is hapenning iside authorization block. It is recommended to do so, because if new type will be added, there will be thrown a permission exception. If you are sure that no new types will appear, you can call operations outside authorization block in your app, only if the type's data reading/writing permissions were granted.
 
@@ -269,7 +269,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ## Requirements
 
 The library supports iOS 12. 
-Some features like HKHeartbeatSeries available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
+Some features like HKHeartbeatSeries are available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
 
 ## Installation
 
