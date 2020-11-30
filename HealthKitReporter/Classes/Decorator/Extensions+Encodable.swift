@@ -2,7 +2,7 @@
 //  Extensions+Encodable.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 01.10.20.
+//  Created by Victor on 01.10.20.
 //
 
 import Foundation

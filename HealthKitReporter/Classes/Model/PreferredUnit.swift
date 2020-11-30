@@ -2,7 +2,7 @@
 //  PreferredUnit.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 16.11.20.
+//  Created by Victor on 16.11.20.
 //
 
 import Foundation

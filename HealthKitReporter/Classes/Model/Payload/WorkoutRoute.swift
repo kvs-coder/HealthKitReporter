@@ -2,7 +2,7 @@
 //  WorkoutRoute.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 24.11.20.
+//  Created by Victor on 24.11.20.
 //
 
 import Foundation

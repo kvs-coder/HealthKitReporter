@@ -2,7 +2,7 @@
 //  Extensions+Double.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 30.09.20.
+//  Created by Victor on 30.09.20.
 //
 
 import Foundation
