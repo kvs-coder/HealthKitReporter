@@ -42,3 +42,21 @@ extension HKElectrocardiogram: Harmonizable {
         )
     }
 }
+
+@available(iOS 14.0, *)
+extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
+    typealias Harmonized = Electrocardiogram.VoltageMeasurement.Harmonized
+
+    func harmonize() throws -> Harmonized {
+        guard
+            let quantitiy = self.quantity(for: .appleWatchSimilarToLeadI)
+        else {
+            throw HealthKitError.invalidValue(
+                "Invalid averageHeartRate value for HKElectrocardiogram"
+            )
+        }
+        let unit = HKUnit.volt()
+        let voltage = quantitiy.doubleValue(for: unit)
+        return Harmonized(value: voltage, unit: unit.unitString)
+    }
+}

@@ -37,6 +37,20 @@ public struct Electrocardiogram: Identifiable, Sample {
             self.metadata = metadata
         }
     }
+    public struct VoltageMeasurement: Codable {
+        public struct Harmonized: Codable {
+            public let value: Double
+            public let unit: String
+        }
+
+        public let harmonized: Harmonized
+        public let timeSinceSampleStart: Double
+
+        init(voltageMeasurement: HKElectrocardiogram.VoltageMeasurement) throws {
+            self.harmonized = try voltageMeasurement.harmonize()
+            self.timeSinceSampleStart = voltageMeasurement.timeSinceSampleStart
+        }
+    }
 
     public let identifier: String
     public let startTimestamp: Double

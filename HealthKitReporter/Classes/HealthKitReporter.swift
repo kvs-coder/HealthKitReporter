@@ -10,6 +10,22 @@ import HealthKit
 
 /// **HKQuery** typealias
 public typealias Query = HKQuery
+/// **HKObserverQuery** typealias
+public typealias ObserverQuery = HKObserverQuery
+/// **HKSampleQuery** typealias
+public typealias SampleQuery = HKSampleQuery
+/// **HKStatisticsQuery** typealias
+public typealias StatisticsQuery = HKStatisticsQuery
+/// **HKStatisticsCollectionQuery** typealias
+public typealias StatisticsCollectionQuery = HKStatisticsCollectionQuery
+/// **HKActivitySummaryQuery** typealias
+public typealias ActivitySummaryQuery = HKActivitySummaryQuery
+/// **HKAnchoredObjectQuery** typealias
+public typealias AnchoredObjectQuery = HKAnchoredObjectQuery
+/// **HKSourceQuery** typealias
+public typealias SourceQuery = HKSourceQuery
+/// **HKCorrelationQuery** typealias
+public typealias CorrelationQuery = HKCorrelationQuery
 /**
  - Parameters:
  - success: the status
@@ -145,6 +161,17 @@ public typealias PreferredUnitsCompeltion = (
 @available(iOS 14.0, *)
 public typealias ElectrocardiogramResultsHandler = (
     _ samples: [Electrocardiogram],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+ - samples: electrocardiogram voltage measurements sample array. Empty by default
+ - error: error (optional)
+ */
+@available(iOS 14.0, *)
+public typealias ElectrocardiogramVoltageMeasurementDataHandler = (
+    _ measurement: Electrocardiogram.VoltageMeasurement?,
+    _ done: Bool,
     _ error: Error?
 ) -> Void
 
