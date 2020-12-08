@@ -2,7 +2,7 @@
 //  CategoryType.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 05.10.20.
+//  Created by Victor on 05.10.20.
 //
 
 import Foundation

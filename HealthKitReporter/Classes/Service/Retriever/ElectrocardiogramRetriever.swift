@@ -2,7 +2,7 @@
 //  ElectrocardiogramRetriever.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 21.10.20.
+//  Created by Victor on 21.10.20.
 //
 
 import Foundation
@@ -10,7 +10,7 @@ import HealthKit
 
 @available(iOS 14.0, *)
 class ElectrocardiogramRetriever {
-    func makeSampleQuery(
+    func makeElectrocardiogramQuery(
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
@@ -45,13 +45,13 @@ class ElectrocardiogramRetriever {
         return query
     }
 
-    func makeAnchoredObjectQuery(
+    func electrocardiogramVoltageMeasurementQuery(
+        healthStore: HKHealthStore,
         predicate: NSPredicate?,
-        anchor: HKQueryAnchor?,
+        sortDescriptors: [NSSortDescriptor],
         limit: Int,
-        monitorUpdates: Bool,
-        completionHandler: @escaping ElectrocardiogramResultsHandler
-    ) throws -> HKAnchoredObjectQuery {
+        dataHandler: @escaping ElectrocardiogramVoltageMeasurementDataHandler
+    ) throws -> HKSampleQuery {
         let electrocardiogramType = ElectrocardiogramType.electrocardiogramType
         guard
             let type = electrocardiogramType.original as? HKElectrocardiogramType
@@ -60,28 +60,67 @@ class ElectrocardiogramRetriever {
                 "\(electrocardiogramType) can not be represented as HKElectrocardiogramType"
             )
         }
-        let resultsHandler: AnchoredObjectQueryHandler = { (_, data, deletedObjects, anchor, error) in
+        let query = HKSampleQuery(
+            sampleType: type,
+            predicate: predicate,
+            limit: limit,
+            sortDescriptors: sortDescriptors
+        ) { (query, data, error) in
             guard
                 error == nil,
-                let results = data
+                let results = data as? [HKElectrocardiogram]
             else {
-                completionHandler([], error)
+                dataHandler(
+                    nil,
+                    false,
+                    error
+                )
                 return
             }
-            let samples = Electrocardiogram.collect(
-                results: results
-            )
-            completionHandler(samples, nil)
-        }
-        let query = HKAnchoredObjectQuery(
-            type: type,
-            predicate: predicate,
-            anchor: anchor,
-            limit: limit,
-            resultsHandler: resultsHandler
-        )
-        if monitorUpdates {
-            query.updateHandler = resultsHandler
+            for ecgSample in results {
+                let voltageQuery = HKElectrocardiogramQuery(ecgSample) { (query, result) in
+                    switch(result) {
+                    case .measurement(let voltageMeasurement):
+                        do {
+                            let value = try Electrocardiogram.VoltageMeasurement(
+                                voltageMeasurement: voltageMeasurement
+                            )
+                            dataHandler(
+                                value,
+                                false,
+                                nil
+                            )
+                        } catch {
+                            dataHandler(
+                                nil,
+                                false,
+                                nil
+                            )
+                        }
+                    case .done:
+                        dataHandler(
+                            nil,
+                            true,
+                            nil
+                        )
+                    case .error(let error):
+                        dataHandler(
+                            nil,
+                            false,
+                            error
+                        )
+                    @unknown default:
+                        dataHandler(
+                            nil,
+                            false,
+                            HealthKitError.notAvailable(
+                                "Unknown case of Electrocardiogram.VoltageMeasurement result"
+                            )
+                        )
+                    }
+                }
+                healthStore.execute(voltageQuery)
+            }
         }
         return query
     }

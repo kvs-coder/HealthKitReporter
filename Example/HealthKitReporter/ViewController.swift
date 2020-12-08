@@ -48,8 +48,12 @@ class ViewController: UIViewController {
                                     softwareVersion: "some_2",
                                     localIdentifier: "some_3",
                                     udiDeviceIdentifier: "some_4"
-                                ), sourceRevision: SourceRevision(
-                                    source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
+                                ),
+                                sourceRevision: SourceRevision(
+                                    source: Source(
+                                        name: "mySource",
+                                        bundleIdentifier: "com.kvs.hkreporter"
+                                    ),
                                     version: "1.0.0",
                                     productType: "CocoaPod",
                                     systemVersion: "1.0.0.0",
@@ -96,7 +100,7 @@ class ViewController: UIViewController {
                         if error == nil {
                             for preferredUnit in preferredUnits {
                                 do {
-                                    reporter.reader.quantityQuery(
+                                    let query = try reporter.reader.quantityQuery(
                                         type: try QuantityType.make(from: preferredUnit.identifier),
                                         unit: preferredUnit.unit
                                     ) { (results, error) in
@@ -112,6 +116,7 @@ class ViewController: UIViewController {
                                             print(error)
                                         }
                                     }
+                                    reporter.manager.executeQuery(query)
                                 } catch {
                                     print(error)
                                 }

@@ -17,22 +17,17 @@ public class HealthKitObserver {
     }
     /**
      Sets observer query for type
-     - Parameter type: **ObjectType** type
+     - Parameter type: **SampleType** type
      - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
      - Parameter updateHandler: is called as soon any change happened in AppleHealth App
      */
     public func observerQuery(
-        type: ObjectType,
+        type: SampleType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverUpdateHandler
-    ) {
+    ) throws -> ObserverQuery {
         guard let sampleType = type.original as? HKSampleType else {
-            updateHandler(
-                nil,
-                nil,
-                HealthKitError.invalidType("Unknown type: \(type)")
-            )
-            return
+            throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
         }
         let query = HKObserverQuery(
             sampleType: sampleType,
@@ -53,7 +48,7 @@ public class HealthKitObserver {
             updateHandler(query, id, nil)
             completion()
         }
-        healthStore.execute(query)
+        return query
     }
     /**
      Enables background notifications about changes in AppleHealth

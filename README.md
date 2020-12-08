@@ -3,7 +3,7 @@
 ## About
 
 A wrapper above HealthKit Apple's framework for data manipulations.
-The library supports reading values from HealthKit repository and translating them to <i>Codable</i> models allowing to encode the result as a simple JSON payload.
+The library supports manipulating with values from HealthKit repository and translating them to <i>Codable</i> models allowing to encode the result as a simple JSON payload.
 In addition you can write your own HealthKit objects using <i>Codable</i> wrappers which will be translated to <i>HKObjectType</i> objects inside HealthKit repository.
 
 ## Start
@@ -19,7 +19,7 @@ At first in your app's entitlements select HealthKit. and in your app's info.pli
 <string>WHY_YOU_NEED_TO_USE_DATA</string>
 ```
 
-If you plan to use **WorkoutRoute** **Series** please provide additionaly CoreLocation permissions:
+If you plan to use **WorkoutRoute** **Series** please provide additionally CoreLocation permissions:
 
 ```xml
 <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -40,7 +40,7 @@ The reporter instance contains several properties:
 
 Every property is responsible for an appropriate part of HealthKit framework. Based from the naming, reader will handle every manipulation regarding reading data and writer will handle everything related to writing data in HealthKit repository, observer will handle observations and will notify if anything was changes in HealthKit, manager is responsible for the authorization of read/write types and launching a WatchApp you make.
 
-If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manullly allow this in Apple Health App.
+If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manually allow this in Apple Health App.
 
 In examples below every operation is hapenning iside authorization block. It is recommended to do so, because if new type will be added, there will be thrown a permission exception. If you are sure that no new types will appear, you can call operations outside authorization block in your app, only if the type's data reading/writing permissions were granted.
 
@@ -49,54 +49,54 @@ Create a <i>HealthKitReporter</i> instance.
 
 Authorize deisred types to read, like step count.
 
-If authorization was successfull (the authorization window was shown) call sample query with type step count.
+If authorization was successfull (the authorization window was shown) call sample query with type step count to create a **Query** object.
+
+Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
 ```swift
-override func viewDidLoad() {
-    super.viewDidLoad()
-    do {
-        let reporter = try HealthKitReporter()
-        let types = [QuantityType.stepCount]
-        reporter.manager.requestAuthorization(
-            toRead: types,
-            toWrite: types
-        ) { (success, error) in
-            if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
-                    if error == nil {
-                        for preferredUnit in preferredUnits {
-                            do {
-                                reporter.reader.quantityQuery(
-                                    type: try QuantityType.make(from: preferredUnit.identifier),
-                                    unit: preferredUnit.unit
-                                ) { (results, error) in
-                                    if error == nil {
-                                        for element in results {
-                                            do {
-                                                print(try element.encoded())
-                                            } catch {
-                                                print(error)
-                                            }
+do {
+    let reporter = try HealthKitReporter()
+    let types = [QuantityType.stepCount]
+    reporter.manager.requestAuthorization(
+        toRead: types,
+        toWrite: types
+    ) { (success, error) in
+        if success && error == nil {
+            reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
+                if error == nil {
+                    for preferredUnit in preferredUnits {
+                        do {
+                            let query = try reporter.reader.quantityQuery(
+                                type: try QuantityType.make(from: preferredUnit.identifier),
+                                unit: preferredUnit.unit
+                            ) { (results, error) in
+                                if error == nil {
+                                    for element in results {
+                                        do {
+                                            print(try element.encoded())
+                                        } catch {
+                                            print(error)
                                         }
-                                    } else {
-                                        print(error)
                                     }
+                                } else {
+                                    print(error)
                                 }
-                            } catch {
-                                print(error)
                             }
+                            reporter.manager.executeQuery(query)
+                        } catch {
+                            print(error)
                         }
-                    } else {
-                        print(error)
                     }
+                } else {
+                    print(error)
                 }
-            } else {
-                print(error)
             }
+        } else {
+            print(error)
         }
-    } catch {
-        print(error)
     }
+} catch {
+    print(error)
 }
 ```
 
@@ -141,66 +141,73 @@ You may call manager's <i>preferredUnits(for: )</i> function to pass units (for 
 If authorization was successfull (the authorization window was shown) call save method with type step count.
 
 ```swift
-override func viewDidLoad() {
-    super.viewDidLoad()
-    do {
-        let reporter = try HealthKitReporter()
-        let types = [QuantityType.stepCount]
-        reporter.manager.requestAuthorization(
-            toRead: types,
-            toWrite: types
-        ) { (success, error) in
-            if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (dict, error) in
-                    for (type, unit) in dict {
-                        //Do write steps
-                        let identifier = preferredUnit.identifier
-                        guard
-                            identifier == QuantityType.stepCount.identifier
-                        else {
-                            return
-                        }
-                        let now = Date()
-                        let quantity = Quantity(
-                            identifier: identifier,
-                            startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
-                            endTimestamp: now.timeIntervalSince1970,
-                            device: Device(
-                                name: "Guy's iPhone",
-                                manufacturer: "Guy",
-                                model: "6.1.1",
-                                hardwareVersion: "some_0",
-                                firmwareVersion: "some_1",
-                                softwareVersion: "some_2",
-                                localIdentifier: "some_3",
-                                udiDeviceIdentifier: "some_4"
-                            ), sourceRevision: SourceRevision(
-                                source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
-                                version: "1.0.0",
-                                productType: "CocoaPod",
-                                systemVersion: "1.0.0.0"),
-                            harmonized: Quantity.Harmonized(
-                                value: 123.0,
-                                unit: unit,
-                                metadata: nil
+do {
+    let reporter = try HealthKitReporter()
+    let types = [QuantityType.stepCount]
+    reporter.manager.requestAuthorization(
+        toRead: types,
+        toWrite: types
+    ) { (success, error) in
+        if success && error == nil {
+            reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
+                for preferredUnit in preferredUnits {
+                    //Do write steps
+                    let identifier = preferredUnit.identifier
+                    guard
+                        identifier == QuantityType.stepCount.identifier
+                    else {
+                        return
+                    }
+                    let now = Date()
+                    let quantity = Quantity(
+                        identifier: identifier,
+                        startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
+                        endTimestamp: now.timeIntervalSince1970,
+                        device: Device(
+                            name: "Guy's iPhone",
+                            manufacturer: "Guy",
+                            model: "6.1.1",
+                            hardwareVersion: "some_0",
+                            firmwareVersion: "some_1",
+                            softwareVersion: "some_2",
+                            localIdentifier: "some_3",
+                            udiDeviceIdentifier: "some_4"
+                        ),
+                        sourceRevision: SourceRevision(
+                            source: Source(
+                                name: "mySource",
+                                bundleIdentifier: "com.kvs.hkreporter"
+                            ),
+                            version: "1.0.0",
+                            productType: "CocoaPod",
+                            systemVersion: "1.0.0.0",
+                            operatingSystem: SourceRevision.OperatingSystem(
+                                majorVersion: 1,
+                                minorVersion: 1,
+                                patchVersion: 1
                             )
+                        ),
+                        harmonized: Quantity.Harmonized(
+                            value: 123.0,
+                            unit: preferredUnit.unit,
+                            metadata: nil
                         )
-                        reporter.writer.save(sample: quantity) { (success, error) in
-                            if success && error == nil {
-                                print("success")
-                            } else {
-                                print(error)
-                            }
+                    )
+                    reporter.writer.save(sample: quantity) { (success, error) in
+                        if success && error == nil {
+                            print("success")
+                        } else {
+                            print(error)
                         }
                     }
                 }
-            } else {
-                print(error)
             }
+        } else {
+            print(error)
         }
-    } catch {
-        print(error)
     }
+} catch {
+    print(error)
 }
 ```
 
@@ -220,7 +227,13 @@ Create a <i>HealthKitReporter</i> instance.
 
 Authorize deisred types to read/write, like step count and sleep analysis.
 
-Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method
+You might create an App which will be called every time by HealthKit, and receive notifications, that some data was changed in HealthKit depending on frequency. But keep in mind that sometimes the desired frequency you set cannot be fulfilled by HealthKit.
+
+Call the observation query method inside your AppDelegate's method. This will let Apple Health to send events even if the app is in background or wake up your app,  if it was previosly put into "Not Running" state and execute the code provided inside **observerQuery** update handler.
+
+Warning: to run **observerQuery** when the app is killed by the system, provide an additional capability **Background Mode** and select **Background fetch**
+
+Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
 ```swift
 func application(
@@ -239,18 +252,25 @@ func application(
         ) { (success, error) in
             if success && error == nil {
                 for type in types {
-                    reporter.observer.observerQuery(type: type) { (query, identifier, error) in
-                        if error == nil {
-                            print("updates for \(identifier)")
+                    do {
+                        let query = try reporter.observer.observerQuery(
+                            type: type
+                        ) { (query, identifier, error) in
+                            if error == nil && identifier != nil {
+                                print("updates for \(identifier!)")
+                            }
                         }
-                    }
-                    reporter.observer.enableBackgroundDelivery(
-                        type: type,
-                        frequency: .daily
-                    ) { (success, error) in
-                        if error == nil {
-                            print("enabled")
+                        reporter.observer.enableBackgroundDelivery(
+                            type: type,
+                            frequency: .daily
+                        ) { (success, error) in
+                            if error == nil {
+                                print("enabled")
+                            }
                         }
+                        reporter.manager.executeQuery(query)
+                    } catch {
+                        print(error)
                     }
                 }
             }
@@ -269,7 +289,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 ## Requirements
 
 The library supports iOS 12. 
-Some features like HKHeartbeatSeries available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
+Some features like HKHeartbeatSeries are available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
 
 ## Installation
 

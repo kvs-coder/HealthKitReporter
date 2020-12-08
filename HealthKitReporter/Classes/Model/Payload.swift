@@ -2,7 +2,7 @@
 //  Payload.swift
 //  HealthKitReporter
 //
-//  Created by Florian on 15.11.20.
+//  Created by Victor on 15.11.20.
 //
 
 import Foundation

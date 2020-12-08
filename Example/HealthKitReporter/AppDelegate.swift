@@ -29,18 +29,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ) { (success, error) in
                 if success && error == nil {
                     for type in types {
-                        reporter.observer.observerQuery(type: type) { (query, identifier, error) in
-                            if error == nil {
-                                print("updates for \(identifier)")
+                        do {
+                            let query = try reporter.observer.observerQuery(
+                                type: type
+                            ) { (query, identifier, error) in
+                                if error == nil && identifier != nil {
+                                    print("updates for \(identifier!)")
+                                }
                             }
-                        }
-                        reporter.observer.enableBackgroundDelivery(
-                            type: type,
-                            frequency: .daily
-                        ) { (success, error) in
-                            if error == nil {
-                                print("enabled")
+                            reporter.observer.enableBackgroundDelivery(
+                                type: type,
+                                frequency: .daily
+                            ) { (success, error) in
+                                if error == nil {
+                                    print("enabled")
+                                }
                             }
+                            reporter.manager.executeQuery(query)
+                        } catch {
+                            print(error)
                         }
                     }
                 }
