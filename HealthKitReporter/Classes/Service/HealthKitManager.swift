@@ -89,11 +89,18 @@ public class HealthKitManager {
         }
     }
     /**
-     Stops executing the long time query like **ObserverQuery** and **AnchoredQuery**.
-     - Parameter query: **HKQuery** workout configuration
+     Stops executing the query.
+     - Parameter query: **Query**
      */
-    public func stopQuery(_ query: HKQuery) {
+    public func stopQuery(_ query: Query) {
         healthStore.stop(query)
+    }
+    /**
+     Executs query
+     - Parameter query: **Query**
+     */
+    public func executeQuery(_ query: Query) {
+        healthStore.execute(query)
     }
     /**
      Starts Watch App.

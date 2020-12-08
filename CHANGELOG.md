@@ -1,3 +1,10 @@
+## [1.3.0] - 08.12.2020.
+
+* All reading and observer queries are returned as objects in order to let to stop them running
+* Manager is now responsible for executing queries
+* Most of the reading queries will throw an Error if provided type is not recognized by HK
+* Electrocardiograms voltage measurement
+
 ## [1.2.6] - 24.11.2020.
 
 * Workout Route series query

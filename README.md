@@ -49,54 +49,54 @@ Create a <i>HealthKitReporter</i> instance.
 
 Authorize deisred types to read, like step count.
 
-If authorization was successfull (the authorization window was shown) call sample query with type step count.
+If authorization was successfull (the authorization window was shown) call sample query with type step count to create a **Query** object.
+
+Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
 ```swift
-override func viewDidLoad() {
-    super.viewDidLoad()
-    do {
-        let reporter = try HealthKitReporter()
-        let types = [QuantityType.stepCount]
-        reporter.manager.requestAuthorization(
-            toRead: types,
-            toWrite: types
-        ) { (success, error) in
-            if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
-                    if error == nil {
-                        for preferredUnit in preferredUnits {
-                            do {
-                                reporter.reader.quantityQuery(
-                                    type: try QuantityType.make(from: preferredUnit.identifier),
-                                    unit: preferredUnit.unit
-                                ) { (results, error) in
-                                    if error == nil {
-                                        for element in results {
-                                            do {
-                                                print(try element.encoded())
-                                            } catch {
-                                                print(error)
-                                            }
+do {
+    let reporter = try HealthKitReporter()
+    let types = [QuantityType.stepCount]
+    reporter.manager.requestAuthorization(
+        toRead: types,
+        toWrite: types
+    ) { (success, error) in
+        if success && error == nil {
+            reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
+                if error == nil {
+                    for preferredUnit in preferredUnits {
+                        do {
+                            let query = try reporter.reader.quantityQuery(
+                                type: try QuantityType.make(from: preferredUnit.identifier),
+                                unit: preferredUnit.unit
+                            ) { (results, error) in
+                                if error == nil {
+                                    for element in results {
+                                        do {
+                                            print(try element.encoded())
+                                        } catch {
+                                            print(error)
                                         }
-                                    } else {
-                                        print(error)
                                     }
+                                } else {
+                                    print(error)
                                 }
-                            } catch {
-                                print(error)
                             }
+                            reporter.manager.executeQuery(query)
+                        } catch {
+                            print(error)
                         }
-                    } else {
-                        print(error)
                     }
+                } else {
+                    print(error)
                 }
-            } else {
-                print(error)
             }
+        } else {
+            print(error)
         }
-    } catch {
-        print(error)
     }
+} catch {
+    print(error)
 }
 ```
 
@@ -141,66 +141,73 @@ You may call manager's <i>preferredUnits(for: )</i> function to pass units (for 
 If authorization was successfull (the authorization window was shown) call save method with type step count.
 
 ```swift
-override func viewDidLoad() {
-    super.viewDidLoad()
-    do {
-        let reporter = try HealthKitReporter()
-        let types = [QuantityType.stepCount]
-        reporter.manager.requestAuthorization(
-            toRead: types,
-            toWrite: types
-        ) { (success, error) in
-            if success && error == nil {
-                reporter.manager.preferredUnits(for: types) { (dict, error) in
-                    for (type, unit) in dict {
-                        //Do write steps
-                        let identifier = preferredUnit.identifier
-                        guard
-                            identifier == QuantityType.stepCount.identifier
-                        else {
-                            return
-                        }
-                        let now = Date()
-                        let quantity = Quantity(
-                            identifier: identifier,
-                            startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
-                            endTimestamp: now.timeIntervalSince1970,
-                            device: Device(
-                                name: "Guy's iPhone",
-                                manufacturer: "Guy",
-                                model: "6.1.1",
-                                hardwareVersion: "some_0",
-                                firmwareVersion: "some_1",
-                                softwareVersion: "some_2",
-                                localIdentifier: "some_3",
-                                udiDeviceIdentifier: "some_4"
-                            ), sourceRevision: SourceRevision(
-                                source: Source(name: "mySource", bundleIdentifier: "com.kvs.hkreporter"),
-                                version: "1.0.0",
-                                productType: "CocoaPod",
-                                systemVersion: "1.0.0.0"),
-                            harmonized: Quantity.Harmonized(
-                                value: 123.0,
-                                unit: unit,
-                                metadata: nil
+do {
+    let reporter = try HealthKitReporter()
+    let types = [QuantityType.stepCount]
+    reporter.manager.requestAuthorization(
+        toRead: types,
+        toWrite: types
+    ) { (success, error) in
+        if success && error == nil {
+            reporter.manager.preferredUnits(for: types) { (preferredUnits, error) in
+                for preferredUnit in preferredUnits {
+                    //Do write steps
+                    let identifier = preferredUnit.identifier
+                    guard
+                        identifier == QuantityType.stepCount.identifier
+                    else {
+                        return
+                    }
+                    let now = Date()
+                    let quantity = Quantity(
+                        identifier: identifier,
+                        startTimestamp: now.addingTimeInterval(-60).timeIntervalSince1970,
+                        endTimestamp: now.timeIntervalSince1970,
+                        device: Device(
+                            name: "Guy's iPhone",
+                            manufacturer: "Guy",
+                            model: "6.1.1",
+                            hardwareVersion: "some_0",
+                            firmwareVersion: "some_1",
+                            softwareVersion: "some_2",
+                            localIdentifier: "some_3",
+                            udiDeviceIdentifier: "some_4"
+                        ),
+                        sourceRevision: SourceRevision(
+                            source: Source(
+                                name: "mySource",
+                                bundleIdentifier: "com.kvs.hkreporter"
+                            ),
+                            version: "1.0.0",
+                            productType: "CocoaPod",
+                            systemVersion: "1.0.0.0",
+                            operatingSystem: SourceRevision.OperatingSystem(
+                                majorVersion: 1,
+                                minorVersion: 1,
+                                patchVersion: 1
                             )
+                        ),
+                        harmonized: Quantity.Harmonized(
+                            value: 123.0,
+                            unit: preferredUnit.unit,
+                            metadata: nil
                         )
-                        reporter.writer.save(sample: quantity) { (success, error) in
-                            if success && error == nil {
-                                print("success")
-                            } else {
-                                print(error)
-                            }
+                    )
+                    reporter.writer.save(sample: quantity) { (success, error) in
+                        if success && error == nil {
+                            print("success")
+                        } else {
+                            print(error)
                         }
                     }
                 }
-            } else {
-                print(error)
             }
+        } else {
+            print(error)
         }
-    } catch {
-        print(error)
     }
+} catch {
+    print(error)
 }
 ```
 
@@ -220,7 +227,13 @@ Create a <i>HealthKitReporter</i> instance.
 
 Authorize deisred types to read/write, like step count and sleep analysis.
 
-Important to notice, if you want to enable background deliveries with notifications about new data in Health Kit repository, call the observation query method inside your AppDelegate's method
+You might create an App which will be called every time by HealthKit, and receive notifications, that some data was changed in HealthKit depending on frequency. But keep in mind that sometimes the desired frequency you set cannot be fulfilled by HealthKit.
+
+Call the observation query method inside your AppDelegate's method. This will let Apple Health to send events even if the app is in background or wake up your app,  if it was previosly put into "Not Running" state and execute the code provided inside **observerQuery** update handler.
+
+Warning: to run **observerQuery** when the app is killed by the system, provide an additional capability **Background Mode** and select **Background fetch**
+
+Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
 ```swift
 func application(
@@ -239,18 +252,25 @@ func application(
         ) { (success, error) in
             if success && error == nil {
                 for type in types {
-                    reporter.observer.observerQuery(type: type) { (query, identifier, error) in
-                        if error == nil {
-                            print("updates for \(identifier)")
+                    do {
+                        let query = try reporter.observer.observerQuery(
+                            type: type
+                        ) { (query, identifier, error) in
+                            if error == nil && identifier != nil {
+                                print("updates for \(identifier!)")
+                            }
                         }
-                    }
-                    reporter.observer.enableBackgroundDelivery(
-                        type: type,
-                        frequency: .daily
-                    ) { (success, error) in
-                        if error == nil {
-                            print("enabled")
+                        reporter.observer.enableBackgroundDelivery(
+                            type: type,
+                            frequency: .daily
+                        ) { (success, error) in
+                            if error == nil {
+                                print("enabled")
+                            }
                         }
+                        reporter.manager.executeQuery(query)
+                    } catch {
+                        print(error)
                     }
                 }
             }

@@ -26,10 +26,14 @@
 	<string>This app needs permission to share your health data</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>This app needs permission to update your health data</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>This app needs permission to update your location data always</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app needs permission to update your location data during usage</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs permission to update your location data always</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs permission to update your location data during usage</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
