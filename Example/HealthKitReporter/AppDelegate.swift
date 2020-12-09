@@ -13,14 +13,20 @@ import HealthKitReporter
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
+    var observerUpdateHandler: ((Query?, String?, Error?) -> Void)?
+
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        let localNotificationManager = LocalNotificationManager()
+        localNotificationManager.requestPermission { (success, error) in }
         do {
             let reporter = try HealthKitReporter()
             let types: [SampleType] = [
                 QuantityType.stepCount,
+                QuantityType.heartRate,
+                QuantityType.distanceCycling,
                 CategoryType.sleepAnalysis
             ]
             reporter.manager.requestAuthorization(
@@ -33,13 +39,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let query = try reporter.observer.observerQuery(
                                 type: type
                             ) { (query, identifier, error) in
-                                if error == nil && identifier != nil {
-                                    print("updates for \(identifier!)")
+                                if let identifier = identifier {
+                                    let notification = LocalNotification(
+                                        title: "Observed",
+                                        subtitle: identifier
+                                    )
+                                    localNotificationManager.scheduleNotification(notification)
                                 }
                             }
                             reporter.observer.enableBackgroundDelivery(
                                 type: type,
-                                frequency: .daily
+                                frequency: .immediate
                             ) { (success, error) in
                                 if error == nil {
                                     print("enabled")
@@ -59,3 +69,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler(
+            [
+                .alert,
+                .badge,
+                .sound
+            ]
+        )
+    }
+}
