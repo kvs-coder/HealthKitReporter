@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		179DA3B125250601003A2C22 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 179DA3B025250601003A2C22 /* HealthKit.framework */; };
+		17FB97D12581399C0092B9E9 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FB97D02581399C0092B9E9 /* LocalNotificationManager.swift */; };
+		17FB97DA25813A250092B9E9 /* LocalNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FB97D925813A250092B9E9 /* LocalNotification.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -50,6 +52,8 @@
 		17B76BF7255C501100A62E96 /* CODE_OF_CONDUCT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CODE_OF_CONDUCT.md; path = ../CODE_OF_CONDUCT.md; sourceTree = "<group>"; };
 		17B76BF8255C501100A62E96 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CONTRIBUTING.md; path = ../CONTRIBUTING.md; sourceTree = "<group>"; };
 		17B76BF9255C501100A62E96 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
+		17FB97D02581399C0092B9E9 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
+		17FB97D925813A250092B9E9 /* LocalNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotification.swift; sourceTree = "<group>"; };
 		18B9502231E7C5A897312197 /* Pods-HealthKitReporter_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKitReporter_Example.debug.xcconfig"; path = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		537879F82DA60D94091A8E1E /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKitReporter_Example.release.xcconfig"; path = "Target Support Files/Pods-HealthKitReporter_Example/Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* HealthKitReporter_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthKitReporter_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +94,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17FB97D825813A150092B9E9 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				17FB97D02581399C0092B9E9 /* LocalNotificationManager.swift */,
+				17FB97D925813A250092B9E9 /* LocalNotification.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +128,7 @@
 		607FACD21AFB9204008FA782 /* HealthKitReporter_Example */ = {
 			isa = PBXGroup;
 			children = (
+				17FB97D825813A150092B9E9 /* Service */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -381,6 +395,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17FB97DA25813A250092B9E9 /* LocalNotification.swift in Sources */,
+				17FB97D12581399C0092B9E9 /* LocalNotificationManager.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
