@@ -1,3 +1,7 @@
+## [1.3.1] - 23.12.2020.
+
+* Fix with HKActivitySummaryType identifier
+
 ## [1.3.0] - 08.12.2020.
 
 * All reading and observer queries are returned as objects in order to let to stop them running

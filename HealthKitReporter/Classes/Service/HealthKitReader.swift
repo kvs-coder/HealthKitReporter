@@ -469,12 +469,12 @@ public class HealthKitReader {
     }
     /**
      Queries activity summary.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (otpional). nil by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter completionHandler: returns a block with activity summary array
      */
     public func queryActivitySummary(
-        predicate: NSPredicate? = .allSamples,
+        predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,
         completionHandler: @escaping ActivitySummaryCompletionHandler
     ) -> ActivitySummaryQuery {

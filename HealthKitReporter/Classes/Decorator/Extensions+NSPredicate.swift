@@ -27,4 +27,15 @@ public extension NSPredicate {
             options: options
         )
     }
+    static func activitySummaryPredicate(
+        dateComponents: DateComponents
+    ) -> NSPredicate {
+        return HKQuery.predicateForActivitySummary(with: dateComponents)
+    }
+    static func activitySummaryPredicateBetween(
+        start: DateComponents,
+        end: DateComponents
+    ) -> NSPredicate {
+        return HKQuery.predicate(forActivitySummariesBetweenStart: start, end: end)
+    }
 }

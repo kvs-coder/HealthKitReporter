@@ -29,7 +29,7 @@ public struct ActivitySummary: Identifiable {
         self.identifier = ActivitySummaryType
             .activitySummaryType
             .original?
-            .identifier ?? "HKActivitySummaryType"
+            .identifier ?? "HKActivitySummaryTypeIdentifier"
         self.date = activitySummary
             .dateComponents(for: Calendar.current)
             .date?
