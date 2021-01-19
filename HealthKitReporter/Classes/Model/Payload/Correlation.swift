@@ -32,6 +32,25 @@ public struct Correlation: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    public static func collect(
+        results: [HKSample]
+    ) -> [Correlation] {
+        var samples = [Correlation]()
+        if let correlations = results as? [HKCorrelation] {
+            for correlation in correlations {
+                do {
+                    let sample = try Correlation(
+                        correlation: correlation
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+
     init(correlation: HKCorrelation) throws {
         self.sourceRevision = SourceRevision(
             sourceRevision: correlation.sourceRevision

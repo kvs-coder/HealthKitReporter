@@ -12,61 +12,96 @@ import HealthKit
  All HealthKit qunatitiy types
  */
 public enum QuantityType: Int, CaseIterable, SampleType {
-    case heartRateVariabilitySDNN
     case bodyMassIndex
     case bodyFatPercentage
+    case height
+    case bodyMass
+    case leanBodyMass
+    case waistCircumference
+    case stepCount
+    case distanceWalkingRunning
+    case distanceCycling
+    case distanceWheelchair
+    case basalEnergyBurned
+    case activeEnergyBurned
+    case flightsClimbed
+    case nikeFuel
+    case appleExerciseTime
+    case pushCount
+    case distanceSwimming
+    case swimmingStrokeCount
+    case vo2Max
+    case distanceDownhillSnowSports
+    case appleStandTime
+    case walkingSpeed
+    case walkingDoubleSupportPercentage
+    case walkingAsymmetryPercentage
+    case walkingStepLength
+    case sixMinuteWalkTestDistance
+    case stairAscentSpeed
+    case stairDescentSpeed
     case heartRate
-    case respiratoryRate
-    case oxygenSaturation
     case bodyTemperature
     case basalBodyTemperature
     case bloodPressureSystolic
     case bloodPressureDiastolic
-    case bloodGlucose
-    case height
-    case bodyMass
+    case respiratoryRate
     case restingHeartRate
-    case vo2Max
-    case waistCircumference
-    case stepCount
-    case distanceSwimming
-    case distanceWalkingRunning
-    case distanceCycling
-    case basalEnergyBurned
-    case activeEnergyBurned
-    case flightsClimbed
-    case appleExerciseTime
-    case dietaryEnergyConsumed
+    case walkingHeartRateAverage
+    case heartRateVariabilitySDNN
+    case oxygenSaturation
+    case peripheralPerfusionIndex
+    case bloodGlucose
+    case numberOfTimesFallen
+    case electrodermalActivity
+    case inhalerUsage
+    case insulinDelivery
+    case bloodAlcoholContent
+    case forcedVitalCapacity
+    case forcedExpiratoryVolume1
+    case peakExpiratoryFlowRate
+    case environmentalAudioExposure
+    case headphoneAudioExposure
+    case dietaryFatTotal
+    case dietaryFatPolyunsaturated
+    case dietaryFatMonounsaturated
+    case dietaryFatSaturated
+    case dietaryCholesterol
+    case dietarySodium
     case dietaryCarbohydrates
     case dietaryFiber
     case dietarySugar
-    case dietaryFatTotal
-    case dietaryFatSaturated
+    case dietaryEnergyConsumed
     case dietaryProtein
     case dietaryVitaminA
-    case dietaryThiamin
-    case dietaryRiboflavin
-    case dietaryNiacin
-    case dietaryPantothenicAcid
     case dietaryVitaminB6
     case dietaryVitaminB12
     case dietaryVitaminC
     case dietaryVitaminD
     case dietaryVitaminE
     case dietaryVitaminK
-    case dietaryFolate
     case dietaryCalcium
     case dietaryIron
-    case dietaryMagnesium
+    case dietaryThiamin
+    case dietaryRiboflavin
+    case dietaryNiacin
+    case dietaryFolate
+    case dietaryBiotin
+    case dietaryPantothenicAcid
     case dietaryPhosphorus
-    case dietaryPotassium
-    case dietarySodium
-    case dietaryZinc
     case dietaryIodine
+    case dietaryMagnesium
+    case dietaryZinc
+    case dietarySelenium
+    case dietaryCopper
     case dietaryManganese
+    case dietaryChromium
+    case dietaryMolybdenum
+    case dietaryChloride
+    case dietaryPotassium
+    case dietaryCaffeine
     case dietaryWater
-    case environmentalAudioExposure
-    case headphoneAudioExposure
+    case uvExposure
 
     public var identifier: String? {
         return original?.identifier
@@ -180,6 +215,60 @@ public enum QuantityType: Int, CaseIterable, SampleType {
             return HKObjectType.quantityType(forIdentifier: .dietaryManganese)
         case .dietaryWater:
             return HKObjectType.quantityType(forIdentifier: .dietaryWater)
+        case .peakExpiratoryFlowRate:
+            return HKObjectType.quantityType(forIdentifier: .peakExpiratoryFlowRate)
+        case .leanBodyMass:
+            return HKObjectType.quantityType(forIdentifier: .leanBodyMass)
+        case .distanceWheelchair:
+            return HKObjectType.quantityType(forIdentifier: .distanceWheelchair)
+        case .nikeFuel:
+            return HKObjectType.quantityType(forIdentifier: .nikeFuel)
+        case .pushCount:
+            return HKObjectType.quantityType(forIdentifier: .pushCount)
+        case .swimmingStrokeCount:
+            return HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount)
+        case .distanceDownhillSnowSports:
+            return HKObjectType.quantityType(forIdentifier: .distanceDownhillSnowSports)
+        case .walkingHeartRateAverage:
+            return HKObjectType.quantityType(forIdentifier: .walkingHeartRateAverage)
+        case .peripheralPerfusionIndex:
+            return HKObjectType.quantityType(forIdentifier: .peripheralPerfusionIndex)
+        case .numberOfTimesFallen:
+            return HKObjectType.quantityType(forIdentifier: .numberOfTimesFallen)
+        case .electrodermalActivity:
+            return HKObjectType.quantityType(forIdentifier: .electrodermalActivity)
+        case .inhalerUsage:
+            return HKObjectType.quantityType(forIdentifier: .inhalerUsage)
+        case .insulinDelivery:
+            return HKObjectType.quantityType(forIdentifier: .insulinDelivery)
+        case .bloodAlcoholContent:
+            return HKObjectType.quantityType(forIdentifier: .bloodAlcoholContent)
+        case .forcedVitalCapacity:
+            return HKObjectType.quantityType(forIdentifier: .forcedVitalCapacity)
+        case .forcedExpiratoryVolume1:
+            return HKObjectType.quantityType(forIdentifier: .forcedExpiratoryVolume1)
+        case .dietaryFatPolyunsaturated:
+            return HKObjectType.quantityType(forIdentifier: .dietaryFatPolyunsaturated)
+        case .dietaryFatMonounsaturated:
+            return HKObjectType.quantityType(forIdentifier: .dietaryFatMonounsaturated)
+        case .dietaryCholesterol:
+            return HKObjectType.quantityType(forIdentifier: .dietaryCholesterol)
+        case .dietaryBiotin:
+            return HKObjectType.quantityType(forIdentifier: .dietaryBiotin)
+        case .dietarySelenium:
+            return HKObjectType.quantityType(forIdentifier: .dietarySelenium)
+        case .dietaryCopper:
+            return HKObjectType.quantityType(forIdentifier: .dietaryCopper)
+        case .dietaryChromium:
+            return HKObjectType.quantityType(forIdentifier: .dietaryChromium)
+        case .dietaryMolybdenum:
+            return HKObjectType.quantityType(forIdentifier: .dietaryMolybdenum)
+        case .dietaryChloride:
+            return HKObjectType.quantityType(forIdentifier: .dietaryChloride)
+        case .dietaryCaffeine:
+            return HKObjectType.quantityType(forIdentifier: .dietaryCaffeine)
+        case .uvExposure:
+            return HKObjectType.quantityType(forIdentifier: .uvExposure)
         case .environmentalAudioExposure:
             if #available(iOS 13.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)
@@ -189,6 +278,54 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .headphoneAudioExposure:
             if #available(iOS 13.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)
+            } else {
+                return nil
+            }
+        case .appleStandTime:
+            if #available(iOS 13.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .appleStandTime)
+            } else {
+                return nil
+            }
+        case .walkingSpeed:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .walkingSpeed)
+            } else {
+                return nil
+            }
+        case .walkingDoubleSupportPercentage:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .walkingDoubleSupportPercentage)
+            } else {
+                return nil
+            }
+        case .walkingAsymmetryPercentage:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .walkingAsymmetryPercentage)
+            } else {
+                return nil
+            }
+        case .walkingStepLength:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .walkingStepLength)
+            } else {
+                return nil
+            }
+        case .sixMinuteWalkTestDistance:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .sixMinuteWalkTestDistance)
+            } else {
+                return nil
+            }
+        case .stairAscentSpeed:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .stairAscentSpeed)
+            } else {
+                return nil
+            }
+        case .stairDescentSpeed:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .stairDescentSpeed)
             } else {
                 return nil
             }

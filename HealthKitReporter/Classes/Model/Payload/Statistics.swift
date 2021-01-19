@@ -13,17 +13,23 @@ public struct Statistics: Identifiable, Sample {
         public let summary: Double?
         public let average: Double?
         public let recent: Double?
+        public let min: Double?
+        public let max: Double?
         public let unit: String
 
         public init(
             summary: Double?,
             average: Double?,
             recent: Double?,
+            min: Double?,
+            max: Double?,
             unit: String
         ) {
             self.summary = summary
             self.average = average
             self.recent = recent
+            self.min = min
+            self.max = max
             self.unit = unit
         }
     }
@@ -43,6 +49,8 @@ public struct Statistics: Identifiable, Sample {
             summary: statistics.sumQuantity()?.doubleValue(for: unit),
             average: statistics.averageQuantity()?.doubleValue(for: unit),
             recent: statistics.mostRecentQuantity()?.doubleValue(for: unit),
+            min: statistics.minimumQuantity()?.doubleValue(for: unit),
+            max: statistics.maximumQuantity()?.doubleValue(for: unit),
             unit: unit.unitString
         )
     }

@@ -1,3 +1,8 @@
+## [1.3.2] - 19.01.2021.
+
+* Deprecate SampleQuery, use specific queries instead (Quantity, Category etc.)
+* Added more QuantityType enum cases (iOS 14)
+
 ## [1.3.1] - 23.12.2020.
 
 * Fix with HKActivitySummaryType identifier

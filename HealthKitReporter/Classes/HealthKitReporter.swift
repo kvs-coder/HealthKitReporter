@@ -119,6 +119,15 @@ public typealias QuantityResultsHandler = (
 ) -> Void
 /**
  - Parameters:
+ - samples: correlation sample array. Empty by default
+ - error: error (optional)
+ */
+public typealias CorrelationResultsHandler = (
+    _ samples: [Correlation],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
  - statistics: statistics. Nil by default
  - error: error (optional)
  */

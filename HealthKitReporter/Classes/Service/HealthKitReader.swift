@@ -180,6 +180,52 @@ public class HealthKitReader {
         return query
     }
     /**
+     Queries correlations.
+     - Parameter type: **CorrelationType** types
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples
+     - Throws: HealthKitError.invalidType
+     */
+    public func correlationQuery(
+        type: CorrelationType,
+        predicate: NSPredicate? = .allSamples,
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping CorrelationResultsHandler
+    ) throws -> SampleQuery {
+        guard let correlationType = type.original as? HKCorrelationType else {
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKWorkoutType"
+            )
+        }
+        let query = HKSampleQuery(
+            sampleType: correlationType,
+            predicate: predicate,
+            limit: limit,
+            sortDescriptors: sortDescriptors
+        ) { (query, data, error) in
+            guard
+                error == nil,
+                let results = data
+            else {
+                resultsHandler([], error)
+                return
+            }
+            let samples = Correlation.collect(
+                results: results
+            )
+            resultsHandler(samples, nil)
+        }
+        return query
+    }
+    /**
      Queries electrocardiogram.
      - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
@@ -244,6 +290,11 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @available(
+        iOS,
+        deprecated: 11,
+        message: "Use special functions for fetching Quantity/Category/Workout samples. For Quantity Samples will return with SI units"
+    )
     public func sampleQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,

@@ -90,7 +90,11 @@ class ViewController: UIViewController {
     private func read() {
         do {
             let reporter = try HealthKitReporter()
-            let types = [QuantityType.stepCount]
+            let types: [QuantityType] = [
+                .stepCount,
+                .heartRate,
+                .heartRateVariabilitySDNN
+            ]
             reporter.manager.requestAuthorization(
                 toRead: types,
                 toWrite: types
@@ -100,13 +104,14 @@ class ViewController: UIViewController {
                         if error == nil {
                             for preferredUnit in preferredUnits {
                                 do {
-                                    let query = try reporter.reader.quantityQuery(
+                                    let quantityQuery = try reporter.reader.quantityQuery(
                                         type: try QuantityType.make(from: preferredUnit.identifier),
                                         unit: preferredUnit.unit
                                     ) { (results, error) in
                                         if error == nil {
                                             for element in results {
                                                 do {
+                                                    print("QUANTITY")
                                                     print(try element.encoded())
                                                 } catch {
                                                     print(error)
@@ -116,7 +121,23 @@ class ViewController: UIViewController {
                                             print(error)
                                         }
                                     }
-                                    reporter.manager.executeQuery(query)
+                                    reporter.manager.executeQuery(quantityQuery)
+                                    let statisticsQuery = try reporter.reader.statisticsQuery(
+                                        type: try QuantityType.make(from: preferredUnit.identifier),
+                                        unit: preferredUnit.unit
+                                    ) { (element, error) in
+                                        if error == nil {
+                                            do {
+                                                print("STATISTICS")
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
+                                        } else {
+                                            print(error)
+                                        }
+                                    }
+                                    reporter.manager.executeQuery(statisticsQuery)
                                 } catch {
                                     print(error)
                                 }
