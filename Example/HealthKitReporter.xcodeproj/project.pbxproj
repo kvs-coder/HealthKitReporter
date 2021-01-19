@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 1732D4522565DE3600454F4E /* Build configuration list for PBXAggregateTarget "HealthKitReporterAggregate" */;
 			buildPhases = (
-				1732D4582565DE3A00454F4E /* ShellScript */,
+				1732D4582565DE3A00454F4E /* Run Script */,
 			);
 			dependencies = (
 			);
@@ -309,7 +309,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1732D4582565DE3A00454F4E /* ShellScript */ = {
+		1732D4582565DE3A00454F4E /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -318,6 +318,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
