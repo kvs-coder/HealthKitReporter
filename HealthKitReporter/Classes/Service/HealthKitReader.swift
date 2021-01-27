@@ -38,12 +38,26 @@ public class HealthKitReader {
         let birthday = try? healthStore.dateOfBirthComponents()
         let bloodType = try? healthStore.bloodType()
         let skinType = try? healthStore.fitzpatrickSkinType()
-        return Characteristic(
-            biologicalSex: biologicalSex,
-            birthday: birthday,
-            bloodType: bloodType,
-            skinType: skinType
-        )
+        let wheelchairUse = try? healthStore.wheelchairUse()
+        if #available(iOS 14.0, *) {
+            let activityMoveMode = try? healthStore.activityMoveMode()
+            return Characteristic(
+                biologicalSex: biologicalSex,
+                birthday: birthday,
+                bloodType: bloodType,
+                skinType: skinType,
+                wheelchairUse: wheelchairUse,
+                activityMoveMode: activityMoveMode
+            )
+        } else {
+            return Characteristic(
+                biologicalSex: biologicalSex,
+                birthday: birthday,
+                bloodType: bloodType,
+                skinType: skinType,
+                wheelchairUse: wheelchairUse
+            )
+        }
     }
     /**
      Queries quantity types.

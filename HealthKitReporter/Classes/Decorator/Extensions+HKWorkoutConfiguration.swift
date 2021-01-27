@@ -13,7 +13,7 @@ extension HKWorkoutConfiguration: Harmonizable {
 
     func harmonize() throws -> Harmonized {
         let unit = HKUnit.meter()
-        guard let value = self.lapLength?.doubleValue(for: unit) else {
+        guard let value = lapLength?.doubleValue(for: unit) else {
             throw HealthKitError.invalidValue("Value for HKWorkoutConfiguration is invalid")
         }
         return Harmonized(

@@ -130,10 +130,10 @@ extension HKQuantitySample: Harmonizable {
     }
 
     private func quantity(unit: HKUnit) -> Harmonized {
-        let value = self.quantity.doubleValue(for: unit)
+        let value = quantity.doubleValue(for: unit)
         return Harmonized(
             value: value,
             unit: unit.unitString,
-            metadata: self.metadata?.compactMapValues { String(describing: $0 )})
+            metadata: metadata?.compactMapValues { String(describing: $0 )})
     }
 }

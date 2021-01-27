@@ -10,9 +10,9 @@ import HealthKit
 
 extension HKSourceRevision {
     var systemVersion: String {
-        let major = self.operatingSystemVersion.majorVersion
-        let minor = self.operatingSystemVersion.minorVersion
-        let patch = self.operatingSystemVersion.patchVersion
+        let major = operatingSystemVersion.majorVersion
+        let minor = operatingSystemVersion.minorVersion
+        let patch = operatingSystemVersion.patchVersion
         return "\(major).\(minor).\(patch)"
     }
 }

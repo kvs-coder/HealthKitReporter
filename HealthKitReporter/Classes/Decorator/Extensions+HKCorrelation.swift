@@ -29,7 +29,7 @@ extension HKCorrelation: Harmonizable {
         return Harmonized(
             quantitySamples: quantityArray,
             categorySamples: categoryArray,
-            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }

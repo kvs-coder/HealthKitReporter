@@ -15,7 +15,7 @@ extension HKElectrocardiogram: Harmonizable {
     func harmonize() throws -> Harmonized {
         let averageHeartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
         guard
-            let averageHeartRate = self.averageHeartRate?.doubleValue(for: averageHeartRateUnit)
+            let averageHeartRate = averageHeartRate?.doubleValue(for: averageHeartRateUnit)
         else {
             throw HealthKitError.invalidValue(
                 "Invalid averageHeartRate value for HKElectrocardiogram"
@@ -23,7 +23,7 @@ extension HKElectrocardiogram: Harmonizable {
         }
         let samplingFrequencyUnit = HKUnit.hertz()
         guard
-            let samplingFrequency = self.samplingFrequency?.doubleValue(for: samplingFrequencyUnit)
+            let samplingFrequency = samplingFrequency?.doubleValue(for: samplingFrequencyUnit)
         else {
             throw HealthKitError.invalidValue(
                 "Invalid samplingFrequency value for HKElectrocardiogram"
@@ -38,7 +38,7 @@ extension HKElectrocardiogram: Harmonizable {
             samplingFrequencyUnit: samplingFrequencyUnit.unitString,
             classification: classification,
             symptomsStatus: symptomsStatus,
-            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }
@@ -49,7 +49,7 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
 
     func harmonize() throws -> Harmonized {
         guard
-            let quantitiy = self.quantity(for: .appleWatchSimilarToLeadI)
+            let quantitiy = quantity(for: .appleWatchSimilarToLeadI)
         else {
             throw HealthKitError.invalidValue(
                 "Invalid averageHeartRate value for HKElectrocardiogram"

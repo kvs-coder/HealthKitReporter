@@ -79,9 +79,7 @@ public struct Category: Identifiable, Sample {
 // MARK: - Original
 extension Category: Original {
     func asOriginal() throws -> HKCategorySample {
-        guard let type = HKObjectType.categoryType(
-            forIdentifier: HKCategoryTypeIdentifier(rawValue: identifier)
-        ) else {
+        guard let type = identifier.objectType?.original as? HKCategoryType else {
             throw HealthKitError.invalidType(
                 "Category type identifier: \(identifier) could not be foramtted"
             )

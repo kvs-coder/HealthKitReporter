@@ -11,14 +11,15 @@ import HealthKit
 extension HKQuantityType {
     func parsed() throws -> QuantityType {
         for type in QuantityType.allCases {
-            if type.identifier == self.identifier {
+            if type.identifier == identifier {
                 return type
             }
         }
         throw HealthKitError.invalidType("Unknown HKObjectType")
     }
+
     var statisticsOptions: HKStatisticsOptions {
-        switch self.aggregationStyle {
+        switch aggregationStyle {
         case .cumulative:
             return .cumulativeSum
         case .discreteArithmetic,

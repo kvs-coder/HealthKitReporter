@@ -14,29 +14,29 @@ extension HKWorkout: Harmonizable {
     func harmonize() throws -> Harmonized {
         let totalEnergyBurnedUnit = HKUnit.largeCalorie()
         guard
-            let totalEnergyBurned = self.totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit)
+            let totalEnergyBurned = totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit)
         else {
             throw HealthKitError.invalidValue("Invalid totalEnergyBurned value for HKWorkout")
         }
         let totalDistanceUnit = HKUnit.meter()
         guard
-            let totalDistance = self.totalDistance?.doubleValue(for: totalDistanceUnit)
+            let totalDistance = totalDistance?.doubleValue(for: totalDistanceUnit)
         else {
             throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
         }
         let countUnit = HKUnit.count()
         guard
-            let totalSwimmingStrokeCount = self.totalSwimmingStrokeCount?.doubleValue(for: countUnit)
+            let totalSwimmingStrokeCount = totalSwimmingStrokeCount?.doubleValue(for: countUnit)
         else {
             throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
         }
         guard
-            let totalFlightsClimbed = self.totalFlightsClimbed?.doubleValue(for: countUnit)
+            let totalFlightsClimbed = totalFlightsClimbed?.doubleValue(for: countUnit)
         else {
             throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
         }
         return Harmonized(
-            value: Int(self.workoutActivityType.rawValue),
+            value: Int(workoutActivityType.rawValue),
             totalEnergyBurned: totalEnergyBurned,
             totalEnergyBurnedUnit: totalEnergyBurnedUnit.unitString,
             totalDistance: totalDistance,
@@ -45,7 +45,7 @@ extension HKWorkout: Harmonizable {
             totalSwimmingStrokeCountUnit: countUnit.unitString,
             totalFlightsClimbed: totalFlightsClimbed,
             totalFlightsClimbedUnit: countUnit.unitString,
-            metadata: self.metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.compactMapValues { String(describing: $0 )}
         )
     }
 }

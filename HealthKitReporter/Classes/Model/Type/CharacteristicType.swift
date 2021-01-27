@@ -16,6 +16,8 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case dateOfBirth
     case bloodType
     case biologicalSex
+    case wheelchairUse
+    case activityMoveMode
 
     public var original: HKObjectType? {
         switch self {
@@ -27,6 +29,14 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
             return HKObjectType.characteristicType(forIdentifier: .bloodType)
         case .biologicalSex:
             return HKObjectType.characteristicType(forIdentifier: .biologicalSex)
+        case .wheelchairUse:
+            return HKObjectType.characteristicType(forIdentifier: .wheelchairUse)
+        case .activityMoveMode:
+            if #available(iOS 14.0, *) {
+                return HKObjectType.characteristicType(forIdentifier: .activityMoveMode)
+            } else {
+                return nil
+            }
         }
     }
 }

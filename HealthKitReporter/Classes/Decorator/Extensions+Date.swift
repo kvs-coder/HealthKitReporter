@@ -14,7 +14,7 @@ public extension Date {
     }
 
     var millisecondsSince1970: Double {
-        return self.timeIntervalSince1970 * 1000
+        return timeIntervalSince1970 * 1000
     }
 
     func formatted(

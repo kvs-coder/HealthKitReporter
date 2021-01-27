@@ -94,11 +94,7 @@ public struct Quantity: Identifiable, Sample {
 // MARK: - Original
 extension Quantity: Original {
     func asOriginal() throws -> HKQuantitySample {
-        guard
-            let type = HKObjectType.quantityType(
-                forIdentifier: HKQuantityTypeIdentifier(rawValue: identifier)
-            )
-        else {
+        guard let type = identifier.objectType?.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "Quantitiy type identifier: \(identifier) could not be foramtted"
             )
