@@ -1,3 +1,7 @@
+## [1.3.3] - 27.01.2021.
+
+* Added more CategoryType enum cases (iOS 14)
+
 ## [1.3.2] - 19.01.2021.
 
 * Deprecate SampleQuery, use specific queries instead (Quantity, Category etc.)
