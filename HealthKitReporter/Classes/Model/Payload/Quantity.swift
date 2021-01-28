@@ -25,6 +25,7 @@ public struct Quantity: Identifiable, Sample {
         }
     }
 
+    public let uuid: String
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
@@ -54,6 +55,7 @@ public struct Quantity: Identifiable, Sample {
     }
 
     init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
+        self.uuid = quantitySample.uuid.uuidString
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
@@ -67,6 +69,7 @@ public struct Quantity: Identifiable, Sample {
     }
 
     init(quantitySample: HKQuantitySample) throws {
+        self.uuid = quantitySample.uuid.uuidString
         self.identifier = quantitySample.quantityType.identifier
         self.startTimestamp = quantitySample.startDate.timeIntervalSince1970
         self.endTimestamp = quantitySample.endDate.timeIntervalSince1970
@@ -76,6 +79,7 @@ public struct Quantity: Identifiable, Sample {
     }
 
     public init(
+        uuid: String,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -83,6 +87,7 @@ public struct Quantity: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -118,6 +123,7 @@ extension Quantity: Payload {
         from dictionary: [String : Any]
     ) throws -> Quantity {
         guard
+            let uuid = dictionary["uuid"] as? String,
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? Double,
             let endTimestamp = dictionary["endTimestamp"] as? Double,
@@ -128,6 +134,7 @@ extension Quantity: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Quantity(
+            uuid: uuid,
             identifier: identifier,
             startTimestamp: startTimestamp.secondsSince1970,
             endTimestamp: endTimestamp.secondsSince1970,

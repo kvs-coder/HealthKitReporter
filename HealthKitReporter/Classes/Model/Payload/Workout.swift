@@ -46,6 +46,7 @@ public struct Workout: Identifiable, Sample {
         }
     }
 
+    public let uuid: String
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
@@ -76,6 +77,7 @@ public struct Workout: Identifiable, Sample {
     }
 
     init(workout: HKWorkout) throws {
+        self.uuid = workout.uuid.uuidString
         self.identifier = workout.sampleType.identifier
         self.startTimestamp = workout.startDate.timeIntervalSince1970
         self.endTimestamp = workout.endDate.timeIntervalSince1970
@@ -99,6 +101,7 @@ public struct Workout: Identifiable, Sample {
     }
 
     public init(
+        uuid: String,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -109,6 +112,7 @@ public struct Workout: Identifiable, Sample {
         workoutEvents: [WorkoutEvent],
         harmonized: Harmonized
     ) {
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -162,6 +166,7 @@ extension Workout: Payload {
         from dictionary: [String: Any]
     ) throws -> Workout {
         guard
+            let uuid = dictionary["uuid"] as? String,
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? Double,
             let endTimestamp = dictionary["endTimestamp"] as? Double,
@@ -175,6 +180,7 @@ extension Workout: Payload {
         let device = dictionary["device"] as? [String: Any]
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
         return Workout(
+            uuid: uuid,
             identifier: identifier,
             startTimestamp: startTimestamp.secondsSince1970,
             endTimestamp: endTimestamp.secondsSince1970,

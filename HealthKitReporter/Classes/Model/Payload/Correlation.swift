@@ -25,6 +25,7 @@ public struct Correlation: Identifiable, Sample {
         }
     }
 
+    public let uuid: String
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
@@ -55,6 +56,7 @@ public struct Correlation: Identifiable, Sample {
         self.sourceRevision = SourceRevision(
             sourceRevision: correlation.sourceRevision
         )
+        self.uuid = correlation.uuid.uuidString
         self.identifier = correlation.correlationType.identifier
         self.startTimestamp = correlation.startDate.timeIntervalSince1970
         self.endTimestamp = correlation.endDate.timeIntervalSince1970
