@@ -52,6 +52,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         }
     }
 
+    public let uuid: String
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
@@ -80,6 +81,7 @@ public struct Electrocardiogram: Identifiable, Sample {
     }
 
     init(electrocardiogram: HKElectrocardiogram) throws {
+        self.uuid = electrocardiogram.uuid.uuidString
         self.identifier = ElectrocardiogramType
             .electrocardiogramType
             .original?
