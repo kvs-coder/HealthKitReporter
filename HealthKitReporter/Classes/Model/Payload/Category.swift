@@ -85,7 +85,7 @@ extension Category: Original {
     func asOriginal() throws -> HKCategorySample {
         guard let type = identifier.objectType?.original as? HKCategoryType else {
             throw HealthKitError.invalidType(
-                "Category type identifier: \(identifier) could not be foramtted"
+                "Category type identifier: \(identifier) could not be formatted"
             )
         }
         return HKCategorySample(

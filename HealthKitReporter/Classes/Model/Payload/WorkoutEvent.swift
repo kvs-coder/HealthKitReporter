@@ -58,7 +58,7 @@ extension WorkoutEvent: Original {
     func asOriginal() throws -> HKWorkoutEvent {
         guard let type = HKWorkoutEventType(rawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
-                "WorkoutEvent type: \(harmonized.value) could not be foramtted"
+                "WorkoutEvent type: \(harmonized.value) could not be formatted"
             )
         }
         return HKWorkoutEvent(

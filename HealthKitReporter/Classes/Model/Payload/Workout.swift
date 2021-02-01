@@ -129,7 +129,7 @@ extension Workout: Original {
     func asOriginal() throws -> HKWorkout {
         guard let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.value)) else {
             throw HealthKitError.invalidType(
-                "Workout type: \(harmonized.value) could not be foramtted"
+                "Workout type: \(harmonized.value) could not be formatted"
             )
         }
         return HKWorkout(

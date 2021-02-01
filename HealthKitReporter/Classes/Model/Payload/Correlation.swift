@@ -69,7 +69,7 @@ extension Correlation: Original {
     func asOriginal() throws -> HKCorrelation {
         guard let type = identifier.objectType?.original as? HKCorrelationType else {
             throw HealthKitError.invalidType(
-                "Correlation type identifier: \(identifier) could not be foramtted"
+                "Correlation type identifier: \(identifier) could not be formatted"
             )
         }
         var set = Set<HKSample>()

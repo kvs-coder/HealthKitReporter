@@ -101,7 +101,7 @@ extension Quantity: Original {
     func asOriginal() throws -> HKQuantitySample {
         guard let type = identifier.objectType?.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
-                "Quantitiy type identifier: \(identifier) could not be foramtted"
+                "Quantitiy type identifier: \(identifier) could not be formatted"
             )
         }
         return HKQuantitySample(
