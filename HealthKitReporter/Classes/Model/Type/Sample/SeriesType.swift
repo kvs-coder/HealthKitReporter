@@ -31,10 +31,14 @@ public enum SeriesType: Int, CaseIterable, SampleType {
                 return nil
             }
         case .workoutRoute:
-            let workoutRoute = HKObjectType.seriesType(
-                forIdentifier: HKWorkoutRouteTypeIdentifier
-            )
-            return workoutRoute ?? HKSeriesType.workoutRoute()
+            if #available(iOS 11.0, *) {
+                let workoutRoute = HKObjectType.seriesType(
+                    forIdentifier: HKWorkoutRouteTypeIdentifier
+                )
+                return workoutRoute ?? HKSeriesType.workoutRoute()
+            } else {
+                return nil
+            }
         }
     }
 }

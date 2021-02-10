@@ -19,6 +19,7 @@ public typealias StatisticsQuery = HKStatisticsQuery
 /// **HKStatisticsCollectionQuery** typealias
 public typealias StatisticsCollectionQuery = HKStatisticsCollectionQuery
 /// **HKActivitySummaryQuery** typealias
+@available(iOS 9.3, *)
 public typealias ActivitySummaryQuery = HKActivitySummaryQuery
 /// **HKAnchoredObjectQuery** typealias
 public typealias AnchoredObjectQuery = HKAnchoredObjectQuery
@@ -86,6 +87,7 @@ public typealias WorkoutRouteDataHandler = (
  - summaries: summary array. Empty by default
  - error: error (optional)
  */
+@available(iOS 9.3, *)
 public typealias ActivitySummaryCompletionHandler = (
     _ summaries: [ActivitySummary],
     _ error: Error?

@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@available(iOS 9.3, *)
 typealias ActivitySummaryUpdateHanlder = (
     HKActivitySummaryQuery, [HKActivitySummary]?, Error?
 ) -> Void
@@ -35,11 +36,14 @@ public class HealthKitReader {
      */
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()
-        let birthday = try? healthStore.dateOfBirthComponents()
         let bloodType = try? healthStore.bloodType()
         let skinType = try? healthStore.fitzpatrickSkinType()
-        let wheelchairUse = try? healthStore.wheelchairUse()
+        var birthday: DateComponents?
+        if #available(iOS 10.0, *) {
+            birthday = try? healthStore.dateOfBirthComponents()
+        }
         if #available(iOS 14.0, *) {
+            let wheelchairUse = try? healthStore.wheelchairUse()
             let activityMoveMode = try? healthStore.activityMoveMode()
             return Characteristic(
                 biologicalSex: biologicalSex,
@@ -49,13 +53,21 @@ public class HealthKitReader {
                 wheelchairUse: wheelchairUse,
                 activityMoveMode: activityMoveMode
             )
-        } else {
+        } else if #available(iOS 10.0, *) {
+            let wheelchairUse = try? healthStore.wheelchairUse()
             return Characteristic(
                 biologicalSex: biologicalSex,
                 birthday: birthday,
                 bloodType: bloodType,
                 skinType: skinType,
                 wheelchairUse: wheelchairUse
+            )
+        } else {
+            return Characteristic(
+                biologicalSex: biologicalSex,
+                birthday: birthday,
+                bloodType: bloodType,
+                skinType: skinType
             )
         }
     }
@@ -538,6 +550,7 @@ public class HealthKitReader {
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter completionHandler: returns a block with activity summary array
      */
+    @available(iOS 9.3, *)
     public func queryActivitySummary(
         predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,

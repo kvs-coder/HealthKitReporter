@@ -20,6 +20,21 @@ public struct Characteristic: Codable {
         biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,
         bloodType: HKBloodTypeObject?,
+        skinType: HKFitzpatrickSkinTypeObject?
+    ) {
+        self.biologicalSex = biologicalSex?.biologicalSex.string
+        self.birthday = birthday?.date?.formatted(with: Date.iso8601)
+        self.bloodType = bloodType?.bloodType.string
+        self.skinType = skinType?.skinType.string
+        self.wheelchairUse = nil
+        self.activityMoveMode = nil
+    }
+    
+    @available(iOS 10.0, *)
+    init(
+        biologicalSex: HKBiologicalSexObject?,
+        birthday: DateComponents?,
+        bloodType: HKBloodTypeObject?,
         skinType: HKFitzpatrickSkinTypeObject?,
         wheelchairUse: HKWheelchairUseObject?
     ) {

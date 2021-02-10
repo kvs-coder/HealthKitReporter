@@ -43,7 +43,11 @@ extension HKStatistics: Harmonizable {
         case .basalEnergyBurned,
              .activeEnergyBurned,
              .dietaryEnergyConsumed:
-            return statistics(unit: HKUnit.largeCalorie())
+            if #available(iOS 11.0, *) {
+                return statistics(unit: HKUnit.largeCalorie())
+            } else {
+                return statistics(unit: HKUnit.kilocalorie())
+            }
         case .basalBodyTemperature,
              .bodyTemperature:
             return statistics(unit: HKUnit.kelvin())
@@ -119,7 +123,13 @@ extension HKStatistics: Harmonizable {
         case .electrodermalActivity:
             return statistics(unit: HKUnit.siemen())
         case .insulinDelivery:
-            return statistics(unit: HKUnit.internationalUnit())
+            if #available(iOS 11.0, *) {
+                return statistics(unit: HKUnit.internationalUnit())
+            } else {
+                throw HealthKitError.notAvailable(
+                    "\(type) is not available for the current iOS"
+                )
+            }
         case .forcedVitalCapacity,
              .forcedExpiratoryVolume1:
             return statistics(unit: HKUnit.literUnit(with: .milli))
@@ -130,13 +140,24 @@ extension HKStatistics: Harmonizable {
     }
     
     private func statistics(unit: HKUnit) -> Harmonized {
-        return Harmonized(
-            summary: sumQuantity()?.doubleValue(for: unit),
-            average: averageQuantity()?.doubleValue(for: unit),
-            recent: mostRecentQuantity()?.doubleValue(for: unit),
-            min: minimumQuantity()?.doubleValue(for: unit),
-            max: maximumQuantity()?.doubleValue(for: unit),
-            unit: unit.unitString
-        )
+        if #available(iOS 12.0, *) {
+            return Harmonized(
+                summary: sumQuantity()?.doubleValue(for: unit),
+                average: averageQuantity()?.doubleValue(for: unit),
+                recent: mostRecentQuantity()?.doubleValue(for: unit),
+                min: minimumQuantity()?.doubleValue(for: unit),
+                max: maximumQuantity()?.doubleValue(for: unit),
+                unit: unit.unitString
+            )
+        } else {
+            return Harmonized(
+                summary: sumQuantity()?.doubleValue(for: unit),
+                average: averageQuantity()?.doubleValue(for: unit),
+                recent: nil,
+                min: minimumQuantity()?.doubleValue(for: unit),
+                max: maximumQuantity()?.doubleValue(for: unit),
+                unit: unit.unitString
+            )
+        }
     }
 }

@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.author                = { 'Victor Kachalov' => 'victorkachalov@gmail.com' }
   s.source                = { :git => 'https://github.com/VictorKachalov/HealthKitReporter.git', :tag => s.version.to_s }
   s.social_media_url      = 'https://www.facebook.com/profile.php?id=1700091944'
-  s.platform              = :ios, '12.0'
-  s.ios.deployment_target = '12.0'
+  s.platform              = :ios, '9.0'
+  s.ios.deployment_target = '9.0'
   s.source_files          = 'HealthKitReporter/Classes/**/*'
 end

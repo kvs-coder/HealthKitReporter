@@ -36,7 +36,11 @@ public struct WorkoutRoute: Codable {
             self.floor = location.floor?.level
             self.horizontalAccuracy = location.horizontalAccuracy
             self.speed = location.speed
-            self.speedAccuracy = location.speedAccuracy
+            if #available(iOS 10.0, *) {
+                self.speedAccuracy = location.speedAccuracy
+            } else {
+                self.speedAccuracy = 0
+            }
             self.timestamp = location.timestamp.timeIntervalSince1970
             self.verticalAccuracy = location.verticalAccuracy
         }

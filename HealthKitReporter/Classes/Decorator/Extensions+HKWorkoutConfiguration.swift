@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@available(iOS 10.0, *)
 extension HKWorkoutConfiguration: Harmonizable {
     typealias Harmonized = WorkoutConfiguration.Harmonized
 
