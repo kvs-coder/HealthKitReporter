@@ -205,19 +205,19 @@ extension Workout.Harmonized: Payload {
         from dictionary: [String: Any]
     ) throws -> Workout.Harmonized {
         guard
-            let value = (dictionary["value"] as? String)?.integer,
+            let value = dictionary["value"] as? Int,
             let totalEnergyBurnedUnit = dictionary["totalEnergyBurnedUnit"] as? String,
             let totalDistanceUnit = dictionary["totalDistanceUnit"] as? String,
             let totalSwimmingStrokeCountUnit = dictionary["totalSwimmingStrokeCountUnit"] as? String,
-            let totalFlightsClimbedUnit = dictionary["totalFlightsClimbedUnit"] as? String,
-            let metadata = dictionary["metadata"] as? [String: String]
+            let totalFlightsClimbedUnit = dictionary["totalFlightsClimbedUnit"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let totalEnergyBurned = (dictionary["totalEnergyBurned"] as? String)?.double
-        let totalDistance = (dictionary["totalDistance"] as? String)?.double
-        let totalSwimmingStrokeCount = (dictionary["totalSwimmingStrokeCount"] as? String)?.double
-        let totalFlightsClimbed = (dictionary["totalFlightsClimbed"] as? String)?.double
+        let totalEnergyBurned = dictionary["totalEnergyBurned"] as? Double
+        let totalDistance = dictionary["totalDistance"] as? Double
+        let totalSwimmingStrokeCount = dictionary["totalSwimmingStrokeCount"] as? Double
+        let totalFlightsClimbed = dictionary["totalFlightsClimbed"] as? Double
+        let metadata = dictionary["metadata"] as? [String: String]
         return Workout.Harmonized(
             value: value,
             totalEnergyBurned: totalEnergyBurned,
@@ -232,4 +232,3 @@ extension Workout.Harmonized: Payload {
         )
     }
 }
-
