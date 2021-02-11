@@ -131,11 +131,11 @@ extension Category.Harmonized: Payload {
     ) throws -> Category.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
-            let description = dictionary["description"] as? String,
-            let metadata = dictionary["metadata"] as? [String: String]
+            let description = dictionary["description"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
+        let metadata = dictionary["metadata"] as? [String: String]
         return Category.Harmonized(
             value: value,
             description: description,
