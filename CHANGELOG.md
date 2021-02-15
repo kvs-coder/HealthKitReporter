@@ -1,3 +1,11 @@
+## [1.3.6] - 10.02.2021.
+
+* Remove redundant UUID paramater
+
+## [1.3.5] - 10.02.2021.
+
+* Fix issue with saving Workout
+
 ## [1.3.4] - 01.02.2021.
 
 * Added UUID property for Wrappers of original HKObjectTypes

@@ -63,7 +63,6 @@ public struct Category: Identifiable, Sample {
     }
 
     public init(
-        uuid: String,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -71,7 +70,7 @@ public struct Category: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = uuid
+        self.uuid = UUID().uuidString
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -104,7 +103,6 @@ extension Category: Payload {
         from dictionary: [String : Any]
     ) throws -> Category {
         guard
-            let uuid = dictionary["uuid"] as? String,
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? Double,
             let endTimestamp = dictionary["endTimestamp"] as? Double,
@@ -115,7 +113,6 @@ extension Category: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Category(
-            uuid: uuid,
             identifier: identifier,
             startTimestamp: startTimestamp.secondsSince1970,
             endTimestamp: endTimestamp.secondsSince1970,
@@ -134,11 +131,11 @@ extension Category.Harmonized: Payload {
     ) throws -> Category.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
-            let description = dictionary["description"] as? String,
-            let metadata = dictionary["metadata"] as? [String: String]
+            let description = dictionary["description"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
+        let metadata = dictionary["metadata"] as? [String: String]
         return Category.Harmonized(
             value: value,
             description: description,
