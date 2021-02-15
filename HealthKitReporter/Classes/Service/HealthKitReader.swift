@@ -599,7 +599,7 @@ public class HealthKitReader {
         ),
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
-        completionHandler: @escaping SampleResultsHandler
+        completionHandler: @escaping AnchoredResultsHandler
     ) throws -> AnchoredObjectQuery {
         guard let sampleType = type.original as? HKSampleType else {
             throw HealthKitError.invalidType(
@@ -614,6 +614,8 @@ public class HealthKitReader {
                 completionHandler(
                     query,
                     [],
+                    deletedObjects,
+                    anchor,
                     error
                 )
                 return
@@ -630,6 +632,8 @@ public class HealthKitReader {
             completionHandler(
                 query,
                 samples,
+                deletedObjects,
+                anchor,
                 nil
             )
         }
@@ -644,6 +648,41 @@ public class HealthKitReader {
             query.updateHandler = resultsHandler
         }
         return query
+    }
+    /**
+     Queries objects (with anchors).
+     - Parameter type: **SampleType** types
+     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
+     - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
+     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
+     - Parameter completionHandler: returns a block with samples
+     - Throws: HealthKitError.invalidType
+     */
+    public func anchoredObjectQuery(
+        type: SampleType,
+        predicate: NSPredicate? = .allSamples,
+        anchor: HKQueryAnchor? = HKQueryAnchor(
+            fromValue: Int(HKAnchoredObjectQueryNoAnchor)
+        ),
+        limit: Int = HKObjectQueryNoLimit,
+        monitorUpdates: Bool = false,
+        completionHandler: @escaping SampleResultsHandler
+    ) throws -> AnchoredObjectQuery {
+        let resultsHandler: AnchoredResultsHandler = { (query, samples, _, _, error) in
+            completionHandler(
+                query,
+                samples,
+                error
+            )
+        }
+        
+        return try self.anchoredObjectQuery(type: type,
+                                            predicate: predicate,
+                                            anchor: anchor,
+                                            limit: limit,
+                                            monitorUpdates: monitorUpdates,
+                                            completionHandler: resultsHandler)
     }
     /**
      Queries sources.

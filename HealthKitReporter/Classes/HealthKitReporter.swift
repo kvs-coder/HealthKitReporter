@@ -66,6 +66,20 @@ public typealias SampleResultsHandler = (
 ) -> Void
 /**
  - Parameters:
+ - samples: sample array. Empty by default
+ - deletedObjects: samples array that has been deleted
+ - anchor: The anchor which was returned by a previous HKAnchoredObjectQuery result or update
+ - error: error (optional)
+ */
+public typealias AnchoredResultsHandler = (
+    _ query: Query?,
+    _ samples: [Sample],
+    _ deletedObjects: [HKDeletedObject]?,
+    _ anchor: HKQueryAnchor?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
  - serie: heartbeat serie.
  - error: error (optional)
  */
