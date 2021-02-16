@@ -162,3 +162,13 @@ extension Quantity.Harmonized: Payload {
         )
     }
 }
+// MARK: - HKUnitConvertable
+extension Quantity: HKUnitConvertable {
+    public func converted(to unit: HKUnit) throws -> Quantity {
+        guard self.harmonized.unit != unit.unitString else {
+            return self
+        }
+        let quantitySample = try self.asOriginal()
+        return try Quantity(quantitySample: quantitySample, unit: unit)
+    }
+}
