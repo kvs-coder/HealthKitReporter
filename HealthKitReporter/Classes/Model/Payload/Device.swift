@@ -51,7 +51,19 @@ public struct Device: Codable {
 }
 // MARK: - Original
 extension Device: Original {
-    func asOriginal() -> HKDevice {
+    func asOriginal() throws -> HKDevice {
+        guard
+            name != nil ||
+                manufacturer != nil ||
+                model != nil ||
+                hardwareVersion != nil ||
+                firmwareVersion != nil ||
+                softwareVersion != nil ||
+                localIdentifier != nil ||
+                udiDeviceIdentifier != nil
+        else {
+            throw HealthKitError.invalidValue("Invalid device: \(self)")
+        }
         return HKDevice(
             name: name,
             manufacturer: manufacturer,

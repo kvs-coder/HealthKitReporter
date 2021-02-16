@@ -85,6 +85,11 @@ public struct Workout: Identifiable, Sample {
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.workoutName = String(describing: workout.workoutActivityType)
         self.duration = workout.duration
+        guard #available(iOS 11.0, *) else {
+            throw HealthKitError.notAvailable(
+                "WorkoutEvents is not available for the current iOS"
+            )
+        }
         var workoutEvents = [WorkoutEvent]()
         if let events = workout.workoutEvents {
             for element in events {
@@ -131,6 +136,11 @@ extension Workout: Original {
                 "Workout type: \(harmonized.value) could not be formatted"
             )
         }
+        guard #available(iOS 10.0, *) else {
+            throw HealthKitError.notAvailable(
+                "HKWorkout initializer is not available for the current iOS"
+            )
+        }
         return HKWorkout(
             activityType: activityType,
             start: startTimestamp.asDate,
@@ -154,7 +164,7 @@ extension Workout: Original {
                     doubleValue: harmonized.totalSwimmingStrokeCount!
                 )
                 : nil,
-            device: device?.asOriginal(),
+            device: try? device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }

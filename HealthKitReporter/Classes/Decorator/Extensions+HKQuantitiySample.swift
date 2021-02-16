@@ -43,7 +43,11 @@ extension HKQuantitySample: Harmonizable {
         case .basalEnergyBurned,
              .activeEnergyBurned,
              .dietaryEnergyConsumed:
-            return quantity(unit: HKUnit.largeCalorie())
+            if #available(iOS 11.0, *) {
+                return quantity(unit: HKUnit.largeCalorie())
+            } else {
+                return quantity(unit: HKUnit.kilocalorie())
+            }
         case .basalBodyTemperature,
              .bodyTemperature:
             return quantity(unit: HKUnit.kelvin())
@@ -119,7 +123,13 @@ extension HKQuantitySample: Harmonizable {
         case .electrodermalActivity:
             return quantity(unit: HKUnit.siemen())
         case .insulinDelivery:
-            return quantity(unit: HKUnit.internationalUnit())
+            if #available(iOS 11.0, *) {
+                return quantity(unit: HKUnit.internationalUnit())
+            } else {
+                throw HealthKitError.notAvailable(
+                    "\(type) is not available for the current iOS"
+                )
+            }
         case .forcedVitalCapacity,
              .forcedExpiratoryVolume1:
             return quantity(unit: HKUnit.literUnit(with: .milli))

@@ -111,7 +111,7 @@ extension Quantity: Original {
             ),
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            device: device?.asOriginal(),
+            device: try? device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }
@@ -160,5 +160,15 @@ extension Quantity.Harmonized: Payload {
             unit: unit,
             metadata: metadata
         )
+    }
+}
+// MARK: - HKUnitConvertable
+extension Quantity: HKUnitConvertable {
+    public func converted(to unit: HKUnit) throws -> Quantity {
+        guard self.harmonized.unit != unit.unitString else {
+            return self
+        }
+        let quantitySample = try self.asOriginal()
+        return try Quantity(quantitySample: quantitySample, unit: unit)
     }
 }

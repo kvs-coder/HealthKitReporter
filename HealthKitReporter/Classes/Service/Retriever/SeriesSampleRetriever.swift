@@ -76,6 +76,11 @@ class SeriesSampleRetriever {
         dataHandler: @escaping WorkoutRouteDataHandler
     ) throws -> HKSampleQuery {
         let workoutRoute = SeriesType.workoutRoute
+        guard #available(iOS 11.0, *) else {
+            throw HealthKitError.notAvailable(
+                "HKSeriesType is not available for the current iOS"
+            )
+        }
         guard
             let seriesType = workoutRoute.original as? HKSeriesType
         else {

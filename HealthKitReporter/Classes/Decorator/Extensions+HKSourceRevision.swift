@@ -9,6 +9,7 @@ import Foundation
 import HealthKit
 
 extension HKSourceRevision {
+    @available(iOS 11.0, *)
     var systemVersion: String {
         let major = operatingSystemVersion.majorVersion
         let minor = operatingSystemVersion.minorVersion

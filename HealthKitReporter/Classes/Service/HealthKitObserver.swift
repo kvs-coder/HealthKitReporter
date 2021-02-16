@@ -37,6 +37,12 @@ public class HealthKitObserver {
                 updateHandler(query, nil, error)
                 return
             }
+            guard #available(iOS 9.3, *) else {
+                updateHandler(query, nil, HealthKitError.notAvailable(
+                    "Query objectType is not available for the current iOS"
+                ))
+                return
+            }
             guard let id = query.objectType?.identifier else {
                 updateHandler(
                     query,

@@ -88,7 +88,7 @@ extension Correlation: Original {
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
             objects: set,
-            device: device?.asOriginal(),
+            device: try? device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }

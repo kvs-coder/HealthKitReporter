@@ -8,11 +8,17 @@
 import Foundation
 import HealthKit
 
+@available(iOS 9.3, *)
 extension HKActivitySummary: Harmonizable {
     typealias Harmonized = ActivitySummary.Harmonized
 
     func harmonize() throws -> Harmonized {
-        let activeEnergyBurnedUnit = HKUnit.largeCalorie()
+        let activeEnergyBurnedUnit: HKUnit
+        if #available(iOS 11.0, *) {
+            activeEnergyBurnedUnit = HKUnit.largeCalorie()
+        } else {
+            activeEnergyBurnedUnit = HKUnit.kilocalorie()
+        }
         let activeEnergyBurned = self.activeEnergyBurned.doubleValue(for: activeEnergyBurnedUnit)
         let activeEnergyBurnedGoal = self.activeEnergyBurnedGoal.doubleValue(for: activeEnergyBurnedUnit)
         let appleExerciseTimeUnit = HKUnit.minute()

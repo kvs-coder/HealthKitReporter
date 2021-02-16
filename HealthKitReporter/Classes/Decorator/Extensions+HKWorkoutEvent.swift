@@ -12,8 +12,14 @@ extension HKWorkoutEvent: Harmonizable {
     typealias Harmonized = WorkoutEvent.Harmonized
 
     func harmonize() throws -> Harmonized {
-        return Harmonized(
-            value: type.rawValue,
-            metadata: metadata?.compactMapValues { String(describing: $0 )})
+        if #available(iOS 10.0, *) {
+            return Harmonized(
+                value: type.rawValue,
+                metadata: metadata?.compactMapValues { String(describing: $0 )})
+        } else {
+            throw HealthKitError.notAvailable(
+                "Metadata is not available for the current iOS"
+            )
+        }
     }
 }

@@ -92,7 +92,7 @@ extension Category: Original {
             value: harmonized.value,
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            device: device?.asOriginal(),
+            device: try? device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }
