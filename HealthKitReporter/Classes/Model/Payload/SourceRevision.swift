@@ -37,6 +37,18 @@ public struct SourceRevision: Codable {
             self.minorVersion = minorVersion
             self.patchVersion = patchVersion
         }
+
+        public func copyWith(
+            majorVersion: Int? = nil,
+            minorVersion: Int? = nil,
+            patchVersion: Int? = nil
+        ) -> OperatingSystem {
+            return OperatingSystem(
+                majorVersion: majorVersion ?? self.majorVersion,
+                minorVersion: minorVersion ?? self.minorVersion,
+                patchVersion: patchVersion ?? self.patchVersion
+            )
+        }
     }
 
     public let source: Source
@@ -77,6 +89,22 @@ public struct SourceRevision: Codable {
         self.productType = productType
         self.systemVersion = systemVersion
         self.operatingSystem = operatingSystem
+    }
+
+    public func copyWith(
+        source: Source? = nil,
+        version: String? = nil,
+        productType: String? = nil,
+        systemVersion: String? = nil,
+        operatingSystem: OperatingSystem? = nil
+    ) -> SourceRevision {
+        return SourceRevision(
+            source: source ?? self.source,
+            version: version ?? self.version,
+            productType: productType ?? self.productType,
+            systemVersion: systemVersion ?? self.systemVersion,
+            operatingSystem: operatingSystem ?? self.operatingSystem
+        )
     }
 }
 // MARK: - Original

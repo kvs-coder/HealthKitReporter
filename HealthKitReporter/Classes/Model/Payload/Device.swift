@@ -48,22 +48,37 @@ public struct Device: Codable {
         self.localIdentifier = localIdentifier
         self.udiDeviceIdentifier = udiDeviceIdentifier
     }
+
+    public static func local() -> Device {
+        let local = HKDevice.local()
+        return Device(device: local)
+    }
+
+    public func copyWith(
+        name: String? = nil,
+        manufacturer: String? = nil,
+        model: String? = nil,
+        hardwareVersion: String? = nil,
+        firmwareVersion: String? = nil,
+        softwareVersion: String? = nil,
+        localIdentifier: String? = nil,
+        udiDeviceIdentifier: String? = nil
+    ) -> Device {
+        return Device(
+            name: name ?? self.name,
+            manufacturer: manufacturer ?? self.manufacturer,
+            model: model ?? self.model,
+            hardwareVersion: hardwareVersion ?? self.hardwareVersion,
+            firmwareVersion: firmwareVersion ?? self.firmwareVersion,
+            softwareVersion: softwareVersion ?? self.softwareVersion,
+            localIdentifier: localIdentifier ?? self.localIdentifier,
+            udiDeviceIdentifier: udiDeviceIdentifier ?? self.udiDeviceIdentifier
+        )
+    }
 }
 // MARK: - Original
 extension Device: Original {
-    func asOriginal() throws -> HKDevice {
-        guard
-            name != nil ||
-                manufacturer != nil ||
-                model != nil ||
-                hardwareVersion != nil ||
-                firmwareVersion != nil ||
-                softwareVersion != nil ||
-                localIdentifier != nil ||
-                udiDeviceIdentifier != nil
-        else {
-            throw HealthKitError.invalidValue("Invalid device: \(self)")
-        }
+    func asOriginal() -> HKDevice {
         return HKDevice(
             name: name,
             manufacturer: manufacturer,

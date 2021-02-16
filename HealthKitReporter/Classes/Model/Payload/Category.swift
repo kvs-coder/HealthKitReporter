@@ -23,6 +23,18 @@ public struct Category: Identifiable, Sample {
             self.description = description
             self.metadata = metadata 
         }
+
+        public func copyWith(
+            value: Int? = nil,
+            description: String? = nil,
+            metadata: [String: String]? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                description: description ?? self.description,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let uuid: String
@@ -78,6 +90,24 @@ public struct Category: Identifiable, Sample {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
+
+    public func copyWith(
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        harmonized: Harmonized? = nil
+    ) -> Category {
+        return Category(
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
 }
 // MARK: - Original
 extension Category: Original {
@@ -92,7 +122,7 @@ extension Category: Original {
             value: harmonized.value,
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            device: try? device?.asOriginal(),
+            device: device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }

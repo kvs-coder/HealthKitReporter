@@ -21,6 +21,16 @@ public struct Source: Codable {
         self.name = name
         self.bundleIdentifier = bundleIdentifier
     }
+
+    public func copyWith(
+        name: String? = nil,
+        bundleIdentifier: String? = nil
+    ) -> Source {
+        return Source(
+            name: name ?? self.name,
+            bundleIdentifier: bundleIdentifier ?? self.bundleIdentifier
+        )
+    }
 }
 // MARK: - Original
 extension Source: Original {

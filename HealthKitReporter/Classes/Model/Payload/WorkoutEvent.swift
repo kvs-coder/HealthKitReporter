@@ -17,6 +17,16 @@ public struct WorkoutEvent: Sample {
             self.value = value
             self.metadata = metadata
         }
+
+        public func copyWith(
+            value: Int? = nil,
+            metadata: [String: String]? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let type: String
@@ -52,6 +62,22 @@ public struct WorkoutEvent: Sample {
         self.endTimestamp = endTimestamp
         self.duration = duration
         self.harmonized = harmonized
+    }
+
+    public func copyWith(
+        type: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        duration: Double? = nil,
+        harmonized: Harmonized? = nil
+    ) -> WorkoutEvent {
+        return WorkoutEvent(
+            type: type ?? self.type,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            duration: duration ?? self.duration,
+            harmonized: harmonized ?? self.harmonized
+        )
     }
 }
 // MARK: - Original

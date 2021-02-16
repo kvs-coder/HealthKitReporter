@@ -140,7 +140,7 @@ extension Quantity: Original {
             ),
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            device: try? device?.asOriginal(),
+            device: device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }
@@ -197,6 +197,9 @@ extension Quantity: UnitConvertable {
         guard harmonized.unit != unit else {
             return self
         }
-        return copyWith(harmonized: harmonized.copyWith(unit: unit))
+        return try Quantity(
+            quantitySample: try asOriginal(),
+            unit: HKUnit.init(from: unit)
+        )
     }
 }
