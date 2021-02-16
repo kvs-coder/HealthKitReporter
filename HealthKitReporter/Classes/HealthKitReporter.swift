@@ -8,6 +8,8 @@
 import Foundation
 import HealthKit
 
+/// ***HKQueryAnchor** typealias
+public typealias Anchor = HKQueryAnchor
 /// **HKQuery** typealias
 public typealias Query = HKQuery
 /// **HKObserverQuery** typealias
@@ -29,14 +31,14 @@ public typealias SourceQuery = HKSourceQuery
 public typealias CorrelationQuery = HKCorrelationQuery
 /**
  - Parameters:
- - success: the status
- - error: error (optional)
+    - success: the status
+    - error: error (optional)
  */
 public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
 /**
  - Parameters:
- - identifier: the object type identifier
- - error: error (optional)
+    - identifier: the object type identifier
+    - error: error (optional)
  */
 public typealias ObserverUpdateHandler = (
     _ query: Query?,
@@ -56,8 +58,8 @@ public typealias DeletionCompletionBlock = (
 ) -> Void
 /**
  - Parameters:
- - samples: sample array. Empty by default
- - error: error (optional)
+    - samples: sample array. Empty by default
+    - error: error (optional)
  */
 public typealias SampleResultsHandler = (
     _ query: Query?,
@@ -66,22 +68,22 @@ public typealias SampleResultsHandler = (
 ) -> Void
 /**
  - Parameters:
- - samples: sample array. Empty by default
- - deletedObjects: samples array that has been deleted
- - anchor: The anchor which was returned by a previous HKAnchoredObjectQuery result or update
- - error: error (optional)
+    - samples: sample array. Empty by default
+    - deletedObjects: samples array that has been deleted
+    - anchor: The anchor which was returned by a previous HKAnchoredObjectQuery result or update
+    - error: error (optional)
  */
 public typealias AnchoredResultsHandler = (
     _ query: Query?,
     _ samples: [Sample],
-    _ deletedObjects: [HKDeletedObject]?,
-    _ anchor: HKQueryAnchor?,
+    _ deletedObjects: [DeletedObject],
+    _ anchor: Anchor?,
     _ error: Error?
 ) -> Void
 /**
  - Parameters:
- - serie: heartbeat serie.
- - error: error (optional)
+    - serie: heartbeat serie.
+    - error: error (optional)
  */
 public typealias HeartbeatSeriesDataHandler = (
     _ serie: HeartbeatSerie?,
@@ -89,8 +91,8 @@ public typealias HeartbeatSeriesDataHandler = (
 ) -> Void
 /**
  - Parameters:
- - workoutRoute: workout route.
- - error: error (optional)
+    - workoutRoute: workout route.
+    - error: error (optional)
  */
 public typealias WorkoutRouteDataHandler = (
     _ workoutRoute: WorkoutRoute?,
@@ -98,8 +100,8 @@ public typealias WorkoutRouteDataHandler = (
 ) -> Void
 /**
  - Parameters:
- - summaries: summary array. Empty by default
- - error: error (optional)
+    - summaries: summary array. Empty by default
+    - error: error (optional)
  */
 @available(iOS 9.3, *)
 public typealias ActivitySummaryCompletionHandler = (
@@ -108,8 +110,8 @@ public typealias ActivitySummaryCompletionHandler = (
 ) -> Void
 /**
  - Parameters:
- - sources: source array. Empty by default
- - error: error (optional)
+    - sources: source array. Empty by default
+    - error: error (optional)
  */
 public typealias SourceCompletionHandler =  (
     _ sources: [Source],
@@ -117,8 +119,8 @@ public typealias SourceCompletionHandler =  (
 ) -> Void
 /**
  - Parameters:
- - correlations: correlation array. Empty by default
- - error: error (optional)
+    - correlations: correlation array. Empty by default
+    - error: error (optional)
  */
 public typealias CorrelationCompletionHandler =  (
     _ correlations: [Correlation],
@@ -126,8 +128,8 @@ public typealias CorrelationCompletionHandler =  (
 ) -> Void
 /**
  - Parameters:
- - samples: quantity sample array. Empty by default
- - error: error (optional)
+    - samples: quantity sample array. Empty by default
+    - error: error (optional)
  */
 public typealias QuantityResultsHandler = (
     _ samples: [Quantity],
@@ -135,8 +137,8 @@ public typealias QuantityResultsHandler = (
 ) -> Void
 /**
  - Parameters:
- - samples: correlation sample array. Empty by default
- - error: error (optional)
+    - samples: correlation sample array. Empty by default
+    - error: error (optional)
  */
 public typealias CorrelationResultsHandler = (
     _ samples: [Correlation],
@@ -144,8 +146,8 @@ public typealias CorrelationResultsHandler = (
 ) -> Void
 /**
  - Parameters:
- - statistics: statistics. Nil by default
- - error: error (optional)
+    - statistics: statistics. Nil by default
+    - error: error (optional)
  */
 public typealias StatisticsCompeltionHandler = (
     _ statistics: Statistics?,
@@ -153,8 +155,8 @@ public typealias StatisticsCompeltionHandler = (
 ) -> Void
 /**
  - Parameters:
- - samples: category sample array. Empty by default
- - error: error (optional)
+    - samples: category sample array. Empty by default
+    - error: error (optional)
  */
 public typealias CategoryResultsHandler = (
     _ samples: [Category],
@@ -162,8 +164,8 @@ public typealias CategoryResultsHandler = (
 ) -> Void
 /**
  - Parameters:
- - samples: workout sample array. Empty by default
- - error: error (optional)
+    - samples: workout sample array. Empty by default
+    - error: error (optional)
  */
 public typealias WorkoutResultsHandler = (
     _ samples: [Workout],
@@ -180,8 +182,8 @@ public typealias PreferredUnitsCompeltion = (
 ) -> Void
 /**
  - Parameters:
- - samples: electrocardiogram sample array. Empty by default
- - error: error (optional)
+    - samples: electrocardiogram sample array. Empty by default
+    - error: error (optional)
  */
 @available(iOS 14.0, *)
 public typealias ElectrocardiogramResultsHandler = (
@@ -190,8 +192,8 @@ public typealias ElectrocardiogramResultsHandler = (
 ) -> Void
 /**
  - Parameters:
- - samples: electrocardiogram voltage measurements sample array. Empty by default
- - error: error (optional)
+    - samples: electrocardiogram voltage measurements sample array. Empty by default
+    - error: error (optional)
  */
 @available(iOS 14.0, *)
 public typealias ElectrocardiogramVoltageMeasurementDataHandler = (

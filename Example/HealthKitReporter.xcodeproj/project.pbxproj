@@ -45,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04F570C725DC5EC80084336C /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../.swiftlint.yml; sourceTree = "<group>"; };
 		11FF9B66454122EEE8369E7C /* Pods-HealthKitReporter_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKitReporter_Tests.debug.xcconfig"; path = "Target Support Files/Pods-HealthKitReporter_Tests/Pods-HealthKitReporter_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		15F8173830CFE392F3EA6A3D /* Pods_HealthKitReporter_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		179DA3AF25250601003A2C22 /* HealthKitReporter_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthKitReporter_Example.entitlements; sourceTree = "<group>"; };
@@ -106,6 +107,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				04F570C725DC5EC80084336C /* .swiftlint.yml */,
 				179DA3AF25250601003A2C22 /* HealthKitReporter_Example.entitlements */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* HealthKitReporter_Example */,
@@ -211,6 +213,7 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				182ECA17E28929626E5E65ED /* [CP] Embed Pods Frameworks */,
+				04F570C625DC5E930084336C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -309,6 +312,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		04F570C625DC5E930084336C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		1732D4582565DE3A00454F4E /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -508,7 +528,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.3.6;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -559,7 +579,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.3.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -576,7 +596,6 @@
 				CODE_SIGN_ENTITLEMENTS = HealthKitReporter_Example.entitlements;
 				DEVELOPMENT_TEAM = MAVP5V2N7V;
 				INFOPLIST_FILE = HealthKitReporter/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kvs.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -594,7 +613,6 @@
 				CODE_SIGN_ENTITLEMENTS = HealthKitReporter_Example.entitlements;
 				DEVELOPMENT_TEAM = MAVP5V2N7V;
 				INFOPLIST_FILE = HealthKitReporter/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.kvs.demo.$(PRODUCT_NAME:rfc1034identifier)";

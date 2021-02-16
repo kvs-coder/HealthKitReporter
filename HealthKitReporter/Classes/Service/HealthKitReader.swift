@@ -38,11 +38,8 @@ public class HealthKitReader {
         let biologicalSex = try? healthStore.biologicalSex()
         let bloodType = try? healthStore.bloodType()
         let skinType = try? healthStore.fitzpatrickSkinType()
-        var birthday: DateComponents?
-        if #available(iOS 10.0, *) {
-            birthday = try? healthStore.dateOfBirthComponents()
-        }
         if #available(iOS 14.0, *) {
+            let birthday = try? healthStore.dateOfBirthComponents()
             let wheelchairUse = try? healthStore.wheelchairUse()
             let activityMoveMode = try? healthStore.activityMoveMode()
             return Characteristic(
@@ -54,6 +51,7 @@ public class HealthKitReader {
                 activityMoveMode: activityMoveMode
             )
         } else if #available(iOS 10.0, *) {
+            let birthday = try? healthStore.dateOfBirthComponents()
             let wheelchairUse = try? healthStore.wheelchairUse()
             return Characteristic(
                 biologicalSex: biologicalSex,
@@ -65,7 +63,6 @@ public class HealthKitReader {
         } else {
             return Characteristic(
                 biologicalSex: biologicalSex,
-                birthday: birthday,
                 bloodType: bloodType,
                 skinType: skinType
             )
@@ -594,7 +591,7 @@ public class HealthKitReader {
     public func anchoredObjectQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
-        anchor: HKQueryAnchor? = HKQueryAnchor(
+        anchor: Anchor? = HKQueryAnchor(
             fromValue: Int(HKAnchoredObjectQueryNoAnchor)
         ),
         limit: Int = HKObjectQueryNoLimit,
@@ -606,7 +603,7 @@ public class HealthKitReader {
                 "\(type) can not be represented as HKSampleType"
             )
         }
-        let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedObjects, anchor, error) in
+        let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedData, anchor, error) in
             guard
                 error == nil,
                 let result = data
@@ -614,7 +611,7 @@ public class HealthKitReader {
                 completionHandler(
                     query,
                     [],
-                    deletedObjects,
+                    [],
                     anchor,
                     error
                 )
@@ -629,6 +626,7 @@ public class HealthKitReader {
                     continue
                 }
             }
+            let deletedObjects = DeletedObject.collect(deletedObjects: deletedData)
             completionHandler(
                 query,
                 samples,
@@ -648,41 +646,6 @@ public class HealthKitReader {
             query.updateHandler = resultsHandler
         }
         return query
-    }
-    /**
-     Queries objects (with anchors).
-     - Parameter type: **SampleType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
-     - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
-     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
-     - Parameter completionHandler: returns a block with samples
-     - Throws: HealthKitError.invalidType
-     */
-    public func anchoredObjectQuery(
-        type: SampleType,
-        predicate: NSPredicate? = .allSamples,
-        anchor: HKQueryAnchor? = HKQueryAnchor(
-            fromValue: Int(HKAnchoredObjectQueryNoAnchor)
-        ),
-        limit: Int = HKObjectQueryNoLimit,
-        monitorUpdates: Bool = false,
-        completionHandler: @escaping SampleResultsHandler
-    ) throws -> AnchoredObjectQuery {
-        let resultsHandler: AnchoredResultsHandler = { (query, samples, _, _, error) in
-            completionHandler(
-                query,
-                samples,
-                error
-            )
-        }
-        
-        return try self.anchoredObjectQuery(type: type,
-                                            predicate: predicate,
-                                            anchor: anchor,
-                                            limit: limit,
-                                            monitorUpdates: monitorUpdates,
-                                            completionHandler: resultsHandler)
     }
     /**
      Queries sources.
