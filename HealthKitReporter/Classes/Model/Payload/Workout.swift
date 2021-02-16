@@ -164,7 +164,7 @@ extension Workout: Original {
                     doubleValue: harmonized.totalSwimmingStrokeCount!
                 )
                 : nil,
-            device: device?.asOriginal(),
+            device: try? device?.asOriginal(),
             metadata: harmonized.metadata
         )
     }
