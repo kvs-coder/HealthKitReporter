@@ -36,6 +36,16 @@ public struct Quantity: Identifiable, Sample {
             )
         }
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case uuid
+        case identifier
+        case startTimestamp
+        case endTimestamp
+        case device
+        case sourceRevision
+        case harmonized
+    }
 
     public let uuid: String
     public let identifier: String
@@ -44,6 +54,8 @@ public struct Quantity: Identifiable, Sample {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
+    
+    private let original: HKQuantitySample?
 
     public static func collect(
         results: [HKSample],
@@ -65,6 +77,25 @@ public struct Quantity: Identifiable, Sample {
         }
         return samples
     }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        self.uuid = try values.decode(String.self,
+                                      forKey: .uuid)
+        self.identifier = try values.decode(String.self,
+                                            forKey: .identifier)
+        self.startTimestamp = try values.decode(Double.self,
+                                                forKey: .startTimestamp)
+        self.endTimestamp = try values.decode(Double.self,
+                                              forKey: .endTimestamp)
+        self.device = try values.decodeIfPresent(Device.self,
+                                                 forKey: .device)
+        self.sourceRevision = try values.decode(SourceRevision.self,
+                                                forKey: .sourceRevision)
+        self.harmonized = try values.decode(Harmonized.self,
+                                            forKey: .harmonized)
+        self.original = nil
+    }
 
     init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.uuid = quantitySample.uuid.uuidString
@@ -78,6 +109,7 @@ public struct Quantity: Identifiable, Sample {
             unit: unit.unitString,
             metadata: quantitySample.metadata?.compactMapValues { String(describing: $0 )}
         )
+        self.original = quantitySample
     }
     init(quantitySample: HKQuantitySample) throws {
         self.uuid = quantitySample.uuid.uuidString
@@ -87,6 +119,7 @@ public struct Quantity: Identifiable, Sample {
         self.device = Device(device: quantitySample.device)
         self.sourceRevision = SourceRevision(sourceRevision: quantitySample.sourceRevision)
         self.harmonized = try quantitySample.harmonize()
+        self.original = quantitySample
     }
 
     public init(
@@ -104,6 +137,7 @@ public struct Quantity: Identifiable, Sample {
         self.device = device
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
+        self.original = nil
     }
 
     public func copyWith(
@@ -198,8 +232,28 @@ extension Quantity: UnitConvertable {
             return self
         }
         return try Quantity(
-            quantitySample: try asOriginal(),
+            quantitySample: try self.original ?? self.asOriginal(),
             unit: HKUnit.init(from: unit)
         )
+    }
+}
+// MARK: - Encodable
+extension Quantity {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.uuid,
+                             forKey: .uuid)
+        try container.encode(self.identifier,
+                             forKey: .identifier)
+        try container.encode(self.startTimestamp,
+                             forKey: .startTimestamp)
+        try container.encode(self.endTimestamp,
+                             forKey: .endTimestamp)
+        try container.encodeIfPresent(self.device,
+                                      forKey: .device)
+        try container.encode(self.sourceRevision,
+                             forKey: .sourceRevision)
+        try container.encode(self.harmonized,
+                             forKey: .harmonized)
     }
 }
