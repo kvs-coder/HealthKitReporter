@@ -69,7 +69,8 @@ public struct Workout: Identifiable, Sample {
                     )
                     samples.append(sample)
                 } catch {
-                    continue
+                    print("Could not construct Workout: \(error).")
+		     continue
                 }
             }
         }
