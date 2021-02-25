@@ -23,6 +23,18 @@ public struct Quantity: Identifiable, Sample {
             self.unit = unit
             self.metadata = metadata
         }
+
+        public func copyWith(
+            value: Double? = nil,
+            unit: String? = nil,
+            metadata: [String: String]? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                unit: unit ?? self.unit,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let uuid: String
@@ -67,7 +79,6 @@ public struct Quantity: Identifiable, Sample {
             metadata: quantitySample.metadata?.compactMapValues { String(describing: $0 )}
         )
     }
-
     init(quantitySample: HKQuantitySample) throws {
         self.uuid = quantitySample.uuid.uuidString
         self.identifier = quantitySample.quantityType.identifier
@@ -93,6 +104,24 @@ public struct Quantity: Identifiable, Sample {
         self.device = device
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
+    }
+
+    public func copyWith(
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        harmonized: Harmonized? = nil
+    ) -> Quantity {
+        return Quantity(
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            harmonized: harmonized ?? self.harmonized
+        )
     }
 }
 // MARK: - Original
@@ -159,6 +188,18 @@ extension Quantity.Harmonized: Payload {
             value: value,
             unit: unit,
             metadata: metadata
+        )
+    }
+}
+// MARK: - UnitConvertable
+extension Quantity: UnitConvertable {
+    public func converted(to unit: String) throws -> Quantity {
+        guard harmonized.unit != unit else {
+            return self
+        }
+        return try Quantity(
+            quantitySample: try asOriginal(),
+            unit: HKUnit.init(from: unit)
         )
     }
 }

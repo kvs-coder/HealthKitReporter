@@ -17,6 +17,16 @@ public struct WorkoutEvent: Sample {
             self.value = value
             self.metadata = metadata
         }
+
+        public func copyWith(
+            value: Int? = nil,
+            metadata: [String: String]? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let type: String
@@ -25,6 +35,7 @@ public struct WorkoutEvent: Sample {
     public let duration: Double
     public let harmonized: Harmonized
 
+    @available(iOS 11.0, *)
     init(workoutEvent: HKWorkoutEvent) throws {
         self.type = String(describing: workoutEvent.type)
         self.startTimestamp = workoutEvent
@@ -52,10 +63,31 @@ public struct WorkoutEvent: Sample {
         self.duration = duration
         self.harmonized = harmonized
     }
+
+    public func copyWith(
+        type: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        duration: Double? = nil,
+        harmonized: Harmonized? = nil
+    ) -> WorkoutEvent {
+        return WorkoutEvent(
+            type: type ?? self.type,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            duration: duration ?? self.duration,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
 }
 // MARK: - Original
 extension WorkoutEvent: Original {
     func asOriginal() throws -> HKWorkoutEvent {
+        guard #available(iOS 11.0, *) else {
+            throw HealthKitError.notAvailable(
+                "HKWorkoutEvent DateInterval is not available for the current iOS"
+            )
+        }
         guard let type = HKWorkoutEventType(rawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
                 "WorkoutEvent type: \(harmonized.value) could not be formatted"

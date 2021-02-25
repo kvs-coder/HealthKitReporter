@@ -288,16 +288,43 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-The library supports iOS 12. 
+The library supports iOS 9 & above. 
 Some features like HKHeartbeatSeries are available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
 
 ## Installation
+
+### Cocoapods
 
 HealthKitReporter is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'HealthKitReporter'
+```
+
+or 
+
+```ruby
+pod 'HealthKitReporter', '~> 1.4'
+```
+
+### Swift Package Manager
+
+To install it, simply add the following lines to your Package.swift file
+(or just use the Package Manager from within XCode and reference this repo):
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.4.0")
+]
+```
+
+### Carthage
+
+Add the line in your cartfile 
+
+```ruby
+github "VictorKachalov/HealthKitReporter" "1.4.0"
 ```
 
 ## Author

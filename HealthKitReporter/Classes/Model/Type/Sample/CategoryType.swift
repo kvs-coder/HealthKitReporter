@@ -99,7 +99,11 @@ public enum CategoryType: Int, CaseIterable, SampleType {
                 return nil
             }
         case .mindfulSession:
-            return HKObjectType.categoryType(forIdentifier: .mindfulSession)
+            if #available(iOS 10.0, *) {
+                return HKObjectType.categoryType(forIdentifier: .mindfulSession)
+            } else {
+                return nil
+            }
         case .highHeartRateEvent:
             if #available(iOS 12.2, *) {
                 return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)

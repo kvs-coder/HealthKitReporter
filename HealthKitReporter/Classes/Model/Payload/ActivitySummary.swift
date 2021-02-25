@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@available(iOS 9.3, *)
 public struct ActivitySummary: Identifiable {
     public struct Harmonized: Codable {
         public let activeEnergyBurned: Double

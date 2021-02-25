@@ -1,3 +1,10 @@
+## [1.4.0] - 25.02.2021.
+
+* iOS 9.0 support
+* Carthage and Swift Package Manager support
+* FIx with workout values
+* Fix with UUID of Samples
+
 ## [1.3.6] - 10.02.2021.
 
 * Remove redundant UUID paramater

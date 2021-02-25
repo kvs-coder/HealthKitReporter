@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         let localNotificationManager = LocalNotificationManager()
-        localNotificationManager.requestPermission { (success, error) in }
+        localNotificationManager.requestPermission { (_, _) in }
         do {
             let reporter = try HealthKitReporter()
             let types: [SampleType] = [
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         do {
                             let query = try reporter.observer.observerQuery(
                                 type: type
-                            ) { (query, identifier, error) in
+                            ) { (_, identifier, _) in
                                 if let identifier = identifier {
                                     let notification = LocalNotification(
                                         title: "Observed",
@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             reporter.observer.enableBackgroundDelivery(
                                 type: type,
                                 frequency: .immediate
-                            ) { (success, error) in
+                            ) { (_, error) in
                                 if error == nil {
                                     print("enabled")
                                 }

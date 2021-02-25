@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@available(iOS 9.3, *)
 typealias ActivitySummaryUpdateHanlder = (
     HKActivitySummaryQuery, [HKActivitySummary]?, Error?
 ) -> Void
@@ -35,11 +36,11 @@ public class HealthKitReader {
      */
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()
-        let birthday = try? healthStore.dateOfBirthComponents()
         let bloodType = try? healthStore.bloodType()
         let skinType = try? healthStore.fitzpatrickSkinType()
-        let wheelchairUse = try? healthStore.wheelchairUse()
         if #available(iOS 14.0, *) {
+            let birthday = try? healthStore.dateOfBirthComponents()
+            let wheelchairUse = try? healthStore.wheelchairUse()
             let activityMoveMode = try? healthStore.activityMoveMode()
             return Characteristic(
                 biologicalSex: biologicalSex,
@@ -49,7 +50,10 @@ public class HealthKitReader {
                 wheelchairUse: wheelchairUse,
                 activityMoveMode: activityMoveMode
             )
-        } else {
+        }
+        if #available(iOS 10.0, *) {
+            let birthday = try? healthStore.dateOfBirthComponents()
+            let wheelchairUse = try? healthStore.wheelchairUse()
             return Characteristic(
                 biologicalSex: biologicalSex,
                 birthday: birthday,
@@ -58,6 +62,11 @@ public class HealthKitReader {
                 wheelchairUse: wheelchairUse
             )
         }
+        return Characteristic(
+            biologicalSex: biologicalSex,
+            bloodType: bloodType,
+            skinType: skinType
+        )
     }
     /**
      Queries quantity types.
@@ -538,6 +547,7 @@ public class HealthKitReader {
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter completionHandler: returns a block with activity summary array
      */
+    @available(iOS 9.3, *)
     public func queryActivitySummary(
         predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,
@@ -581,19 +591,19 @@ public class HealthKitReader {
     public func anchoredObjectQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
-        anchor: HKQueryAnchor? = HKQueryAnchor(
+        anchor: Anchor? = HKQueryAnchor(
             fromValue: Int(HKAnchoredObjectQueryNoAnchor)
         ),
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
-        completionHandler: @escaping SampleResultsHandler
+        completionHandler: @escaping AnchoredResultsHandler
     ) throws -> AnchoredObjectQuery {
         guard let sampleType = type.original as? HKSampleType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKSampleType"
             )
         }
-        let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedObjects, anchor, error) in
+        let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedData, anchor, error) in
             guard
                 error == nil,
                 let result = data
@@ -601,6 +611,8 @@ public class HealthKitReader {
                 completionHandler(
                     query,
                     [],
+                    [],
+                    anchor,
                     error
                 )
                 return
@@ -614,9 +626,12 @@ public class HealthKitReader {
                     continue
                 }
             }
+            let deletedObjects = DeletedObject.collect(deletedObjects: deletedData)
             completionHandler(
                 query,
                 samples,
+                deletedObjects,
+                anchor,
                 nil
             )
         }

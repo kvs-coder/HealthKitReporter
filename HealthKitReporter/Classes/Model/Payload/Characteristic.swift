@@ -18,6 +18,20 @@ public struct Characteristic: Codable {
     
     init(
         biologicalSex: HKBiologicalSexObject?,
+        bloodType: HKBloodTypeObject?,
+        skinType: HKFitzpatrickSkinTypeObject?
+    ) {
+        self.biologicalSex = biologicalSex?.biologicalSex.string
+        self.bloodType = bloodType?.bloodType.string
+        self.skinType = skinType?.skinType.string
+        self.birthday = nil
+        self.wheelchairUse = nil
+        self.activityMoveMode = nil
+    }
+    
+    @available(iOS 10.0, *)
+    init(
+        biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,
         bloodType: HKBloodTypeObject?,
         skinType: HKFitzpatrickSkinTypeObject?,

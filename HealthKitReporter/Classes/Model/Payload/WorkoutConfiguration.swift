@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@available(iOS 10.0, *)
 public struct WorkoutConfiguration {
     public struct Harmonized: Codable {
         public let value: Double
@@ -73,6 +74,7 @@ public struct WorkoutConfiguration {
     }
 }
 // MARK: - Original
+@available(iOS 10.0, *)
 extension WorkoutConfiguration: Original {
     func asOriginal() throws -> HKWorkoutConfiguration {
         let configuration = HKWorkoutConfiguration()

@@ -12,7 +12,7 @@ import HealthKitReporter
 class ViewController: UIViewController {
     @IBOutlet weak var readButton: UIButton!
     @IBOutlet weak var writeButton: UIButton!
-    
+
     private var reporter: HealthKitReporter?
     private let typesToRead: [QuantityType] = [
         .stepCount,
@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     private let typesToWrite: [QuantityType] = [
         .stepCount
     ]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
@@ -33,7 +33,7 @@ class ViewController: UIViewController {
         readButton.isEnabled = false
         writeButton.isEnabled = false
     }
-    
+
     @IBAction func authorizeButtonTapped(_ sender: UIButton) {
         reporter?.manager.requestAuthorization(
             toRead: typesToRead,
@@ -50,7 +50,7 @@ class ViewController: UIViewController {
                         UIAlertAction(
                             title: "OK",
                             style: .default
-                        ) { [unowned self] (action) in
+                        ) { [unowned self] (_) in
                             self.readButton.isEnabled = true
                             self.writeButton.isEnabled = true
                         }
@@ -58,7 +58,7 @@ class ViewController: UIViewController {
                     self.present(alert, animated: true)
                 }
             } else {
-                print(error)
+                print(error ?? "error")
             }
         }
     }
@@ -83,13 +83,12 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     private func write(completionHandler: @escaping (Bool, Error?) -> Void) {
         let manager = reporter?.manager
         let writer = reporter?.writer
-        manager?.preferredUnits(for: typesToWrite) { (preferredUnits, error) in
+        manager?.preferredUnits(for: typesToWrite) { (preferredUnits, _) in
             for preferredUnit in preferredUnits {
-                //Do write steps
                 let identifier = preferredUnit.identifier
                 guard
                     identifier == QuantityType.stepCount.identifier
@@ -135,7 +134,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     private func read() {
         let manager = reporter?.manager
         let reader = reporter?.reader
@@ -157,7 +156,7 @@ class ViewController: UIViewController {
                                         }
                                     }
                                 } else {
-                                    print(error)
+                                    print(error ?? "error")
                                 }
                             }
                         ) {
@@ -175,7 +174,7 @@ class ViewController: UIViewController {
                                         print(error)
                                     }
                                 } else {
-                                    print(error)
+                                    print(error ?? "error")
                                 }
                             }
                         ) {
@@ -186,9 +185,8 @@ class ViewController: UIViewController {
                     }
                 }
             } else {
-                print(error)
+                print(error ?? "error")
             }
         }
     }
 }
-

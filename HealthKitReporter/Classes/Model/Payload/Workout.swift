@@ -44,6 +44,32 @@ public struct Workout: Identifiable, Sample {
             self.totalFlightsClimbedUnit = totalFlightsClimbedUnit
             self.metadata = metadata
         }
+
+        public func copyWith(
+            value: Int? = nil,
+            totalEnergyBurned: Double? = nil,
+            totalEnergyBurnedUnit: String? = nil,
+            totalDistance: Double? = nil,
+            totalDistanceUnit: String? = nil,
+            totalSwimmingStrokeCount: Double? = nil,
+            totalSwimmingStrokeCountUnit: String? = nil,
+            totalFlightsClimbed: Double? = nil,
+            totalFlightsClimbedUnit: String? = nil,
+            metadata: [String: String]? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                totalEnergyBurned: totalEnergyBurned ?? self.totalEnergyBurned,
+                totalEnergyBurnedUnit: totalEnergyBurnedUnit ?? self.totalEnergyBurnedUnit,
+                totalDistance: totalDistance ?? self.totalDistance,
+                totalDistanceUnit: totalDistanceUnit ?? self.totalDistanceUnit,
+                totalSwimmingStrokeCount: totalSwimmingStrokeCount ?? self.totalSwimmingStrokeCount,
+                totalSwimmingStrokeCountUnit: totalSwimmingStrokeCountUnit ?? self.totalSwimmingStrokeCountUnit,
+                totalFlightsClimbed: totalFlightsClimbed ?? self.totalFlightsClimbed,
+                totalFlightsClimbedUnit: totalFlightsClimbedUnit ?? self.totalFlightsClimbedUnit,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let uuid: String
@@ -69,8 +95,7 @@ public struct Workout: Identifiable, Sample {
                     )
                     samples.append(sample)
                 } catch {
-                    print("Could not construct Workout: \(error).")
-		     continue
+                    continue
                 }
             }
         }
@@ -86,6 +111,11 @@ public struct Workout: Identifiable, Sample {
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.workoutName = String(describing: workout.workoutActivityType)
         self.duration = workout.duration
+        guard #available(iOS 11.0, *) else {
+            throw HealthKitError.notAvailable(
+                "WorkoutEvents is not available for the current iOS"
+            )
+        }
         var workoutEvents = [WorkoutEvent]()
         if let events = workout.workoutEvents {
             for element in events {
@@ -123,6 +153,30 @@ public struct Workout: Identifiable, Sample {
         self.workoutEvents = workoutEvents
         self.harmonized = harmonized
     }
+
+    public func copyWith(
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        workoutName: String? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        duration: Double? = nil,
+        workoutEvents: [WorkoutEvent]? = nil,
+        harmonized: Harmonized? = nil
+    ) -> Workout {
+        return Workout(
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            workoutName: workoutName ?? self.workoutName,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            duration: duration ?? self.duration,
+            workoutEvents: workoutEvents ?? self.workoutEvents,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
 }
 // MARK: - Original
 extension Workout: Original {
@@ -130,6 +184,11 @@ extension Workout: Original {
         guard let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.value)) else {
             throw HealthKitError.invalidType(
                 "Workout type: \(harmonized.value) could not be formatted"
+            )
+        }
+        guard #available(iOS 10.0, *) else {
+            throw HealthKitError.notAvailable(
+                "HKWorkout initializer is not available for the current iOS"
             )
         }
         return HKWorkout(
