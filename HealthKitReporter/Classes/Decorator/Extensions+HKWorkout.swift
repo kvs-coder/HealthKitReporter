@@ -13,28 +13,12 @@ extension HKWorkout: Harmonizable {
 
     func harmonize() throws -> Harmonized {
         let totalEnergyBurnedUnit = HKUnit.largeCalorie()
-        guard
-            let totalEnergyBurned = totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalEnergyBurned value for HKWorkout")
-        }
+        let totalEnergyBurned = self.totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit) ?? 0
         let totalDistanceUnit = HKUnit.meter()
-        guard
-            let totalDistance = totalDistance?.doubleValue(for: totalDistanceUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
-        }
+        let totalDistance = self.totalDistance?.doubleValue(for: totalDistanceUnit) ?? 0
         let countUnit = HKUnit.count()
-        guard
-            let totalSwimmingStrokeCount = totalSwimmingStrokeCount?.doubleValue(for: countUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
-        }
-        guard
-            let totalFlightsClimbed = totalFlightsClimbed?.doubleValue(for: countUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
-        }
+        let totalSwimmingStrokeCount = self.totalSwimmingStrokeCount?.doubleValue(for: countUnit) ?? 0
+        let totalFlightsClimbed = self.totalFlightsClimbed?.doubleValue(for: countUnit) ?? 0
         return Harmonized(
             value: Int(workoutActivityType.rawValue),
             totalEnergyBurned: totalEnergyBurned,
