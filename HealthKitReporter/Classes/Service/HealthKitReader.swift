@@ -50,7 +50,8 @@ public class HealthKitReader {
                 wheelchairUse: wheelchairUse,
                 activityMoveMode: activityMoveMode
             )
-        } else if #available(iOS 10.0, *) {
+        }
+        if #available(iOS 10.0, *) {
             let birthday = try? healthStore.dateOfBirthComponents()
             let wheelchairUse = try? healthStore.wheelchairUse()
             return Characteristic(
@@ -60,13 +61,12 @@ public class HealthKitReader {
                 skinType: skinType,
                 wheelchairUse: wheelchairUse
             )
-        } else {
-            return Characteristic(
-                biologicalSex: biologicalSex,
-                bloodType: bloodType,
-                skinType: skinType
-            )
         }
+        return Characteristic(
+            biologicalSex: biologicalSex,
+            bloodType: bloodType,
+            skinType: skinType
+        )
     }
     /**
      Queries quantity types.
