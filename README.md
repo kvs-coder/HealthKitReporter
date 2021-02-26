@@ -302,14 +302,30 @@ it, simply add the following line to your Podfile:
 pod 'HealthKitReporter'
 ```
 
+or 
+
+```ruby
+pod 'HealthKitReporter', '~> 1.4'
+```
+
 ### Swift Package Manager
 
 To install it, simply add the following lines to your Package.swift file
 (or just use the Package Manager from within XCode and reference this repo):
 
+```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.3.0")
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.4.0")
 ]
+```
+
+### Carthage
+
+Add the line in your cartfile 
+
+```ruby
+github "VictorKachalov/HealthKitReporter" "1.4.0"
+```
 
 ## Author
 

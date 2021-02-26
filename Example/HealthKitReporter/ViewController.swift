@@ -58,7 +58,7 @@ class ViewController: UIViewController {
                     self.present(alert, animated: true)
                 }
             } else {
-                print(error)
+                print(error ?? "error")
             }
         }
     }
@@ -156,7 +156,7 @@ class ViewController: UIViewController {
                                         }
                                     }
                                 } else {
-                                    print(error)
+                                    print(error ?? "error")
                                 }
                             }
                         ) {
@@ -174,7 +174,7 @@ class ViewController: UIViewController {
                                         print(error)
                                     }
                                 } else {
-                                    print(error)
+                                    print(error ?? "error")
                                 }
                             }
                         ) {
@@ -185,7 +185,7 @@ class ViewController: UIViewController {
                     }
                 }
             } else {
-                print(error)
+                print(error ?? "error")
             }
         }
     }

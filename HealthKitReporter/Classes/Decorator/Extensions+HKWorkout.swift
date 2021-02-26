@@ -18,37 +18,19 @@ extension HKWorkout: Harmonizable {
         } else {
             totalEnergyBurnedUnit = HKUnit.kilocalorie()
         }
-        guard
-            let totalEnergyBurned = totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalEnergyBurned value for HKWorkout")
-        }
+        let totalEnergyBurned = self.totalEnergyBurned?.doubleValue(for: totalEnergyBurnedUnit)
+        
         let totalDistanceUnit = HKUnit.meter()
-        guard
-            let totalDistance = totalDistance?.doubleValue(for: totalDistanceUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
-        }
+        let totalDistance = self.totalDistance?.doubleValue(for: totalDistanceUnit)
+
         let countUnit = HKUnit.count()
-        guard #available(iOS 10.0, *) else {
-            throw HealthKitError.notAvailable(
-                "Total swimming stroke count is not available for the current iOS"
-            )
+        var totalSwimmingStrokeCount: Double?
+        if #available(iOS 10.0, *) {
+            totalSwimmingStrokeCount = self.totalSwimmingStrokeCount?.doubleValue(for: countUnit)
         }
-        guard
-            let totalSwimmingStrokeCount = totalSwimmingStrokeCount?.doubleValue(for: countUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
-        }
-        guard #available(iOS 11.0, *) else {
-            throw HealthKitError.notAvailable(
-                "Total flights climbed is not available for the current iOS"
-            )
-        }
-        guard
-            let totalFlightsClimbed = totalFlightsClimbed?.doubleValue(for: countUnit)
-        else {
-            throw HealthKitError.invalidValue("Invalid totalDistance value for HKWorkout")
+        var totalFlightsClimbed: Double?
+        if #available(iOS 11.0, *) {
+            totalFlightsClimbed = self.totalFlightsClimbed?.doubleValue(for: countUnit)
         }
         return Harmonized(
             value: Int(workoutActivityType.rawValue),
