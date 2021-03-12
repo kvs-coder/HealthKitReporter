@@ -1,3 +1,7 @@
+## [1.4.1] - 12.03.2021.
+
+* Fix Statistics sources
+
 ## [1.4.0] - 25.02.2021.
 
 * iOS 9.0 support

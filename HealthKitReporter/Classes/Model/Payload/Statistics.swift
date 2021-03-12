@@ -56,13 +56,13 @@ public struct Statistics: Identifiable, Sample {
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let harmonized: Harmonized
-    public let sources: [Source]?
+    public let sources: [Source]
 
     init(statistics: HKStatistics, unit: HKUnit) throws {
         self.identifier = statistics.quantityType.identifier
         self.startTimestamp = statistics.startDate.timeIntervalSince1970
         self.endTimestamp = statistics.endDate.timeIntervalSince1970
-        self.sources = statistics.sources?.map { Source(source: $0) }
+        self.sources = statistics.sources?.map { Source(source: $0) } ?? []
         if #available(iOS 12.0, *) {
             self.harmonized = Harmonized(
                 summary: statistics.sumQuantity()?.doubleValue(for: unit),
