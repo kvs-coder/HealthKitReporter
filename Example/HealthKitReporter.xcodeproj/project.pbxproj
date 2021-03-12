@@ -345,7 +345,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ..\npod lib lint\ngit tag \"${MARKETING_VERSION}\"\ngit push --tags\npod trunk push HealthKitReporter.podspec\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncd ..\ngit tag \"${MARKETING_VERSION}\"\ngit push --tags\npod trunk push HealthKitReporter.podspec\n";
 		};
 		182ECA17E28929626E5E65ED /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

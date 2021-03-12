@@ -87,7 +87,7 @@ public struct Statistics: Identifiable, Sample {
         self.identifier = statistics.quantityType.identifier
         self.startTimestamp = statistics.startDate.timeIntervalSince1970
         self.endTimestamp = statistics.endDate.timeIntervalSince1970
-        self.sources = statistics.sources?.map { Source(source: $0) }
+        self.sources = statistics.sources?.map { Source(source: $0) } ?? []
         self.harmonized = try statistics.harmonize()
     }
     
@@ -96,7 +96,7 @@ public struct Statistics: Identifiable, Sample {
         startTimestamp: Double,
         endTimestamp: Double,
         harmonized: Harmonized,
-        sources: [Source]?
+        sources: [Source]
     ) {
         self.identifier = identifier
         self.startTimestamp = startTimestamp
