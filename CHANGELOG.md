@@ -1,3 +1,7 @@
+## [1.4.3] - 02.04.2021.
+
+* Add Workout names
+
 ## [1.4.2] - 12.03.2021.
 
 * Fix Statistics sources

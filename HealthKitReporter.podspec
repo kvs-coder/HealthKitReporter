@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name                  = 'HealthKitReporter'
-  s.version               = '1.4.2'
+  s.version               = '1.4.3'
   s.summary               = 'HealthKitReporter. A wrapper for HealthKit framework.'
   s.swift_versions        = '5.3'
   s.description           = 'Helps to write or read data from Apple Health via HealthKit framework.'
@@ -19,5 +19,5 @@ Pod::Spec.new do |s|
   s.social_media_url      = 'https://www.facebook.com/profile.php?id=1700091944'
   s.platform              = :ios, '9.0'
   s.ios.deployment_target = '9.0'
-  s.source_files          = 'HealthKitReporter/Classes/**/*'
+  s.source_files          = 'Sources/**/*'
 end

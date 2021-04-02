@@ -315,7 +315,7 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.4.2")
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.4.3")
 ]
 ```
 
@@ -324,7 +324,7 @@ dependencies: [
 Add the line in your cartfile 
 
 ```ruby
-github "VictorKachalov/HealthKitReporter" "1.4.2"
+github "VictorKachalov/HealthKitReporter" "1.4.3"
 ```
 
 ## Author
