@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0420238C261786A5001C40F7 /* Extensions+HKWorkoutActivityType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420238B261786A5001C40F7 /* Extensions+HKWorkoutActivityType.swift */; };
 		04F570C125DC51940084336C /* UnitConvertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F570C025DC51940084336C /* UnitConvertable.swift */; };
 		04F570C325DC577F0084336C /* DeletedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F570C225DC577F0084336C /* DeletedObject.swift */; };
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
@@ -105,6 +106,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0420238B261786A5001C40F7 /* Extensions+HKWorkoutActivityType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkoutActivityType.swift"; sourceTree = "<group>"; };
 		04F570C025DC51940084336C /* UnitConvertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitConvertable.swift; sourceTree = "<group>"; };
 		04F570C225DC577F0084336C /* DeletedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedObject.swift; sourceTree = "<group>"; };
 		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -285,6 +287,7 @@
 				17633C5A251D0DC200A361C6 /* Extensions+HKElectrocardiogram.swift */,
 				1727AA1B251D2D1600560461 /* Extensions+HKSourceRevision.swift */,
 				17C9D508251E1BEE003BB785 /* Extensions+HKWorkout.swift */,
+				0420238B261786A5001C40F7 /* Extensions+HKWorkoutActivityType.swift */,
 				17F3EAC4251E36200035C405 /* Extensions+HKCorrelation.swift */,
 				17F3EAD4251E46B40035C405 /* Extensions+HKWorkoutEvent.swift */,
 				17F3EAD9251E4B410035C405 /* Extensions+String.swift */,
@@ -680,6 +683,7 @@
 				1780AC0525616DA1008F2328 /* Extensions+DateComponents.swift in Sources */,
 				17300E4525125C9F00C643E4 /* Extensions+NSPredicate.swift in Sources */,
 				17300E4725125C9F00C643E4 /* Extensions+Date.swift in Sources */,
+				0420238C261786A5001C40F7 /* Extensions+HKWorkoutActivityType.swift in Sources */,
 				17300E4325125C9F00C643E4 /* Extensions+HKCategorySample.swift in Sources */,
 				17E864B625658B3100859F68 /* SampleType.swift in Sources */,
 				17B1DBFF252BA2BB0013AA9A /* ActivitySummaryType.swift in Sources */,

@@ -109,7 +109,7 @@ public struct Workout: Identifiable, Sample {
         self.endTimestamp = workout.endDate.timeIntervalSince1970
         self.device = Device(device: workout.device)
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
-        self.workoutName = String(describing: workout.workoutActivityType.name)
+        self.workoutName = workout.workoutActivityType.name
         self.duration = workout.duration
         guard #available(iOS 11.0, *) else {
             throw HealthKitError.notAvailable(
