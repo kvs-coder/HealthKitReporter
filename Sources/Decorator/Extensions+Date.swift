@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HealthKit
 
 public extension Date {
     static var iso8601: String {

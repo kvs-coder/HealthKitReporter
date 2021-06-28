@@ -68,9 +68,9 @@ public struct SourceRevision: Codable {
             )
         } else {
             self.productType = nil
-            self.systemVersion = "1.0.0"
+            self.systemVersion = "10.0.0"
             self.operatingSystem = OperatingSystem(
-                majorVersion: 1,
+                majorVersion: 10,
                 minorVersion: 0,
                 patchVersion: 0
             )
