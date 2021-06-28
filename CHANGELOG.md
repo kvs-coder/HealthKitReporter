@@ -1,3 +1,11 @@
+## [1.4.4] - 28.06.2021.
+
+* Fix with minimum Operation System for iOS 10
+
+## [1.4.4] - 27.05.2021.
+
+* Swift package fix
+
 ## [1.4.3] - 02.04.2021.
 
 * Add Workout names
