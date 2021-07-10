@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 @available(iOS 9.3, *)
-typealias ActivitySummaryUpdateHanlder = (
+typealias ActivitySummaryUpdateHandler = (
     HKActivitySummaryQuery, [HKActivitySummary]?, Error?
 ) -> Void
 typealias HKStatisticsCollectionHandler = (
@@ -553,7 +553,7 @@ public class HealthKitReader {
         monitorUpdates: Bool = false,
         completionHandler: @escaping ActivitySummaryCompletionHandler
     ) -> ActivitySummaryQuery {
-        let resultsHandler: ActivitySummaryUpdateHanlder = { (_, data, error) in
+        let resultsHandler: ActivitySummaryUpdateHandler = { (_, data, error) in
             guard
                 error == nil,
                 let result = data
