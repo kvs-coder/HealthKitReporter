@@ -11,25 +11,28 @@ import HealthKit
 public struct WorkoutEvent: Sample {
     public struct Harmonized: Codable {
         public let value: Int
+        public let description: String
         public let metadata: [String: String]?
 
-        public init(value: Int, metadata: [String: String]?) {
+        public init(value: Int, description: String, metadata: [String: String]?) {
             self.value = value
+            self.description = description
             self.metadata = metadata
         }
 
         public func copyWith(
             value: Int? = nil,
+            description: String? = nil,
             metadata: [String: String]? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
+                description: description ?? self.description,
                 metadata: metadata ?? self.metadata
             )
         }
     }
 
-    public let type: String
     public let startTimestamp: Double
     public let endTimestamp: Double
     public let duration: Double
@@ -37,7 +40,6 @@ public struct WorkoutEvent: Sample {
 
     @available(iOS 11.0, *)
     init(workoutEvent: HKWorkoutEvent) throws {
-        self.type = workoutEvent.type.name
         self.startTimestamp = workoutEvent
             .dateInterval
             .start
@@ -51,13 +53,11 @@ public struct WorkoutEvent: Sample {
     }
 
     public init(
-        type: String,
         startTimestamp: Double,
         endTimestamp: Double,
         duration: Double,
         harmonized: Harmonized
     ) {
-        self.type = type
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
         self.duration = duration
@@ -65,14 +65,12 @@ public struct WorkoutEvent: Sample {
     }
 
     public func copyWith(
-        type: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
         duration: Double? = nil,
         harmonized: Harmonized? = nil
     ) -> WorkoutEvent {
         return WorkoutEvent(
-            type: type ?? self.type,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
             duration: duration ?? self.duration,
@@ -108,11 +106,18 @@ extension WorkoutEvent.Harmonized: Payload {
     public static func make(
         from dictionary: [String: Any]
     ) throws ->  WorkoutEvent.Harmonized {
-        guard let value = dictionary["value"] as? Int else {
+        guard
+            let value = dictionary["value"] as? Int,
+            let description = dictionary["description"] as? String
+        else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         let metadata = dictionary["metadata"] as? [String: String]
-        return  WorkoutEvent.Harmonized(value: value, metadata: metadata)
+        return  WorkoutEvent.Harmonized(
+            value: value,
+            description: description,
+            metadata: metadata
+        )
     }
 }
 // MARK: - Payload
@@ -121,7 +126,6 @@ extension WorkoutEvent: Payload {
         from dictionary: [String: Any]
     ) throws -> WorkoutEvent {
         guard
-            let type = dictionary["type"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
             let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
             let duration = dictionary["duration"] as? NSNumber,
@@ -130,7 +134,6 @@ extension WorkoutEvent: Payload {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         return WorkoutEvent(
-            type: type,
             startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
             endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
             duration: Double(truncating: duration),

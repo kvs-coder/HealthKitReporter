@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKWorkoutActivityType {
-    var name: String {
+extension HKWorkoutActivityType: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .americanFootball: return "American Football"
         case .archery: return "Archery"

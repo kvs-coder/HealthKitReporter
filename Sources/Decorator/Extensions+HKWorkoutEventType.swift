@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKWorkoutEventType {
-    var name: String {
+extension HKWorkoutEventType: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .pause:
             return "Pause"

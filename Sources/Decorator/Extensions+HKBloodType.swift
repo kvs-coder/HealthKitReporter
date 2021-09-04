@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKBloodType {
-    var string: String {
+extension HKBloodType: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .notSet:
             return "na"

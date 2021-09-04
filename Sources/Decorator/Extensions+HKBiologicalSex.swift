@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKBiologicalSex {
-    var string: String {
+extension HKBiologicalSex: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .notSet:
             return "na"

@@ -21,9 +21,9 @@ public struct Characteristic: Codable {
         bloodType: HKBloodTypeObject?,
         fitzpatrickSkinType: HKFitzpatrickSkinTypeObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.string
-        self.bloodType = bloodType?.bloodType.string
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.string
+        self.biologicalSex = biologicalSex?.biologicalSex.description
+        self.bloodType = bloodType?.bloodType.description
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
         self.birthday = nil
         self.wheelchairUse = nil
         self.activityMoveMode = nil
@@ -37,10 +37,10 @@ public struct Characteristic: Codable {
         fitzpatrickSkinType: HKFitzpatrickSkinTypeObject?,
         wheelchairUse: HKWheelchairUseObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.string
+        self.biologicalSex = biologicalSex?.biologicalSex.description
         self.birthday = birthday?.date?.formatted(with: Date.iso8601)
-        self.bloodType = bloodType?.bloodType.string
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.string
+        self.bloodType = bloodType?.bloodType.description
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
         self.wheelchairUse = wheelchairUse?.wheelchairUse.string
         self.activityMoveMode = nil
     }
@@ -54,11 +54,11 @@ public struct Characteristic: Codable {
         wheelchairUse: HKWheelchairUseObject?,
         activityMoveMode: HKActivityMoveModeObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.string
+        self.biologicalSex = biologicalSex?.biologicalSex.description
         self.birthday = birthday?.date?.formatted(with: Date.iso8601)
-        self.bloodType = bloodType?.bloodType.string
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.string
+        self.bloodType = bloodType?.bloodType.description
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
         self.wheelchairUse = wheelchairUse?.wheelchairUse.string
-        self.activityMoveMode = activityMoveMode?.activityMoveMode.string
+        self.activityMoveMode = activityMoveMode?.activityMoveMode.description
     }
 }

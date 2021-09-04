@@ -1,3 +1,8 @@
+## [1.5.1] - 04.09.2021.
+
+* CustomStringConvertable for HK enum Types
+* Workout and WorkoutEvent restructuring, add harmonized description instead of name and type property respectively
+
 ## [1.5.0] - 04.09.2021.
 
 * Unit Tests for most of DTO Models

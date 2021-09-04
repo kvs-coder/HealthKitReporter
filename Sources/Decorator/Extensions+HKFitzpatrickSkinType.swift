@@ -8,8 +8,8 @@
 import Foundation
 import HealthKit
 
-extension HKFitzpatrickSkinType {
-    var string: String {
+extension HKFitzpatrickSkinType: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .notSet:
             return "na"

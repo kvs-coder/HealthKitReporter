@@ -11,6 +11,7 @@ import HealthKit
 public struct Workout: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let value: Int
+        public let description: String
         public let totalEnergyBurned: Double?
         public let totalEnergyBurnedUnit: String
         public let totalDistance: Double?
@@ -23,6 +24,7 @@ public struct Workout: Identifiable, Sample {
 
         public init(
             value: Int,
+            description: String,
             totalEnergyBurned: Double?,
             totalEnergyBurnedUnit: String,
             totalDistance: Double?,
@@ -34,6 +36,7 @@ public struct Workout: Identifiable, Sample {
             metadata: [String: String]?
         ) {
             self.value = value
+            self.description = description
             self.totalEnergyBurned = totalEnergyBurned
             self.totalEnergyBurnedUnit = totalEnergyBurnedUnit
             self.totalDistance = totalDistance
@@ -47,6 +50,7 @@ public struct Workout: Identifiable, Sample {
 
         public func copyWith(
             value: Int? = nil,
+            description: String? = nil,
             totalEnergyBurned: Double? = nil,
             totalEnergyBurnedUnit: String? = nil,
             totalDistance: Double? = nil,
@@ -59,6 +63,7 @@ public struct Workout: Identifiable, Sample {
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
+                description: description ?? self.description,
                 totalEnergyBurned: totalEnergyBurned ?? self.totalEnergyBurned,
                 totalEnergyBurnedUnit: totalEnergyBurnedUnit ?? self.totalEnergyBurnedUnit,
                 totalDistance: totalDistance ?? self.totalDistance,
@@ -76,7 +81,6 @@ public struct Workout: Identifiable, Sample {
     public let identifier: String
     public let startTimestamp: Double
     public let endTimestamp: Double
-    public let workoutName: String
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let duration: Double
@@ -109,7 +113,6 @@ public struct Workout: Identifiable, Sample {
         self.endTimestamp = workout.endDate.timeIntervalSince1970
         self.device = Device(device: workout.device)
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
-        self.workoutName = workout.workoutActivityType.name
         self.duration = workout.duration
         guard #available(iOS 11.0, *) else {
             throw HealthKitError.notAvailable(
@@ -135,7 +138,6 @@ public struct Workout: Identifiable, Sample {
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
-        workoutName: String,
         device: Device?,
         sourceRevision: SourceRevision,
         duration: Double,
@@ -146,7 +148,6 @@ public struct Workout: Identifiable, Sample {
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
-        self.workoutName = workoutName
         self.device = device
         self.sourceRevision = sourceRevision
         self.duration = duration
@@ -158,7 +159,6 @@ public struct Workout: Identifiable, Sample {
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
-        workoutName: String? = nil,
         device: Device? = nil,
         sourceRevision: SourceRevision? = nil,
         duration: Double? = nil,
@@ -169,7 +169,6 @@ public struct Workout: Identifiable, Sample {
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
-            workoutName: workoutName ?? self.workoutName,
             device: device ?? self.device,
             sourceRevision: sourceRevision ?? self.sourceRevision,
             duration: duration ?? self.duration,
@@ -228,7 +227,6 @@ extension Workout: Payload {
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
             let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
-            let workoutName = dictionary["workoutName"] as? String,
             let duration = dictionary["duration"] as? NSNumber,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
             let harmonized = dictionary["harmonized"] as? [String: Any]
@@ -241,7 +239,6 @@ extension Workout: Payload {
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
             endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
-            workoutName: workoutName,
             device: device != nil
                 ? try Device.make(from: device!)
                 : nil,
@@ -263,6 +260,7 @@ extension Workout.Harmonized: Payload {
     ) throws -> Workout.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
+            let description = dictionary["description"] as? String,
             let totalEnergyBurnedUnit = dictionary["totalEnergyBurnedUnit"] as? String,
             let totalDistanceUnit = dictionary["totalDistanceUnit"] as? String,
             let totalSwimmingStrokeCountUnit = dictionary["totalSwimmingStrokeCountUnit"] as? String,
@@ -277,6 +275,7 @@ extension Workout.Harmonized: Payload {
         let metadata = dictionary["metadata"] as? [String: String]
         return Workout.Harmonized(
             value: value,
+            description: description,
             totalEnergyBurned: totalEnergyBurned != nil
                 ? Double(truncating: totalEnergyBurned!)
                 : nil,

@@ -16,7 +16,7 @@ class WorkoutTests: XCTestCase {
             identifier: WorkoutType.workoutType.identifier!,
             startTimestamp: startDate.timeIntervalSince1970,
             endTimestamp: endDate.timeIntervalSince1970,
-            workoutName: "Badminton", device: Device(
+            device: Device(
                 name: "Guy's iPhone",
                 manufacturer: "Guy",
                 model: "6.1.1",
@@ -43,18 +43,19 @@ class WorkoutTests: XCTestCase {
             duration: 10.0,
             workoutEvents: [
                 WorkoutEvent(
-                    type: "Paused",
                     startTimestamp: startDate.timeIntervalSince1970,
                     endTimestamp: startDate.timeIntervalSince1970,
                     duration: 60.0,
                     harmonized: WorkoutEvent.Harmonized(
                         value: 6,
+                        description: "Paused",
                         metadata: ["event": "value"]
                     )
                 )
             ],
             harmonized: Workout.Harmonized(
                 value: 6,
+                description: "Badminton",
                 totalEnergyBurned: 1.2,
                 totalEnergyBurnedUnit: "kcal",
                 totalDistance: 123,
@@ -91,11 +92,11 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(decoded.duration, 10.0)
-        XCTAssertEqual(decoded.workoutEvents[0].type, "Paused")
         XCTAssertEqual(decoded.workoutEvents[0].startTimestamp, 1626884)
         XCTAssertEqual(decoded.workoutEvents[0].endTimestamp, 1626884)
         XCTAssertEqual(decoded.workoutEvents[0].duration, 60.0)
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.value, 6)
+        XCTAssertEqual(decoded.workoutEvents[0].harmonized.description, "Paused")
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.metadata, ["event": "value"])
         XCTAssertEqual(decoded.harmonized.value, 6)
         XCTAssertEqual(decoded.harmonized.totalEnergyBurned, 1.2)
@@ -113,7 +114,6 @@ class WorkoutTests: XCTestCase {
             "identifier": "HKWorkoutTypeIdentifier",
             "startTimestamp": 1624906615.822,
             "endTimestamp": 1624906675.822,
-            "workoutName": "Basketball",
             "device": [
                 "name": "FlutterTracker",
                 "manufacturer": "kvs",
@@ -147,12 +147,14 @@ class WorkoutTests: XCTestCase {
                     "duration": 0,
                     "harmonized": [
                         "value": 6,
+                        "description": "Paused",
                         "metadata": ["event": "value"]
                     ]
                 ]
             ],
             "harmonized": [
                 "value": 6,
+                "description": "Basketball",
                 "totalEnergyBurned": 1.2,
                 "totalEnergyBurnedUnit": "Cal",
                 "totalDistance": 123,
@@ -186,13 +188,14 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(sut.sourceRevision.operatingSystem.minorVersion, 5)
         XCTAssertEqual(sut.sourceRevision.operatingSystem.patchVersion, 0)
         XCTAssertEqual(sut.duration, 60.0)
-        XCTAssertEqual(sut.workoutEvents[0].type, "Paused")
         XCTAssertEqual(sut.workoutEvents[0].startTimestamp, 1624906.675822, accuracy: epsilon)
         XCTAssertEqual(sut.workoutEvents[0].endTimestamp, 1624906.675822, accuracy: epsilon)
         XCTAssertEqual(sut.workoutEvents[0].duration, 0.0)
         XCTAssertEqual(sut.workoutEvents[0].harmonized.value, 6)
+        XCTAssertEqual(sut.workoutEvents[0].harmonized.description, "Paused")
         XCTAssertEqual(sut.workoutEvents[0].harmonized.metadata, ["event": "value"])
         XCTAssertEqual(sut.harmonized.value, 6)
+        XCTAssertEqual(sut.harmonized.description, "Basketball")
         XCTAssertEqual(sut.harmonized.totalEnergyBurned, 1.2)
         XCTAssertEqual(sut.harmonized.totalEnergyBurnedUnit, "Cal")
         XCTAssertEqual(sut.harmonized.totalDistance, 123)

@@ -15,6 +15,7 @@ extension HKWorkoutEvent: Harmonizable {
         if #available(iOS 10.0, *) {
             return Harmonized(
                 value: type.rawValue,
+                description: type.description,
                 metadata: metadata?.compactMapValues { String(describing: $0 )})
         } else {
             throw HealthKitError.notAvailable(

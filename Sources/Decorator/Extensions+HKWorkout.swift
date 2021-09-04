@@ -34,6 +34,7 @@ extension HKWorkout: Harmonizable {
         }
         return Harmonized(
             value: Int(workoutActivityType.rawValue),
+            description: workoutActivityType.description,
             totalEnergyBurned: totalEnergyBurned,
             totalEnergyBurnedUnit: totalEnergyBurnedUnit.unitString,
             totalDistance: totalDistance,

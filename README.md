@@ -305,7 +305,7 @@ pod 'HealthKitReporter'
 or 
 
 ```ruby
-pod 'HealthKitReporter', '~> 1.4'
+pod 'HealthKitReporter', '~> 1.5.1'
 ```
 
 ### Swift Package Manager
@@ -315,7 +315,7 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.5.0")
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "1.5.1")
 ]
 ```
 
@@ -324,7 +324,7 @@ dependencies: [
 Add the line in your cartfile 
 
 ```ruby
-github "VictorKachalov/HealthKitReporter" "1.5.0"
+github "VictorKachalov/HealthKitReporter" "1.5.1"
 ```
 
 ## Author

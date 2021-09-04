@@ -9,8 +9,8 @@ import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
-extension HKActivityMoveMode {
-    var string: String {
+extension HKActivityMoveMode: CustomStringConvertible {
+    public var description: String {
         switch self {
         case .activeEnergy:
             return "Active energy"
