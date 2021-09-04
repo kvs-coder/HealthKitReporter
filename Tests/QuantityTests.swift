@@ -10,7 +10,7 @@ import HealthKitReporter
 
 class QuantityTests: XCTestCase {
     func testCreateThenEncodeThenDecode() throws {
-        let startDate = Date(timeIntervalSince1970: 1626884)
+        let startDate = Date(timeIntervalSince1970: 1626884800)
         let endDate = startDate.addingTimeInterval(60)
         let sut = Quantity(
             identifier: QuantityType.stepCount.identifier!,
@@ -52,8 +52,8 @@ class QuantityTests: XCTestCase {
             from: encoded.data(using: .utf8)!
         )
         XCTAssertEqual(decoded.identifier, "HKQuantityTypeIdentifierStepCount")
-        XCTAssertEqual(decoded.startTimestamp, 1626884)
-        XCTAssertEqual(decoded.endTimestamp, 1626884 + 60)
+        XCTAssertEqual(decoded.startTimestamp, 1626884800)
+        XCTAssertEqual(decoded.endTimestamp, 1626884800 + 60)
         XCTAssertEqual(decoded.device?.name, "Guy's iPhone")
         XCTAssertEqual(decoded.device?.manufacturer, "Guy")
         XCTAssertEqual(decoded.device?.model, "6.1.1")
@@ -77,8 +77,8 @@ class QuantityTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
             "identifier": "HKQuantityTypeIdentifierStepCount",
-            "startTimestamp": 1624906509.076,
-            "endTimestamp": 1624906569.076,
+            "startTimestamp": 1624906509000.076,
+            "endTimestamp": 1624906569000.076,
             "device": [
                 "name": "FlutterTracker",
                 "manufacturer": "kvs",
@@ -112,8 +112,8 @@ class QuantityTests: XCTestCase {
         let epsilon = 1.0
         let sut = try Quantity.make(from: dictionary)
         XCTAssertEqual(sut.identifier, "HKQuantityTypeIdentifierStepCount")
-        XCTAssertEqual(sut.startTimestamp, 1624906.076, accuracy: epsilon)
-        XCTAssertEqual(sut.endTimestamp, 1624906.076, accuracy: epsilon)
+        XCTAssertEqual(sut.startTimestamp, 1624906509, accuracy: epsilon)
+        XCTAssertEqual(sut.endTimestamp, 1624906569, accuracy: epsilon)
         XCTAssertEqual(sut.device?.name, "FlutterTracker")
         XCTAssertEqual(sut.device?.manufacturer, "kvs")
         XCTAssertEqual(sut.device?.model, "T-800")

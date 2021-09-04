@@ -10,7 +10,7 @@ import HealthKitReporter
 
 class WorkoutTests: XCTestCase {
     func testCreateThenEncodeThenDecode() throws {
-        let startDate = Date(timeIntervalSince1970: 1626884)
+        let startDate = Date(timeIntervalSince1970: 16268848000)
         let endDate = startDate.addingTimeInterval(60)
         let sut = Workout(
             identifier: WorkoutType.workoutType.identifier!,
@@ -73,8 +73,8 @@ class WorkoutTests: XCTestCase {
             from: encoded.data(using: .utf8)!
         )
         XCTAssertEqual(decoded.identifier, "HKWorkoutTypeIdentifier")
-        XCTAssertEqual(decoded.startTimestamp, 1626884)
-        XCTAssertEqual(decoded.endTimestamp, 1626884 + 60)
+        XCTAssertEqual(decoded.startTimestamp, 16268848000)
+        XCTAssertEqual(decoded.endTimestamp, 16268848000 + 60)
         XCTAssertEqual(decoded.device?.name, "Guy's iPhone")
         XCTAssertEqual(decoded.device?.manufacturer, "Guy")
         XCTAssertEqual(decoded.device?.model, "6.1.1")
@@ -92,8 +92,8 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(decoded.duration, 10.0)
-        XCTAssertEqual(decoded.workoutEvents[0].startTimestamp, 1626884)
-        XCTAssertEqual(decoded.workoutEvents[0].endTimestamp, 1626884)
+        XCTAssertEqual(decoded.workoutEvents[0].startTimestamp, 16268848000)
+        XCTAssertEqual(decoded.workoutEvents[0].endTimestamp, 16268848000)
         XCTAssertEqual(decoded.workoutEvents[0].duration, 60.0)
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.value, 6)
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.description, "Paused")
@@ -112,8 +112,8 @@ class WorkoutTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
             "identifier": "HKWorkoutTypeIdentifier",
-            "startTimestamp": 1624906615.822,
-            "endTimestamp": 1624906675.822,
+            "startTimestamp": 1624906615822,
+            "endTimestamp": 1624906675822,
             "device": [
                 "name": "FlutterTracker",
                 "manufacturer": "kvs",
@@ -142,8 +142,8 @@ class WorkoutTests: XCTestCase {
             "workoutEvents": [
                 [
                     "type": "Paused",
-                    "startTimestamp": 1624906675.822,
-                    "endTimestamp": 1624906675.822,
+                    "startTimestamp": 1624906675822,
+                    "endTimestamp": 1624906675822,
                     "duration": 0,
                     "harmonized": [
                         "value": 6,
@@ -169,8 +169,8 @@ class WorkoutTests: XCTestCase {
         let epsilon = 1.0
         let sut = try Workout.make(from: dictionary)
         XCTAssertEqual(sut.identifier, "HKWorkoutTypeIdentifier")
-        XCTAssertEqual(sut.startTimestamp, 1624906.615822, accuracy: epsilon)
-        XCTAssertEqual(sut.endTimestamp, 1624906.675822, accuracy: epsilon)
+        XCTAssertEqual(sut.startTimestamp, 1624906615, accuracy: epsilon)
+        XCTAssertEqual(sut.endTimestamp, 1624906675, accuracy: epsilon)
         XCTAssertEqual(sut.device?.name, "FlutterTracker")
         XCTAssertEqual(sut.device?.manufacturer, "kvs")
         XCTAssertEqual(sut.device?.model, "T-800")
@@ -188,8 +188,8 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(sut.sourceRevision.operatingSystem.minorVersion, 5)
         XCTAssertEqual(sut.sourceRevision.operatingSystem.patchVersion, 0)
         XCTAssertEqual(sut.duration, 60.0)
-        XCTAssertEqual(sut.workoutEvents[0].startTimestamp, 1624906.675822, accuracy: epsilon)
-        XCTAssertEqual(sut.workoutEvents[0].endTimestamp, 1624906.675822, accuracy: epsilon)
+        XCTAssertEqual(sut.workoutEvents[0].startTimestamp, 1624906675, accuracy: epsilon)
+        XCTAssertEqual(sut.workoutEvents[0].endTimestamp, 1624906675, accuracy: epsilon)
         XCTAssertEqual(sut.workoutEvents[0].duration, 0.0)
         XCTAssertEqual(sut.workoutEvents[0].harmonized.value, 6)
         XCTAssertEqual(sut.workoutEvents[0].harmonized.description, "Paused")

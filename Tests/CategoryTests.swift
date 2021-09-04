@@ -10,7 +10,7 @@ import HealthKitReporter
 
 class CategoryTests: XCTestCase {
     func testCreateThenEncodeThenDecode() throws {
-        let startDate = Date(timeIntervalSince1970: 1626884)
+        let startDate = Date(timeIntervalSince1970: 1626884800)
         let endDate = startDate.addingTimeInterval(60)
         let sut = Category(
             identifier: CategoryType.sleepAnalysis.identifier!,
@@ -52,8 +52,8 @@ class CategoryTests: XCTestCase {
             from: encoded.data(using: .utf8)!
         )
         XCTAssertEqual(decoded.identifier, "HKCategoryTypeIdentifierSleepAnalysis")
-        XCTAssertEqual(decoded.startTimestamp, 1626884)
-        XCTAssertEqual(decoded.endTimestamp, 1626884 + 60)
+        XCTAssertEqual(decoded.startTimestamp, 1626884800)
+        XCTAssertEqual(decoded.endTimestamp, 1626884800 + 60)
         XCTAssertEqual(decoded.device?.name, "Guy's iPhone")
         XCTAssertEqual(decoded.device?.manufacturer, "Guy")
         XCTAssertEqual(decoded.device?.model, "6.1.1")
@@ -77,8 +77,8 @@ class CategoryTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
             "identifier": "HKCategoryTypeIdentifierSleepAnalysis",
-            "startTimestamp": 1630618680,
-            "endTimestamp": 1630697880,
+            "startTimestamp": 1630618680000,
+            "endTimestamp": 1630697880000,
             "device": [
                 "name": nil,
                 "manufacturer": nil,
@@ -114,8 +114,8 @@ class CategoryTests: XCTestCase {
         let epsilon = 1.0
         let sut = try Category.make(from: dictionary)
         XCTAssertEqual(sut.identifier, "HKCategoryTypeIdentifierSleepAnalysis")
-        XCTAssertEqual(sut.startTimestamp, 1630618, accuracy: epsilon)
-        XCTAssertEqual(sut.endTimestamp, 1630697, accuracy: epsilon)
+        XCTAssertEqual(sut.startTimestamp, 1630618680, accuracy: epsilon)
+        XCTAssertEqual(sut.endTimestamp, 1630697880, accuracy: epsilon)
         XCTAssertNil(sut.device?.name)
         XCTAssertNil(sut.device?.manufacturer)
         XCTAssertNil(sut.device?.model)
