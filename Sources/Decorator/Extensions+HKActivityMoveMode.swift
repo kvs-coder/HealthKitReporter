@@ -1,5 +1,5 @@
 //
-//  Extensions+HKActivityMode.swift
+//  Extensions+HKActivityMoveMode.swift
 //  HealthKitReporter
 //
 //  Created by Victor Kachalov on 27.01.21.

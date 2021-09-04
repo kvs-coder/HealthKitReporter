@@ -152,8 +152,8 @@ extension Quantity: Payload {
     ) throws -> Quantity {
         guard
             let identifier = dictionary["identifier"] as? String,
-            let startTimestamp = dictionary["startTimestamp"] as? Double,
-            let endTimestamp = dictionary["endTimestamp"] as? Double,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
@@ -162,8 +162,8 @@ extension Quantity: Payload {
         let device = dictionary["device"] as? [String: Any]
         return Quantity(
             identifier: identifier,
-            startTimestamp: startTimestamp.secondsSince1970,
-            endTimestamp: endTimestamp.secondsSince1970,
+            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
+            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
             device: device != nil
                 ? try Device.make(from: device!)
                 : nil,
@@ -178,14 +178,14 @@ extension Quantity.Harmonized: Payload {
         from dictionary: [String : Any]
     ) throws -> Quantity.Harmonized {
         guard
-            let value = dictionary["value"] as? Double,
+            let value = dictionary["value"] as? NSNumber,
             let unit = dictionary["unit"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         let metadata = dictionary["metadata"] as? [String: String]
         return Quantity.Harmonized(
-            value: value,
+            value: Double(truncating: value),
             unit: unit,
             metadata: metadata
         )

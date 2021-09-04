@@ -226,10 +226,10 @@ extension Workout: Payload {
     ) throws -> Workout {
         guard
             let identifier = dictionary["identifier"] as? String,
-            let startTimestamp = dictionary["startTimestamp"] as? Double,
-            let endTimestamp = dictionary["endTimestamp"] as? Double,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
             let workoutName = dictionary["workoutName"] as? String,
-            let duration = dictionary["duration"] as? Double,
+            let duration = dictionary["duration"] as? NSNumber,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
@@ -239,14 +239,14 @@ extension Workout: Payload {
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
         return Workout(
             identifier: identifier,
-            startTimestamp: startTimestamp.secondsSince1970,
-            endTimestamp: endTimestamp.secondsSince1970,
+            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
+            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
             workoutName: workoutName,
             device: device != nil
                 ? try Device.make(from: device!)
                 : nil,
             sourceRevision: try SourceRevision.make(from: sourceRevision),
-            duration: duration,
+            duration: Double(truncating: duration),
             workoutEvents: workoutEvents != nil
                 ? try workoutEvents!.map {
                     try WorkoutEvent.make(from: $0)
@@ -270,20 +270,28 @@ extension Workout.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let totalEnergyBurned = dictionary["totalEnergyBurned"] as? Double
-        let totalDistance = dictionary["totalDistance"] as? Double
-        let totalSwimmingStrokeCount = dictionary["totalSwimmingStrokeCount"] as? Double
-        let totalFlightsClimbed = dictionary["totalFlightsClimbed"] as? Double
+        let totalEnergyBurned = dictionary["totalEnergyBurned"] as? NSNumber
+        let totalDistance = dictionary["totalDistance"] as? NSNumber
+        let totalSwimmingStrokeCount = dictionary["totalSwimmingStrokeCount"] as? NSNumber
+        let totalFlightsClimbed = dictionary["totalFlightsClimbed"] as? NSNumber
         let metadata = dictionary["metadata"] as? [String: String]
         return Workout.Harmonized(
             value: value,
-            totalEnergyBurned: totalEnergyBurned,
+            totalEnergyBurned: totalEnergyBurned != nil
+                ? Double(truncating: totalEnergyBurned!)
+                : nil,
             totalEnergyBurnedUnit: totalEnergyBurnedUnit,
-            totalDistance: totalDistance,
+            totalDistance:  totalDistance != nil
+                ? Double(truncating: totalDistance!)
+                : nil,
             totalDistanceUnit: totalDistanceUnit,
-            totalSwimmingStrokeCount: totalSwimmingStrokeCount,
+            totalSwimmingStrokeCount:  totalSwimmingStrokeCount != nil
+                ? Double(truncating: totalSwimmingStrokeCount!)
+                : nil,
             totalSwimmingStrokeCountUnit: totalSwimmingStrokeCountUnit,
-            totalFlightsClimbed: totalFlightsClimbed,
+            totalFlightsClimbed:  totalFlightsClimbed != nil
+                ? Double(truncating: totalFlightsClimbed!)
+                : nil,
             totalFlightsClimbedUnit: totalFlightsClimbedUnit,
             metadata: metadata
         )

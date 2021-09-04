@@ -37,7 +37,7 @@ public class HealthKitReader {
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()
         let bloodType = try? healthStore.bloodType()
-        let skinType = try? healthStore.fitzpatrickSkinType()
+        let fitzpatrickSkinType = try? healthStore.fitzpatrickSkinType()
         if #available(iOS 14.0, *) {
             let birthday = try? healthStore.dateOfBirthComponents()
             let wheelchairUse = try? healthStore.wheelchairUse()
@@ -46,7 +46,7 @@ public class HealthKitReader {
                 biologicalSex: biologicalSex,
                 birthday: birthday,
                 bloodType: bloodType,
-                skinType: skinType,
+                fitzpatrickSkinType: fitzpatrickSkinType,
                 wheelchairUse: wheelchairUse,
                 activityMoveMode: activityMoveMode
             )
@@ -58,14 +58,14 @@ public class HealthKitReader {
                 biologicalSex: biologicalSex,
                 birthday: birthday,
                 bloodType: bloodType,
-                skinType: skinType,
+                fitzpatrickSkinType: fitzpatrickSkinType,
                 wheelchairUse: wheelchairUse
             )
         }
         return Characteristic(
             biologicalSex: biologicalSex,
             bloodType: bloodType,
-            skinType: skinType
+            fitzpatrickSkinType: fitzpatrickSkinType
         )
     }
     /**

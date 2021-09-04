@@ -134,8 +134,8 @@ extension Category: Payload {
     ) throws -> Category {
         guard
             let identifier = dictionary["identifier"] as? String,
-            let startTimestamp = dictionary["startTimestamp"] as? Double,
-            let endTimestamp = dictionary["endTimestamp"] as? Double,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
@@ -144,8 +144,8 @@ extension Category: Payload {
         let device = dictionary["device"] as? [String: Any]
         return Category(
             identifier: identifier,
-            startTimestamp: startTimestamp.secondsSince1970,
-            endTimestamp: endTimestamp.secondsSince1970,
+            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
+            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
             device: device != nil
                 ? try Device.make(from: device!)
                 : nil,

@@ -1,5 +1,5 @@
 //
-//  HeartbeatSerie.swift
+//  HeartbeatSeries.swift
 //  HealthKitReporter
 //
 //  Created by Victor on 25.09.20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct HeartbeatSerie: Codable {
+public struct HeartbeatSeries: Codable {
     public let timeSinceSeriesStart: Double
     public let precededByGap: Bool
     public let done: Bool

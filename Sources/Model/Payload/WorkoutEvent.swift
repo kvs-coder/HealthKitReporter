@@ -37,7 +37,7 @@ public struct WorkoutEvent: Sample {
 
     @available(iOS 11.0, *)
     init(workoutEvent: HKWorkoutEvent) throws {
-        self.type = String(describing: workoutEvent.type)
+        self.type = workoutEvent.type.name
         self.startTimestamp = workoutEvent
             .dateInterval
             .start
@@ -111,7 +111,7 @@ extension WorkoutEvent.Harmonized: Payload {
         guard let value = dictionary["value"] as? Int else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["value"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: String]
         return  WorkoutEvent.Harmonized(value: value, metadata: metadata)
     }
 }
@@ -122,18 +122,18 @@ extension WorkoutEvent: Payload {
     ) throws -> WorkoutEvent {
         guard
             let type = dictionary["type"] as? String,
-            let startTimestamp = dictionary["startTimestamp"] as? Double,
-            let endTimestamp = dictionary["endTimestamp"] as? Double,
-            let duration = dictionary["duration"] as? Double,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
+            let duration = dictionary["duration"] as? NSNumber,
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         return WorkoutEvent(
             type: type,
-            startTimestamp: startTimestamp.secondsSince1970,
-            endTimestamp: endTimestamp.secondsSince1970,
-            duration: duration,
+            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
+            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
+            duration: Double(truncating: duration),
             harmonized: try WorkoutEvent.Harmonized.make(from: harmonized)
         )
     }

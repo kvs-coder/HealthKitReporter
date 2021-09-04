@@ -1,4 +1,12 @@
-## [1.4.4] - 28.06.2021.
+## [1.5.0] - 04.09.2021.
+
+* Unit Tests for most of DTO Models
+* WorkoutConfiguration bug fix for parsing
+* WorkoutEventType name
+* Parsing number values from incoming JSON dictionaries as NSNumber
+* Fix the typos (HeartbeatSeries)
+
+## [1.4.5] - 28.06.2021.
 
 * Fix with minimum Operation System for iOS 10
 

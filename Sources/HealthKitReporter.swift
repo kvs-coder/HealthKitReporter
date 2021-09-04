@@ -86,7 +86,7 @@ public typealias AnchoredResultsHandler = (
     - error: error (optional)
  */
 public typealias HeartbeatSeriesDataHandler = (
-    _ serie: HeartbeatSerie?,
+    _ serie: HeartbeatSeries?,
     _ error: Error?
 ) -> Void
 /**

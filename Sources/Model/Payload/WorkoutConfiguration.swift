@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 
 @available(iOS 10.0, *)
-public struct WorkoutConfiguration {
+public struct WorkoutConfiguration: Codable {
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
@@ -35,22 +35,17 @@ public struct WorkoutConfiguration {
             let activityValue = dictionary["activityValue"] as? Int,
             let locationValue = dictionary["locationValue"] as? Int,
             let swimmingValue = dictionary["swimmingValue"] as? Int,
-            let value = dictionary["value"] as? Double,
-            let unit = dictionary["unit"] as? String
+            let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
             throw HealthKitError.invalidValue(
                 "Invalid dictionary: \(dictionary)"
             )
         }
-        let harmonized = Harmonized(
-            value: value,
-            unit: unit
-        )
         return WorkoutConfiguration(
             activityValue: activityValue,
             locationValue: locationValue,
             swimmingValue: swimmingValue,
-            harmonized: harmonized
+            harmonized: try Harmonized.make(from: harmonized)
         )
     }
 
@@ -92,5 +87,23 @@ extension WorkoutConfiguration: Original {
             doubleValue: harmonized.value
         )
         return HKWorkoutConfiguration()
+    }
+}
+// MARK: - Payload
+@available(iOS 10.0, *)
+extension WorkoutConfiguration.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> WorkoutConfiguration.Harmonized {
+        guard
+            let value = dictionary["value"] as? NSNumber,
+            let unit = dictionary["unit"] as? String
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return WorkoutConfiguration.Harmonized(
+            value: Double(truncating: value),
+            unit: unit
+        )
     }
 }

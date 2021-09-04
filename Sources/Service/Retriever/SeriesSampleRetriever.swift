@@ -56,7 +56,7 @@ class SeriesSampleRetriever {
                         dataHandler(nil, error)
                         return
                     }
-                    let heartbeatSerie = HeartbeatSerie(
+                    let heartbeatSerie = HeartbeatSeries(
                         timeSinceSeriesStart: timeSinceSeriesStart,
                         precededByGap: precededByGap,
                         done: done

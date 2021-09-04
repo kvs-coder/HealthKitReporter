@@ -13,7 +13,7 @@ extension HKWheelchairUse {
     var string: String {
         switch self {
         case .notSet:
-            return "Not set"
+            return "na"
         case .no:
             return "No"
         case .yes:
