@@ -1,3 +1,7 @@
+## [1.5.3] - 05.09.2021.
+
+* Sample app adjustments
+
 ## [1.5.2] - 05.09.2021.
 
 * Extension of Category types, add detail key-value to DTO
