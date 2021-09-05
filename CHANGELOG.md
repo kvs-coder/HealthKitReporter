@@ -1,3 +1,7 @@
+## [1.5.2] - 05.09.2021.
+
+* Extension of Category types, add detail key-value to DTO
+
 ## [1.5.1] - 04.09.2021.
 
 * CustomStringConvertable for HK enum Types
