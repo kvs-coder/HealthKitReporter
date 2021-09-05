@@ -42,8 +42,9 @@ class CategoryTests: XCTestCase {
             ),
             harmonized: Category.Harmonized(
                 value: 1,
-                description: "Some category sleep",
-                metadata: ["key": "value"]
+                description: "HKCategoryValueSleepAnalysis",
+                detail: "Asleep",
+                metadata: ["HKWasUserEntered": "1"]
             )
         )
         let encoded = try sut.encoded()
@@ -71,8 +72,9 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(decoded.harmonized.value, 1)
-        XCTAssertEqual(decoded.harmonized.description, "Some category sleep")
-        XCTAssertEqual(decoded.harmonized.metadata, ["key": "value"])
+        XCTAssertEqual(decoded.harmonized.description, "HKCategoryValueSleepAnalysis")
+        XCTAssertEqual(decoded.harmonized.detail, "Asleep")
+        XCTAssertEqual(decoded.harmonized.metadata, ["HKWasUserEntered": "1"])
     }
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
@@ -106,6 +108,7 @@ class CategoryTests: XCTestCase {
             "harmonized": [
                 "value": 1,
                 "description": "HKCategoryValueSleepAnalysis",
+                "detail": "Asleep",
                 "metadata": [
                     "HKWasUserEntered": "1"
                 ]
@@ -134,6 +137,7 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(sut.sourceRevision.operatingSystem.patchVersion, 0)
         XCTAssertEqual(sut.harmonized.value, 1)
         XCTAssertEqual(sut.harmonized.description, "HKCategoryValueSleepAnalysis")
+        XCTAssertEqual(sut.harmonized.detail, "Asleep")
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"])
     }
 }

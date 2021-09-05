@@ -15,6 +15,8 @@ extension HKCategoryType {
                 return type
             }
         }
-        throw HealthKitError.invalidType("Unknown HKObjectType")
+        throw HealthKitError.invalidType(
+            "Unknown HKCategoryType with identifier:\(identifier)"
+        )
     }
 }

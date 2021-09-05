@@ -14,10 +14,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var writeButton: UIButton!
 
     private var reporter: HealthKitReporter?
-    private let typesToRead: [QuantityType] = [
-        .stepCount,
-        .heartRate,
-        .heartRateVariabilitySDNN
+    private let typesToRead: [ObjectType] = [
+        QuantityType.stepCount,
+        QuantityType.heartRate,
+        CategoryType.sleepAnalysis,
+        QuantityType.heartRateVariabilitySDNN
     ]
     private let typesToWrite: [QuantityType] = [
         .stepCount
@@ -138,54 +139,76 @@ class ViewController: UIViewController {
     private func read() {
         let manager = reporter?.manager
         let reader = reporter?.reader
-        manager?.preferredUnits(for: typesToRead) { [unowned self] (preferredUnits, error) in
-            if error == nil {
-                for preferredUnit in preferredUnits {
-                    do {
-                        if let quantityQuery = try reader?.quantityQuery(
-                            type: try QuantityType.make(from: preferredUnit.identifier),
-                            unit: preferredUnit.unit,
-                            resultsHandler: { (results, error) in
-                                if error == nil {
-                                    for element in results {
+        do {
+            if let query = try reader?.categoryQuery(type: .sleepAnalysis, resultsHandler: { results, error in
+                if error == nil {
+                    for element in results {
+                        do {
+                            print("Category")
+                            print(try element.encoded())
+                        } catch {
+                            print(error)
+                        }
+                    }
+                } else {
+                    print(error ?? "error")
+                }
+            }) {
+                manager?.executeQuery(query)
+            }
+        } catch {
+            print(error)
+        }
+        if let quantityTypes = typesToRead.filter({ $0 is QuantityType}) as? [QuantityType] {
+            manager?.preferredUnits(for: quantityTypes) { [unowned self] (preferredUnits, error) in
+                if error == nil {
+                    for preferredUnit in preferredUnits {
+                        do {
+                            if let quantityQuery = try reader?.quantityQuery(
+                                type: try QuantityType.make(from: preferredUnit.identifier),
+                                unit: preferredUnit.unit,
+                                resultsHandler: { (results, error) in
+                                    if error == nil {
+                                        for element in results {
+                                            do {
+                                                print("QUANTITY")
+                                                print(try element.encoded())
+                                            } catch {
+                                                print(error)
+                                            }
+                                        }
+                                    } else {
+                                        print(error ?? "error")
+                                    }
+                                }
+                            ) {
+                                manager?.executeQuery(quantityQuery)
+                            }
+                            if let statisticsQuery = try self.reporter?.reader.statisticsQuery(
+                                type: try QuantityType.make(from: preferredUnit.identifier),
+                                unit: preferredUnit.unit,
+                                completionHandler: { (element, error) in
+                                    if error == nil {
                                         do {
-                                            print("QUANTITY")
+                                            print("STATISTICS")
                                             print(try element.encoded())
                                         } catch {
                                             print(error)
                                         }
+                                    } else {
+                                        print(error ?? "error")
                                     }
-                                } else {
-                                    print(error ?? "error")
                                 }
+                            ) {
+                                manager?.executeQuery(statisticsQuery)
                             }
-                        ) {
-                            manager?.executeQuery(quantityQuery)
+                        } catch {
+                            print(error)
                         }
-                        if let statisticsQuery = try self.reporter?.reader.statisticsQuery(
-                            type: try QuantityType.make(from: preferredUnit.identifier),
-                            unit: preferredUnit.unit,
-                            completionHandler: { (element, error) in
-                                if error == nil {
-                                    do {
-                                        print("STATISTICS")
-                                        print(try element.encoded())
-                                    } catch {
-                                        print(error)
-                                    }
-                                } else {
-                                    print(error ?? "error")
-                                }
-                            }
-                        ) {
-                            manager?.executeQuery(statisticsQuery)
-                        }
-                    } catch {
-                        print(error)
                     }
+                } else {
+                    print(error ?? "error")
                 }
-            } else {
-                print(error ?? "error")
             }
         }
     }

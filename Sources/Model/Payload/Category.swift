@@ -12,26 +12,31 @@ public struct Category: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String
+        public let detail: String
         public let metadata: [String: String]?
 
         public init(
             value: Int,
             description: String,
+            detail: String,
             metadata: [String: String]?
         ) {
             self.value = value
             self.description = description
+            self.detail = detail
             self.metadata = metadata 
         }
 
         public func copyWith(
             value: Int? = nil,
             description: String? = nil,
+            detail: String? = nil,
             metadata: [String: String]? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
                 description: description ?? self.description,
+                detail: detail ?? self.detail,
                 metadata: metadata ?? self.metadata
             )
         }
@@ -161,7 +166,8 @@ extension Category.Harmonized: Payload {
     ) throws -> Category.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
-            let description = dictionary["description"] as? String
+            let description = dictionary["description"] as? String,
+            let detail = dictionary["detail"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
@@ -169,6 +175,7 @@ extension Category.Harmonized: Payload {
         return Category.Harmonized(
             value: value,
             description: description,
+            detail: detail,
             metadata: metadata
         )
     }
