@@ -64,8 +64,7 @@ class SeriesSampleRetriever {
                     )
                     series.append(heartbeatSeries)
                     if done {
-                        let sample = HeartbeatSeriesSample(seriesSample: seriesSample, series: series)
-                        series.removeAll()
+                        let sample = HeartbeatSeriesSample(sample: seriesSample, series: series)
                         dataHandler(sample, nil)
                     }
                 }

@@ -62,13 +62,13 @@ public struct HeartbeatSeriesSample: Identifiable, Sample {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
-    init(seriesSample: HKHeartbeatSeriesSample, series: [HeartbeatSeries]) {
-        self.uuid = seriesSample.uuid.uuidString
-        self.identifier = seriesSample.sampleType.identifier
-        self.startTimestamp = seriesSample.startDate.timeIntervalSince1970
-        self.endTimestamp = seriesSample.endDate.timeIntervalSince1970
-        self.device = Device(device: seriesSample.device)
-        self.sourceRevision = SourceRevision(sourceRevision: seriesSample.sourceRevision)
-        self.harmonized = seriesSample.harmonize(series: series)
+    init(sample: HKHeartbeatSeriesSample, series: [HeartbeatSeries]) {
+        self.uuid = sample.uuid.uuidString
+        self.identifier = sample.sampleType.identifier
+        self.startTimestamp = sample.startDate.timeIntervalSince1970
+        self.endTimestamp = sample.endDate.timeIntervalSince1970
+        self.device = Device(device: sample.device)
+        self.sourceRevision = SourceRevision(sourceRevision: sample.sourceRevision)
+        self.harmonized = sample.harmonize(series: series)
     }
 }
