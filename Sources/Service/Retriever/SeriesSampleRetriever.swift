@@ -52,7 +52,7 @@ class SeriesSampleRetriever {
                 var series = [HeartbeatSeries]()
                 let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
                     heartbeatSeries: seriesSample
-                ) { (query, timeSinceSeriesStart, precededByGap, done, error) in
+                ) { (_, timeSinceSeriesStart, precededByGap, done, error) in
                     guard error == nil else {
                         dataHandler(nil, error)
                         return
