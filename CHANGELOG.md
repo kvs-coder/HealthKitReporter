@@ -1,3 +1,7 @@
+## [1.6.0] - 12.10.2021.
+
+* heartbeatSeriesQuery changed as HeartbeatSeries now is a valid sample with a set of beat by beat measurements
+
 ## [1.5.3] - 05.09.2021.
 
 * Sample app adjustments
