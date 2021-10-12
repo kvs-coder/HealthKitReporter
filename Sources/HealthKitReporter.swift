@@ -82,11 +82,12 @@ public typealias AnchoredResultsHandler = (
 ) -> Void
 /**
  - Parameters:
-    - serie: heartbeat serie.
+    - series: heartbeat serie.
     - error: error (optional)
  */
+@available(iOS 13.0, *)
 public typealias HeartbeatSeriesDataHandler = (
-    _ serie: HeartbeatSeries?,
+    _ sample: HeartbeatSeriesSample?,
     _ error: Error?
 ) -> Void
 /**

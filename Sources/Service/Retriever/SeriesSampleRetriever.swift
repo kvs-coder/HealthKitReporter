@@ -49,6 +49,7 @@ class SeriesSampleRetriever {
                     )
                     return
                 }
+                var series = [HeartbeatSeries]()
                 let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
                     heartbeatSeries: seriesSample
                 ) { (query, timeSinceSeriesStart, precededByGap, done, error) in
@@ -56,12 +57,17 @@ class SeriesSampleRetriever {
                         dataHandler(nil, error)
                         return
                     }
-                    let heartbeatSerie = HeartbeatSeries(
+                    let heartbeatSeries = HeartbeatSeries(
                         timeSinceSeriesStart: timeSinceSeriesStart,
                         precededByGap: precededByGap,
                         done: done
                     )
-                    dataHandler(heartbeatSerie, nil)
+                    series.append(heartbeatSeries)
+                    if done {
+                        let sample = HeartbeatSeriesSample(seriesSample: seriesSample, series: series)
+                        series.removeAll()
+                        dataHandler(sample, nil)
+                    }
                 }
                 healthStore.execute(heartbeatSeriesQuery)
             }

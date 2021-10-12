@@ -144,6 +144,7 @@ extension HKQuantitySample: Harmonizable {
         return Harmonized(
             value: value,
             unit: unit.unitString,
-            metadata: metadata?.compactMapValues { String(describing: $0 )})
+            metadata: metadata?.compactMapValues { String(describing: $0) }
+        )
     }
 }

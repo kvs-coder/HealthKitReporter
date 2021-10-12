@@ -18,7 +18,8 @@ class ViewController: UIViewController {
         QuantityType.stepCount,
         QuantityType.heartRate,
         CategoryType.sleepAnalysis,
-        QuantityType.heartRateVariabilitySDNN
+        QuantityType.heartRateVariabilitySDNN,
+        SeriesType.heartbeatSeries
     ]
     private let typesToWrite: [QuantityType] = [
         .stepCount
@@ -84,6 +85,31 @@ class ViewController: UIViewController {
             }
         }
     }
+    @IBAction func hrSeriesButtonTapped(_ sender: UIButton) {
+        readSeries()
+    }
+
+    private func readSeries() {
+        let manager = reporter?.manager
+        let reader = reporter?.reader
+        do {
+            if let seriesQuery = try reader?.heartbeatSeriesQuery(dataHandler: { heartbeatSeries, error in
+                if error == nil {
+                    do {
+                        print(try heartbeatSeries.encoded())
+                    } catch {
+                        print(error)
+                    }
+                } else {
+                    print(error ?? "error")
+                }
+            }) {
+                manager?.executeQuery(seriesQuery)
+            }
+        } catch {
+            print(error)
+        }
+    }
 
     private func write(completionHandler: @escaping (Bool, Error?) -> Void) {
         let manager = reporter?.manager
@@ -144,7 +170,6 @@ class ViewController: UIViewController {
                 if error == nil {
                     for element in results {
                         do {
-                            print("Category")
                             print(try element.encoded())
                         } catch {
                             print(error)

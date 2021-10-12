@@ -72,7 +72,7 @@ public class HealthKitReader {
      Queries quantity types.
      - Parameter type: **QuantityType** types
      - Parameter unit: **String** unit
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -118,7 +118,7 @@ public class HealthKitReader {
     /**
      Queries category types.
      - Parameter type: **CategoryType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -159,7 +159,7 @@ public class HealthKitReader {
     }
     /**
      Queries workouts.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -205,7 +205,7 @@ public class HealthKitReader {
     /**
      Queries correlations.
      - Parameter type: **CorrelationType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -250,7 +250,7 @@ public class HealthKitReader {
     }
     /**
      Queries electrocardiogram.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -277,7 +277,7 @@ public class HealthKitReader {
     }
     /**
      Queries electrocardiogram.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter dataHandler: returns a block with voltage measurement for each
@@ -307,7 +307,7 @@ public class HealthKitReader {
     /**
      Queries samples. If samples are quantity types, the SI for units will be used.
      - Parameter type: **SampleType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
@@ -373,7 +373,7 @@ public class HealthKitReader {
      Queries statistics.
      - Parameter type: **ObjectType** types
      - Parameter unit: **String** unit
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter completionHandler: returns a block with statistics
      - Throws: HealthKitError.invalidType
      */
@@ -416,7 +416,7 @@ public class HealthKitReader {
      Queries statistics collection.
      - Parameter type: **QuantityType** types
      - Parameter unit: **String** unit
-     - Parameter quantitySamplePredicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter quantitySamplePredicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter anchorDate: **Date** anchor date
      - Parameter enumerateFrom: **Date** start enumeration date
      - Parameter enumerateTo: **Date** end enumeration date
@@ -483,11 +483,11 @@ public class HealthKitReader {
     }
     /**
      Queries heartbeat series.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with heartbeat serie for each
-     iteration until **done** of **HeartbeatSerie**  is True.
+     - Parameter dataHandler: returns a block with heartbeat series for each
+     iteration until **done** of **HeartbeatSeries**  is True.
      - Throws: HealthKitError.invalidType
      */
     @available(iOS 13.0, *)
@@ -515,10 +515,10 @@ public class HealthKitReader {
      - Requires: CLLocation permissions:
      “Privacy - Location Always and When In Use Usage Description”
      and “Privacy - Location When In Use Usage Description”.
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with heartbeat serie for each
+     - Parameter dataHandler: returns a block with heartbeat series for each
      iteration until **done** of **WorkoutRoute**  is True.
      - Throws: HealthKitError.invalidType
      */
@@ -543,7 +543,7 @@ public class HealthKitReader {
     }
     /**
      Queries activity summary.
-     - Parameter predicate: **NSPredicate** predicate (otpional). nil by default
+     - Parameter predicate: **NSPredicate** predicate (optional). nil by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter completionHandler: returns a block with activity summary array
      */
@@ -581,7 +581,7 @@ public class HealthKitReader {
     /**
      Queries objects (with anchors).
      - Parameter type: **SampleType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
      - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
@@ -650,7 +650,7 @@ public class HealthKitReader {
     /**
      Queries sources.
      - Parameter type: **SampleType** types
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter completionHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
@@ -683,8 +683,8 @@ public class HealthKitReader {
     /**
      Queries correlation.
      - Parameter type: **CorrelationType** type
-     - Parameter predicate: **NSPredicate** predicate (otpional). allSamples by default
-     - Parameter typePredicates: type predicates (otpional). Key is the type
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
+     - Parameter typePredicates: type predicates (optional). Key is the type
      identifier **String**  and value is **NSPredicate**. Nil by default
      - Parameter completionHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
