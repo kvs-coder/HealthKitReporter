@@ -86,8 +86,8 @@ public typealias AnchoredResultsHandler = (
     - error: error (optional)
  */
 @available(iOS 13.0, *)
-public typealias HeartbeatSeriesDataHandler = (
-    _ sample: HeartbeatSeriesSample?,
+public typealias HeartbeatSeriesResultsDataHandler = (
+    _ samples: [HeartbeatSeriesSample],
     _ error: Error?
 ) -> Void
 /**

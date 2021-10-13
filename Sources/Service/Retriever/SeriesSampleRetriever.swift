@@ -16,7 +16,7 @@ class SeriesSampleRetriever {
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
-        dataHandler: @escaping HeartbeatSeriesDataHandler
+        resultsHandler: @escaping HeartbeatSeriesResultsDataHandler
     ) throws -> HKSampleQuery {
         let heartbeatSeries = SeriesType.heartbeatSeries
         guard
@@ -36,13 +36,16 @@ class SeriesSampleRetriever {
                 error == nil,
                 let result = data
             else {
-                dataHandler(nil, error)
+                resultsHandler([], error)
                 return
             }
+            var samples = [HeartbeatSeriesSample]()
+            var seriesError: Error?
+            let group = DispatchGroup()
             for element in result {
                 guard let seriesSample = element as? HKHeartbeatSeriesSample else {
-                    dataHandler(
-                        nil,
+                    resultsHandler(
+                        [],
                         HealthKitError.invalidType(
                             "Sample \(element) is not HKHeartbeatSeriesSample"
                         )
@@ -50,11 +53,13 @@ class SeriesSampleRetriever {
                     return
                 }
                 var series = [HeartbeatSeries]()
+                group.enter()
                 let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
                     heartbeatSeries: seriesSample
                 ) { (_, timeSinceSeriesStart, precededByGap, done, error) in
                     guard error == nil else {
-                        dataHandler(nil, error)
+                        seriesError = error
+                        group.leave()
                         return
                     }
                     let heartbeatSeries = HeartbeatSeries(
@@ -65,10 +70,14 @@ class SeriesSampleRetriever {
                     series.append(heartbeatSeries)
                     if done {
                         let sample = HeartbeatSeriesSample(sample: seriesSample, series: series)
-                        dataHandler(sample, nil)
+                        samples.append(sample)
+                        group.leave()
                     }
                 }
                 healthStore.execute(heartbeatSeriesQuery)
+            }
+            group.notify(queue: .global()) {
+                resultsHandler(samples, seriesError)
             }
         }
         return query

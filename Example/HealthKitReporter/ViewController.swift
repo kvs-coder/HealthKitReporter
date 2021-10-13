@@ -93,10 +93,10 @@ class ViewController: UIViewController {
         let manager = reporter?.manager
         let reader = reporter?.reader
         do {
-            if let seriesQuery = try reader?.heartbeatSeriesQuery(dataHandler: { heartbeatSeries, error in
+            if let seriesQuery = try reader?.heartbeatSeriesQuery(resultsHandler: { samples, error in
                 if error == nil {
                     do {
-                        print(try heartbeatSeries.encoded())
+                        print(try samples.encoded())
                     } catch {
                         print(error)
                     }

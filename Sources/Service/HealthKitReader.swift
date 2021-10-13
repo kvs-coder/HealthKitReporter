@@ -486,7 +486,7 @@ public class HealthKitReader {
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with heartbeat series for each
+     - Parameter resultsHandler: returns a block with heartbeat series for each
      iteration until **done** of **HeartbeatSeries**  is True.
      - Throws: HealthKitError.invalidType
      */
@@ -500,14 +500,14 @@ public class HealthKitReader {
             )
         ],
         limit: Int = HKObjectQueryNoLimit,
-        dataHandler: @escaping HeartbeatSeriesDataHandler
+        resultsHandler: @escaping HeartbeatSeriesResultsDataHandler
     ) throws -> SampleQuery {
         return try SeriesSampleRetriever().makeHeartbeatSeriesQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
-            dataHandler: dataHandler
+            resultsHandler: resultsHandler
         )
     }
     /**
