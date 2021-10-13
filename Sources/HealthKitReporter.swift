@@ -150,7 +150,7 @@ public typealias CorrelationResultsHandler = (
     - statistics: statistics. Nil by default
     - error: error (optional)
  */
-public typealias StatisticsCompeltionHandler = (
+public typealias StatisticsCompletionHandler = (
     _ statistics: Statistics?,
     _ error: Error?
 ) -> Void

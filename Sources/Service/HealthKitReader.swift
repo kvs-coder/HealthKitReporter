@@ -381,7 +381,7 @@ public class HealthKitReader {
         type: QuantityType,
         unit: String,
         predicate: NSPredicate? = .allSamples,
-        completionHandler: @escaping StatisticsCompeltionHandler
+        completionHandler: @escaping StatisticsCompletionHandler
     ) throws -> StatisticsQuery {
         guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
@@ -434,7 +434,7 @@ public class HealthKitReader {
         enumerateTo: Date,
         intervalComponents: DateComponents,
         monitorUpdates: Bool = false,
-        enumerationBlock: @escaping StatisticsCompeltionHandler
+        enumerationBlock: @escaping StatisticsCompletionHandler
     ) throws -> StatisticsCollectionQuery {
         guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType(
