@@ -53,3 +53,17 @@ public extension PreferredUnit {
         return preferredUnits
     }
 }
+// MARK: - Payload
+extension PreferredUnit: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> PreferredUnit {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let unit = dictionary["unit"] as? String
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return PreferredUnit(identifier: identifier, unit: unit)
+    }
+}

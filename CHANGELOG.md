@@ -1,3 +1,7 @@
+## [1.6.1] - 15.10.2021.
+
+* return HeartbeatSeries as a collection of samples, each has own collection of measurements
+
 ## [1.6.0] - 12.10.2021.
 
 * heartbeatSeriesQuery changed as HeartbeatSeries now is a valid sample with a set of beat by beat measurements

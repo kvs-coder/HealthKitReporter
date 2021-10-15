@@ -89,9 +89,8 @@
 		0420241E26178860001C40F7 /* PreferredUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042023D926178860001C40F7 /* PreferredUnit.swift */; };
 		0420241F26178860001C40F7 /* HealthKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042023DA26178860001C40F7 /* HealthKitError.swift */; };
 		0420242026178860001C40F7 /* HealthKitReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042023DB26178860001C40F7 /* HealthKitReporter.swift */; };
-		04CC38E026E37F480067ABFD /* HeartbeatSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CC38DF26E37F480067ABFD /* HeartbeatSeries.swift */; };
 		04CC38E426E37F970067ABFD /* Extensions+HKWorkoutEventType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CC38E326E37F970067ABFD /* Extensions+HKWorkoutEventType.swift */; };
-		04F6E1762715D6B800A63807 /* HeartbeatSeriesSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6E1752715D6B800A63807 /* HeartbeatSeriesSample.swift */; };
+		04F6E1762715D6B800A63807 /* HeartbeatSeries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6E1752715D6B800A63807 /* HeartbeatSeries.swift */; };
 		04F6E1782715DADC00A63807 /* Extensions+HKHeartbeatSeriesSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F6E1772715DADC00A63807 /* Extensions+HKHeartbeatSeriesSample.swift */; };
 		1050D86C275F823332DB71B3081511F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		1716C45525278E190037EA4E /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 1716C45425278E190037EA4E /* CHANGELOG.md */; };
@@ -205,9 +204,8 @@
 		042023D926178860001C40F7 /* PreferredUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferredUnit.swift; sourceTree = "<group>"; };
 		042023DA26178860001C40F7 /* HealthKitError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HealthKitError.swift; path = Sources/HealthKitError.swift; sourceTree = "<group>"; };
 		042023DB26178860001C40F7 /* HealthKitReporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HealthKitReporter.swift; path = Sources/HealthKitReporter.swift; sourceTree = "<group>"; };
-		04CC38DF26E37F480067ABFD /* HeartbeatSeries.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeartbeatSeries.swift; sourceTree = "<group>"; };
 		04CC38E326E37F970067ABFD /* Extensions+HKWorkoutEventType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKWorkoutEventType.swift"; sourceTree = "<group>"; };
-		04F6E1752715D6B800A63807 /* HeartbeatSeriesSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatSeriesSample.swift; sourceTree = "<group>"; };
+		04F6E1752715D6B800A63807 /* HeartbeatSeries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatSeries.swift; sourceTree = "<group>"; };
 		04F6E1772715DADC00A63807 /* Extensions+HKHeartbeatSeriesSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+HKHeartbeatSeriesSample.swift"; sourceTree = "<group>"; };
 		0CBCDB9707C28427FF60B97538188EDE /* Pods_HealthKitReporter_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKitReporter_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10ED9239B0ED1C13D65048DF6C2EDD88 /* Pods-HealthKitReporter_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-HealthKitReporter_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -364,7 +362,6 @@
 		042023B426178860001C40F7 /* Payload */ = {
 			isa = PBXGroup;
 			children = (
-				04CC38DF26E37F480067ABFD /* HeartbeatSeries.swift */,
 				042023B626178860001C40F7 /* Source.swift */,
 				042023B726178860001C40F7 /* Statistics.swift */,
 				042023B826178860001C40F7 /* Workout.swift */,
@@ -382,7 +379,7 @@
 				042023C426178860001C40F7 /* WorkoutConfiguration.swift */,
 				042023C526178860001C40F7 /* Characteristic.swift */,
 				042023C626178860001C40F7 /* SourceRevision.swift */,
-				04F6E1752715D6B800A63807 /* HeartbeatSeriesSample.swift */,
+				04F6E1752715D6B800A63807 /* HeartbeatSeries.swift */,
 			);
 			path = Payload;
 			sourceTree = "<group>";
@@ -727,7 +724,6 @@
 				042023FB26178860001C40F7 /* HealthKitManager.swift in Sources */,
 				04CC38E426E37F970067ABFD /* Extensions+HKWorkoutEventType.swift in Sources */,
 				0420241D26178860001C40F7 /* Harmonizable.swift in Sources */,
-				04CC38E026E37F480067ABFD /* HeartbeatSeries.swift in Sources */,
 				0420240B26178860001C40F7 /* WorkoutConfiguration.swift in Sources */,
 				040EFF2126E4CD0500D37F04 /* Extensions+HKCategoryValueContraceptive.swift in Sources */,
 				0420241726178860001C40F7 /* DocumentType.swift in Sources */,
@@ -768,7 +764,7 @@
 				042023E326178860001C40F7 /* Extensions+Double.swift in Sources */,
 				04F6E1782715DADC00A63807 /* Extensions+HKHeartbeatSeriesSample.swift in Sources */,
 				042023F126178860001C40F7 /* Extensions+HKWorkout.swift in Sources */,
-				04F6E1762715D6B800A63807 /* HeartbeatSeriesSample.swift in Sources */,
+				04F6E1762715D6B800A63807 /* HeartbeatSeries.swift in Sources */,
 				0420241F26178860001C40F7 /* HealthKitError.swift in Sources */,
 				0420240826178860001C40F7 /* Category.swift in Sources */,
 				0420241E26178860001C40F7 /* PreferredUnit.swift in Sources */,
@@ -1006,7 +1002,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1070,7 +1066,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

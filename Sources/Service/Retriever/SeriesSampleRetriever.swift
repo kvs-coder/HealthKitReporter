@@ -39,7 +39,7 @@ class SeriesSampleRetriever {
                 resultsHandler([], error)
                 return
             }
-            var samples = [HeartbeatSeriesSample]()
+            var series = [HeartbeatSeries]()
             var seriesError: Error?
             let group = DispatchGroup()
             for element in result {
@@ -52,7 +52,7 @@ class SeriesSampleRetriever {
                     )
                     return
                 }
-                var series = [HeartbeatSeries]()
+                var measurements = [HeartbeatSeries.Measurement]()
                 group.enter()
                 let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
                     heartbeatSeries: seriesSample
@@ -62,22 +62,22 @@ class SeriesSampleRetriever {
                         group.leave()
                         return
                     }
-                    let heartbeatSeries = HeartbeatSeries(
+                    let measurement = HeartbeatSeries.Measurement(
                         timeSinceSeriesStart: timeSinceSeriesStart,
                         precededByGap: precededByGap,
                         done: done
                     )
-                    series.append(heartbeatSeries)
+                    measurements.append(measurement)
                     if done {
-                        let sample = HeartbeatSeriesSample(sample: seriesSample, series: series)
-                        samples.append(sample)
+                        let sample = HeartbeatSeries(sample: seriesSample, measurements: measurements)
+                        series.append(sample)
                         group.leave()
                     }
                 }
                 healthStore.execute(heartbeatSeriesQuery)
             }
             group.notify(queue: .global()) {
-                resultsHandler(samples, seriesError)
+                resultsHandler(series, seriesError)
             }
         }
         return query

@@ -10,12 +10,12 @@ import HealthKit
 
 @available(iOS 13.0, *)
 extension HKHeartbeatSeriesSample {
-    typealias Harmonized = HeartbeatSeriesSample.Harmonized
+    typealias Harmonized = HeartbeatSeries.Harmonized
     
-    func harmonize(series: [HeartbeatSeries]) -> Harmonized {
+    func harmonize(measurements: [HeartbeatSeries.Measurement]) -> Harmonized {
         Harmonized(
             count: count,
-            series: series,
+            measurements: measurements,
             metadata: metadata?.compactMapValues { String(describing: $0) }
         )
     }
