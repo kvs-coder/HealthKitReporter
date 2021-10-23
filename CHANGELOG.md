@@ -1,3 +1,8 @@
+## [1.6.2] - 23.10.2021.
+
+* Fix timestamps bug
+* add from dictionary static factory for HeartbeatSeries
+
 ## [1.6.1] - 15.10.2021.
 
 * return HeartbeatSeries as a collection of samples, each has own collection of measurements
