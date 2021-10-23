@@ -134,8 +134,8 @@ extension WorkoutEvent: Payload {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         return WorkoutEvent(
-            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
-            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
             duration: Double(truncating: duration),
             harmonized: try WorkoutEvent.Harmonized.make(from: harmonized)
         )

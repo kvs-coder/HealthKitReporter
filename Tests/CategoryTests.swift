@@ -79,8 +79,8 @@ class CategoryTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
             "identifier": "HKCategoryTypeIdentifierSleepAnalysis",
-            "startTimestamp": 1630618680000,
-            "endTimestamp": 1630697880000,
+            "startTimestamp": 1630618680,
+            "endTimestamp": 1630697880,
             "device": [
                 "name": nil,
                 "manufacturer": nil,

@@ -149,8 +149,8 @@ extension Category: Payload {
         let device = dictionary["device"] as? [String: Any]
         return Category(
             identifier: identifier,
-            startTimestamp: Double(truncating: startTimestamp).secondsSince1970,
-            endTimestamp: Double(truncating: endTimestamp).secondsSince1970,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
             device: device != nil
                 ? try Device.make(from: device!)
                 : nil,

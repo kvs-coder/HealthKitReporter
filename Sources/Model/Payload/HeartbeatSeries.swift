@@ -87,3 +87,83 @@ public struct HeartbeatSeries: Identifiable, Sample {
         self.harmonized = sample.harmonize(measurements: measurements)
     }
 }
+// MARK: - Payload
+@available(iOS 13.0, *)
+extension HeartbeatSeries: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> HeartbeatSeries {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
+            let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let device = dictionary["device"] as? [String: Any]
+        return HeartbeatSeries(
+            identifier: identifier,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
+            device: device != nil
+                ? try Device.make(from: device!)
+                : nil,
+            sourceRevision: try SourceRevision.make(from: sourceRevision),
+            harmonized: try Harmonized.make(from: harmonized)
+        )
+    }
+}
+// MARK: - Payload
+@available(iOS 13.0, *)
+extension HeartbeatSeries.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> HeartbeatSeries.Harmonized {
+        guard
+            let count = dictionary["count"] as? Int,
+            let measurements = dictionary["measurements"] as? [Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let metadata = dictionary["metadata"] as? [String: String]
+        return HeartbeatSeries.Harmonized(
+            count: count,
+            measurements: try HeartbeatSeries.Measurement.collect(from: measurements),
+            metadata: metadata
+        )
+    }
+}
+// MARK: - Payload
+@available(iOS 13.0, *)
+extension HeartbeatSeries.Measurement: Payload {
+    public static func make(
+        from dictionary: [String : Any]
+    ) throws -> HeartbeatSeries.Measurement {
+        guard
+            let timeSinceSeriesStart = dictionary["timeSinceSeriesStart"] as? NSNumber,
+            let precededByGap = dictionary["precededByGap"] as? Bool,
+            let done = dictionary["done"] as? Bool
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return HeartbeatSeries.Measurement(
+            timeSinceSeriesStart: Double(truncating: timeSinceSeriesStart),
+            precededByGap: precededByGap,
+            done: done
+        )
+    }
+    public static func collect(
+        from array: [Any]
+    ) throws -> [HeartbeatSeries.Measurement] {
+        var measurements = [HeartbeatSeries.Measurement]()
+        for element in array {
+            if let dictionary = element as? [String: Any] {
+                let measurement = try HeartbeatSeries.Measurement.make(from: dictionary)
+                measurements.append(measurement)
+            }
+        }
+        return measurements
+    }
+}

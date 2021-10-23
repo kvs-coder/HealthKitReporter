@@ -35,8 +35,8 @@ class WorkoutEventTests: XCTestCase {
     }
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
-            "startTimestamp": 1624906675822,
-            "endTimestamp": 1624906675822,
+            "startTimestamp": 1624906675.822,
+            "endTimestamp": 1624906675.822,
             "duration": 0,
             "harmonized": [
                 "value": 6,

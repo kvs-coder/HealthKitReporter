@@ -77,8 +77,8 @@ class QuantityTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary: [String: Any] = [
             "identifier": "HKQuantityTypeIdentifierStepCount",
-            "startTimestamp": 1624906509000.076,
-            "endTimestamp": 1624906569000.076,
+            "startTimestamp": 1624906509.076,
+            "endTimestamp": 1624906569.076,
             "device": [
                 "name": "FlutterTracker",
                 "manufacturer": "kvs",
