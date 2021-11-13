@@ -335,7 +335,5 @@ Victor Kachalov, victorkachalov@gmail.com
 
 HealthKitReporter is available under the MIT license. See the LICENSE file for more info.
 
-## Donation
-If you think that my repo helped you to solve the issues you struggle with, please don't be shy and donate :-)
-
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/VictorKachalov/5EUR)
+## Sponsorhip
+If you think that my repo helped you to solve the issues you struggle with, please don't be shy and sponsor :-)
