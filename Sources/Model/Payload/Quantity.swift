@@ -8,8 +8,10 @@
 import Foundation
 import HealthKit
 
-public struct Quantity: Identifiable, Sample {
-    public struct Harmonized: Codable {
+@objc(HKRQuantity)
+public final class Quantity: NSObject, Identifiable, Sample {
+    @objcMembers
+    public final class Harmonized: NSObject, Codable {
         public let value: Double
         public let unit: String
         public let metadata: [String: String]?
@@ -37,14 +39,22 @@ public struct Quantity: Identifiable, Sample {
         }
     }
 
+    @objc
     public let uuid: String
+    @objc
     public let identifier: String
+    @objc
     public let startTimestamp: Double
+    @objc
     public let endTimestamp: Double
+    @objc
     public let device: Device?
+    @objc
     public let sourceRevision: SourceRevision
+    @objc
     public let harmonized: Harmonized
 
+    @objc
     public static func collect(
         results: [HKSample],
         unit: HKUnit
@@ -89,6 +99,7 @@ public struct Quantity: Identifiable, Sample {
         self.harmonized = try quantitySample.harmonize()
     }
 
+    @objc
     public init(
         identifier: String,
         startTimestamp: Double,
@@ -106,6 +117,7 @@ public struct Quantity: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    @objc
     public func copyWith(
         identifier: String? = nil,
         startTimestamp: Double? = nil,
@@ -147,6 +159,7 @@ extension Quantity: Original {
 }
 // MARK: - Payload
 extension Quantity: Payload {
+    @objc
     public static func make(
         from dictionary: [String : Any]
     ) throws -> Quantity {
@@ -174,6 +187,7 @@ extension Quantity: Payload {
 }
 // MARK: - Payload
 extension Quantity.Harmonized: Payload {
+    @objc
     public static func make(
         from dictionary: [String : Any]
     ) throws -> Quantity.Harmonized {
@@ -193,6 +207,7 @@ extension Quantity.Harmonized: Payload {
 }
 // MARK: - UnitConvertable
 extension Quantity: UnitConvertable {
+    @objc
     public func converted(to unit: String) throws -> Quantity {
         guard harmonized.unit != unit else {
             return self

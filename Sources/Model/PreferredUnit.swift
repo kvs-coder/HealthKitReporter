@@ -8,8 +8,11 @@
 import Foundation
 import HealthKit
 
-public struct PreferredUnit: Codable {
+@objc(HKRPreferredUnit)
+public final class PreferredUnit: NSObject, Codable {
+    @objc
     public let identifier: String
+    @objc
     public let unit: String
 
     init(type: HKQuantityType, unit: HKUnit) {
@@ -17,6 +20,7 @@ public struct PreferredUnit: Codable {
         self.unit = unit.unitString
     }
 
+    @objc
     public init(identifier: String, unit: String) {
         self.identifier = identifier
         self.unit = unit
@@ -24,6 +28,7 @@ public struct PreferredUnit: Codable {
 }
 // MARK: - Factory
 public extension PreferredUnit {
+    @objc
     static func collect(
         from dictionary: [HKQuantityType : HKUnit]
     ) -> [PreferredUnit] {
@@ -37,6 +42,7 @@ public extension PreferredUnit {
         }
         return preferredUnits
     }
+    @objc
     static func collect(
         from dictionary: [QuantityType: String]
     ) -> [PreferredUnit] {
@@ -55,6 +61,7 @@ public extension PreferredUnit {
 }
 // MARK: - Payload
 extension PreferredUnit: Payload {
+    @objc
     public static func make(
         from dictionary: [String : Any]
     ) throws -> PreferredUnit {

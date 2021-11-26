@@ -9,9 +9,10 @@ import Foundation
 import HealthKit
 
 /// **HealthKitWriter** class for HK writing operations
-public class HealthKitWriter {
+@objc(HKRWriter)
+public final class HealthKitWriter: NSObject {
     private let healthStore: HKHealthStore
-
+    
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
@@ -21,6 +22,7 @@ public class HealthKitWriter {
      - Throws: `HealthKitError.notAvailable` `HealthKitError.invalidType`
      - Returns: true if allowed to write and false if  not
      */
+    @objc
     public func isAuthorizedToWrite(type: ObjectType) throws -> Bool {
         guard let objectType = type.original else {
             throw HealthKitError.invalidType("Invalid type: \(type)")
@@ -42,6 +44,7 @@ public class HealthKitWriter {
      - Parameter workout: **Workout** workout
      - Parameter completion: block notifies about operation status
      */
+    @objc
     public func addCategory(
         _ samples: [Category],
         from: Device?,
@@ -66,6 +69,7 @@ public class HealthKitWriter {
      - Parameter workout: **Workout** workout
      - Parameter completion: block notifies about operation status
      */
+    @objc
     public func addQuantitiy(
         _ samples: [Quantity],
         from: Device?,
@@ -88,6 +92,7 @@ public class HealthKitWriter {
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
+    @objc
     public func delete(
         sample: Sample,
         completion: @escaping StatusCompletionBlock
@@ -112,6 +117,7 @@ public class HealthKitWriter {
      - Parameter predicate: **NSPredicate** predicate for deletion
      - Parameter completion: block notifies about deletion operation status
      */
+    @objc
     public func deleteObjects(
         of objectType: ObjectType,
         predicate: NSPredicate,
@@ -132,6 +138,7 @@ public class HealthKitWriter {
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
+    @objc
     public func save(
         sample: Sample,
         completion: @escaping StatusCompletionBlock

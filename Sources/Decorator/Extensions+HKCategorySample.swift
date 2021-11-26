@@ -12,14 +12,14 @@ extension HKCategorySample: Harmonizable {
     typealias Harmonized = Category.Harmonized
     
     func harmonize() throws -> Harmonized {
-        var description = String()
+        var name = String()
         var detail = String()
         let type = try categoryType.parsed()
         switch type {
         case .audioExposureEvent:
             if #available(iOS 13.0, *) {
                 if let value = HKCategoryValueAudioExposureEvent(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -29,78 +29,78 @@ extension HKCategorySample: Harmonizable {
             }
         case .sleepAnalysis:
             if let value = HKCategoryValueSleepAnalysis(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .sexualActivity:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .menstrualFlow:
             if let value = HKCategoryValueMenstrualFlow(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .ovulationTestResult:
             if let value = HKCategoryValueOvulationTestResult(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .cervicalMucusQuality:
             if let value = HKCategoryValueCervicalMucusQuality(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .appleStandHour:
             if let value = HKCategoryValueAppleStandHour(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .intermenstrualBleeding:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .mindfulSession:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .highHeartRateEvent:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .lowHeartRateEvent:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .irregularHeartRhythmEvent:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .toothbrushingEvent:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .pregnancy:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .lactation:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .contraceptive:
             if #available(iOS 14.3, *) {
                 if let value = HKCategoryValueContraceptive(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -111,7 +111,7 @@ extension HKCategorySample: Harmonizable {
         case .environmentalAudioExposureEvent:
             if #available(iOS 14.0, *) {
                 if let value = HKCategoryValueEnvironmentalAudioExposureEvent(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -122,7 +122,7 @@ extension HKCategorySample: Harmonizable {
         case .headphoneAudioExposureEvent:
             if #available(iOS 14.2, *) {
                 if let value = HKCategoryValueHeadphoneAudioExposureEvent(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -132,13 +132,13 @@ extension HKCategorySample: Harmonizable {
             }
         case .handwashingEvent:
             if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
+                name = value.description
                 detail = value.detail
             }
         case .lowCardioFitnessEvent:
             if #available(iOS 14.3, *) {
                 if let value = HKCategoryValueLowCardioFitnessEvent(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -149,7 +149,7 @@ extension HKCategorySample: Harmonizable {
         case .abdominalCramps:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -160,7 +160,7 @@ extension HKCategorySample: Harmonizable {
         case .acne:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -171,7 +171,7 @@ extension HKCategorySample: Harmonizable {
         case .appetiteChanges:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueAppetiteChanges(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -182,7 +182,7 @@ extension HKCategorySample: Harmonizable {
         case .bladderIncontinence:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -193,7 +193,7 @@ extension HKCategorySample: Harmonizable {
         case .bloating:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -204,7 +204,7 @@ extension HKCategorySample: Harmonizable {
         case .breastPain:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -215,7 +215,7 @@ extension HKCategorySample: Harmonizable {
         case .chestTightnessOrPain:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -226,7 +226,7 @@ extension HKCategorySample: Harmonizable {
         case .chills:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -237,7 +237,7 @@ extension HKCategorySample: Harmonizable {
         case .constipation:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -248,7 +248,7 @@ extension HKCategorySample: Harmonizable {
         case .coughing:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -259,7 +259,7 @@ extension HKCategorySample: Harmonizable {
         case .diarrhea:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -270,7 +270,7 @@ extension HKCategorySample: Harmonizable {
         case .dizziness:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -281,7 +281,7 @@ extension HKCategorySample: Harmonizable {
         case .drySkin:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -292,7 +292,7 @@ extension HKCategorySample: Harmonizable {
         case .fainting:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -303,7 +303,7 @@ extension HKCategorySample: Harmonizable {
         case .fatigue:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -314,7 +314,7 @@ extension HKCategorySample: Harmonizable {
         case .fever:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -325,7 +325,7 @@ extension HKCategorySample: Harmonizable {
         case .generalizedBodyAche:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -336,7 +336,7 @@ extension HKCategorySample: Harmonizable {
         case .hairLoss:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -347,7 +347,7 @@ extension HKCategorySample: Harmonizable {
         case .headache:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -358,7 +358,7 @@ extension HKCategorySample: Harmonizable {
         case .heartburn:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -369,7 +369,7 @@ extension HKCategorySample: Harmonizable {
         case .hotFlashes:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -380,7 +380,7 @@ extension HKCategorySample: Harmonizable {
         case .lossOfSmell:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -391,7 +391,7 @@ extension HKCategorySample: Harmonizable {
         case .lossOfTaste:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -402,7 +402,7 @@ extension HKCategorySample: Harmonizable {
         case .lowerBackPain:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -413,7 +413,7 @@ extension HKCategorySample: Harmonizable {
         case .memoryLapse:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -424,7 +424,7 @@ extension HKCategorySample: Harmonizable {
         case .moodChanges:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValuePresence(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -435,7 +435,7 @@ extension HKCategorySample: Harmonizable {
         case .nausea:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -446,7 +446,7 @@ extension HKCategorySample: Harmonizable {
         case .nightSweats:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -457,7 +457,7 @@ extension HKCategorySample: Harmonizable {
         case .pelvicPain:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -468,7 +468,7 @@ extension HKCategorySample: Harmonizable {
         case .rapidPoundingOrFlutteringHeartbeat:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -479,7 +479,7 @@ extension HKCategorySample: Harmonizable {
         case .runnyNose:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -490,7 +490,7 @@ extension HKCategorySample: Harmonizable {
         case .shortnessOfBreath:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -501,7 +501,7 @@ extension HKCategorySample: Harmonizable {
         case .sinusCongestion:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -512,7 +512,7 @@ extension HKCategorySample: Harmonizable {
         case .skippedHeartbeat:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -523,7 +523,7 @@ extension HKCategorySample: Harmonizable {
         case .sleepChanges:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValuePresence(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -534,7 +534,7 @@ extension HKCategorySample: Harmonizable {
         case .soreThroat:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -545,7 +545,7 @@ extension HKCategorySample: Harmonizable {
         case .vaginalDryness:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -556,7 +556,7 @@ extension HKCategorySample: Harmonizable {
         case .vomiting:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -567,7 +567,7 @@ extension HKCategorySample: Harmonizable {
         case .wheezing:
             if #available(iOS 13.6, *) {
                 if let value = HKCategoryValueSeverity(rawValue: value) {
-                    description = value.description
+                    name = value.description
                     detail = value.detail
                 }
             } else {
@@ -576,13 +576,13 @@ extension HKCategorySample: Harmonizable {
                 )
             }
         }
-        return category(description: description, detail: detail)
+        return category(name: name, detail: detail)
     }
     
-    private func category(description: String, detail: String) -> Harmonized {
+    private func category(name: String, detail: String) -> Harmonized {
         return Harmonized(
             value: value,
-            description: description,
+            name: name,
             detail: detail,
             metadata: metadata?.compactMapValues { String(describing: $0 )}
         )

@@ -12,6 +12,7 @@ import HealthKit
  All HealthKit electrocardiogram types
  */
 @available(iOS 14.0, *)
+@objc(HKRElectrocardiogramType)
 public enum ElectrocardiogramType: Int, CaseIterable, SampleType {
     case electrocardiogramType
 

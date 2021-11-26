@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@objc(HKRUpdateFrequency)
 public enum UpdateFrequency: Int {
     case immediate = 1
     case hourly = 2

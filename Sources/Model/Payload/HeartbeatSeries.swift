@@ -9,7 +9,8 @@ import Foundation
 import HealthKit
 
 @available(iOS 13.0, *)
-public struct HeartbeatSeries: Identifiable, Sample {
+@objc(HKRHeartbeatSeries)
+public final class HeartbeatSeries: NSObject, Identifiable, Sample {
     public struct Measurement: Codable {
         public let timeSinceSeriesStart: Double
         public let precededByGap: Bool

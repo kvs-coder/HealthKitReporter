@@ -9,9 +9,10 @@ import Foundation
 import HealthKit
 
 /// **HealthKitObserver** class for HK observing operations
-public class HealthKitObserver {
+@objc(HKRObserver)
+public final class HealthKitObserver: NSObject {
     private let healthStore: HKHealthStore
-
+    
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
@@ -21,6 +22,7 @@ public class HealthKitObserver {
      - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
      - Parameter updateHandler: is called as soon any change happened in AppleHealth App
      */
+    @objc
     public func observerQuery(
         type: SampleType,
         predicate: NSPredicate? = nil,
@@ -62,6 +64,7 @@ public class HealthKitObserver {
      - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
+    @objc
     public func enableBackgroundDelivery(
         type: ObjectType,
         frequency: UpdateFrequency = .hourly,
@@ -76,14 +79,15 @@ public class HealthKitObserver {
         }
         healthStore.enableBackgroundDelivery(
             for: objectType,
-            frequency: frequency.original,
-            withCompletion: completionHandler
+               frequency: frequency.original,
+               withCompletion: completionHandler
         )
     }
     /**
      Disables All background notifications about changes in AppleHealth
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
+    @objc
     public func disableAllBackgroundDelivery(
         completionHandler: @escaping StatusCompletionBlock
     ) {
@@ -94,6 +98,7 @@ public class HealthKitObserver {
      - Parameter type: **ObjectType** type
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
+    @objc
     public func disableBackgroundDelivery(
         type: ObjectType,
         completionHandler: @escaping StatusCompletionBlock
@@ -107,7 +112,7 @@ public class HealthKitObserver {
         }
         healthStore.disableBackgroundDelivery(
             for: objectType,
-            withCompletion: completionHandler
+               withCompletion: completionHandler
         )
     }
 }

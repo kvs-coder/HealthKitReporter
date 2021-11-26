@@ -8,8 +8,10 @@
 import Foundation
 import CoreLocation
 
-public struct WorkoutRoute: Codable {
-    public struct Location: Codable {
+@objc(HKRWorkoutRoute)
+public final class WorkoutRoute: NSObject, Codable {
+    @objcMembers
+    public final class Location: NSObject, Codable {
         public let latitude: Double
         public let longitude: Double
         public let altitude: Double
@@ -72,9 +74,12 @@ public struct WorkoutRoute: Codable {
         }
     }
 
+    @objc
     public let locations: [Location]
+    @objc
     public let done: Bool
 
+    @objc
     public init(locations: [Location], done: Bool) {
         self.locations = locations
         self.done = done

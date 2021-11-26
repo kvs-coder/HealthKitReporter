@@ -8,8 +8,10 @@
 import Foundation
 import HealthKit
 
-public struct SourceRevision: Codable {
-    public struct OperatingSystem: Codable {
+@objc(HKRSourceRevision)
+public final class SourceRevision: NSObject, Codable {
+    @objcMembers
+    public final class OperatingSystem: NSObject, Codable {
         public let majorVersion: Int
         public let minorVersion: Int
         public let patchVersion: Int
@@ -51,10 +53,15 @@ public struct SourceRevision: Codable {
         }
     }
 
+    @objc
     public let source: Source
+    @objc
     public let version: String?
+    @objc
     public let productType: String?
+    @objc
     public let systemVersion: String
+    @objc
     public let operatingSystem: OperatingSystem
 
     init(sourceRevision: HKSourceRevision) {
@@ -77,6 +84,7 @@ public struct SourceRevision: Codable {
         }
     }
 
+    @objc
     public init(
         source: Source,
         version: String?,
@@ -91,6 +99,7 @@ public struct SourceRevision: Codable {
         self.operatingSystem = operatingSystem
     }
 
+    @objc
     public func copyWith(
         source: Source? = nil,
         version: String? = nil,
@@ -126,6 +135,7 @@ extension SourceRevision: Original {
 }
 // MARK: - Payload
 extension SourceRevision.OperatingSystem: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> SourceRevision.OperatingSystem {
@@ -145,6 +155,7 @@ extension SourceRevision.OperatingSystem: Payload {
 }
 // MARK: - Payload
 extension SourceRevision: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> SourceRevision {

@@ -9,9 +9,10 @@ import Foundation
 import HealthKit
 
 /// **HealthKitManager** class for HK managing operations
-public class HealthKitManager {
+@objc(HKRManager)
+public final class HealthKitManager: NSObject {
     private let healthStore: HKHealthStore
-
+    
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
@@ -21,6 +22,7 @@ public class HealthKitManager {
      - Parameter toWrite: an array of **ObjectType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
+    @objc
     public func requestAuthorization(
         toRead: [ObjectType],
         toWrite: [SampleType],
@@ -62,6 +64,7 @@ public class HealthKitManager {
      - Parameter quantityTypes: an array of **QuantityType** types
      - Parameter completion: returns a block with information preferred units
      */
+    @objc
     public func preferredUnits(
         for quantityTypes: [QuantityType],
         completion: @escaping PreferredUnitsCompeltion
@@ -92,6 +95,7 @@ public class HealthKitManager {
      Stops executing the query.
      - Parameter query: **Query**
      */
+    @objc
     public func stopQuery(_ query: Query) {
         healthStore.stop(query)
     }
@@ -99,6 +103,7 @@ public class HealthKitManager {
      Executs query
      - Parameter query: **Query**
      */
+    @objc
     public func executeQuery(_ query: Query) {
         healthStore.execute(query)
     }
@@ -108,6 +113,7 @@ public class HealthKitManager {
      - Parameter completion: returns a block with samples
      */
     @available(iOS 10.0, *)
+    @objc
     public func startWatchApp(
         with workoutConfiguration: WorkoutConfiguration,
         completion: @escaping StatusCompletionBlock

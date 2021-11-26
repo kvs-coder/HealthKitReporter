@@ -17,7 +17,7 @@ class WorkoutEventTests: XCTestCase {
             duration: 60.0,
             harmonized: WorkoutEvent.Harmonized(
                 value: 6,
-                description: "Paused",
+                name: "Paused",
                 metadata: ["event": "value"]
             )
         )
@@ -30,7 +30,7 @@ class WorkoutEventTests: XCTestCase {
         XCTAssertEqual(decoded.endTimestamp, 1626884800)
         XCTAssertEqual(decoded.duration, 60.0)
         XCTAssertEqual(decoded.harmonized.value, 6)
-        XCTAssertEqual(decoded.harmonized.description, "Paused")
+        XCTAssertEqual(decoded.harmonized.name, "Paused")
         XCTAssertEqual(decoded.harmonized.metadata, ["event": "value"])
     }
     func testCreateFromDictionary() throws {
@@ -40,7 +40,7 @@ class WorkoutEventTests: XCTestCase {
             "duration": 0,
             "harmonized": [
                 "value": 6,
-                "description": "Paused",
+                "name": "Paused",
                 "metadata": ["event": "value"]
             ]
         ]
@@ -50,7 +50,7 @@ class WorkoutEventTests: XCTestCase {
         XCTAssertEqual(sut.endTimestamp, 1624906675.822, accuracy: epsilon)
         XCTAssertEqual(sut.duration, 0.0)
         XCTAssertEqual(sut.harmonized.value, 6)
-        XCTAssertEqual(sut.harmonized.description, "Paused")
+        XCTAssertEqual(sut.harmonized.name, "Paused")
         XCTAssertEqual(sut.harmonized.metadata, ["event": "value"])
     }
 }

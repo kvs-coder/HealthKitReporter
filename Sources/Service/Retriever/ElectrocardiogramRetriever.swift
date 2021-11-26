@@ -9,7 +9,8 @@ import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
-class ElectrocardiogramRetriever {
+@objcMembers
+final class ElectrocardiogramRetriever: NSObject {
     func makeElectrocardiogramQuery(
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],

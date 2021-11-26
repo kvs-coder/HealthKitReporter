@@ -8,34 +8,40 @@
 import Foundation
 import HealthKit
 
-public struct WorkoutEvent: Sample {
-    public struct Harmonized: Codable {
+@objc(HKRWorkoutEvent)
+public final class WorkoutEvent: NSObject, Sample {
+    @objcMembers
+    public final class Harmonized: NSObject, Codable {
         public let value: Int
-        public let description: String
+        public let name: String
         public let metadata: [String: String]?
 
-        public init(value: Int, description: String, metadata: [String: String]?) {
+        public init(value: Int, name: String, metadata: [String: String]?) {
             self.value = value
-            self.description = description
+            self.name = name
             self.metadata = metadata
         }
 
         public func copyWith(
             value: Int? = nil,
-            description: String? = nil,
+            name: String? = nil,
             metadata: [String: String]? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
-                description: description ?? self.description,
+                name: name ?? self.name,
                 metadata: metadata ?? self.metadata
             )
         }
     }
 
+    @objc
     public let startTimestamp: Double
+    @objc
     public let endTimestamp: Double
+    @objc
     public let duration: Double
+    @objc
     public let harmonized: Harmonized
 
     @available(iOS 11.0, *)
@@ -52,6 +58,7 @@ public struct WorkoutEvent: Sample {
         self.harmonized = try workoutEvent.harmonize()
     }
 
+    @objc
     public init(
         startTimestamp: Double,
         endTimestamp: Double,
@@ -103,25 +110,27 @@ extension WorkoutEvent: Original {
 }
 // MARK: - Payload
 extension WorkoutEvent.Harmonized: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws ->  WorkoutEvent.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
-            let description = dictionary["description"] as? String
+            let name = dictionary["name"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         let metadata = dictionary["metadata"] as? [String: String]
         return  WorkoutEvent.Harmonized(
             value: value,
-            description: description,
+            name: name,
             metadata: metadata
         )
     }
 }
 // MARK: - Payload
 extension WorkoutEvent: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> WorkoutEvent {

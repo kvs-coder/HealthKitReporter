@@ -8,6 +8,7 @@
 import Foundation
 import HealthKit
 
+@objc(ObjectType)
 public protocol ObjectType {
     /**
      Represents type as an original **HKObjectType**

@@ -42,7 +42,7 @@ class CategoryTests: XCTestCase {
             ),
             harmonized: Category.Harmonized(
                 value: 1,
-                description: "HKCategoryValueSleepAnalysis",
+                name: "HKCategoryValueSleepAnalysis",
                 detail: "Asleep",
                 metadata: ["HKWasUserEntered": "1"]
             )
@@ -72,7 +72,7 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(decoded.harmonized.value, 1)
-        XCTAssertEqual(decoded.harmonized.description, "HKCategoryValueSleepAnalysis")
+        XCTAssertEqual(decoded.harmonized.name, "HKCategoryValueSleepAnalysis")
         XCTAssertEqual(decoded.harmonized.detail, "Asleep")
         XCTAssertEqual(decoded.harmonized.metadata, ["HKWasUserEntered": "1"])
     }
@@ -107,7 +107,7 @@ class CategoryTests: XCTestCase {
             ],
             "harmonized": [
                 "value": 1,
-                "description": "HKCategoryValueSleepAnalysis",
+                "name": "HKCategoryValueSleepAnalysis",
                 "detail": "Asleep",
                 "metadata": [
                     "HKWasUserEntered": "1"
@@ -136,7 +136,7 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(sut.sourceRevision.operatingSystem.minorVersion, 5)
         XCTAssertEqual(sut.sourceRevision.operatingSystem.patchVersion, 0)
         XCTAssertEqual(sut.harmonized.value, 1)
-        XCTAssertEqual(sut.harmonized.description, "HKCategoryValueSleepAnalysis")
+        XCTAssertEqual(sut.harmonized.name, "HKCategoryValueSleepAnalysis")
         XCTAssertEqual(sut.harmonized.detail, "Asleep")
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"])
     }

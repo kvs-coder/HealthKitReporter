@@ -48,14 +48,14 @@ class WorkoutTests: XCTestCase {
                     duration: 60.0,
                     harmonized: WorkoutEvent.Harmonized(
                         value: 6,
-                        description: "Paused",
+                        name: "Paused",
                         metadata: ["event": "value"]
                     )
                 )
             ],
             harmonized: Workout.Harmonized(
                 value: 6,
-                description: "Badminton",
+                name: "Badminton",
                 totalEnergyBurned: 1.2,
                 totalEnergyBurnedUnit: "kcal",
                 totalDistance: 123,
@@ -96,9 +96,10 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(decoded.workoutEvents[0].endTimestamp, 1626884800)
         XCTAssertEqual(decoded.workoutEvents[0].duration, 60.0)
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.value, 6)
-        XCTAssertEqual(decoded.workoutEvents[0].harmonized.description, "Paused")
+        XCTAssertEqual(decoded.workoutEvents[0].harmonized.name, "Paused")
         XCTAssertEqual(decoded.workoutEvents[0].harmonized.metadata, ["event": "value"])
         XCTAssertEqual(decoded.harmonized.value, 6)
+        XCTAssertEqual(decoded.harmonized.name, "Badminton")
         XCTAssertEqual(decoded.harmonized.totalEnergyBurned, 1.2)
         XCTAssertEqual(decoded.harmonized.totalEnergyBurnedUnit, "kcal")
         XCTAssertEqual(decoded.harmonized.totalDistance, 123)
@@ -147,14 +148,14 @@ class WorkoutTests: XCTestCase {
                     "duration": 0,
                     "harmonized": [
                         "value": 6,
-                        "description": "Paused",
+                        "name": "Paused",
                         "metadata": ["event": "value"]
                     ]
                 ]
             ],
             "harmonized": [
                 "value": 6,
-                "description": "Basketball",
+                "name": "Basketball",
                 "totalEnergyBurned": 1.2,
                 "totalEnergyBurnedUnit": "Cal",
                 "totalDistance": 123,
@@ -192,10 +193,10 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(sut.workoutEvents[0].endTimestamp, 1624906675, accuracy: epsilon)
         XCTAssertEqual(sut.workoutEvents[0].duration, 0.0)
         XCTAssertEqual(sut.workoutEvents[0].harmonized.value, 6)
-        XCTAssertEqual(sut.workoutEvents[0].harmonized.description, "Paused")
+        XCTAssertEqual(sut.workoutEvents[0].harmonized.name, "Paused")
         XCTAssertEqual(sut.workoutEvents[0].harmonized.metadata, ["event": "value"])
         XCTAssertEqual(sut.harmonized.value, 6)
-        XCTAssertEqual(sut.harmonized.description, "Basketball")
+        XCTAssertEqual(sut.harmonized.name, "Basketball")
         XCTAssertEqual(sut.harmonized.totalEnergyBurned, 1.2)
         XCTAssertEqual(sut.harmonized.totalEnergyBurnedUnit, "Cal")
         XCTAssertEqual(sut.harmonized.totalDistance, 123)

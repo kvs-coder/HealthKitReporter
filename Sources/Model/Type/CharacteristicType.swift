@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit characteristic types
  */
+@objc(HKRCharacteristicType)
 public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case fitzpatrickSkinType
     case dateOfBirth

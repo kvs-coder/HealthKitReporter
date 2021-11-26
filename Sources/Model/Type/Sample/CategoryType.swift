@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit category types
  */
+@objc(HKRCategoryType)
 public enum CategoryType: Int, CaseIterable, SampleType {
     case sleepAnalysis
     case appleStandHour

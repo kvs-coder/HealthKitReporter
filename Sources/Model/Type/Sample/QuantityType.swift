@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit qunatitiy types
  */
+@objc(HKRQuantityType)
 public enum QuantityType: Int, CaseIterable, SampleType {
     case bodyMassIndex
     case bodyFatPercentage

@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit workout types
  */
+@objc(HKRWorkoutType)
 public enum WorkoutType: Int, CaseIterable, SampleType {
     case workoutType
 

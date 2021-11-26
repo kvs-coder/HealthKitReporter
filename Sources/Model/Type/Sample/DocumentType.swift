@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit document types
  */
+@objc(HKRDocumentType)
 public enum DocumentType: Int, CaseIterable, SampleType {
     case cda
 

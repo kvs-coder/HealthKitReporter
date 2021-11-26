@@ -23,9 +23,10 @@ typealias StatisticsCollectionHandler = (
 ) -> Void
 
 /// **HealthKitReader** class for HK reading operations
-public class HealthKitReader {
+@objc(HKRReader)
+public final class HealthKitReader: NSObject {
     private let healthStore: HKHealthStore
-
+    
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore
     }
@@ -34,6 +35,7 @@ public class HealthKitReader {
      - Throws: `HealthKitError.notAvailable``
      - Returns: **Characteristics** characteristics
      */
+    @objc
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()
         let bloodType = try? healthStore.bloodType()
@@ -78,6 +80,7 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func quantityQuery(
         type: QuantityType,
         unit: String,
@@ -124,6 +127,7 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func categoryQuery(
         type: CategoryType,
         predicate: NSPredicate? = .allSamples,
@@ -165,6 +169,7 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func workoutQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -211,6 +216,7 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func correlationQuery(
         type: CorrelationType,
         predicate: NSPredicate? = .allSamples,
@@ -257,6 +263,7 @@ public class HealthKitReader {
      - Throws: HealthKitError.invalidType
      */
     @available(iOS 14.0, *)
+    @objc
     public func electrocardiogramQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -285,6 +292,7 @@ public class HealthKitReader {
      - Throws: HealthKitError.invalidType
      */
     @available(iOS 14.0, *)
+    @objc
     public func electrocardiogramVoltageMeasurementQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -318,6 +326,7 @@ public class HealthKitReader {
         deprecated: 11,
         message: "Use special functions for fetching Quantity/Category/Workout samples. For Quantity Samples will return with SI units"
     )
+    @objc
     public func sampleQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
@@ -377,6 +386,7 @@ public class HealthKitReader {
      - Parameter completionHandler: returns a block with statistics
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func statisticsQuery(
         type: QuantityType,
         unit: String,
@@ -425,6 +435,7 @@ public class HealthKitReader {
      - Parameter enumerationBlock: returns a block with statistics on every iteration
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func statisticsCollectionQuery(
         type: QuantityType,
         unit: String,
@@ -491,6 +502,7 @@ public class HealthKitReader {
      - Throws: HealthKitError.invalidType
      */
     @available(iOS 13.0, *)
+    @objc
     public func heartbeatSeriesQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -522,6 +534,7 @@ public class HealthKitReader {
      iteration until **done** of **WorkoutRoute**  is True.
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func workoutRouteQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -548,6 +561,7 @@ public class HealthKitReader {
      - Parameter completionHandler: returns a block with activity summary array
      */
     @available(iOS 9.3, *)
+    @objc
     public func queryActivitySummary(
         predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,
@@ -588,6 +602,7 @@ public class HealthKitReader {
      - Parameter completionHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func anchoredObjectQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
@@ -654,6 +669,7 @@ public class HealthKitReader {
      - Parameter completionHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func sourceQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
@@ -689,6 +705,7 @@ public class HealthKitReader {
      - Parameter completionHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
+    @objc
     public func correlationQuery(
         type: CorrelationType,
         predicate: NSPredicate? = .allSamples,

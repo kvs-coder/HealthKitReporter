@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit series types
  */
+@objc(HKRSeriesType)
 public enum SeriesType: Int, CaseIterable, SampleType {
     case heartbeatSeries
     case workoutRoute

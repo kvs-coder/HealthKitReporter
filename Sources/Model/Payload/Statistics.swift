@@ -8,8 +8,10 @@
 import Foundation
 import HealthKit
 
-public struct Statistics: Identifiable, Sample {
-    public struct Harmonized: Codable {
+@objc(HKRStatistics)
+public final class Statistics: NSObject, Identifiable, Sample {
+    @objcMembers
+    public final class Harmonized: NSObject, Codable {
         public let summary: Double?
         public let average: Double?
         public let recent: Double?
@@ -52,10 +54,15 @@ public struct Statistics: Identifiable, Sample {
         }
     }
 
+    @objc
     public let identifier: String
+    @objc
     public let startTimestamp: Double
+    @objc
     public let endTimestamp: Double
+    @objc
     public let harmonized: Harmonized
+    @objc
     public let sources: [Source]
 
     init(statistics: HKStatistics, unit: HKUnit) throws {
@@ -105,6 +112,7 @@ public struct Statistics: Identifiable, Sample {
         self.sources = sources
     }
     
+    @objc
     public func copyWith(
         identifier: String? = nil,
         startTimestamp: Double? = nil,
@@ -123,6 +131,7 @@ public struct Statistics: Identifiable, Sample {
 }
 // MARK: - UnitConvertable
 extension Statistics: UnitConvertable {
+    @objc
     public func converted(to unit: String) throws -> Statistics {
         guard harmonized.unit != unit else {
             return self

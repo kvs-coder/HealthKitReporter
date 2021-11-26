@@ -9,7 +9,8 @@ import Foundation
 import HealthKit
 import CoreLocation
 
-class SeriesSampleRetriever {
+@objcMembers
+final class SeriesSampleRetriever: NSObject {
     @available(iOS 13.0, *)
     func makeHeartbeatSeriesQuery(
         healthStore: HKHealthStore,

@@ -8,10 +8,12 @@
 import Foundation
 import HealthKit
 
-public struct Workout: Identifiable, Sample {
-    public struct Harmonized: Codable {
+@objc(HKRWorkout)
+public final class Workout: NSObject, Identifiable, Sample {
+    @objcMembers
+    public final class Harmonized: NSObject, Codable {
         public let value: Int
-        public let description: String
+        public let name: String
         public let totalEnergyBurned: Double?
         public let totalEnergyBurnedUnit: String
         public let totalDistance: Double?
@@ -24,7 +26,7 @@ public struct Workout: Identifiable, Sample {
 
         public init(
             value: Int,
-            description: String,
+            name: String,
             totalEnergyBurned: Double?,
             totalEnergyBurnedUnit: String,
             totalDistance: Double?,
@@ -36,7 +38,7 @@ public struct Workout: Identifiable, Sample {
             metadata: [String: String]?
         ) {
             self.value = value
-            self.description = description
+            self.name = name
             self.totalEnergyBurned = totalEnergyBurned
             self.totalEnergyBurnedUnit = totalEnergyBurnedUnit
             self.totalDistance = totalDistance
@@ -50,7 +52,7 @@ public struct Workout: Identifiable, Sample {
 
         public func copyWith(
             value: Int? = nil,
-            description: String? = nil,
+            name: String? = nil,
             totalEnergyBurned: Double? = nil,
             totalEnergyBurnedUnit: String? = nil,
             totalDistance: Double? = nil,
@@ -63,7 +65,7 @@ public struct Workout: Identifiable, Sample {
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
-                description: description ?? self.description,
+                name: name ?? self.name,
                 totalEnergyBurned: totalEnergyBurned ?? self.totalEnergyBurned,
                 totalEnergyBurnedUnit: totalEnergyBurnedUnit ?? self.totalEnergyBurnedUnit,
                 totalDistance: totalDistance ?? self.totalDistance,
@@ -77,16 +79,26 @@ public struct Workout: Identifiable, Sample {
         }
     }
 
+    @objc
     public let uuid: String
+    @objc
     public let identifier: String
+    @objc
     public let startTimestamp: Double
+    @objc
     public let endTimestamp: Double
+    @objc
     public let device: Device?
+    @objc
     public let sourceRevision: SourceRevision
+    @objc
     public let duration: Double
+    @objc
     public let workoutEvents: [WorkoutEvent]
+    @objc
     public let harmonized: Harmonized
 
+    @objc
     public static func collect(
         results: [HKSample]
     ) -> [Workout] {
@@ -134,6 +146,7 @@ public struct Workout: Identifiable, Sample {
         self.harmonized = try workout.harmonize()
     }
 
+    @objc
     public init(
         identifier: String,
         startTimestamp: Double,
@@ -155,6 +168,7 @@ public struct Workout: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    @objc
     public func copyWith(
         identifier: String? = nil,
         startTimestamp: Double? = nil,
@@ -220,6 +234,7 @@ extension Workout: Original {
 }
 // MARK: - Payload
 extension Workout: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Workout {
@@ -255,12 +270,13 @@ extension Workout: Payload {
 }
 // MARK: - Payload
 extension Workout.Harmonized: Payload {
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Workout.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
-            let description = dictionary["description"] as? String,
+            let name = dictionary["name"] as? String,
             let totalEnergyBurnedUnit = dictionary["totalEnergyBurnedUnit"] as? String,
             let totalDistanceUnit = dictionary["totalDistanceUnit"] as? String,
             let totalSwimmingStrokeCountUnit = dictionary["totalSwimmingStrokeCountUnit"] as? String,
@@ -275,7 +291,7 @@ extension Workout.Harmonized: Payload {
         let metadata = dictionary["metadata"] as? [String: String]
         return Workout.Harmonized(
             value: value,
-            description: description,
+            name: name,
             totalEnergyBurned: totalEnergyBurned != nil
                 ? Double(truncating: totalEnergyBurned!)
                 : nil,

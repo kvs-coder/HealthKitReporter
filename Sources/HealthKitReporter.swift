@@ -204,30 +204,45 @@ public typealias ElectrocardiogramVoltageMeasurementDataHandler = (
 ) -> Void
 
 /// **HealthKitReporter** class for HK easy integration
-public class HealthKitReporter {
+@objc(HKRModule)
+public final class HealthKitReporter: NSObject {
     /// **HealthKitReader** is reponsible for reading operations in HK
+    @objc
     public let reader: HealthKitReader
     /// **HealthKitWriter** is reponsible for writing operations in HK
+    @objc
     public let writer: HealthKitWriter
     /// **HealthKitObserver** is reponsible for observing in HK
+    @objc
     public let observer: HealthKitObserver
     /// **HealthKitManager** is reponsible for authorization and other operations
+    @objc
     public let manager: HealthKitManager
     /**
      Inits the instance of **HealthKitReporter** class.
      Every time when called, the new instance of **HKHealthStore** is created.
-     - Requires: Apple Healt App is installed on the device.
-     - Throws: `HealthKitError.notAvailable`
      - Returns: **HealthKitReporter** instance
      */
-    public init() throws {
-        guard HKHealthStore.isHealthDataAvailable() else {
-            throw HealthKitError.notAvailable()
-        }
+    @objc
+    override init() {
         let healthStore = HKHealthStore()
         self.reader = HealthKitReader(healthStore: healthStore)
         self.writer = HealthKitWriter(healthStore: healthStore)
         self.observer = HealthKitObserver(healthStore: healthStore)
         self.manager = HealthKitManager(healthStore: healthStore)
+    }
+    /**
+     Makes the instance of **HealthKitReporter** class.
+     Every time when called, the new instance of **HKHealthStore** is created.
+     - Requires: Apple Health App is installed on the device.
+     - Throws: `HealthKitError.notAvailable`
+     - Returns: **HealthKitReporter** instance
+     */
+    @objc
+    static func make() throws -> HealthKitReporter {
+        guard HKHealthStore.isHealthDataAvailable() else {
+            throw HealthKitError.notAvailable()
+        }
+        return HealthKitReporter()
     }
 }

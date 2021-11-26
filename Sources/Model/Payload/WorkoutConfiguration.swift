@@ -9,8 +9,10 @@ import Foundation
 import HealthKit
 
 @available(iOS 10.0, *)
-public struct WorkoutConfiguration: Codable {
-    public struct Harmonized: Codable {
+@objc(HKRWorkoutConfiguration)
+public final class WorkoutConfiguration: NSObject, Codable {
+    @objcMembers
+    public final class Harmonized: NSObject, Codable {
         public let value: Double
         public let unit: String
 
@@ -23,11 +25,16 @@ public struct WorkoutConfiguration: Codable {
         }
     }
 
+    @objc
     public let activityValue: Int
+    @objc
     public let locationValue: Int
+    @objc
     public let swimmingValue: Int
+    @objc
     public let harmonized: Harmonized
 
+    @objc
     public static func make(
         from dictionary: [String: Any]
     ) throws -> WorkoutConfiguration {
@@ -49,6 +56,7 @@ public struct WorkoutConfiguration: Codable {
         )
     }
 
+    @objc
     public init(
         activityValue: Int,
         locationValue: Int,

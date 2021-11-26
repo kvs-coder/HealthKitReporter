@@ -8,8 +8,11 @@
 import Foundation
 import HealthKit
 
-public struct Source: Codable {
+@objc(HKRSource)
+public final class Source: NSObject, Codable {
+    @objc
     public let name: String
+    @objc
     public let bundleIdentifier: String
 
     init(source: HKSource) {
@@ -17,11 +20,13 @@ public struct Source: Codable {
         self.bundleIdentifier = source.bundleIdentifier
     }
 
+    @objc
     public init(name: String, bundleIdentifier: String) {
         self.name = name
         self.bundleIdentifier = bundleIdentifier
     }
 
+    @objc
     public func copyWith(
         name: String? = nil,
         bundleIdentifier: String? = nil
@@ -40,6 +45,7 @@ extension Source: Original {
 }
 // MARK: - Payload
 extension Source: Payload {
+    @objc
     public static func make(from dictionary: [String: Any]) throws -> Source {
         guard
             let name = dictionary["name"] as? String,

@@ -11,6 +11,7 @@ import HealthKit
 /**
  All HealthKit correlation types
  */
+@objc(HKRCorrelationType)
 public enum CorrelationType: Int, CaseIterable, SampleType {
     case bloodPressure
     case food
