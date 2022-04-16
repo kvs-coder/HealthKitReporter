@@ -5,7 +5,6 @@
 //  Created by Kachalov, Victor on 04.09.21.
 //
 
-import Foundation
 import HealthKit
 
 extension HKWorkoutEventType: CustomStringConvertible {

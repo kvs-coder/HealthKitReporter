@@ -5,7 +5,6 @@
 //  Created by Victor on 21.10.20.
 //
 
-import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)

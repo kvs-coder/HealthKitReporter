@@ -5,7 +5,6 @@
 //  Created by Victor on 05.10.20.
 //
 
-import Foundation
 import HealthKit
 
 /**

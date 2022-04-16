@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HealthKit
 
 public protocol Sample: Codable {
     var startTimestamp: Double { get }

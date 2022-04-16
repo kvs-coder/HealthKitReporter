@@ -1,3 +1,8 @@
+## [1.6.3] - 16.04.2022.
+
+* add from dictionary static factory for WorkoutRoute
+* minor fixes in the code
+
 ## [1.6.2] - 23.10.2021.
 
 * Fix timestamps bug

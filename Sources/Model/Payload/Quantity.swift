@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct Quantity: Identifiable, Sample {
@@ -44,27 +43,6 @@ public struct Quantity: Identifiable, Sample {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
-
-    public static func collect(
-        results: [HKSample],
-        unit: HKUnit
-    ) -> [Quantity] {
-        var samples = [Quantity]()
-        if let quantitySamples = results as? [HKQuantitySample] {
-            for quantitySample in quantitySamples {
-                do {
-                    let sample = try Quantity(
-                        quantitySample: quantitySample,
-                        unit: unit
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
-        }
-        return samples
-    }
 
     init(quantitySample: HKQuantitySample, unit: HKUnit) throws {
         self.uuid = quantitySample.uuid.uuidString
@@ -147,9 +125,7 @@ extension Quantity: Original {
 }
 // MARK: - Payload
 extension Quantity: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> Quantity {
+    public static func make(from dictionary: [String: Any]) throws -> Quantity {
         guard
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
@@ -172,11 +148,29 @@ extension Quantity: Payload {
         )
     }
 }
+// MARK: - Factory
+extension Quantity {
+    public static func collect(results: [HKSample], unit: HKUnit) -> [Quantity] {
+        var samples = [Quantity]()
+        if let quantitySamples = results as? [HKQuantitySample] {
+            for quantitySample in quantitySamples {
+                do {
+                    let sample = try Quantity(
+                        quantitySample: quantitySample,
+                        unit: unit
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
+}
 // MARK: - Payload
 extension Quantity.Harmonized: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> Quantity.Harmonized {
+    public static func make(from dictionary: [String: Any]) throws -> Quantity.Harmonized {
         guard
             let value = dictionary["value"] as? NSNumber,
             let unit = dictionary["unit"] as? String

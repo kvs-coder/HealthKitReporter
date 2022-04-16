@@ -5,7 +5,6 @@
 //  Created by Victor Kachalov on 27.01.21.
 //
 
-import Foundation
 import HealthKit
 
 extension HKCategoryType {

@@ -5,7 +5,6 @@
 //  Created by Victor on 23.09.20.
 //
 
-import Foundation
 import HealthKit
 
 /// **HealthKitObserver** class for HK observing operations

@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct Workout: Identifiable, Sample {
@@ -86,25 +85,6 @@ public struct Workout: Identifiable, Sample {
     public let duration: Double
     public let workoutEvents: [WorkoutEvent]
     public let harmonized: Harmonized
-
-    public static func collect(
-        results: [HKSample]
-    ) -> [Workout] {
-        var samples = [Workout]()
-        if let workouts = results as? [HKWorkout] {
-            for workout in workouts {
-                do {
-                    let sample = try Workout(
-                        workout: workout
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
-        }
-        return samples
-    }
 
     init(workout: HKWorkout) throws {
         self.uuid = workout.uuid.uuidString
@@ -194,7 +174,7 @@ extension Workout: Original {
             activityType: activityType,
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            workoutEvents: try workoutEvents.map({ try $0.asOriginal() }),
+            workoutEvents: try workoutEvents.map { try $0.asOriginal() },
             totalEnergyBurned: harmonized.totalEnergyBurned != nil
                 ? HKQuantity(
                     unit: HKUnit.init(from: harmonized.totalEnergyBurnedUnit),
@@ -251,6 +231,24 @@ extension Workout: Payload {
                 : [],
             harmonized: try Harmonized.make(from: harmonized)
         )
+    }
+    public static func collect(
+        results: [HKSample]
+    ) -> [Workout] {
+        var samples = [Workout]()
+        if let workouts = results as? [HKWorkout] {
+            for workout in workouts {
+                do {
+                    let sample = try Workout(
+                        workout: workout
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
     }
 }
 // MARK: - Payload

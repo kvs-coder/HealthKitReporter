@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct Category: Identifiable, Sample {
@@ -49,25 +48,6 @@ public struct Category: Identifiable, Sample {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
-
-    public static func collect(
-        results: [HKSample]
-    ) -> [Category] {
-        var samples = [Category]()
-        if let categorySamples = results as? [HKCategorySample] {
-            for categorySample in categorySamples {
-                do {
-                    let sample = try Category(
-                        categorySample: categorySample
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
-        }
-        return samples
-    }
 
     init(categorySample: HKCategorySample) throws {
         self.uuid = categorySample.uuid.uuidString
@@ -134,9 +114,7 @@ extension Category: Original {
 }
 // MARK: - Payload
 extension Category: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> Category {
+    public static func make(from dictionary: [String: Any]) throws -> Category {
         guard
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
@@ -158,12 +136,26 @@ extension Category: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
+    public static func collect(results: [HKSample]) -> [Category] {
+        var samples = [Category]()
+        if let categorySamples = results as? [HKCategorySample] {
+            for categorySample in categorySamples {
+                do {
+                    let sample = try Category(
+                        categorySample: categorySample
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
+    }
 }
 // MARK: - Payload
 extension Category.Harmonized: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> Category.Harmonized {
+    public static func make(from dictionary: [String: Any]) throws -> Category.Harmonized {
         guard
             let value = dictionary["value"] as? Int,
             let description = dictionary["description"] as? String,

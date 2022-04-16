@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HealthKit
 
 public protocol UnitConvertable {
     func converted(to unit: String) throws -> Self

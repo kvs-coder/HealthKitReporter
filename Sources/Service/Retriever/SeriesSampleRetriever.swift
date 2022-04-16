@@ -5,7 +5,6 @@
 //  Created by Victor on 24.11.20.
 //
 
-import Foundation
 import HealthKit
 import CoreLocation
 
@@ -82,19 +81,15 @@ class SeriesSampleRetriever {
         }
         return query
     }
+    @available(iOS 11.0, *)
     func makeWorkoutRouteQuery(
         healthStore: HKHealthStore,
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
-        dataHandler: @escaping WorkoutRouteDataHandler
+        resultsHandler: @escaping WorkoutRouteResultsDataHandler
     ) throws -> HKSampleQuery {
         let workoutRoute = SeriesType.workoutRoute
-        guard #available(iOS 11.0, *) else {
-            throw HealthKitError.notAvailable(
-                "HKSeriesType is not available for the current iOS"
-            )
-        }
         guard
             let seriesType = workoutRoute.original as? HKSeriesType
         else {
@@ -112,19 +107,24 @@ class SeriesSampleRetriever {
                 error == nil,
                 let result = data
             else {
-                dataHandler(nil, error)
+                resultsHandler([], error)
                 return
             }
+            var workoutRoutes = [WorkoutRoute]()
+            var workoutRoutesError: Error?
+            let group = DispatchGroup()
             for element in result {
                 guard let workoutRoute = element as? HKWorkoutRoute else {
-                    dataHandler(
-                        nil,
+                    resultsHandler(
+                        [],
                         HealthKitError.invalidType(
-                            "Sample \(element) is not HKHeartbeatSeriesSample"
+                            "Sample \(element) is not HKWorkoutRoute"
                         )
                     )
                     return
                 }
+                var routes = [WorkoutRoute.Route]()
+                group.enter()
                 let workoutRouteQuery = HKWorkoutRouteQuery(
                     route: workoutRoute
                 ) { (query, locations, done, error) in
@@ -132,18 +132,27 @@ class SeriesSampleRetriever {
                         error == nil,
                         let locations = locations
                     else {
-                        dataHandler(nil, error)
+                        workoutRoutesError = error
+                        group.leave()
                         return
                     }
-                    let workoutRoute = WorkoutRoute(
+                    let route = WorkoutRoute.Route(
                         locations: locations.map {
                             WorkoutRoute.Location(location: $0)
                         },
                         done: done
                     )
-                    dataHandler(workoutRoute, nil)
+                    routes.append(route)
+                    if done {
+                        let workoutRoute = WorkoutRoute(sample: workoutRoute, routes: routes)
+                        workoutRoutes.append(workoutRoute)
+                        group.leave()
+                    }
                 }
                 healthStore.execute(workoutRouteQuery)
+            }
+            group.notify(queue: .global()) {
+                resultsHandler(workoutRoutes, workoutRoutesError)
             }
         }
         return query

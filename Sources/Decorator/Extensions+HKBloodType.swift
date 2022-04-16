@@ -5,7 +5,6 @@
 //  Created by Victor on 15.09.20.
 //
 
-import Foundation
 import HealthKit
 
 extension HKBloodType: CustomStringConvertible {

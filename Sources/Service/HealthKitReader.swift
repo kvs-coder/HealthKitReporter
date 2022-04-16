@@ -5,7 +5,6 @@
 //  Created by Victor on 23.09.20.
 //
 
-import Foundation
 import HealthKit
 
 @available(iOS 9.3, *)
@@ -518,10 +517,10 @@ public class HealthKitReader {
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with heartbeat series for each
-     iteration until **done** of **WorkoutRoute**  is True.
+     - Parameter resultsHandler: returns a block with workout routes
      - Throws: HealthKitError.invalidType
      */
+    @available(iOS 11.0, *)
     public func workoutRouteQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -531,14 +530,14 @@ public class HealthKitReader {
             )
         ],
         limit: Int = HKObjectQueryNoLimit,
-        dataHandler: @escaping WorkoutRouteDataHandler
+        resultsHandler: @escaping WorkoutRouteResultsDataHandler
     ) throws -> SampleQuery {
         return try SeriesSampleRetriever().makeWorkoutRouteQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
-            dataHandler: dataHandler
+            resultsHandler: resultsHandler
         )
     }
     /**

@@ -5,7 +5,6 @@
 //  Created by Kachalov, Victor on 12.10.21.
 //
 
-import Foundation
 import HealthKit
 
 @available(iOS 13.0, *)
@@ -14,6 +13,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
         public let timeSinceSeriesStart: Double
         public let precededByGap: Bool
         public let done: Bool
+
         public init(
             timeSinceSeriesStart: Double,
             precededByGap: Bool,
@@ -77,6 +77,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
+
     init(sample: HKHeartbeatSeriesSample, measurements: [Measurement]) {
         self.uuid = sample.uuid.uuidString
         self.identifier = sample.sampleType.identifier
@@ -90,9 +91,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
 // MARK: - Payload
 @available(iOS 13.0, *)
 extension HeartbeatSeries: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> HeartbeatSeries {
+    public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries {
         guard
             let identifier = dictionary["identifier"] as? String,
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
@@ -118,9 +117,7 @@ extension HeartbeatSeries: Payload {
 // MARK: - Payload
 @available(iOS 13.0, *)
 extension HeartbeatSeries.Harmonized: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> HeartbeatSeries.Harmonized {
+    public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Harmonized {
         guard
             let count = dictionary["count"] as? Int,
             let measurements = dictionary["measurements"] as? [Any]
@@ -138,9 +135,7 @@ extension HeartbeatSeries.Harmonized: Payload {
 // MARK: - Payload
 @available(iOS 13.0, *)
 extension HeartbeatSeries.Measurement: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> HeartbeatSeries.Measurement {
+    public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Measurement {
         guard
             let timeSinceSeriesStart = dictionary["timeSinceSeriesStart"] as? NSNumber,
             let precededByGap = dictionary["precededByGap"] as? Bool,
@@ -154,9 +149,7 @@ extension HeartbeatSeries.Measurement: Payload {
             done: done
         )
     }
-    public static func collect(
-        from array: [Any]
-    ) throws -> [HeartbeatSeries.Measurement] {
+    public static func collect(from array: [Any]) throws -> [HeartbeatSeries.Measurement] {
         var measurements = [HeartbeatSeries.Measurement]()
         for element in array {
             if let dictionary = element as? [String: Any] {

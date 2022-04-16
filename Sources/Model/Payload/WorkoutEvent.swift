@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct WorkoutEvent: Sample {
@@ -113,7 +112,7 @@ extension WorkoutEvent.Harmonized: Payload {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         let metadata = dictionary["metadata"] as? [String: String]
-        return  WorkoutEvent.Harmonized(
+        return WorkoutEvent.Harmonized(
             value: value,
             description: description,
             metadata: metadata

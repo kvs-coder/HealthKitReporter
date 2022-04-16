@@ -5,7 +5,6 @@
 //  Created by Oliver Searle-Barnes on 01.04.21.
 //
 
-import Foundation
 import HealthKit
 
 extension HKWorkoutActivityType: CustomStringConvertible {

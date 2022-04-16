@@ -1,11 +1,11 @@
+platform :ios, '9.0'
 use_frameworks!
 
 target 'HealthKitReporter_Example' do
-  pod 'HealthKitReporter', :path => '../'
-
-  target 'HealthKitReporter_Tests' do
-    inherit! :search_paths
-
-    
-  end
+  pod 'HealthKitReporter', :path => '../', :testspecs => ['Tests']
 end
+
+target 'HealthKitReporter_Tests' do
+  inherit! :search_paths
+end
+ 

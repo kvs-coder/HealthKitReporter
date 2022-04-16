@@ -1,16 +1,18 @@
 PODS:
-  - HealthKitReporter (0.1.0)
+  - HealthKitReporter (1.6.3)
+  - HealthKitReporter/Tests (1.6.3)
 
 DEPENDENCIES:
   - HealthKitReporter (from `../`)
+  - HealthKitReporter/Tests (from `../`)
 
 EXTERNAL SOURCES:
   HealthKitReporter:
     :path: "../"
 
 SPEC CHECKSUMS:
-  HealthKitReporter: 101f590db77a0c3153df14478144b85879d6fba8
+  HealthKitReporter: 42ebaa50989c4e4f6171b2caa3388c53519bea33
 
-PODFILE CHECKSUM: 23abae3089785275304b0626e117fcbe304f3915
+PODFILE CHECKSUM: 42dc208a4788fd9b7d8eebf0c62dd84606fddf4d
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.11.2

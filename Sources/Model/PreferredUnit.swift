@@ -5,7 +5,6 @@
 //  Created by Victor on 16.11.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct PreferredUnit: Codable {
@@ -22,7 +21,7 @@ public struct PreferredUnit: Codable {
         self.unit = unit
     }
 }
-// MARK: - Factory
+// MARK: - Payload
 public extension PreferredUnit {
     static func collect(
         from dictionary: [HKQuantityType : HKUnit]
@@ -55,9 +54,7 @@ public extension PreferredUnit {
 }
 // MARK: - Payload
 extension PreferredUnit: Payload {
-    public static func make(
-        from dictionary: [String : Any]
-    ) throws -> PreferredUnit {
+    public static func make(from dictionary: [String: Any]) throws -> PreferredUnit {
         guard
             let identifier = dictionary["identifier"] as? String,
             let unit = dictionary["unit"] as? String

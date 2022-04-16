@@ -5,7 +5,6 @@
 //  Created by Victor on 13.11.20.
 //
 
-import Foundation
 import HealthKit
 
 public extension Dictionary where Key == String, Value == NSPredicate {

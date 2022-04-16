@@ -5,7 +5,6 @@
 //  Created by Victor on 23.09.20.
 //
 
-import Foundation
 import HealthKit
 
 /// ***HKQueryAnchor** typealias
@@ -92,11 +91,12 @@ public typealias HeartbeatSeriesResultsDataHandler = (
 ) -> Void
 /**
  - Parameters:
-    - workoutRoute: workout route.
+    - routes: workout routes.
     - error: error (optional)
  */
-public typealias WorkoutRouteDataHandler = (
-    _ workoutRoute: WorkoutRoute?,
+@available(iOS 11.0, *)
+public typealias WorkoutRouteResultsDataHandler = (
+    _ routes: [WorkoutRoute],
     _ error: Error?
 ) -> Void
 /**

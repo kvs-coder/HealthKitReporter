@@ -6,7 +6,6 @@
 //  Copyright © 2020 Victor Kachalov. All rights reserved.
 //
 
-import Foundation
 import UserNotifications
 
 class LocalNotificationManager {

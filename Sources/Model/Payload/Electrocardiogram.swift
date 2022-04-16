@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 @available(iOS 14.0, *)
@@ -61,6 +60,23 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let numberOfMeasurements: Int
     public let harmonized: Harmonized
 
+    init(electrocardiogram: HKElectrocardiogram) throws {
+        self.uuid = electrocardiogram.uuid.uuidString
+        self.identifier = ElectrocardiogramType
+            .electrocardiogramType
+            .original?
+            .identifier ?? "HKElectrocardiogram"
+        self.startTimestamp = electrocardiogram.startDate.timeIntervalSince1970
+        self.endTimestamp = electrocardiogram.endDate.timeIntervalSince1970
+        self.device = Device(device: electrocardiogram.device)
+        self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
+        self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
+        self.harmonized = try electrocardiogram.harmonize()
+    }
+}
+// MARK: - Factory
+@available(iOS 14.0, *)
+extension Electrocardiogram {
     public static func collect(
         results: [HKSample]
     ) -> [Electrocardiogram] {
@@ -78,19 +94,5 @@ public struct Electrocardiogram: Identifiable, Sample {
             }
         }
         return samples
-    }
-
-    init(electrocardiogram: HKElectrocardiogram) throws {
-        self.uuid = electrocardiogram.uuid.uuidString
-        self.identifier = ElectrocardiogramType
-            .electrocardiogramType
-            .original?
-            .identifier ?? "HKElectrocardiogram"
-        self.startTimestamp = electrocardiogram.startDate.timeIntervalSince1970
-        self.endTimestamp = electrocardiogram.endDate.timeIntervalSince1970
-        self.device = Device(device: electrocardiogram.device)
-        self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
-        self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
-        self.harmonized = try electrocardiogram.harmonize()
     }
 }

@@ -5,7 +5,6 @@
 //  Created by Victor on 13.11.20.
 //
 
-import Foundation
 import HealthKit
 
 public enum UpdateFrequency: Int {

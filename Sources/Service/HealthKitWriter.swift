@@ -5,7 +5,6 @@
 //  Created by Victor on 24.09.20.
 //
 
-import Foundation
 import HealthKit
 
 /// **HealthKitWriter** class for HK writing operations

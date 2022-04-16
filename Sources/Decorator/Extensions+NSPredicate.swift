@@ -5,7 +5,6 @@
 //  Created by Victor on 14.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public extension NSPredicate {

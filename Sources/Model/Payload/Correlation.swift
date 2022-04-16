@@ -5,7 +5,6 @@
 //  Created by Victor on 25.09.20.
 //
 
-import Foundation
 import HealthKit
 
 public struct Correlation: Identifiable, Sample {
@@ -33,6 +32,20 @@ public struct Correlation: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    init(correlation: HKCorrelation) throws {
+        self.sourceRevision = SourceRevision(
+            sourceRevision: correlation.sourceRevision
+        )
+        self.uuid = correlation.uuid.uuidString
+        self.identifier = correlation.correlationType.identifier
+        self.startTimestamp = correlation.startDate.timeIntervalSince1970
+        self.endTimestamp = correlation.endDate.timeIntervalSince1970
+        self.device = Device(device: correlation.device)
+        self.harmonized = try correlation.harmonize()
+    }
+}
+// MARK: - Factory
+extension Correlation {
     public static func collect(
         results: [HKSample]
     ) -> [Correlation] {
@@ -50,18 +63,6 @@ public struct Correlation: Identifiable, Sample {
             }
         }
         return samples
-    }
-
-    init(correlation: HKCorrelation) throws {
-        self.sourceRevision = SourceRevision(
-            sourceRevision: correlation.sourceRevision
-        )
-        self.uuid = correlation.uuid.uuidString
-        self.identifier = correlation.correlationType.identifier
-        self.startTimestamp = correlation.startDate.timeIntervalSince1970
-        self.endTimestamp = correlation.endDate.timeIntervalSince1970
-        self.device = Device(device: correlation.device)
-        self.harmonized = try correlation.harmonize()
     }
 }
 // MARK: - Original

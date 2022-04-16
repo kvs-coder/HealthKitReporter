@@ -5,7 +5,6 @@
 //  Created by Kachalov, Victor on 16.02.21.
 //
 
-import Foundation
 import HealthKit
 
 public struct DeletedObject: Codable {
@@ -20,7 +19,9 @@ public struct DeletedObject: Codable {
             self.metadata = nil
         }
     }
-
+}
+// MARK: - Factory
+extension DeletedObject {
     public static func collect(
         deletedObjects: [HKDeletedObject]?
     ) -> [DeletedObject] {

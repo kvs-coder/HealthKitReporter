@@ -19,11 +19,22 @@ class ViewController: UIViewController {
         QuantityType.heartRate,
         CategoryType.sleepAnalysis,
         QuantityType.heartRateVariabilitySDNN,
-        SeriesType.heartbeatSeries
+        SeriesType.heartbeatSeries,
+        WorkoutType.workoutType,
+        SeriesType.workoutRoute
     ]
     private let typesToWrite: [QuantityType] = [
         .stepCount
     ]
+
+    var predicate: NSPredicate {
+        let now = Date()
+        return Query.predicateForSamples(
+            withStart: now.addingTimeInterval(-1 * 3600 * 3600 * 24),
+            end: now,
+            options: .strictEndDate
+        )
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,15 +96,41 @@ class ViewController: UIViewController {
             }
         }
     }
-    @IBAction func hrSeriesButtonTapped(_ sender: UIButton) {
-        readSeries()
+    @IBAction func seriesButtonTapped(_ sender: UIButton) {
+        readRoutes()
     }
 
-    private func readSeries() {
+    private func readHrSeries() {
         let manager = reporter?.manager
         let reader = reporter?.reader
         do {
-            if let seriesQuery = try reader?.heartbeatSeriesQuery(resultsHandler: { samples, error in
+            if let seriesQuery = try reader?.heartbeatSeriesQuery(
+                predicate: predicate,
+                resultsHandler: { samples, error in
+                if error == nil {
+                    do {
+                        print(try samples.encoded())
+                    } catch {
+                        print(error)
+                    }
+                } else {
+                    print(error ?? "error")
+                }
+            }) {
+                manager?.executeQuery(seriesQuery)
+            }
+        } catch {
+            print(error)
+        }
+    }
+
+    private func readRoutes() {
+        let manager = reporter?.manager
+        let reader = reporter?.reader
+        do {
+            if let seriesQuery = try reader?.workoutRouteQuery(
+                predicate: predicate,
+                resultsHandler: { samples, error in
                 if error == nil {
                     do {
                         print(try samples.encoded())
@@ -166,7 +203,10 @@ class ViewController: UIViewController {
         let manager = reporter?.manager
         let reader = reporter?.reader
         do {
-            if let query = try reader?.categoryQuery(type: .sleepAnalysis, resultsHandler: { results, error in
+            if let query = try reader?.categoryQuery(
+                type: .sleepAnalysis,
+                predicate: predicate,
+                resultsHandler: { results, error in
                 if error == nil {
                     for element in results {
                         do {
