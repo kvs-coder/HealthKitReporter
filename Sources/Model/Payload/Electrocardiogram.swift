@@ -16,15 +16,19 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let samplingFrequencyUnit: String
         public let classification: String
         public let symptomsStatus: String
+        public let count: Int
+        public let voltageMeasurements: [VoltageMeasurement]
         public let metadata: [String: String]?
 
-        public init(
+        init(
             averageHeartRate: Double,
             averageHeartRateUnit: String,
             samplingFrequency: Double,
             samplingFrequencyUnit: String,
             classification: String,
             symptomsStatus: String,
+            count: Int,
+            voltageMeasurements: [VoltageMeasurement],
             metadata: [String: String]?
         ) {
             self.averageHeartRate = averageHeartRate
@@ -33,6 +37,8 @@ public struct Electrocardiogram: Identifiable, Sample {
             self.samplingFrequencyUnit = samplingFrequencyUnit
             self.classification = classification
             self.symptomsStatus = symptomsStatus
+            self.count = count
+            self.voltageMeasurements = voltageMeasurements
             self.metadata = metadata
         }
     }
@@ -44,6 +50,11 @@ public struct Electrocardiogram: Identifiable, Sample {
 
         public let harmonized: Harmonized
         public let timeSinceSampleStart: Double
+
+        init(harmonized: Harmonized, timeSinceSampleStart: Double) {
+            self.harmonized = harmonized
+            self.timeSinceSampleStart = timeSinceSampleStart
+        }
 
         init(voltageMeasurement: HKElectrocardiogram.VoltageMeasurement) throws {
             self.harmonized = try voltageMeasurement.harmonize()
@@ -60,39 +71,141 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let numberOfMeasurements: Int
     public let harmonized: Harmonized
 
-    init(electrocardiogram: HKElectrocardiogram) throws {
+    init(
+        identifier: String,
+        startTimestamp: Double,
+        endTimestamp: Double,
+        device: Device?,
+        sourceRevision: SourceRevision,
+        numberOfMeasurements: Int,
+        harmonized: Harmonized
+    ) {
+        self.uuid = UUID().uuidString
+        self.identifier = identifier
+        self.startTimestamp = startTimestamp
+        self.endTimestamp = endTimestamp
+        self.device = device
+        self.sourceRevision = sourceRevision
+        self.numberOfMeasurements = numberOfMeasurements
+        self.harmonized = harmonized
+    }
+
+    init(
+        electrocardiogram: HKElectrocardiogram,
+        voltageMeasurements: [Electrocardiogram.VoltageMeasurement]
+    ) throws {
         self.uuid = electrocardiogram.uuid.uuidString
         self.identifier = ElectrocardiogramType
             .electrocardiogramType
             .original?
-            .identifier ?? "HKElectrocardiogram"
+            .identifier ?? "HKDataTypeIdentifierElectrocardiogram"
         self.startTimestamp = electrocardiogram.startDate.timeIntervalSince1970
         self.endTimestamp = electrocardiogram.endDate.timeIntervalSince1970
         self.device = Device(device: electrocardiogram.device)
         self.numberOfMeasurements = electrocardiogram.numberOfVoltageMeasurements
         self.sourceRevision = SourceRevision(sourceRevision: electrocardiogram.sourceRevision)
-        self.harmonized = try electrocardiogram.harmonize()
+        self.harmonized = try electrocardiogram.harmonize(voltageMeasurements: voltageMeasurements)
     }
 }
-// MARK: - Factory
+// MARK: - Payload
 @available(iOS 14.0, *)
-extension Electrocardiogram {
-    public static func collect(
-        results: [HKSample]
-    ) -> [Electrocardiogram] {
-        var samples = [Electrocardiogram]()
-        if let electrocardiograms = results as? [HKElectrocardiogram] {
-            for electrocardiogram in electrocardiograms {
-                do {
-                    let sample = try Electrocardiogram(
-                        electrocardiogram: electrocardiogram
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
+extension Electrocardiogram.Harmonized: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.Harmonized {
+        guard
+            let averageHeartRate = dictionary["averageHeartRate"] as? NSNumber,
+            let averageHeartRateUnit = dictionary["averageHeartRateUnit"] as? String,
+            let samplingFrequency = dictionary["samplingFrequency"] as? NSNumber,
+            let samplingFrequencyUnit = dictionary["samplingFrequencyUnit"] as? String,
+            let classification = dictionary["classification"] as? String,
+            let symptomsStatus = dictionary["symptomsStatus"] as? String,
+            let count = dictionary["count"] as? Int,
+            let voltageMeasurements = dictionary["voltageMeasurements"] as? [Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let metadata = dictionary["metadata"] as? [String: String]
+        return Electrocardiogram.Harmonized(
+            averageHeartRate: Double(truncating: averageHeartRate),
+            averageHeartRateUnit: averageHeartRateUnit,
+            samplingFrequency: Double(truncating: samplingFrequency),
+            samplingFrequencyUnit: samplingFrequencyUnit,
+            classification: classification,
+            symptomsStatus: symptomsStatus,
+            count: count,
+            voltageMeasurements: try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements),
+            metadata: metadata
+        )
+    }
+}
+// MARK: - Payload
+@available(iOS 14.0, *)
+extension Electrocardiogram: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
+            let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
+            let numberOfMeasurements = dictionary["numberOfMeasurements"] as? Int,
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let device = dictionary["device"] as? [String: Any]
+        return Electrocardiogram(
+            identifier: identifier,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
+            device: device != nil
+                ? try Device.make(from: device!)
+                : nil,
+            sourceRevision: try SourceRevision.make(from: sourceRevision),
+            numberOfMeasurements: numberOfMeasurements,
+            harmonized: try Harmonized.make(from: harmonized)
+        )
+    }
+}
+// MARK: - Payload
+@available(iOS 14.0, *)
+extension Electrocardiogram.VoltageMeasurement: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.VoltageMeasurement {
+        guard
+            let harmonized = dictionary["harmonized"] as? [String: Any],
+            let timeSinceSampleStart = dictionary["timeSinceSampleStart"] as? NSNumber
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return Electrocardiogram.VoltageMeasurement(
+            harmonized: try Electrocardiogram.VoltageMeasurement.Harmonized.make(from: harmonized),
+            timeSinceSampleStart: Double(truncating: timeSinceSampleStart)
+        )
+    }
+    static func collect(from array: [Any]) throws -> [Electrocardiogram.VoltageMeasurement] {
+        var measurements = [Electrocardiogram.VoltageMeasurement]()
+        for element in array {
+            if let dictionary = element as? [String: Any] {
+                let measurement = try Electrocardiogram.VoltageMeasurement.make(from: dictionary)
+                measurements.append(measurement)
             }
         }
-        return samples
+        return measurements
+    }
+}
+// MARK: - Payload
+@available(iOS 14.0, *)
+extension Electrocardiogram.VoltageMeasurement.Harmonized: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> Electrocardiogram.VoltageMeasurement.Harmonized {
+        guard
+            let value = dictionary["value"] as? NSNumber,
+            let unit = dictionary["unit"] as? String
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return Electrocardiogram.VoltageMeasurement.Harmonized(
+            value: Double(truncating: value),
+            unit: unit
+        )
     }
 }

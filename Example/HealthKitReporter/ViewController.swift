@@ -14,15 +14,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var writeButton: UIButton!
 
     private var reporter: HealthKitReporter?
-    private let typesToRead: [ObjectType] = [
-        QuantityType.stepCount,
-        QuantityType.heartRate,
-        CategoryType.sleepAnalysis,
-        QuantityType.heartRateVariabilitySDNN,
-        SeriesType.heartbeatSeries,
-        WorkoutType.workoutType,
-        SeriesType.workoutRoute
-    ]
+    private var typesToRead: [ObjectType] {
+        var types: [ObjectType] = [
+            QuantityType.stepCount,
+            QuantityType.heartRate,
+            CategoryType.sleepAnalysis,
+            QuantityType.heartRateVariabilitySDNN,
+            SeriesType.heartbeatSeries,
+            WorkoutType.workoutType,
+            SeriesType.workoutRoute,
+        ]
+        if #available(iOS 14.0, *) {
+            types.append(ElectrocardiogramType.electrocardiogramType)
+        }
+        return types
+    }
     private let typesToWrite: [QuantityType] = [
         .stepCount
     ]
@@ -97,7 +103,35 @@ class ViewController: UIViewController {
         }
     }
     @IBAction func seriesButtonTapped(_ sender: UIButton) {
-        readRoutes()
+        readEcgs()
+    }
+
+    private func readEcgs() {
+        let manager = reporter?.manager
+        let reader = reporter?.reader
+        do {
+            if #available(iOS 14.0, *) {
+                if let seriesQuery = try reader?.electrocardiogramQuery(
+                    predicate: predicate,
+                    resultsHandler: { samples, error in
+                        if error == nil {
+                            do {
+                                print(try samples.encoded())
+                            } catch {
+                                print(error)
+                            }
+                        } else {
+                            print(error ?? "error")
+                        }
+                    }) {
+                    manager?.executeQuery(seriesQuery)
+                }
+            } else {
+                print("ecg is not available")
+            }
+        } catch {
+            print(error)
+        }
     }
 
     private func readHrSeries() {

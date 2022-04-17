@@ -1,3 +1,7 @@
+## [1.6.4] - 17.04.2022.
+
+* ECG with Voltage measurements in one query
+
 ## [1.6.3] - 16.04.2022.
 
 * add from dictionary static factory for WorkoutRoute

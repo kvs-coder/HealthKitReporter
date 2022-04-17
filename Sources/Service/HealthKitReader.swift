@@ -268,39 +268,11 @@ public class HealthKitReader {
         resultsHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> SampleQuery {
         return try ElectrocardiogramRetriever().makeElectrocardiogramQuery(
-            predicate: predicate,
-            sortDescriptors: sortDescriptors,
-            limit: limit,
-            resultsHandler: resultsHandler
-        )
-    }
-    /**
-     Queries electrocardiogram.
-     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
-     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter dataHandler: returns a block with voltage measurement for each
-     iteration until **done**  is True.
-     - Throws: HealthKitError.invalidType
-     */
-    @available(iOS 14.0, *)
-    public func electrocardiogramVoltageMeasurementQuery(
-        predicate: NSPredicate? = .allSamples,
-        sortDescriptors: [NSSortDescriptor] = [
-            NSSortDescriptor(
-                key: HKSampleSortIdentifierStartDate,
-                ascending: false
-            )
-        ],
-        limit: Int = HKObjectQueryNoLimit,
-        dataHandler: @escaping ElectrocardiogramVoltageMeasurementDataHandler
-    ) throws -> SampleQuery {
-        return try ElectrocardiogramRetriever().electrocardiogramVoltageMeasurementQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
-            dataHandler: dataHandler
+            resultsHandler: resultsHandler
         )
     }
     /**

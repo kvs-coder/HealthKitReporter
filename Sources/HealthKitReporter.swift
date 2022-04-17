@@ -183,12 +183,12 @@ public typealias PreferredUnitsCompeltion = (
 ) -> Void
 /**
  - Parameters:
-    - samples: electrocardiogram sample array. Empty by default
+    - ecgs: electrocardiogram sample array
     - error: error (optional)
  */
 @available(iOS 14.0, *)
 public typealias ElectrocardiogramResultsHandler = (
-    _ samples: [Electrocardiogram],
+    _ ecgs: [Electrocardiogram],
     _ error: Error?
 ) -> Void
 /**
@@ -196,12 +196,6 @@ public typealias ElectrocardiogramResultsHandler = (
     - samples: electrocardiogram voltage measurements sample array. Empty by default
     - error: error (optional)
  */
-@available(iOS 14.0, *)
-public typealias ElectrocardiogramVoltageMeasurementDataHandler = (
-    _ measurement: Electrocardiogram.VoltageMeasurement?,
-    _ done: Bool,
-    _ error: Error?
-) -> Void
 
 /// **HealthKitReporter** class for HK easy integration
 public class HealthKitReporter {

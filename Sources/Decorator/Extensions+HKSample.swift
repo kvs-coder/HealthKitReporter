@@ -23,7 +23,7 @@ extension HKSample {
         }
         if #available(iOS 14.0, *) {
             if let electrocardiogram = self as? HKElectrocardiogram {
-                return try Electrocardiogram(electrocardiogram: electrocardiogram)
+                return try Electrocardiogram(electrocardiogram: electrocardiogram, voltageMeasurements: [])
             }
         }
         throw HealthKitError.parsingFailed("HKSample could not be parsed")

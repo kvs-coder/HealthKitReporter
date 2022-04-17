@@ -8,10 +8,10 @@
 import HealthKit
 
 @available(iOS 14.0, *)
-extension HKElectrocardiogram: Harmonizable {
+extension HKElectrocardiogram {
     typealias Harmonized = Electrocardiogram.Harmonized
 
-    func harmonize() throws -> Harmonized {
+    func harmonize(voltageMeasurements: [Electrocardiogram.VoltageMeasurement]) throws -> Harmonized {
         let averageHeartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
         guard
             let averageHeartRate = averageHeartRate?.doubleValue(for: averageHeartRateUnit)
@@ -28,15 +28,15 @@ extension HKElectrocardiogram: Harmonizable {
                 "Invalid samplingFrequency value for HKElectrocardiogram"
             )
         }
-        let classification = String(describing: self.classification)
-        let symptomsStatus = String(describing: self.symptomsStatus)
         return Harmonized(
             averageHeartRate: averageHeartRate,
             averageHeartRateUnit: averageHeartRateUnit.unitString,
             samplingFrequency: samplingFrequency,
             samplingFrequencyUnit: samplingFrequencyUnit.unitString,
-            classification: classification,
-            symptomsStatus: symptomsStatus,
+            classification: classification.description,
+            symptomsStatus: symptomsStatus.description,
+            count: numberOfVoltageMeasurements,
+            voltageMeasurements: voltageMeasurements,
             metadata: metadata?.compactMapValues { String(describing: $0 )}
         )
     }
@@ -57,5 +57,47 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
         let unit = HKUnit.volt()
         let voltage = quantitiy.doubleValue(for: unit)
         return Harmonized(value: voltage, unit: unit.unitString)
+    }
+}
+// MARK: - CustomStringConvertible
+@available(iOS 14.0, *)
+extension HKElectrocardiogram.Classification: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .notSet:
+            return "na"
+        case .sinusRhythm:
+            return "Sinus rhytm"
+        case .atrialFibrillation:
+            return "Atrial fibrillation"
+        case .inconclusiveLowHeartRate:
+            return "Inconclusive low heart rate"
+        case .inconclusiveHighHeartRate:
+            return "Inconclusive high heart rate"
+        case .inconclusivePoorReading:
+            return "Inconclusive poor reading"
+        case .inconclusiveOther:
+            return "Inconclusive other"
+        case .unrecognized:
+            return "Unrecognized"
+        @unknown default:
+            fatalError()
+        }
+    }
+}
+// MARK: - CustomStringConvertible
+@available(iOS 14.0, *)
+extension HKElectrocardiogram.SymptomsStatus: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .notSet:
+            return "na"
+        case .none:
+            return "None"
+        case .present:
+            return "Present"
+        @unknown default:
+            fatalError()
+        }
     }
 }
