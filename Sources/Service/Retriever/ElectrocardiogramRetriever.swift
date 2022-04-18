@@ -14,6 +14,7 @@ class ElectrocardiogramRetriever {
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
+        withVoltageMeasurements: Bool,
         resultsHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> HKSampleQuery {
         let electrocardiogramType = ElectrocardiogramType.electrocardiogramType
@@ -37,35 +38,42 @@ class ElectrocardiogramRetriever {
                 resultsHandler([], error)
                 return
             }
-            var ecgs = [Electrocardiogram]()
-            var ecgsError: Error?
-            let group = DispatchGroup()
-            for ecgSample in results {
-                var measurments = [Electrocardiogram.VoltageMeasurement]()
-                group.enter()
-                let voltageQuery = HKElectrocardiogramQuery(ecgSample) { (query, result) in
-                    switch(result) {
-                    case .measurement(let voltageMeasurement):
-                        if let measurment = try? Electrocardiogram.VoltageMeasurement(voltageMeasurement: voltageMeasurement) {
-                            measurments.append(measurment)
+            var ecgs: [Electrocardiogram]
+            switch withVoltageMeasurements {
+            case true:
+                ecgs = []
+                var ecgsError: Error?
+                let group = DispatchGroup()
+                for ecgSample in results {
+                    var measurments = [Electrocardiogram.VoltageMeasurement]()
+                    group.enter()
+                    let voltageQuery = HKElectrocardiogramQuery(ecgSample) { (query, result) in
+                        switch(result) {
+                        case .measurement(let voltageMeasurement):
+                            if let measurment = try? Electrocardiogram.VoltageMeasurement(voltageMeasurement: voltageMeasurement) {
+                                measurments.append(measurment)
+                            }
+                        case .done:
+                            if let ecg = try? Electrocardiogram(electrocardiogram: ecgSample, voltageMeasurements: measurments) {
+                                ecgs.append(ecg)
+                            }
+                            group.leave()
+                        case .error(let error):
+                            ecgsError = error
+                            group.leave()
+                        @unknown default:
+                            ecgsError = HealthKitError.notAvailable("Unknown case of Electrocardiogram.VoltageMeasurement result")
+                            group.leave()
                         }
-                    case .done:
-                        if let ecg = try? Electrocardiogram(electrocardiogram: ecgSample, voltageMeasurements: measurments) {
-                            ecgs.append(ecg)
-                        }
-                        group.leave()
-                    case .error(let error):
-                        ecgsError = error
-                        group.leave()
-                    @unknown default:
-                        ecgsError = HealthKitError.notAvailable("Unknown case of Electrocardiogram.VoltageMeasurement result")
-                        group.leave()
                     }
+                    healthStore.execute(voltageQuery)
                 }
-                healthStore.execute(voltageQuery)
-            }
-            group.notify(queue: .global()) {
-                resultsHandler(ecgs, ecgsError)
+                group.notify(queue: .global()) {
+                    resultsHandler(ecgs, ecgsError)
+                }
+            case false:
+                ecgs = Electrocardiogram.collect(results: results)
+                resultsHandler(ecgs, nil)
             }
         }
         return query

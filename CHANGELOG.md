@@ -1,3 +1,7 @@
+## [1.6.5] - 18.04.2022.
+
+* ECG with Voltage measurements in one query on demand
+
 ## [1.6.4] - 17.04.2022.
 
 * ECG with Voltage measurements in one query

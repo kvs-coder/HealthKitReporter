@@ -118,11 +118,11 @@ extension Electrocardiogram.Harmonized: Payload {
             let samplingFrequencyUnit = dictionary["samplingFrequencyUnit"] as? String,
             let classification = dictionary["classification"] as? String,
             let symptomsStatus = dictionary["symptomsStatus"] as? String,
-            let count = dictionary["count"] as? Int,
-            let voltageMeasurements = dictionary["voltageMeasurements"] as? [Any]
+            let count = dictionary["count"] as? Int
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
+        let voltageMeasurements = dictionary["voltageMeasurements"] as? [Any]
         let metadata = dictionary["metadata"] as? [String: String]
         return Electrocardiogram.Harmonized(
             averageHeartRate: Double(truncating: averageHeartRate),
@@ -132,9 +132,32 @@ extension Electrocardiogram.Harmonized: Payload {
             classification: classification,
             symptomsStatus: symptomsStatus,
             count: count,
-            voltageMeasurements: try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements),
+            voltageMeasurements: voltageMeasurements != nil
+                ? try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements!)
+                : [],
             metadata: metadata
         )
+    }
+}
+// MARK: - Factory
+@available(iOS 14.0, *)
+extension Electrocardiogram {
+    static func collect(results: [HKSample]) -> [Electrocardiogram] {
+        var samples = [Electrocardiogram]()
+        if let electrocardiograms = results as? [HKElectrocardiogram] {
+            for electrocardiogram in electrocardiograms {
+                do {
+                    let sample = try Electrocardiogram(
+                        electrocardiogram: electrocardiogram,
+                        voltageMeasurements: []
+                    )
+                    samples.append(sample)
+                } catch {
+                    continue
+                }
+            }
+        }
+        return samples
     }
 }
 // MARK: - Payload

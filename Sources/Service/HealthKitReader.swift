@@ -252,6 +252,7 @@ public class HealthKitReader {
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter withVoltageMeasurements: the query will show the count of made measurements, and if set to **true** will provide ECG with voltage measurments array. By default with **false** the count of measurements will be still available, but the measurements array will be empty.
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
@@ -265,6 +266,7 @@ public class HealthKitReader {
             )
         ],
         limit: Int = HKObjectQueryNoLimit,
+        withVoltageMeasurements: Bool = false,
         resultsHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> SampleQuery {
         return try ElectrocardiogramRetriever().makeElectrocardiogramQuery(
@@ -272,6 +274,7 @@ public class HealthKitReader {
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
+            withVoltageMeasurements: withVoltageMeasurements,
             resultsHandler: resultsHandler
         )
     }

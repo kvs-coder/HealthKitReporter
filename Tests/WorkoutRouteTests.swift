@@ -10,7 +10,7 @@ import HealthKitReporter
 
 @available(iOS 11.0, *)
 class WorkoutRouteTests: XCTestCase {
-    func testCreateFromDicitionsry() throws {
+    func testCreateFromDicitionary() throws {
         let dictionary: [String: Any] = [
             "device" : [
                 "softwareVersion" : "8.5.1",
