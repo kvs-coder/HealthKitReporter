@@ -1,3 +1,7 @@
+## [1.6.7] - 27.05.2022.
+
+* Small fix with Correlation copyWith method
+
 ## [1.6.6] - 27.05.2022.
 
 * Add saving Correlation samples

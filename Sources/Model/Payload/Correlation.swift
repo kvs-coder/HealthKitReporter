@@ -60,6 +60,24 @@ public struct Correlation: Identifiable, Sample {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
+
+    public func copyWith(
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        harmonized: Harmonized? = nil
+    ) -> Correlation {
+        return Correlation(
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
 }
 // MARK: - Factory
 extension Correlation {
