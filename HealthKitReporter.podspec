@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name                  = 'HealthKitReporter'
-  s.version               = '1.6.8'
+  s.version               = '1.6.9'
   s.summary               = 'HealthKitReporter. A wrapper for HealthKit framework.'
   s.swift_versions        = '5.3'
   s.description           = 'Helps to write or read data from Apple Health via HealthKit framework.'

@@ -290,7 +290,7 @@ final class HealthKitReporterService {
             let writer = reporter?.writer
             writer?.save(sample: correlation) { success, error in
                 print("BloodPressureCorrelation saved:", success)
-                print("BloodPressureCorrelation erorr:", error ?? "erorr")
+                print("BloodPressureCorrelation erorr:", error ?? "no erorr")
             }
         } catch {
             print(error)

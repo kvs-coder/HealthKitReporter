@@ -22,6 +22,18 @@ public struct Correlation: Identifiable, Sample {
             self.categorySamples = categorySamples
             self.metadata = metadata
         }
+
+        public func copyWith(
+            quantitySamples: [Quantity]? = nil,
+            categorySamples: [Category]? = nil,
+            metadata: [String: String]? = nil
+        ) -> Correlation.Harmonized {
+            return Correlation.Harmonized(
+                quantitySamples: quantitySamples ?? self.quantitySamples,
+                categorySamples: categorySamples ?? self.categorySamples,
+                metadata: metadata ?? self.metadata
+            )
+        }
     }
 
     public let uuid: String
