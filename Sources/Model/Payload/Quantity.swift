@@ -147,6 +147,16 @@ extension Quantity: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
+    public static func collect(from array: [Any]) throws -> [Quantity] {
+        var results = [Quantity]()
+        for element in array {
+            if let dictionary = element as? [String: Any] {
+                let harmonized = try Quantity.make(from: dictionary)
+                results.append(harmonized)
+            }
+        }
+        return results
+    }
 }
 // MARK: - Factory
 extension Quantity {

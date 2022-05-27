@@ -136,6 +136,19 @@ extension Category: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
+    public static func collect(from array: [Any]) throws -> [Category] {
+        var results = [Category]()
+        for element in array {
+            if let dictionary = element as? [String: Any] {
+                let harmonized = try Category.make(from: dictionary)
+                results.append(harmonized)
+            }
+        }
+        return results
+    }
+}
+// MARK: - Factory
+extension Category {
     public static func collect(results: [HKSample]) -> [Category] {
         var samples = [Category]()
         if let categorySamples = results as? [HKCategorySample] {

@@ -43,6 +43,23 @@ public struct Correlation: Identifiable, Sample {
         self.device = Device(device: correlation.device)
         self.harmonized = try correlation.harmonize()
     }
+
+    public init(
+        identifier: String,
+        startTimestamp: Double,
+        endTimestamp: Double,
+        device: Device?,
+        sourceRevision: SourceRevision,
+        harmonized: Correlation.Harmonized
+    ) {
+        self.uuid = UUID().uuidString
+        self.identifier = identifier
+        self.startTimestamp = startTimestamp
+        self.endTimestamp = endTimestamp
+        self.device = device
+        self.sourceRevision = sourceRevision
+        self.harmonized = harmonized
+    }
 }
 // MARK: - Factory
 extension Correlation {
@@ -65,6 +82,49 @@ extension Correlation {
         return samples
     }
 }
+// MARK: - Payload
+extension Correlation: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Correlation {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
+            let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let device = dictionary["device"] as? [String: Any]
+        return Correlation(
+            identifier: identifier,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
+            device: device != nil
+                ? try Device.make(from: device!)
+                : nil,
+            sourceRevision: try SourceRevision.make(from: sourceRevision),
+            harmonized: try Correlation.Harmonized.make(from: harmonized)
+        )
+    }
+}
+// MARK: - Payload
+extension Correlation.Harmonized: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Correlation.Harmonized {
+        guard
+            let quantitySamples = dictionary["quantitySamples"] as? [Any],
+            let categorySamples = dictionary["categorySamples"] as? [Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let metadata = dictionary["metadata"] as? [String: String]
+
+        return Correlation.Harmonized(
+            quantitySamples: try Quantity.collect(from: quantitySamples),
+            categorySamples: try Category.collect(from: categorySamples),
+            metadata: metadata
+        )
+    }
+}
 // MARK: - Original
 extension Correlation: Original {
     func asOriginal() throws -> HKCorrelation {
@@ -80,8 +140,8 @@ extension Correlation: Original {
             }
         }
         for element in harmonized.quantitySamples {
-            if let category = try? element.asOriginal() {
-                set.insert(category)
+            if let quantity = try? element.asOriginal() {
+                set.insert(quantity)
             }
         }
         return HKCorrelation(
