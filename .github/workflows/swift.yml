@@ -1,0 +1,23 @@
+name: Swift
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Generate project
+      run: swift package generate-xcodeproj
+    - name: Build
+      run: xcodebuild clean build -project "HealthKitReporter.xcodeproj" -scheme "HealthKitReporter-Package" -destination "platform=iOS Simulator,name=iPhone 12 Pro,OS=latest" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+    - name: Run tests
+      run: xcodebuild clean test -project "HealthKitReporter.xcodeproj" -scheme "HealthKitReporter-Package" -destination "platform=iOS Simulator,name=iPhone 12 Pro,OS=latest" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+
+
