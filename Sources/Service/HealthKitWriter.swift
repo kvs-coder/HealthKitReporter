@@ -145,6 +145,9 @@ public class HealthKitWriter {
             if let workout = sample as? Workout {
                 healthStore.save(try workout.asOriginal(), withCompletion: completion)
             }
+            if let correlation = sample as? Correlation {
+                healthStore.save(try correlation.asOriginal(), withCompletion: completion)
+            }
         } catch {
             completion(false, error)
         }

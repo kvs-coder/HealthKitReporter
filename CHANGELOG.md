@@ -1,3 +1,7 @@
+## [1.6.8] - 27.05.2022.
+
+* Small fix with Correlation save in health repository
+
 ## [1.6.7] - 27.05.2022.
 
 * Small fix with Correlation copyWith method
