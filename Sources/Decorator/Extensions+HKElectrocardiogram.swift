@@ -13,13 +13,8 @@ extension HKElectrocardiogram {
 
     func harmonize(voltageMeasurements: [Electrocardiogram.VoltageMeasurement]) throws -> Harmonized {
         let averageHeartRateUnit = HKUnit.count().unitDivided(by: HKUnit.minute())
-        guard
-            let averageHeartRate = averageHeartRate?.doubleValue(for: averageHeartRateUnit)
-        else {
-            throw HealthKitError.invalidValue(
-                "Invalid averageHeartRate value for HKElectrocardiogram"
-            )
-        }
+        let averageHeartRate = averageHeartRate?.doubleValue(for: averageHeartRateUnit)
+        
         let samplingFrequencyUnit = HKUnit.hertz()
         guard
             let samplingFrequency = samplingFrequency?.doubleValue(for: samplingFrequencyUnit)

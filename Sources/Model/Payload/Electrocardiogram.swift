@@ -10,7 +10,7 @@ import HealthKit
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Identifiable, Sample {
     public struct Harmonized: Codable {
-        public let averageHeartRate: Double
+        public let averageHeartRate: Double?
         public let averageHeartRateUnit: String
         public let samplingFrequency: Double
         public let samplingFrequencyUnit: String
@@ -21,7 +21,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let metadata: [String: String]?
 
         init(
-            averageHeartRate: Double,
+            averageHeartRate: Double?,
             averageHeartRateUnit: String,
             samplingFrequency: Double,
             samplingFrequencyUnit: String,
