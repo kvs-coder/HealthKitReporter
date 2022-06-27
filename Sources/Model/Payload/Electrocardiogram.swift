@@ -15,7 +15,9 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let samplingFrequency: Double
         public let samplingFrequencyUnit: String
         public let classification: String
+        public let classificationKey: String
         public let symptomsStatus: String
+        public let symptomsStatusKey: String
         public let count: Int
         public let voltageMeasurements: [VoltageMeasurement]
         public let metadata: [String: String]?
@@ -26,7 +28,9 @@ public struct Electrocardiogram: Identifiable, Sample {
             samplingFrequency: Double,
             samplingFrequencyUnit: String,
             classification: String,
+            classificationKey: String,
             symptomsStatus: String,
+            symptomsStatusKey: String,
             count: Int,
             voltageMeasurements: [VoltageMeasurement],
             metadata: [String: String]?
@@ -36,7 +40,9 @@ public struct Electrocardiogram: Identifiable, Sample {
             self.samplingFrequency = samplingFrequency
             self.samplingFrequencyUnit = samplingFrequencyUnit
             self.classification = classification
+            self.classificationKey = classificationKey
             self.symptomsStatus = symptomsStatus
+            self.symptomsStatusKey = symptomsStatusKey
             self.count = count
             self.voltageMeasurements = voltageMeasurements
             self.metadata = metadata
@@ -117,7 +123,9 @@ extension Electrocardiogram.Harmonized: Payload {
             let samplingFrequency = dictionary["samplingFrequency"] as? NSNumber,
             let samplingFrequencyUnit = dictionary["samplingFrequencyUnit"] as? String,
             let classification = dictionary["classification"] as? String,
+            let classificationKey = dictionary["classificationKey"] as? String,
             let symptomsStatus = dictionary["symptomsStatus"] as? String,
+            let symptomsStatusKey = dictionary["symptomsStatusKey"] as? String,
             let count = dictionary["count"] as? Int
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -130,7 +138,9 @@ extension Electrocardiogram.Harmonized: Payload {
             samplingFrequency: Double(truncating: samplingFrequency),
             samplingFrequencyUnit: samplingFrequencyUnit,
             classification: classification,
+            classificationKey: classificationKey,
             symptomsStatus: symptomsStatus,
+            symptomsStatusKey: symptomsStatusKey,
             count: count,
             voltageMeasurements: voltageMeasurements != nil
                 ? try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements!)

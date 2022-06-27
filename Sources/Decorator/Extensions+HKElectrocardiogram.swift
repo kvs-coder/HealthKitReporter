@@ -29,7 +29,9 @@ extension HKElectrocardiogram {
             samplingFrequency: samplingFrequency,
             samplingFrequencyUnit: samplingFrequencyUnit.unitString,
             classification: classification.description,
+            classificationKey: classification.key,
             symptomsStatus: symptomsStatus.description,
+            symptomsStatusKey: symptomsStatus.key,
             count: numberOfVoltageMeasurements,
             voltageMeasurements: voltageMeasurements,
             metadata: metadata?.compactMapValues { String(describing: $0 )}
@@ -57,6 +59,29 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
 // MARK: - CustomStringConvertible
 @available(iOS 14.0, *)
 extension HKElectrocardiogram.Classification: CustomStringConvertible {
+    public var key: String {
+        switch self {
+        case .notSet:
+            return "notSet"
+        case .sinusRhythm:
+            return "sinusRhythm"
+        case .atrialFibrillation:
+            return "atrialFibrillation"
+        case .inconclusiveLowHeartRate:
+            return "inconclusiveLowHeartRate"
+        case .inconclusiveHighHeartRate:
+            return "inconclusiveHighHeartRate"
+        case .inconclusivePoorReading:
+            return "inconclusivePoorReading"
+        case .inconclusiveOther:
+            return "inconclusiveOther"
+        case .unrecognized:
+            return "unrecognized"
+        @unknown default:
+            fatalError()
+        }
+    }
+    
     public var description: String {
         switch self {
         case .notSet:
@@ -83,6 +108,18 @@ extension HKElectrocardiogram.Classification: CustomStringConvertible {
 // MARK: - CustomStringConvertible
 @available(iOS 14.0, *)
 extension HKElectrocardiogram.SymptomsStatus: CustomStringConvertible {
+    public var key: String {
+        switch self {
+        case .notSet:
+            return "notSet"
+        case .none:
+            return "none"
+        case .present:
+            return "present"
+        @unknown default:
+            fatalError()
+        }
+    }
     public var description: String {
         switch self {
         case .notSet:
