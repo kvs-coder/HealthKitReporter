@@ -1,3 +1,7 @@
+## [1.7.1] - 27.06.2022.
+
+* Add raw keys for electrocardiogram classification and symptom status
+
 ## [1.7.0] - 23.06.2022.
 
 * Make `averageHeartRate` optional as a `HKElectrocardiogram.Classification.inconclusivePoorReading` may not have a value for this field
