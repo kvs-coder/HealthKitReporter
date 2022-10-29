@@ -15,7 +15,7 @@ extension HKWorkoutRoute {
         Harmonized(
             count: count,
             routes: routes,
-            metadata: metadata?.compactMapValues { String(describing: $0) }
+            metadata: metadata?.asMetadata
         )
     }
 }

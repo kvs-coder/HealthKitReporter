@@ -11,12 +11,12 @@ public struct Correlation: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let quantitySamples: [Quantity]
         public let categorySamples: [Category]
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             quantitySamples: [Quantity],
             categorySamples: [Category],
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.quantitySamples = quantitySamples
             self.categorySamples = categorySamples
@@ -26,7 +26,7 @@ public struct Correlation: Identifiable, Sample {
         public func copyWith(
             quantitySamples: [Quantity]? = nil,
             categorySamples: [Category]? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Correlation.Harmonized {
             return Correlation.Harmonized(
                 quantitySamples: quantitySamples ?? self.quantitySamples,
@@ -146,12 +146,12 @@ extension Correlation.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
 
         return Correlation.Harmonized(
             quantitySamples: try Quantity.collect(from: quantitySamples),
             categorySamples: try Category.collect(from: categorySamples),
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }
@@ -180,7 +180,7 @@ extension Correlation: Original {
             end: endTimestamp.asDate,
             objects: set,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata
+            metadata: harmonized.metadata?.original
         )
     }
 }

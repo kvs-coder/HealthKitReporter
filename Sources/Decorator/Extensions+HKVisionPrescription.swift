@@ -16,7 +16,7 @@ extension HKVisionPrescription: Harmonizable {
             dateIssuedTimestamp: dateIssued.millisecondsSince1970,
             expirationDateTimestamp: expirationDate?.millisecondsSince1970,
             prescriptionType: VisionPrescription.PrescriptionType(prescriptionType: prescriptionType),
-            metadata: metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.asMetadata
         )
     }
 }

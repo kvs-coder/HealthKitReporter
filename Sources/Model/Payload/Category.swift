@@ -12,13 +12,13 @@ public struct Category: Identifiable, Sample {
         public let value: Int
         public let description: String
         public let detail: String
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             value: Int,
             description: String,
             detail: String,
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.value = value
             self.description = description
@@ -30,7 +30,7 @@ public struct Category: Identifiable, Sample {
             value: Int? = nil,
             description: String? = nil,
             detail: String? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
@@ -108,7 +108,7 @@ extension Category: Original {
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata
+            metadata: harmonized.metadata?.original
         )
     }
 }
@@ -176,12 +176,12 @@ extension Category.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return Category.Harmonized(
             value: value,
             description: description,
             detail: detail,
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

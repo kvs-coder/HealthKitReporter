@@ -28,13 +28,13 @@ public struct VisionPrescription: Identifiable, Sample {
         public let dateIssuedTimestamp: Double
         public let expirationDateTimestamp: Double?
         public let prescriptionType: PrescriptionType
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         init(
             dateIssuedTimestamp: Double,
             expirationDateTimestamp: Double?,
             prescriptionType: PrescriptionType,
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.dateIssuedTimestamp = dateIssuedTimestamp
             self.expirationDateTimestamp = expirationDateTimestamp
@@ -92,14 +92,14 @@ extension VisionPrescription.Harmonized: Payload {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
         let expirationDateTimestamp = dictionary["expirationDateTimestamp"] as? NSNumber
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return VisionPrescription.Harmonized(
             dateIssuedTimestamp: Double(truncating: dateIssuedTimestamp),
             expirationDateTimestamp: expirationDateTimestamp != nil
                 ? Double(truncating: expirationDateTimestamp!)
                 : nil,
             prescriptionType: try VisionPrescription.PrescriptionType.make(from: prescriptionType),
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

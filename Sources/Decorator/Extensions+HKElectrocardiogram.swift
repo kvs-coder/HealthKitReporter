@@ -31,7 +31,7 @@ extension HKElectrocardiogram {
             symptomsStatus: symptomsStatus.description,
             count: numberOfVoltageMeasurements,
             voltageMeasurements: voltageMeasurements,
-            metadata: metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.asMetadata
         )
     }
 }

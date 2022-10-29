@@ -19,7 +19,7 @@ public struct Workout: Identifiable, Sample {
         public let totalSwimmingStrokeCountUnit: String
         public let totalFlightsClimbed: Double?
         public let totalFlightsClimbedUnit: String
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             value: Int,
@@ -32,7 +32,7 @@ public struct Workout: Identifiable, Sample {
             totalSwimmingStrokeCountUnit: String,
             totalFlightsClimbed: Double?,
             totalFlightsClimbedUnit: String,
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.value = value
             self.description = description
@@ -58,7 +58,7 @@ public struct Workout: Identifiable, Sample {
             totalSwimmingStrokeCountUnit: String? = nil,
             totalFlightsClimbed: Double? = nil,
             totalFlightsClimbedUnit: String? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
@@ -194,7 +194,7 @@ extension Workout: Original {
                 )
                 : nil,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata
+            metadata: harmonized.metadata?.original
         )
     }
 }
@@ -270,7 +270,7 @@ extension Workout.Harmonized: Payload {
         let totalDistance = dictionary["totalDistance"] as? NSNumber
         let totalSwimmingStrokeCount = dictionary["totalSwimmingStrokeCount"] as? NSNumber
         let totalFlightsClimbed = dictionary["totalFlightsClimbed"] as? NSNumber
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return Workout.Harmonized(
             value: value,
             description: description,
@@ -290,7 +290,7 @@ extension Workout.Harmonized: Payload {
                 ? Double(truncating: totalFlightsClimbed!)
                 : nil,
             totalFlightsClimbedUnit: totalFlightsClimbedUnit,
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

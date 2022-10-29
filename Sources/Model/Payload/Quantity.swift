@@ -11,12 +11,12 @@ public struct Quantity: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             value: Double,
             unit: String,
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.value = value
             self.unit = unit
@@ -26,7 +26,7 @@ public struct Quantity: Identifiable, Sample {
         public func copyWith(
             value: Double? = nil,
             unit: String? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
@@ -54,7 +54,7 @@ public struct Quantity: Identifiable, Sample {
         self.harmonized = Harmonized(
             value: quantitySample.quantity.doubleValue(for: unit),
             unit: unit.unitString,
-            metadata: quantitySample.metadata?.compactMapValues { String(describing: $0 )}
+            metadata: quantitySample.metadata?.asMetadata
         )
     }
     init(quantitySample: HKQuantitySample) throws {
@@ -119,7 +119,7 @@ extension Quantity: Original {
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata
+            metadata: harmonized.metadata?.original
         )
     }
 }
@@ -187,11 +187,11 @@ extension Quantity.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return Quantity.Harmonized(
             value: Double(truncating: value),
             unit: unit,
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

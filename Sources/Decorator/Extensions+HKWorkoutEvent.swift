@@ -15,7 +15,8 @@ extension HKWorkoutEvent: Harmonizable {
             return Harmonized(
                 value: type.rawValue,
                 description: type.description,
-                metadata: metadata?.compactMapValues { String(describing: $0 )})
+                metadata: metadata?.asMetadata
+            )
         } else {
             throw HealthKitError.notAvailable(
                 "Metadata is not available for the current iOS"
