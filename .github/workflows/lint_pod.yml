@@ -1,0 +1,24 @@
+name: Lint Pod
+
+on:
+  pull_request:
+    branches: [ master ]
+    types: [ assigned, opened, synchronize, reopened ]
+
+jobs:
+  pod-lint:
+    name: Lint Pod
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Load and Install Bundle Cache
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: Lint Pod
+        run: bundle exec pod lib lint HealthKitReporter.podspec --allow-warnings
