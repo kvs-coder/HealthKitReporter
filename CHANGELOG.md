@@ -1,3 +1,7 @@
+## [2.0.0] - 29.10.2022.
+
+* Revamp metadata
+
 ## [1.7.0] - 29.10.2022.
 
 * Add new iOS 16 types (also missing iOS 15 types)
