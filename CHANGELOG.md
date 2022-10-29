@@ -1,3 +1,7 @@
+## [1.7.0] - 29.10.2022.
+
+* Add new iOS 16 types (also missing iOS 15 types)
+
 ## [1.6.9] - 27.05.2022.
 
 * Add copyWith methods to Correlation
