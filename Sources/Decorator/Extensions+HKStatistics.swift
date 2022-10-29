@@ -22,7 +22,8 @@ extension HKStatistics: Harmonizable {
              .swimmingStrokeCount,
              .numberOfTimesFallen,
              .inhalerUsage,
-             .uvExposure:
+             .uvExposure,
+             .numberOfAlcoholicBeverages:
             return statistics(unit: HKUnit.count())
         case .distanceCycling,
              .distanceSwimming,
@@ -32,12 +33,16 @@ extension HKStatistics: Harmonizable {
              .height,
              .waistCircumference,
              .walkingStepLength,
-             .sixMinuteWalkTestDistance:
+             .sixMinuteWalkTestDistance,
+             .runningStrideLength,
+             .runningVerticalOscillation,
+             .underwaterDepth:
             return statistics(unit: HKUnit.meter())
         case .heartRate,
              .respiratoryRate,
              .restingHeartRate,
-             .walkingHeartRateAverage:
+             .walkingHeartRateAverage,
+             .heartRateRecoveryOneMinute:
             return statistics(unit: HKUnit.count().unitDivided(by: HKUnit.minute()))
         case .basalEnergyBurned,
              .activeEnergyBurned,
@@ -48,14 +53,18 @@ extension HKStatistics: Harmonizable {
                 return statistics(unit: HKUnit.kilocalorie())
             }
         case .basalBodyTemperature,
-             .bodyTemperature:
+             .bodyTemperature,
+             .appleSleepingWristTemperature,
+             .waterTemperature:
             return statistics(unit: HKUnit.kelvin())
         case .oxygenSaturation,
              .bodyFatPercentage,
              .walkingDoubleSupportPercentage,
              .walkingAsymmetryPercentage,
              .peripheralPerfusionIndex,
-             .bloodAlcoholContent:
+             .bloodAlcoholContent,
+             .appleWalkingSteadiness,
+             .atrialFibrillationBurden:
             return statistics(unit: HKUnit.percent())
         case .bloodPressureSystolic,
              .bloodPressureDiastolic:
@@ -107,7 +116,9 @@ extension HKStatistics: Harmonizable {
              .leanBodyMass:
             return statistics(unit: HKUnit.gramUnit(with: .kilo))
         case .appleExerciseTime,
-             .appleStandTime:
+             .appleStandTime,
+             .appleMoveTime,
+             .runningGroundContactTime:
             return statistics(unit: HKUnit.second())
         case .vo2Max:
             return statistics(
@@ -115,7 +126,8 @@ extension HKStatistics: Harmonizable {
             )
         case .walkingSpeed,
              .stairAscentSpeed,
-             .stairDescentSpeed:
+             .stairDescentSpeed,
+             .runningSpeed:
             return statistics(unit: HKUnit.meter().unitDivided(by: HKUnit.second()))
         case .heartRateVariabilitySDNN:
             return statistics(unit: HKUnit.secondUnit(with: .milli))
@@ -135,6 +147,14 @@ extension HKStatistics: Harmonizable {
         case .environmentalAudioExposure,
              .headphoneAudioExposure:
             return statistics(unit: HKUnit.pascal())
+        case .runningPower:
+            if #available(iOS 16.0, *) {
+                return statistics(unit: HKUnit.watt())
+            } else {
+                throw HealthKitError.notAvailable(
+                    "\(type) is not available for the current iOS"
+                )
+            }
         }
     }
     
