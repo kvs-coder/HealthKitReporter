@@ -170,6 +170,10 @@ extension HKWorkoutActivityType: CustomStringConvertible {
             return "Pickerball"
         case .cooldown:
             return "Cooldown"
+        case .swimBikeRun:
+            return "Swim Bike Run"
+        case .transition:
+            return "Transition"
         case .other:
             return "Other"
         @unknown default: return "Unknown Workout"

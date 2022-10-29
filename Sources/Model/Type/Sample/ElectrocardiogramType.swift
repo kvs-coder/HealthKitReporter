@@ -10,7 +10,6 @@ import HealthKit
 /**
  All HealthKit electrocardiogram types
  */
-@available(iOS 14.0, *)
 public enum ElectrocardiogramType: Int, CaseIterable, SampleType {
     case electrocardiogramType
 
@@ -21,7 +20,10 @@ public enum ElectrocardiogramType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .electrocardiogramType:
-            return HKObjectType.electrocardiogramType()
+            if #available(iOS 14.0, *) {
+                return HKObjectType.electrocardiogramType()
+            }
         }
+        return nil
     }
 }

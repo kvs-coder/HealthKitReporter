@@ -15,10 +15,16 @@ extension HKCategoryValueSleepAnalysis: CustomStringConvertible {
         switch self {
         case .inBed:
             return "In Bed"
-        case .asleep:
-            return "Asleep"
+        case .asleepUnspecified:
+            return "Asleep unspecified"
         case .awake:
             return "Awake"
+        case .asleepCore:
+            return "Asleep core"
+        case .asleepDeep:
+            return "Asleep deep"
+        case .asleepREM:
+            return "Asleep REM"
         @unknown default:
             return "Unknown"
         }
