@@ -10,7 +10,7 @@ import HealthKit
 @available(iOS 14.0, *)
 public struct Electrocardiogram: Identifiable, Sample {
     public struct Harmonized: Codable {
-        public let averageHeartRate: Double
+        public let averageHeartRate: Double?
         public let averageHeartRateUnit: String
         public let samplingFrequency: Double
         public let samplingFrequencyUnit: String
@@ -21,7 +21,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let metadata: [String: String]?
 
         init(
-            averageHeartRate: Double,
+            averageHeartRate: Double?,
             averageHeartRateUnit: String,
             samplingFrequency: Double,
             samplingFrequencyUnit: String,
@@ -112,7 +112,6 @@ public struct Electrocardiogram: Identifiable, Sample {
 extension Electrocardiogram.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.Harmonized {
         guard
-            let averageHeartRate = dictionary["averageHeartRate"] as? NSNumber,
             let averageHeartRateUnit = dictionary["averageHeartRateUnit"] as? String,
             let samplingFrequency = dictionary["samplingFrequency"] as? NSNumber,
             let samplingFrequencyUnit = dictionary["samplingFrequencyUnit"] as? String,
@@ -122,10 +121,13 @@ extension Electrocardiogram.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
+        let averageHeartRate = dictionary["averageHeartRate"] as? NSNumber
         let voltageMeasurements = dictionary["voltageMeasurements"] as? [Any]
         let metadata = dictionary["metadata"] as? [String: String]
         return Electrocardiogram.Harmonized(
-            averageHeartRate: Double(truncating: averageHeartRate),
+            averageHeartRate: averageHeartRate != nil
+                ? Double(truncating: averageHeartRate!)
+                : nil,
             averageHeartRateUnit: averageHeartRateUnit,
             samplingFrequency: Double(truncating: samplingFrequency),
             samplingFrequencyUnit: samplingFrequencyUnit,
