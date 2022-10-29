@@ -28,12 +28,12 @@ public struct HeartbeatSeries: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let count: Int
         public let measurements: [Measurement]
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             count: Int,
             measurements: [Measurement],
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.count = count
             self.measurements = measurements
@@ -43,7 +43,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
         public func copyWith(
             count: Int? = nil,
             measurements: [Measurement]? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 count: count ?? self.count,
@@ -124,11 +124,11 @@ extension HeartbeatSeries.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return HeartbeatSeries.Harmonized(
             count: count,
             measurements: try HeartbeatSeries.Measurement.collect(from: measurements),
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

@@ -1,6 +1,6 @@
 PODS:
-  - HealthKitReporter (1.6.4)
-  - HealthKitReporter/Tests (1.6.4)
+  - HealthKitReporter (1.7.0)
+  - HealthKitReporter/Tests (1.7.0)
 
 DEPENDENCIES:
   - HealthKitReporter (from `../`)
@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  HealthKitReporter: 313a822918d705beb27bdeeb5794c1afa4fe88bb
+  HealthKitReporter: c47cb09099b218c2717b8c3b884ee683edf57d95
 
 PODFILE CHECKSUM: 42dc208a4788fd9b7d8eebf0c62dd84606fddf4d
 

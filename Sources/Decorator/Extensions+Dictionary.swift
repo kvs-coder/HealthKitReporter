@@ -53,3 +53,9 @@ public extension Dictionary where Key == String, Value == NSPredicate {
         return samplePredicates
     }
 }
+
+public extension Dictionary where Key == String, Value == Any {
+    var asMetadata: Metadata? {
+        try? Metadata.make(from: self)
+    }
+}

@@ -88,12 +88,12 @@ public struct WorkoutRoute: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let count: Int
         public let routes: [Route]
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         public init(
             count: Int,
             routes: [Route],
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.count = count
             self.routes = routes
@@ -103,7 +103,7 @@ public struct WorkoutRoute: Identifiable, Sample {
         public func copyWith(
             count: Int? = nil,
             routes: [Route]? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 count: count ?? self.count,
@@ -234,11 +234,11 @@ extension WorkoutRoute.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return WorkoutRoute.Harmonized(
             count: count,
             routes: try WorkoutRoute.Route.collect(from: routes),
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

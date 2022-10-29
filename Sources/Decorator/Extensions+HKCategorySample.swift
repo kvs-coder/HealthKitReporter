@@ -215,7 +215,7 @@ extension HKCategorySample: Harmonizable {
             value: value,
             description: description,
             detail: detail,
-            metadata: metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.asMetadata
         )
     }
 }

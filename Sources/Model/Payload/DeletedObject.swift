@@ -9,12 +9,12 @@ import HealthKit
 
 public struct DeletedObject: Codable {
     public let uuid: String
-    public let metadata: [String: String]?
+    public let metadata: Metadata?
     
     init(deletedObject: HKDeletedObject) {
         self.uuid = deletedObject.uuid.uuidString
         if #available(iOS 11.0, *) {
-            self.metadata = deletedObject.metadata?.compactMapValues { String(describing: $0 )}
+            self.metadata = deletedObject.metadata?.asMetadata
         } else {
             self.metadata = nil
         }

@@ -18,7 +18,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let symptomsStatus: String
         public let count: Int
         public let voltageMeasurements: [VoltageMeasurement]
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
         init(
             averageHeartRate: Double?,
@@ -29,7 +29,7 @@ public struct Electrocardiogram: Identifiable, Sample {
             symptomsStatus: String,
             count: Int,
             voltageMeasurements: [VoltageMeasurement],
-            metadata: [String: String]?
+            metadata: Metadata?
         ) {
             self.averageHeartRate = averageHeartRate
             self.averageHeartRateUnit = averageHeartRateUnit
@@ -123,7 +123,7 @@ extension Electrocardiogram.Harmonized: Payload {
         }
         let averageHeartRate = dictionary["averageHeartRate"] as? NSNumber
         let voltageMeasurements = dictionary["voltageMeasurements"] as? [Any]
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return Electrocardiogram.Harmonized(
             averageHeartRate: averageHeartRate != nil
                 ? Double(truncating: averageHeartRate!)
@@ -137,7 +137,7 @@ extension Electrocardiogram.Harmonized: Payload {
             voltageMeasurements: voltageMeasurements != nil
                 ? try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements!)
                 : [],
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

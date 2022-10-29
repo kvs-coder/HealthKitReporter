@@ -15,7 +15,7 @@ extension HKHeartbeatSeriesSample {
         Harmonized(
             count: count,
             measurements: measurements,
-            metadata: metadata?.compactMapValues { String(describing: $0) }
+            metadata: metadata?.asMetadata
         )
     }
 }

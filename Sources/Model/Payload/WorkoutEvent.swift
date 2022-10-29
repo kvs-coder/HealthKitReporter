@@ -11,9 +11,9 @@ public struct WorkoutEvent: Sample {
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String
-        public let metadata: [String: String]?
+        public let metadata: Metadata?
 
-        public init(value: Int, description: String, metadata: [String: String]?) {
+        public init(value: Int, description: String, metadata: Metadata?) {
             self.value = value
             self.description = description
             self.metadata = metadata
@@ -22,7 +22,7 @@ public struct WorkoutEvent: Sample {
         public func copyWith(
             value: Int? = nil,
             description: String? = nil,
-            metadata: [String: String]? = nil
+            metadata: Metadata? = nil
         ) -> Harmonized {
             return Harmonized(
                 value: value ?? self.value,
@@ -96,7 +96,7 @@ extension WorkoutEvent: Original {
                 start: startTimestamp.asDate,
                 end: endTimestamp.asDate
             ),
-            metadata: harmonized.metadata
+            metadata: harmonized.metadata?.original
         )
     }
 }
@@ -111,11 +111,11 @@ extension WorkoutEvent.Harmonized: Payload {
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
-        let metadata = dictionary["metadata"] as? [String: String]
+        let metadata = dictionary["metadata"] as? [String: Any]
         return WorkoutEvent.Harmonized(
             value: value,
             description: description,
-            metadata: metadata
+            metadata: metadata?.asMetadata
         )
     }
 }

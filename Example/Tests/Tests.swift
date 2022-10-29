@@ -1,5 +1,4 @@
 import XCTest
-import HealthKitReporter
 
 class Tests: XCTestCase {
     override func setUp() {

@@ -42,7 +42,7 @@ extension HKWorkout: Harmonizable {
             totalSwimmingStrokeCountUnit: countUnit.unitString,
             totalFlightsClimbed: totalFlightsClimbed,
             totalFlightsClimbedUnit: countUnit.unitString,
-            metadata: metadata?.compactMapValues { String(describing: $0 )}
+            metadata: metadata?.asMetadata
         )
     }
 }
