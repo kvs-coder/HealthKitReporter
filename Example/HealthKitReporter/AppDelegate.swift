@@ -21,49 +21,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         let localNotificationManager = LocalNotificationManager()
         localNotificationManager.requestPermission { (_, _) in }
-        do {
-            let reporter = try HealthKitReporter()
-            let types: [SampleType] = [
-                QuantityType.stepCount,
-                QuantityType.heartRate,
-                QuantityType.distanceCycling,
-                CategoryType.sleepAnalysis
-            ]
-            reporter.manager.requestAuthorization(
-                toRead: types,
-                toWrite: types
-            ) { (success, error) in
-                if success && error == nil {
-                    for type in types {
-                        do {
-                            let query = try reporter.observer.observerQuery(
-                                type: type
-                            ) { (_, identifier, _) in
-                                if let identifier = identifier {
-                                    let notification = LocalNotification(
-                                        title: "Observed",
-                                        subtitle: identifier
-                                    )
-                                    localNotificationManager.scheduleNotification(notification)
-                                }
+        let reporter = HealthKitReporter()
+        let types: [SampleType] = [
+            QuantityType.stepCount,
+            QuantityType.heartRate,
+            QuantityType.distanceCycling,
+            CategoryType.sleepAnalysis
+        ]
+        reporter.manager.requestAuthorization(
+            toRead: types,
+            toWrite: types
+        ) { (success, error) in
+            if success && error == nil {
+                for type in types {
+                    do {
+                        let query = try reporter.observer.observerQuery(
+                            type: type
+                        ) { (_, identifier, _) in
+                            if let identifier = identifier {
+                                let notification = LocalNotification(
+                                    title: "Observed",
+                                    subtitle: identifier
+                                )
+                                localNotificationManager.scheduleNotification(notification)
                             }
-                            reporter.observer.enableBackgroundDelivery(
-                                type: type,
-                                frequency: .immediate
-                            ) { (_, error) in
-                                if error == nil {
-                                    print("enabled")
-                                }
-                            }
-                            reporter.manager.executeQuery(query)
-                        } catch {
-                            print(error)
                         }
+                        reporter.observer.enableBackgroundDelivery(
+                            type: type,
+                            frequency: .immediate
+                        ) { (_, error) in
+                            if error == nil {
+                                print("enabled")
+                            }
+                        }
+                        reporter.manager.executeQuery(query)
+                    } catch {
+                        print(error)
                     }
                 }
             }
-        } catch {
-            print(error)
         }
         return true
     }

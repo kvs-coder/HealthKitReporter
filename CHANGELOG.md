@@ -1,3 +1,8 @@
+## [3.0.0] - 12.03.2023.
+
+* Check for Health data availability
+* CHanged the way of creating HKR instance
+
 ## [2.0.0] - 29.10.2022.
 
 * Revamp metadata

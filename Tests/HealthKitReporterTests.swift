@@ -12,7 +12,7 @@ class HealthKitReporterTests: XCTestCase {
     var healthKitReporter: HealthKitReporter!
 
     override func setUp() {
-        healthKitReporter = try! HealthKitReporter()
+        healthKitReporter = HealthKitReporter()
     }
     override func tearDown() {
         healthKitReporter = nil

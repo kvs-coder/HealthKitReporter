@@ -44,10 +44,10 @@ final class HealthKitReporterService {
     }
 
     init() {
-        do {
-            reporter = try HealthKitReporter()
-        } catch {
-            print(error)
+        if HealthKitReporter.isHealthDataAvailable {
+            reporter = HealthKitReporter()
+        } else {
+            print("HealthKitReporter is not available")
         }
     }
 

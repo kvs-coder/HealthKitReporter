@@ -208,16 +208,20 @@ public class HealthKitReporter {
     /// **HealthKitManager** is reponsible for authorization and other operations
     public let manager: HealthKitManager
     /**
+     Checks if HealthData is available on the device (for instance iPad do not support Apple Health).
+     Call this check before instantiating the **HealthKitReporter** instance
+     - Returns: **Bool** value
+     */
+    public static var isHealthDataAvailable: Bool {
+        HKHealthStore.isHealthDataAvailable()
+    }
+    /**
      Inits the instance of **HealthKitReporter** class.
      Every time when called, the new instance of **HKHealthStore** is created.
      - Requires: Apple Healt App is installed on the device.
-     - Throws: `HealthKitError.notAvailable`
      - Returns: **HealthKitReporter** instance
      */
-    public init() throws {
-        guard HKHealthStore.isHealthDataAvailable() else {
-            throw HealthKitError.notAvailable()
-        }
+    public init() {
         let healthStore = HKHealthStore()
         self.reader = HealthKitReader(healthStore: healthStore)
         self.writer = HealthKitWriter(healthStore: healthStore)
