@@ -1,3 +1,7 @@
+## [3.1.0] - 08.01.2024.
+
+* Added support for HKClinicalRecord
+
 ## [3.0.0] - 12.03.2023.
 
 * Check for Health data availability

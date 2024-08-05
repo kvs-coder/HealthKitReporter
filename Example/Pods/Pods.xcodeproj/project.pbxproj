@@ -57,6 +57,9 @@
 		70ED962EB2E153C9FF71449F183EB92C /* Extensions+HKCategoryValueHeadphoneAudioExposureEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F7E69DFF38A7DCAD305271E21E7B66 /* Extensions+HKCategoryValueHeadphoneAudioExposureEvent.swift */; };
 		72E09764C778579D86111A27DC1C24B3 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D69270819100EAB8BDBF1A42474EDED /* Device.swift */; };
 		73548876675C72560DA62B3A054517EE /* Extensions+HKCategoryValueOvulationTestResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD4232F0A2B118D033985000AD5D0CB /* Extensions+HKCategoryValueOvulationTestResult.swift */; };
+		7354B0B72C6293B4005297E1 /* ClinicalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7354B0B62C6293B4005297E1 /* ClinicalType.swift */; };
+		7354B0BA2C629433005297E1 /* Extensions+HKClinicalRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7354B0B82C629433005297E1 /* Extensions+HKClinicalRecord.swift */; };
+		7354B0BD2C62945F005297E1 /* ClinicalRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7354B0BC2C62945F005297E1 /* ClinicalRecord.swift */; };
 		7777396AD7F76C1FFA915EDB8D68FDD7 /* Extensions+HKCategoryValueCervicalMucusQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA77ED0476C73CBFC08F47BF12D6D1E9 /* Extensions+HKCategoryValueCervicalMucusQuality.swift */; };
 		7835AED4290DA39000D9CB35 /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7835AED3290DA39000D9CB35 /* Metadata.swift */; };
 		79023528495E32B002B9378AF8B238C4 /* CorrelationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17B2FDE0B6D0320BE2EB63FF8E7C28C /* CorrelationType.swift */; };
@@ -203,6 +206,9 @@
 		71D8BEAF4ADFF6BB7D99C7D261B03A10 /* Pods-HealthKitReporter_Tests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-HealthKitReporter_Tests"; path = Pods_HealthKitReporter_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		725EEB8C2CE54A8A15BDD5F3DB916AB3 /* Extensions+Date.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+Date.swift"; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7354B0B62C6293B4005297E1 /* ClinicalType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicalType.swift; sourceTree = "<group>"; };
+		7354B0B82C629433005297E1 /* Extensions+HKClinicalRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+HKClinicalRecord.swift"; sourceTree = "<group>"; };
+		7354B0BC2C62945F005297E1 /* ClinicalRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClinicalRecord.swift; sourceTree = "<group>"; };
 		7614D1074DB0BD9144DC75E02B319E09 /* StatisticsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = StatisticsTests.swift; path = Tests/StatisticsTests.swift; sourceTree = "<group>"; };
 		775C0010DC236F50A09CDEE5E5B878F4 /* Pods-HealthKitReporter_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-HealthKitReporter_Tests-dummy.m"; sourceTree = "<group>"; };
 		779D0EE7F0734A26C238E0380C189EC2 /* Extensions+HKCategoryValueAppleWalkingSteadinessEvent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+HKCategoryValueAppleWalkingSteadinessEvent.swift"; sourceTree = "<group>"; };
@@ -387,6 +393,7 @@
 		3EC752C055E74E43448E3F9267DD1EF5 /* Payload */ = {
 			isa = PBXGroup;
 			children = (
+				7354B0BC2C62945F005297E1 /* ClinicalRecord.swift */,
 				FAF5FC29558E97773504BFB7A6E3F0B7 /* ActivitySummary.swift */,
 				04FBB513B464D9F96552E98FAE1343BF /* Category.swift */,
 				B7389FA911D6AAD9522A038D7CAA3770 /* Characteristic.swift */,
@@ -421,6 +428,7 @@
 		843BE870623805F8E69DF06C55740F7B /* Sample */ = {
 			isa = PBXGroup;
 			children = (
+				7354B0B62C6293B4005297E1 /* ClinicalType.swift */,
 				D95556BAE1B44A602CBAA93EDD3BB464 /* CategoryType.swift */,
 				D17B2FDE0B6D0320BE2EB63FF8E7C28C /* CorrelationType.swift */,
 				DAAC829BB74B370CC624B2BF0FB92560 /* DocumentType.swift */,
@@ -485,6 +493,7 @@
 		D092319D1ED8522122BAC9CBE6A5C206 /* Decorator */ = {
 			isa = PBXGroup;
 			children = (
+				7354B0B82C629433005297E1 /* Extensions+HKClinicalRecord.swift */,
 				725EEB8C2CE54A8A15BDD5F3DB916AB3 /* Extensions+Date.swift */,
 				84F2596E09A7D67E6EDBD73E42B8FFCA /* Extensions+DateComponents.swift */,
 				C36CEC51B9FF98870F6847C451B710FA /* Extensions+Dictionary.swift */,
@@ -836,6 +845,7 @@
 				0A73D80BDF12B704A492BCDC31B6DCE9 /* ActivitySummaryType.swift in Sources */,
 				147CDFDAB74067118EACE3D27B3ABFB4 /* Category.swift in Sources */,
 				2E85B9A398B2D95224290927BADC59E8 /* CategoryType.swift in Sources */,
+				7354B0BD2C62945F005297E1 /* ClinicalRecord.swift in Sources */,
 				B9107578033FD63377AE5FE34612C96C /* Characteristic.swift in Sources */,
 				920D2C33BD40F2FD60637DB22FC1D9E3 /* CharacteristicType.swift in Sources */,
 				200F17D0556D0C72A0A94242E1A07846 /* Correlation.swift in Sources */,
@@ -910,10 +920,12 @@
 				A4DA272CF9C16C647EE397E650C8965E /* Payload.swift in Sources */,
 				4167C4372313D714316FAF687151846C /* PreferredUnit.swift in Sources */,
 				15632A43212028B6971FEEF3F4F60EAB /* Quantity.swift in Sources */,
+				7354B0B72C6293B4005297E1 /* ClinicalType.swift in Sources */,
 				40B4F5AA8240A68BEA9CB07284D179B9 /* QuantityType.swift in Sources */,
 				46A4D70A3EF5E6455C6447E5C66293C1 /* Sample.swift in Sources */,
 				6CEFD04B650EB3390000DF40063C18C2 /* SampleType.swift in Sources */,
 				D6635A98D8EDE329E6F3E52F6617BA47 /* SeriesSampleRetriever.swift in Sources */,
+				7354B0BA2C629433005297E1 /* Extensions+HKClinicalRecord.swift in Sources */,
 				194DCD765C577F4E4B0F785E3794B782 /* SeriesType.swift in Sources */,
 				A7B932E5511DCCF597CDF9EA44742AF2 /* Source.swift in Sources */,
 				C3F370BD24A59AC1833D0ABF52E319FB /* SourceRevision.swift in Sources */,

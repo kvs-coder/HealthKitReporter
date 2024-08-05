@@ -10,7 +10,11 @@ In addition you can write your own HealthKit objects using <i>Codable</i> wrappe
 
 ### Preparation
 
-At first in your app's entitlements select HealthKit. and in your app's info.plist file add permissions:
+At first in your app's entitlements select HealthKit.
+If you want to read Clinical Records then also check "Clinical Health Records" under Health Kit.
+***NOTE:*** *You can only tick the "Clinical Health Records" checkmark if your development team has a paid Apple developer subscription. To test on a real device, or to publish your application, you will need a paid Apple subscription, but you can still test on the iOS simulator without a subscription by setting the Development Team to None.*
+
+Then in your app's info.plist file add permissions:
 
 ```xml
 <key>NSHealthShareUsageDescription</key>
@@ -27,6 +31,14 @@ If you plan to use **WorkoutRoute** **Series** please provide additionally CoreL
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>WHY_YOU_NEED_TO_SHARE_LOCATION</string>
 ```
+
+If you plan to read **Clinical Records** please provide additionally:
+
+```xml
+<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+<string>WHY_YOU_NEED_TO_SHARE_DATA</string>
+```
+
 
 ### Common usage
 
@@ -47,7 +59,7 @@ In examples below every operation is hapenning iside authorization block. It is 
 ### Reading Data
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize deisred types to read, like step count.
+Authorize desired types to read, like step count.
 
 If authorization was successfull (the authorization window was shown) call sample query with type step count to create a **Query** object.
 
@@ -132,9 +144,12 @@ Here is a sample response for steps:
 ```
 
 ### Writing Data
+
+***NOTE:*** *Clinical Records are read only, Health Kit does not allow writing any data to Clinical Records.*
+
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize deisred types to write, like step count.
+Authorize desired types to write, like step count.
 
 You may call manager's <i>preferredUnits(for: )</i> function to pass units (for <b>Quantity Types</b>).
 
@@ -225,7 +240,7 @@ reporter.manager.preferredUnits(for: [.stepCount]) { (dictionary, error) in
 
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize deisred types to read/write, like step count and sleep analysis.
+Authorize desired types to read/write, like step count and sleep analysis.
 
 You might create an App which will be called every time by HealthKit, and receive notifications, that some data was changed in HealthKit depending on frequency. But keep in mind that sometimes the desired frequency you set cannot be fulfilled by HealthKit.
 
@@ -305,7 +320,7 @@ pod 'HealthKitReporter'
 or 
 
 ```ruby
-pod 'HealthKitReporter', '~> 3.0.0'
+pod 'HealthKitReporter', '~> 3.1.0'
 ```
 
 ### Swift Package Manager
@@ -315,7 +330,7 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.0.0")
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.1.0")
 ]
 ```
 
@@ -324,7 +339,7 @@ dependencies: [
 Add the line in your cartfile 
 
 ```ruby
-github "VictorKachalov/HealthKitReporter" "3.0.0"
+github "VictorKachalov/HealthKitReporter" "3.1.0"
 ```
 
 ## Author
