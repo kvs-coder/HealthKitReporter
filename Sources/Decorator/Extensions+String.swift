@@ -47,6 +47,11 @@ public extension String {
                 return type
             }
         }
+        if #available(iOS 12.0, *) {
+            if let type = try? ClinicalType.make(from: self) {
+                return type
+            }
+        }
         return nil
     }
 
