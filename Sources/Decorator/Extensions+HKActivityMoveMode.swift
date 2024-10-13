@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 14.0, *)
-extension HKActivityMoveMode: CustomStringConvertible {
+extension HKActivityMoveMode: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
         case .activeEnergy:

@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 16.0, *)
-extension HKVisionPrescriptionType: CustomStringConvertible {
+extension HKVisionPrescriptionType: @retroactive CustomStringConvertible {
     public var description: String {
         "HKVisionPrescriptionType"
     }

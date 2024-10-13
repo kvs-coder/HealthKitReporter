@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKWorkoutActivityType: CustomStringConvertible {
+extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
         case .americanFootball:
@@ -176,6 +176,8 @@ extension HKWorkoutActivityType: CustomStringConvertible {
             return "Transition"
         case .other:
             return "Other"
+        case .underwaterDiving:
+            return "Underwater Diving"
         @unknown default: return "Unknown Workout"
         }
     }

@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 14.2, *)
-extension HKCategoryValueHeadphoneAudioExposureEvent: CustomStringConvertible {
+extension HKCategoryValueHeadphoneAudioExposureEvent: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueHeadphoneAudioExposureEvent"
     }

@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 13.6, *)
-extension HKCategoryValueSeverity: CustomStringConvertible {
+extension HKCategoryValueSeverity: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueSeverity"
     }

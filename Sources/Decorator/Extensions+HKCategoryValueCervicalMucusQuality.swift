@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKCategoryValueCervicalMucusQuality: CustomStringConvertible {
+extension HKCategoryValueCervicalMucusQuality: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueCervicalMucusQuality"
     }

@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKCategoryValueSleepAnalysis: CustomStringConvertible {
+extension HKCategoryValueSleepAnalysis: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueSleepAnalysis"
     }

@@ -55,7 +55,7 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
 }
 // MARK: - CustomStringConvertible
 @available(iOS 14.0, *)
-extension HKElectrocardiogram.Classification: CustomStringConvertible {
+extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
         case .notSet:
@@ -81,7 +81,7 @@ extension HKElectrocardiogram.Classification: CustomStringConvertible {
 }
 // MARK: - CustomStringConvertible
 @available(iOS 14.0, *)
-extension HKElectrocardiogram.SymptomsStatus: CustomStringConvertible {
+extension HKElectrocardiogram.SymptomsStatus: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
         case .notSet:

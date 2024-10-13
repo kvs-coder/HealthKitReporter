@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKBloodType: CustomStringConvertible {
+extension HKBloodType: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
         case .notSet:

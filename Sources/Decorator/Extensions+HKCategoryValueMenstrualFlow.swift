@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKCategoryValueMenstrualFlow: CustomStringConvertible {
+extension HKCategoryValueMenstrualFlow: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueMenstrualFlow"
     }

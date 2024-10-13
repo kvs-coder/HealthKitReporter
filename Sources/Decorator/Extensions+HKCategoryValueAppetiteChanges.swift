@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 13.6, *)
-extension HKCategoryValueAppetiteChanges: CustomStringConvertible {
+extension HKCategoryValueAppetiteChanges: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueAppetiteChanges"
     }

@@ -7,7 +7,7 @@
 
 import HealthKit
 
-extension HKCategoryValue: CustomStringConvertible {
+extension HKCategoryValue: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValue"
     }

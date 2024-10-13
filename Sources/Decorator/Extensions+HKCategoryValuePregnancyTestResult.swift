@@ -8,7 +8,7 @@
 import HealthKit
 
 @available(iOS 15.0, *)
-extension HKCategoryValuePregnancyTestResult: CustomStringConvertible {
+extension HKCategoryValuePregnancyTestResult: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValuePregnancyTestResult"
     }
