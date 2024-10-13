@@ -12,12 +12,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Generate project
-      run: swift package generate-xcodeproj
+    - uses: actions/checkout@v4
     - name: Build
-      run: xcodebuild clean build -project "HealthKitReporter.xcodeproj" -scheme "HealthKitReporter-Package" -destination "platform=iOS Simulator,name=iPhone 12 Pro,OS=latest" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+      run: swift build -v
     - name: Run tests
-      run: xcodebuild clean test -project "HealthKitReporter.xcodeproj" -scheme "HealthKitReporter-Package" -destination "platform=iOS Simulator,name=iPhone 12 Pro,OS=latest" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
-
-
+      run: swift test -v
