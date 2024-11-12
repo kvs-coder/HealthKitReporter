@@ -24,7 +24,7 @@ extension HKQuantityType {
         case .discreteArithmetic,
              .discreteTemporallyWeighted,
              .discreteEquivalentContinuousLevel:
-            return .discreteAverage
+            return [.discreteAverage, .discreteMax]
         @unknown default:
             fatalError()
         }
