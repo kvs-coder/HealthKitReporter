@@ -565,19 +565,20 @@ public class HealthKitReader {
     public func anchoredObjectQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
-        anchor: Anchor? = HKQueryAnchor(
-            fromValue: Int(HKAnchoredObjectQueryNoAnchor)
-        ),
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
         completionHandler: @escaping AnchoredResultsHandler
     ) throws -> AnchoredObjectQuery {
+        let _anchor: Anchor? = self.getAnchor(for: type)
         guard let sampleType = type.original as? HKSampleType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKSampleType"
             )
         }
         let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedData, anchor, error) in
+            if anchor != nil {
+                self.setAnchor(anchor, for: type)
+            }
             guard
                 error == nil,
                 let result = data
@@ -612,14 +613,43 @@ public class HealthKitReader {
         let query = HKAnchoredObjectQuery(
             type: sampleType,
             predicate: predicate,
-            anchor: anchor,
+            anchor: _anchor,
             limit: limit,
             resultsHandler: resultsHandler
         )
         if monitorUpdates {
             query.updateHandler = resultsHandler
         }
+        
         return query
+    }
+    
+    
+    let userDefaults = UserDefaults.standard
+        
+    let anchorKeyPrefix = "Anchor_"
+        
+    func anchorKey(for type: SampleType) -> String {
+        return anchorKeyPrefix + (type.identifier ?? "")
+    }
+    
+    /// Returns the saved anchor used in a long-running anchored object query for a particular sample type.
+    /// Returns nil if a query has never been run.
+    func getAnchor(for type: SampleType) -> HKQueryAnchor? {
+        if let anchorData = userDefaults.object(forKey: anchorKey(for: type)) as? Data {
+            return try? NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: anchorData)
+        }
+        
+        return nil
+    }
+    
+    /// Update the saved anchor used in a long-running anchored object query for a particular sample type.
+    func setAnchor(_ queryAnchor: HKQueryAnchor?, for type: SampleType) {
+        if let queryAnchor = queryAnchor,
+            let data = try? NSKeyedArchiver.archivedData(withRootObject: queryAnchor, requiringSecureCoding: true) {
+            userDefaults.set(data, forKey: anchorKey(for: type))
+            userDefaults.synchronize()
+        }
     }
     /**
      Queries sources.
