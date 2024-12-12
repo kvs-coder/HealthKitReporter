@@ -1,3 +1,7 @@
+## [3.2.0] - 13.11.2024.
+
+* Add discreteMax quantity to statistics' options
+
 ## [3.1.0] - 08.01.2024.
 
 * Added support for HKClinicalRecord
