@@ -103,4 +103,50 @@ extension HealthKitReader {
             resultsHandler: resultsHandler
         )
     }
+    /**
+     Queries the individual quantities inside quantity series samples, e.g. step counts recorded as a series.
+     - Parameter type: **QuantityType** type
+     - Parameter unit: **String** unit compatible with the type
+     - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
+     - Parameter resultsHandler: returns a block with every quantity, ordered by sample start date
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
+     */
+    public func quantitySeriesQuery(
+        type: QuantityType,
+        unit: String,
+        predicate: NSPredicate? = .allSamples,
+        resultsHandler: @escaping QuantitySeriesResultsHandler
+    ) throws -> QuantitySeriesSampleQuery {
+        guard let quantityType = type.original as? HKQuantityType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
+        }
+        let hkUnit = try quantityType.compatibleUnit(from: unit)
+        var values = [QuantitySeriesValue]()
+        let query = HKQuantitySeriesSampleQuery(
+            quantityType: quantityType,
+            predicate: predicate
+        ) { (_, quantity, dateInterval, sample, done, error) in
+            if let error = error {
+                resultsHandler([], error)
+                return
+            }
+            if let quantity = quantity, let dateInterval = dateInterval {
+                values.append(
+                    QuantitySeriesValue(
+                        value: quantity.doubleValue(for: hkUnit),
+                        unit: hkUnit.unitString,
+                        startTimestamp: dateInterval.start.timeIntervalSince1970,
+                        endTimestamp: dateInterval.end.timeIntervalSince1970,
+                        sampleUUID: sample?.uuid.uuidString
+                    )
+                )
+            }
+            if done {
+                resultsHandler(values, nil)
+            }
+        }
+        query.includeSample = true
+        query.orderByQuantitySampleStartDate = true
+        return query
+    }
 }

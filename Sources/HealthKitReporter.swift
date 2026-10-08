@@ -273,6 +273,17 @@ public typealias ClinicalRecordResultsHandler = (
     _ error: Error?
 ) -> Void
 #endif
+/// **HKQuantitySeriesSampleQuery** typealias
+public typealias QuantitySeriesSampleQuery = HKQuantitySeriesSampleQuery
+/**
+ - Parameters:
+    - values: every quantity of the matching series samples, delivered once
+    - error: error (optional)
+ */
+public typealias QuantitySeriesResultsHandler = (
+    _ values: [QuantitySeriesValue],
+    _ error: Error?
+) -> Void
 /**
  - Parameters:
     - audiograms: audiogram sample array

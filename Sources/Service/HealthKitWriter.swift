@@ -9,7 +9,7 @@ import HealthKit
 
 /// **HealthKitWriter** class for HK writing operations
 public class HealthKitWriter {
-    private let healthStore: HKHealthStore
+    let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore

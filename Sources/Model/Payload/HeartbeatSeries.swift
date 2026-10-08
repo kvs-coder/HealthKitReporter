@@ -86,6 +86,24 @@ public struct HeartbeatSeries: Identifiable, Sample {
         self.sourceRevision = SourceRevision(sourceRevision: sample.sourceRevision)
         self.harmonized = sample.harmonize(measurements: measurements)
     }
+
+    public func copyWith(
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        harmonized: Harmonized? = nil
+    ) -> HeartbeatSeries {
+        return HeartbeatSeries(
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
 }
 // MARK: - Payload
 extension HeartbeatSeries: Payload {

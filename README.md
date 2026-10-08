@@ -364,6 +364,23 @@ reporter.manager.requestPerObjectReadAuthorization(
 
 Save a glasses or contacts prescription with `reporter.writer.save(sample:completion:)`; a prism must sit on the lens of the eye it names.
 
+### Series
+
+Read the individual quantities of quantity series samples, and write quantity or heartbeat series:
+
+```swift
+let query = try reporter.reader.quantitySeriesQuery(type: .stepCount, unit: "count") { values, error in
+    values.forEach { print($0.value, $0.startTimestamp) }
+}
+reporter.manager.executeQuery(query)
+
+reporter.writer.saveQuantitySeries(
+    type: .stepCount,
+    values: [QuantitySeriesValue(value: 12, unit: "count", startTimestamp: start, endTimestamp: start + 10)]
+) { success, error in }
+reporter.writer.saveHeartbeatSeries(heartbeatSeries) { success, error in }
+```
+
 ### Several types in one query
 
 `QueryDescriptor` pairs a type with a predicate; sample, anchored and observer queries accept several of them:
