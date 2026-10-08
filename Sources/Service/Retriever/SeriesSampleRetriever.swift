@@ -9,7 +9,6 @@ import HealthKit
 import CoreLocation
 
 class SeriesSampleRetriever {
-    @available(iOS 13.0, *)
     func makeHeartbeatSeriesQuery(
         healthStore: HKHealthStore,
         predicate: NSPredicate?,
@@ -25,7 +24,7 @@ class SeriesSampleRetriever {
                 "Invalid HKSeriesType: \(heartbeatSeries)"
             )
         }
-        let query = HKSampleQuery(
+        return HKSampleQuery(
             sampleType: seriesType,
             predicate: predicate,
             limit: limit,
@@ -38,50 +37,26 @@ class SeriesSampleRetriever {
                 resultsHandler([], error)
                 return
             }
-            var series = [HeartbeatSeries]()
-            var seriesError: Error?
-            let group = DispatchGroup()
-            for element in result {
-                guard let seriesSample = element as? HKHeartbeatSeriesSample else {
-                    resultsHandler(
-                        [],
-                        HealthKitError.invalidType(
-                            "Sample \(element) is not HKHeartbeatSeriesSample"
-                        )
-                    )
-                    return
-                }
-                var measurements = [HeartbeatSeries.Measurement]()
-                group.enter()
-                let heartbeatSeriesQuery = HKHeartbeatSeriesQuery(
-                    heartbeatSeries: seriesSample
-                ) { (_, timeSinceSeriesStart, precededByGap, done, error) in
-                    guard error == nil else {
-                        seriesError = error
-                        group.leave()
-                        return
-                    }
-                    let measurement = HeartbeatSeries.Measurement(
-                        timeSinceSeriesStart: timeSinceSeriesStart,
-                        precededByGap: precededByGap,
-                        done: done
-                    )
-                    measurements.append(measurement)
-                    if done {
-                        let sample = HeartbeatSeries(sample: seriesSample, measurements: measurements)
-                        series.append(sample)
-                        group.leave()
-                    }
-                }
-                healthStore.execute(heartbeatSeriesQuery)
+            guard let samples = result as? [HKHeartbeatSeriesSample] else {
+                resultsHandler(
+                    [],
+                    HealthKitError.invalidType("Samples \(result) are not HKHeartbeatSeriesSample")
+                )
+                return
             }
-            group.notify(queue: .global()) {
-                resultsHandler(series, seriesError)
+            let collector = SampleResultsCollector<HeartbeatSeries>(
+                label: "HealthKitReporter.HeartbeatSeriesRetriever",
+                count: samples.count
+            )
+            for (index, sample) in samples.enumerated() {
+                collector.enter()
+                healthStore.execute(
+                    self.makeHeartbeatQuery(for: sample, at: index, collector: collector)
+                )
             }
+            collector.notify(resultsHandler)
         }
-        return query
     }
-    @available(iOS 11.0, *)
     func makeWorkoutRouteQuery(
         healthStore: HKHealthStore,
         predicate: NSPredicate?,
@@ -97,12 +72,12 @@ class SeriesSampleRetriever {
                 "Invalid HKSeriesType: \(workoutRoute)"
             )
         }
-        let query = HKSampleQuery(
+        return HKSampleQuery(
             sampleType: seriesType,
             predicate: predicate,
             limit: limit,
             sortDescriptors: sortDescriptors
-        ) { (query, data, error) in
+        ) { (_, data, error) in
             guard
                 error == nil,
                 let result = data
@@ -110,51 +85,86 @@ class SeriesSampleRetriever {
                 resultsHandler([], error)
                 return
             }
-            var workoutRoutes = [WorkoutRoute]()
-            var workoutRoutesError: Error?
-            let group = DispatchGroup()
-            for element in result {
-                guard let workoutRoute = element as? HKWorkoutRoute else {
-                    resultsHandler(
-                        [],
-                        HealthKitError.invalidType(
-                            "Sample \(element) is not HKWorkoutRoute"
-                        )
-                    )
-                    return
-                }
-                var routes = [WorkoutRoute.Route]()
-                group.enter()
-                let workoutRouteQuery = HKWorkoutRouteQuery(
-                    route: workoutRoute
-                ) { (query, locations, done, error) in
-                    guard
-                        error == nil,
-                        let locations = locations
-                    else {
-                        workoutRoutesError = error
-                        group.leave()
-                        return
-                    }
-                    let route = WorkoutRoute.Route(
-                        locations: locations.map {
-                            WorkoutRoute.Location(location: $0)
-                        },
-                        done: done
-                    )
-                    routes.append(route)
-                    if done {
-                        let workoutRoute = WorkoutRoute(sample: workoutRoute, routes: routes)
-                        workoutRoutes.append(workoutRoute)
-                        group.leave()
-                    }
-                }
-                healthStore.execute(workoutRouteQuery)
+            guard let samples = result as? [HKWorkoutRoute] else {
+                resultsHandler(
+                    [],
+                    HealthKitError.invalidType("Samples \(result) are not HKWorkoutRoute")
+                )
+                return
             }
-            group.notify(queue: .global()) {
-                resultsHandler(workoutRoutes, workoutRoutesError)
+            let collector = SampleResultsCollector<WorkoutRoute>(
+                label: "HealthKitReporter.WorkoutRouteRetriever",
+                count: samples.count
+            )
+            for (index, sample) in samples.enumerated() {
+                collector.enter()
+                healthStore.execute(
+                    self.makeRouteQuery(for: sample, at: index, collector: collector)
+                )
+            }
+            collector.notify(resultsHandler)
+        }
+    }
+
+    private func makeHeartbeatQuery(
+        for sample: HKHeartbeatSeriesSample,
+        at index: Int,
+        collector: SampleResultsCollector<HeartbeatSeries>
+    ) -> HKHeartbeatSeriesQuery {
+        var measurements = [HeartbeatSeries.Measurement]()
+        return HKHeartbeatSeriesQuery(
+            heartbeatSeries: sample
+        ) { (_, timeSinceSeriesStart, precededByGap, done, error) in
+            if let error = error {
+                collector.fail(index, with: error)
+                return
+            }
+            measurements.append(
+                HeartbeatSeries.Measurement(
+                    timeSinceSeriesStart: timeSinceSeriesStart,
+                    precededByGap: precededByGap,
+                    done: done
+                )
+            )
+            if done {
+                collector.finish(
+                    index,
+                    with: HeartbeatSeries(sample: sample, measurements: measurements)
+                )
             }
         }
-        return query
+    }
+    private func makeRouteQuery(
+        for sample: HKWorkoutRoute,
+        at index: Int,
+        collector: SampleResultsCollector<WorkoutRoute>
+    ) -> HKWorkoutRouteQuery {
+        var routes = [WorkoutRoute.Route]()
+        return HKWorkoutRouteQuery(
+            route: sample
+        ) { (_, locations, done, error) in
+            guard
+                error == nil,
+                let locations = locations
+            else {
+                collector.fail(
+                    index,
+                    with: error ?? HealthKitError.unknown("No locations for \(sample)")
+                )
+                return
+            }
+            routes.append(
+                WorkoutRoute.Route(
+                    locations: locations.map { WorkoutRoute.Location(location: $0) },
+                    done: done
+                )
+            )
+            if done {
+                collector.finish(
+                    index,
+                    with: WorkoutRoute(sample: sample, routes: routes)
+                )
+            }
+        }
     }
 }

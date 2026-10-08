@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.0, *)
 class ElectrocardiogramRetriever {
     func makeElectrocardiogramQuery(
         healthStore: HKHealthStore,
@@ -25,12 +24,12 @@ class ElectrocardiogramRetriever {
                 "\(electrocardiogramType) can not be represented as HKElectrocardiogramType"
             )
         }
-        let query = HKSampleQuery(
+        return HKSampleQuery(
             sampleType: type,
             predicate: predicate,
             limit: limit,
             sortDescriptors: sortDescriptors
-        ) { (query, data, error) in
+        ) { (_, data, error) in
             guard
                 error == nil,
                 let results = data as? [HKElectrocardiogram]
@@ -38,44 +37,56 @@ class ElectrocardiogramRetriever {
                 resultsHandler([], error)
                 return
             }
-            var ecgs: [Electrocardiogram]
-            switch withVoltageMeasurements {
-            case true:
-                ecgs = []
-                var ecgsError: Error?
-                let group = DispatchGroup()
-                for ecgSample in results {
-                    var measurments = [Electrocardiogram.VoltageMeasurement]()
-                    group.enter()
-                    let voltageQuery = HKElectrocardiogramQuery(ecgSample) { (query, result) in
-                        switch(result) {
-                        case .measurement(let voltageMeasurement):
-                            if let measurment = try? Electrocardiogram.VoltageMeasurement(voltageMeasurement: voltageMeasurement) {
-                                measurments.append(measurment)
-                            }
-                        case .done:
-                            if let ecg = try? Electrocardiogram(electrocardiogram: ecgSample, voltageMeasurements: measurments) {
-                                ecgs.append(ecg)
-                            }
-                            group.leave()
-                        case .error(let error):
-                            ecgsError = error
-                            group.leave()
-                        @unknown default:
-                            ecgsError = HealthKitError.notAvailable("Unknown case of Electrocardiogram.VoltageMeasurement result")
-                            group.leave()
-                        }
-                    }
-                    healthStore.execute(voltageQuery)
+            guard withVoltageMeasurements else {
+                resultsHandler(Electrocardiogram.collect(results: results), nil)
+                return
+            }
+            let collector = SampleResultsCollector<Electrocardiogram>(
+                label: "HealthKitReporter.ElectrocardiogramRetriever",
+                count: results.count
+            )
+            for (index, sample) in results.enumerated() {
+                collector.enter()
+                healthStore.execute(
+                    self.makeVoltageQuery(for: sample, at: index, collector: collector)
+                )
+            }
+            collector.notify(resultsHandler)
+        }
+    }
+
+    private func makeVoltageQuery(
+        for sample: HKElectrocardiogram,
+        at index: Int,
+        collector: SampleResultsCollector<Electrocardiogram>
+    ) -> HKElectrocardiogramQuery {
+        var measurements = [Electrocardiogram.VoltageMeasurement]()
+        return HKElectrocardiogramQuery(sample) { (_, result) in
+            switch result {
+            case .measurement(let voltageMeasurement):
+                if let measurement = try? Electrocardiogram.VoltageMeasurement(
+                    voltageMeasurement: voltageMeasurement
+                ) {
+                    measurements.append(measurement)
                 }
-                group.notify(queue: .global()) {
-                    resultsHandler(ecgs, ecgsError)
-                }
-            case false:
-                ecgs = Electrocardiogram.collect(results: results)
-                resultsHandler(ecgs, nil)
+            case .done:
+                collector.finish(
+                    index,
+                    with: try? Electrocardiogram(
+                        electrocardiogram: sample,
+                        voltageMeasurements: measurements
+                    )
+                )
+            case .error(let error):
+                collector.fail(index, with: error)
+            @unknown default:
+                collector.fail(
+                    index,
+                    with: HealthKitError.notAvailable(
+                        "Unknown case of Electrocardiogram.VoltageMeasurement result"
+                    )
+                )
             }
         }
-        return query
     }
 }
