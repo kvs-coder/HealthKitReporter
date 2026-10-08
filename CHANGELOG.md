@@ -1,3 +1,5 @@
+# Changelog
+
 ## [3.1.0] - 08.01.2024.
 
 * Added support for HKClinicalRecord
