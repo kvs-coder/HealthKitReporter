@@ -37,7 +37,13 @@ public struct Anchor: Codable, Equatable {
         try container.encode(data)
     }
 
-    var original: HKQueryAnchor? {
-        return try? NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: data)
+    /// The archived HealthKit anchor; data that doesn't hold one throws HealthKitError.invalidValue
+    func asOriginal() throws -> HKQueryAnchor {
+        guard
+            let anchor = try? NSKeyedUnarchiver.unarchivedObject(ofClass: HKQueryAnchor.self, from: data)
+        else {
+            throw HealthKitError.invalidValue("Anchor data does not hold a HealthKit anchor")
+        }
+        return anchor
     }
 }

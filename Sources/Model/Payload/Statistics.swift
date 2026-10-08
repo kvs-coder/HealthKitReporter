@@ -92,13 +92,13 @@ public struct Statistics: Identifiable, Codable {
         try self.init(statistics: statistics, unit: try statistics.quantityType.siUnit)
     }
 
-    private init(
+    public init(
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
         harmonized: Harmonized,
         sources: [Source],
-        sourceStatistics: [SourceStatistics]?
+        sourceStatistics: [SourceStatistics]? = nil
     ) {
         self.identifier = identifier
         self.startTimestamp = startTimestamp
@@ -123,6 +123,65 @@ public struct Statistics: Identifiable, Codable {
             harmonized: harmonized ?? self.harmonized,
             sources: sources ?? self.sources,
             sourceStatistics: sourceStatistics ?? self.sourceStatistics
+        )
+    }
+}
+// MARK: - Payload
+extension Statistics: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Statistics {
+        guard
+            let identifier = dictionary["identifier"] as? String,
+            let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
+            let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let sources = dictionary["sources"] as? [[String: Any]] ?? []
+        let sourceStatistics = dictionary["sourceStatistics"] as? [[String: Any]]
+        return Statistics(
+            identifier: identifier,
+            startTimestamp: Double(truncating: startTimestamp),
+            endTimestamp: Double(truncating: endTimestamp),
+            harmonized: try Harmonized.make(from: harmonized),
+            sources: try sources.map(Source.make),
+            sourceStatistics: try sourceStatistics?.map(SourceStatistics.make)
+        )
+    }
+    public static func collect(from array: [Any]) throws -> [Statistics] {
+        return try array.compactMap { $0 as? [String: Any] }.map(Statistics.make)
+    }
+}
+// MARK: - Payload
+extension Statistics.Harmonized: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Statistics.Harmonized {
+        guard let unit = dictionary["unit"] as? String else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        let number = { (key: String) in (dictionary[key] as? NSNumber).map { Double(truncating: $0) } }
+        return Statistics.Harmonized(
+            summary: number("summary"),
+            average: number("average"),
+            recent: number("recent"),
+            min: number("min"),
+            max: number("max"),
+            unit: unit,
+            duration: number("duration")
+        )
+    }
+}
+// MARK: - Payload
+extension Statistics.SourceStatistics: Payload {
+    public static func make(from dictionary: [String: Any]) throws -> Statistics.SourceStatistics {
+        guard
+            let source = dictionary["source"] as? [String: Any],
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return Statistics.SourceStatistics(
+            source: try Source.make(from: source),
+            harmonized: try Statistics.Harmonized.make(from: harmonized)
         )
     }
 }

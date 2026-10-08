@@ -109,7 +109,7 @@ class WorkoutBuilderTests: XCTestCase {
             throw XCTSkip("Workout effort requires iOS 18")
         }
         let reader = HealthKitReporter().reader
-        let query = reader.workoutEffortRelationshipQuery(mostRelevant: true) { _, _, _ in }
+        let query = try reader.workoutEffortRelationshipQuery(mostRelevant: true) { _, _, _ in }
         XCTAssertNotNil(query)
         let effort = Quantity(
             identifier: "HKQuantityTypeIdentifierWorkoutEffortScore",

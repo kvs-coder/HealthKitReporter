@@ -157,26 +157,6 @@ class HealthKitWriterTests: XCTestCase {
         let deleteError = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
         assertInvalidType(try { throw try XCTUnwrap(deleteError) }())
     }
-    func testSaveWithEndBeforeStartOrUnknownValue() throws {
-        let event = WorkoutEvent(
-            startTimestamp: startTimestamp,
-            endTimestamp: startTimestamp,
-            duration: 0,
-            harmonized: WorkoutEvent.Harmonized(value: 99, description: "Unknown", metadata: nil)
-        )
-        let invalidValues: [Sample] = [
-            quantity.copyWith(endTimestamp: startTimestamp - 60),
-            category.copyWith(endTimestamp: startTimestamp - 60),
-            workout.copyWith(endTimestamp: startTimestamp - 60),
-            category.copyWith(harmonized: category.harmonized.copyWith(value: 99)),
-            workout.copyWith(workoutEvents: [event.copyWith(endTimestamp: startTimestamp - 60)])
-        ]
-        for sample in invalidValues {
-            assertInvalidValue(try { throw try XCTUnwrap(try waitForSave(sample)) }())
-        }
-        let unknownEvent = try waitForSave(workout.copyWith(workoutEvents: [event]))
-        assertInvalidType(try { throw try XCTUnwrap(unknownEvent) }())
-    }
     func testSaveWithMalformedOrIncompatibleUnit() throws {
         let samples: [Sample] = [
             quantity.copyWith(harmonized: quantity.harmonized.copyWith(unit: "kg")),
@@ -320,5 +300,32 @@ class HealthKitWriterTests: XCTestCase {
         line: UInt = #line
     ) {
         XCTAssertEqual((error as NSError?)?.domain, HKErrorDomain, message, file: file, line: line)
+    }
+}
+// MARK: - Validation
+extension HealthKitWriterTests {
+    func testSaveWithEndBeforeStartOrUnknownValue() throws {
+        let event = WorkoutEvent(
+            startTimestamp: startTimestamp,
+            endTimestamp: startTimestamp,
+            duration: 0,
+            harmonized: WorkoutEvent.Harmonized(value: 99, description: "Unknown", metadata: nil)
+        )
+        let invalidValues: [Sample] = [
+            quantity.copyWith(endTimestamp: startTimestamp - 60),
+            category.copyWith(endTimestamp: startTimestamp - 60),
+            workout.copyWith(endTimestamp: startTimestamp - 60),
+            category.copyWith(harmonized: category.harmonized.copyWith(value: 99)),
+            workout.copyWith(workoutEvents: [event.copyWith(endTimestamp: startTimestamp - 60)])
+        ]
+        for sample in invalidValues {
+            assertInvalidValue(try { throw try XCTUnwrap(try waitForSave(sample)) }())
+        }
+        let strokesAndFlights = workout.copyWith(
+            harmonized: workout.harmonized.copyWith(totalSwimmingStrokeCount: 10, totalFlightsClimbed: 3)
+        )
+        assertInvalidValue(try { throw try XCTUnwrap(try waitForSave(strokesAndFlights)) }())
+        let unknownEvent = try waitForSave(workout.copyWith(workoutEvents: [event]))
+        assertInvalidType(try { throw try XCTUnwrap(unknownEvent) }())
     }
 }

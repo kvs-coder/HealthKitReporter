@@ -185,6 +185,7 @@ extension Workout: Original {
                 "Workout type: \(harmonized.value) could not be formatted"
             )
         }
+        try checkTotals()
         let workoutEvents = try workoutEvents.map { try $0.asOriginal() }
         let totalEnergyBurned = try quantity(
             harmonized.totalEnergyBurned,
@@ -200,7 +201,7 @@ extension Workout: Original {
             harmonized.totalFlightsClimbed,
             unit: harmonized.totalFlightsClimbedUnit,
             compatibleWith: .flightsClimbed
-        ), harmonized.totalSwimmingStrokeCount == nil {
+        ) {
             return HKWorkout(
                 activityType: activityType,
                 start: startTimestamp.asDate,
@@ -230,6 +231,14 @@ extension Workout: Original {
         )
     }
 
+    /// HKWorkout takes swimming strokes or flights climbed, not both; the builder takes both as samples
+    private func checkTotals() throws {
+        guard harmonized.totalSwimmingStrokeCount == nil || harmonized.totalFlightsClimbed == nil else {
+            throw HealthKitError.invalidValue(
+                "HKWorkout takes swimming strokes or flights climbed, not both; save it with saveWorkout"
+            )
+        }
+    }
     /// The harmonized totals as samples spanning the workout, for **HKWorkoutBuilder**
     func totalSamples() throws -> [HKQuantitySample] {
         return try [
@@ -269,6 +278,9 @@ extension Workout: Original {
 
     /// The distance type a workout of this activity records
     private var distanceType: HKQuantityTypeIdentifier {
+        if #available(iOS 18.0, watchOS 11.0, *), let distanceType = newerDistanceType {
+            return distanceType
+        }
         switch HKWorkoutActivityType(knownRawValue: harmonized.value) {
         case .cycling, .handCycling:
             return .distanceCycling
@@ -280,6 +292,23 @@ extension Workout: Original {
             return .distanceDownhillSnowSports
         default:
             return .distanceWalkingRunning
+        }
+    }
+
+    /// Distance types added in iOS 18
+    @available(iOS 18.0, watchOS 11.0, *)
+    private var newerDistanceType: HKQuantityTypeIdentifier? {
+        switch HKWorkoutActivityType(knownRawValue: harmonized.value) {
+        case .crossCountrySkiing:
+            return .distanceCrossCountrySkiing
+        case .paddleSports:
+            return .distancePaddleSports
+        case .rowing:
+            return .distanceRowing
+        case .skatingSports:
+            return .distanceSkatingSports
+        default:
+            return nil
         }
     }
 
@@ -315,6 +344,7 @@ extension Workout: Payload {
         let device = dictionary["device"] as? [String: Any]
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
         let activities = dictionary["activities"] as? [[String: Any]]
+        let statistics = dictionary["statistics"] as? [Any]
         return Workout(
             uuid: dictionary.payloadUUID,
             identifier: identifier,
@@ -331,6 +361,7 @@ extension Workout: Payload {
                 }
                 : [],
             harmonized: try Harmonized.make(from: harmonized),
+            statistics: try statistics.map(Statistics.collect),
             activities: try activities?.map(WorkoutActivity.make)
         )
     }

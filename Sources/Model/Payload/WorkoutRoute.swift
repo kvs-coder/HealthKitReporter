@@ -28,6 +28,7 @@ public struct WorkoutRoute: Identifiable, Sample {
         public let altitude: Double
         public let course: Double
         public let courseAccuracy: Double?
+        /// floor level; read only, since CoreLocation can't create a location with a floor
         public let floor: Int?
         public let horizontalAccuracy: Double
         public let speed: Double

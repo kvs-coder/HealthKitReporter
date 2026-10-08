@@ -249,6 +249,24 @@ extension WorkoutTests {
             "harmonized": harmonizedDictionary
         ]
     }
+    func testCreateFromDictionaryWithStatistics() throws {
+        var withStatistics = dictionary
+        withStatistics["statistics"] = [
+            [
+                "identifier": "HKQuantityTypeIdentifierHeartRate",
+                "startTimestamp": startTimestamp,
+                "endTimestamp": endTimestamp,
+                "harmonized": ["average": 120, "unit": "count/min"],
+                "sources": []
+            ]
+        ]
+        let sut = try Workout.make(from: withStatistics)
+        let statistics = try XCTUnwrap(sut.statistics?.first)
+        XCTAssertEqual(statistics.identifier, "HKQuantityTypeIdentifierHeartRate")
+        XCTAssertEqual(try XCTUnwrap(statistics.harmonized.average), 120, accuracy: 0.001)
+        XCTAssertEqual(statistics.harmonized.unit, "count/min")
+        XCTAssertNil(try Workout.make(from: dictionary).statistics)
+    }
     func testCreateFromInvalidDictionary() throws {
         assertEachKeyIsRequired(
             ["identifier", "startTimestamp", "endTimestamp", "duration", "sourceRevision", "harmonized"],

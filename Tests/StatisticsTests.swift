@@ -49,6 +49,22 @@ class StatisticsTests: XCTestCase {
         let sut = try decode(Statistics.self, from: dictionary)
         assertStatistics(sut)
     }
+    func testMakeFromDictionary() throws {
+        let sut = try Statistics.make(from: dictionary)
+        assertStatistics(sut)
+        XCTAssertEqual(try json(sut), try json(try decode(Statistics.self, from: dictionary)))
+        let collected = try Statistics.collect(from: [dictionary, "invalid"])
+        XCTAssertEqual(collected.count, 1)
+    }
+    func testMakeFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "harmonized"],
+            in: dictionary,
+            make: Statistics.make
+        )
+        assertInvalidValue(try Statistics.Harmonized.make(from: ["summary": 1]))
+        assertInvalidValue(try Statistics.SourceStatistics.make(from: ["source": [:]]))
+    }
     func testCreateThenEncodeThenDecode() throws {
         let sut = try decode(Statistics.self, from: dictionary)
         let encoded = try sut.encoded()

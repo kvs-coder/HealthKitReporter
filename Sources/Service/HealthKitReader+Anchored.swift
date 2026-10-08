@@ -18,7 +18,8 @@ extension HealthKitReader {
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
      - Parameter completionHandler: returns a block with samples
-     - Throws: HealthKitError.invalidType, HealthKitError.invalidOption
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidOption,
+     HealthKitError.invalidValue for anchor data that doesn't hold a HealthKit anchor
      */
     public func anchoredObjectQuery(
         type: SampleType,
@@ -40,7 +41,7 @@ extension HealthKitReader {
         let query = HKAnchoredObjectQuery(
             type: sampleType,
             predicate: predicate,
-            anchor: anchor?.original,
+            anchor: try anchor?.asOriginal(),
             limit: limit,
             resultsHandler: resultsHandler
         )
@@ -90,7 +91,8 @@ extension HealthKitReader {
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
      - Parameter completionHandler: returns a block with samples of every type
-     - Throws: HealthKitError.invalidType, HealthKitError.invalidOption
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidOption,
+     HealthKitError.invalidValue for anchor data that doesn't hold a HealthKit anchor
      */
     public func anchoredObjectQuery(
         descriptors: [QueryDescriptor],
@@ -105,7 +107,7 @@ extension HealthKitReader {
         let resultsHandler = anchoredResultsHandler(completionHandler)
         let query = HKAnchoredObjectQuery(
             queryDescriptors: try descriptors.map { try $0.asOriginal() },
-            anchor: anchor?.original,
+            anchor: try anchor?.asOriginal(),
             limit: limit,
             resultsHandler: resultsHandler
         )

@@ -16,16 +16,17 @@ extension HealthKitReader {
      - Parameter anchor: **Anchor** anchor (optional). nil by default
      - Parameter mostRelevant: **Bool** only the most relevant effort sample per workout. False by default
      - Parameter resultsHandler: returns a block with relationships and the new anchor
+     - Throws: HealthKitError.invalidValue for anchor data that doesn't hold a HealthKit anchor
      */
     public func workoutEffortRelationshipQuery(
         predicate: NSPredicate? = nil,
         anchor: Anchor? = nil,
         mostRelevant: Bool = false,
         resultsHandler: @escaping WorkoutEffortRelationshipResultsHandler
-    ) -> QueryHandle {
+    ) throws -> QueryHandle {
         return QueryHandle(HKWorkoutEffortRelationshipQuery(
             predicate: predicate,
-            anchor: anchor?.original,
+            anchor: try anchor?.asOriginal(),
             options: mostRelevant ? .mostRelevant : .default
         ) { (_, relationships, anchor, error) in
             guard error == nil, let relationships = relationships else {

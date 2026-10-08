@@ -13,10 +13,12 @@ extension HealthKitWriter {
     /**
      Saves a workout through **HKWorkoutBuilder**, which replaces the deprecated HKWorkout initializer.
      The harmonized totals are added as samples for the types **samples** doesn't already contain.
-     - Parameter workout: **Workout** workout; its activities are added on iOS 16+
+     - Parameter workout: **Workout** workout; its activities are added on iOS 16+,
+     and the first one's location, swimming location and lap length configure the builder
      - Parameter samples: **Quantity** samples recorded during the workout (optional)
      - Parameter route: **WorkoutRoute.Location** locations of the route (optional)
-     - Parameter completion: returns a block with the saved workout
+     - Parameter completion: returns a block with the saved workout. The workout is saved even when its route
+     fails; then the block carries both the workout and the route's error
      */
     public func saveWorkout(
         _ workout: Workout,
@@ -37,8 +39,12 @@ extension HealthKitWriter {
                         completion(nil, error)
                         return
                     }
-                    self.saveRoute(route, of: hkWorkout, device: workout.device) { error in
-                        completion(try? Workout(workout: hkWorkout), error)
+                    self.saveRoute(route, of: hkWorkout, device: workout.device) { routeError in
+                        do {
+                            completion(try Workout(workout: hkWorkout), routeError)
+                        } catch {
+                            completion(nil, error)
+                        }
                     }
                 }
             }
@@ -55,6 +61,9 @@ extension HealthKitWriter {
         }
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = activityType
+        if #available(iOS 16.0, watchOS 9.0, *), let activity = workout.activities?.first {
+            activity.configure(configuration)
+        }
         return HKWorkoutBuilder(
             healthStore: healthStore,
             configuration: configuration,

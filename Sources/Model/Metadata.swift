@@ -157,21 +157,27 @@ extension Metadata.Value: ExpressibleByStringLiteral,
 // MARK: - Value: Original
 extension Metadata.Value {
     /// Units tried in order to express a metadata **HKQuantity**, which doesn't expose its own unit
-    private static let quantityUnits: [HKUnit] = [
-        .count().unitDivided(by: .minute()),
-        .meter().unitDivided(by: .second()),
-        .meter(),
-        .kilocalorie().unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .hour())),
-        .degreeCelsius(),
-        .percent(),
-        .second(),
-        .kilocalorie(),
-        .gramUnit(with: .kilo),
-        .liter(),
-        .millimeterOfMercury(),
-        .decibelAWeightedSoundPressureLevel(),
-        .count()
-    ]
+    private static var quantityUnits: [HKUnit] {
+        var units: [HKUnit] = [
+            .count().unitDivided(by: .minute()),
+            .meter().unitDivided(by: .second()),
+            .meter(),
+            .kilocalorie().unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .hour())),
+            .degreeCelsius(),
+            .percent(),
+            .second(),
+            .kilocalorie(),
+            .gramUnit(with: .kilo),
+            .liter(),
+            .millimeterOfMercury(),
+            .decibelAWeightedSoundPressureLevel(),
+            .literUnit(with: .milli).unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute()))
+        ]
+        if #available(iOS 17.0, watchOS 10.0, *) {
+            units += [.lux(), .watt()]
+        }
+        return units + [.count()]
+    }
 
     init?(_ element: Any) {
         switch element {

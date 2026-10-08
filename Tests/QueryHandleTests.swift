@@ -84,7 +84,7 @@ class QueryHandleTests: XCTestCase {
         if #available(iOS 18.0, watchOS 11.0, *) {
             handles.append(try reader.stateOfMindQuery { _, _ in })
             handles.append(try reader.scoredAssessmentQuery(type: .gad7) { _, _ in })
-            handles.append(reader.workoutEffortRelationshipQuery(mostRelevant: true) { _, _, _ in })
+            handles.append(try reader.workoutEffortRelationshipQuery(mostRelevant: true) { _, _, _ in })
         }
         if #available(iOS 26.0, watchOS 26.0, *) {
             handles.append(try reader.medicationDoseEventQuery { _, _ in })

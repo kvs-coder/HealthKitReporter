@@ -79,7 +79,7 @@ extension HealthKitReader {
         let query = HKCorrelationQuery(
             type: correlationType,
             predicate: predicate,
-            samplePredicates: typePredicates?.sampleTypePredicates
+            samplePredicates: try typePredicates?.sampleTypePredicates()
         ) { (_, data, error) in
             guard
                 error == nil,

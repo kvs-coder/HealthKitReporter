@@ -92,7 +92,7 @@ final class RecordsDemos: DemoPerformer {
                 }
             } else {
                 execute(
-                    reader.workoutEffortRelationshipQuery { relationships, _, error in
+                    try reader.workoutEffortRelationshipQuery { relationships, _, error in
                         completion(error.map { .failure($0) } ?? .success(relationships.summary("workouts with effort")))
                     }
                 )

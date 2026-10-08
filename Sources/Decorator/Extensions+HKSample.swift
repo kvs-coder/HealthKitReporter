@@ -8,6 +8,8 @@
 import HealthKit
 
 extension HKSample {
+    /// The payload of the sample. Series samples come without their measurements, voltages or locations,
+    /// which need a query of their own (heartbeat series, workout route, electrocardiogram)
     func parsed() throws -> Sample {
         switch self {
         case let quantity as HKQuantitySample:
@@ -22,6 +24,10 @@ extension HKSample {
             return try Electrocardiogram(electrocardiogram: electrocardiogram, voltageMeasurements: [])
         case let audiogram as HKAudiogramSample:
             return try Audiogram(audiogramSample: audiogram)
+        case let heartbeatSeries as HKHeartbeatSeriesSample:
+            return HeartbeatSeries(sample: heartbeatSeries, measurements: [])
+        case let route as HKWorkoutRoute:
+            return WorkoutRoute(sample: route, routes: [])
         default:
             return try parsedNewerOrPlatformSample()
         }

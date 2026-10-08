@@ -57,6 +57,9 @@ Payloads keep the identity of the stored HealthKit sample:
 | Payload `init` / `copyWith` | `init` and `copyWith` always created a new `uuid` | `init(uuid:…)` defaults to a new `uuid`; `copyWith` keeps it, `copyWith(uuid:)` sets it |
 | `make(from:)` | ignored `"uuid"` | reads `"uuid"`, a new one when missing |
 | `Quantity.converted(to:)` | new `uuid` and the app's own `sourceRevision` | keeps every field but the value and unit |
+| `reader.workoutEffortRelationshipQuery` | non-throwing | `throws`; anchor data that doesn't hold a HealthKit anchor throws `invalidValue` (also in `anchoredObjectQuery`, which used to restart from the beginning) |
+| `correlationQuery(typePredicates:)` | unknown identifiers were ignored | throw `invalidType` |
+| `save(sample: Workout)` | dropped flights climbed when swimming strokes were set | completes with `invalidValue`; `saveWorkout` keeps both |
 
 In the Flutter plugin this means: keep `QueryHandle` instead of `ObserverQuery` / `SampleQuery` for running and stopping queries, persist `Anchor` as its encoded string, pass `SamplePredicateOptions` to `samplesPredicate`, send the `uuid` back in dictionaries for delete and unrelate, and read the `uuid` the save completion reports.
 

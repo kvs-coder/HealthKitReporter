@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 /// Every query reports back through its handler. The test host has no HealthKit entitlement,
@@ -58,11 +59,29 @@ class QueryResultsTests: XCTestCase {
         try assertReports { done in
             try reader.anchoredObjectQuery(
                 descriptors: [QueryDescriptor(type: QuantityType.stepCount)],
-                anchor: Anchor(data: Data())
+                anchor: try storedAnchor()
             ) { _, samples, _, _, error in
                 done(samples.isEmpty, error)
             }
         }
+    }
+    func testCorruptAnchorThrows() throws {
+        let reader = reporter.reader
+        let corrupt = Anchor(data: Data("not an anchor".utf8))
+        assertInvalidValue(
+            try reader.anchoredObjectQuery(type: QuantityType.stepCount, anchor: corrupt) { _, _, _, _, _ in }
+        )
+        if #available(iOS 18.0, watchOS 11.0, *) {
+            assertInvalidValue(try reader.workoutEffortRelationshipQuery(anchor: corrupt) { _, _, _ in })
+        }
+    }
+    func testCorrelationQueryWithUnknownTypePredicateThrows() throws {
+        assertInvalidType(
+            try reporter.reader.correlationQuery(
+                type: .food,
+                typePredicates: ["invalid": .allSamples]
+            ) { _, _ in }
+        )
     }
     func testStatisticsQueriesReportErrors() throws {
         let reader = reporter.reader
@@ -119,7 +138,7 @@ class QueryResultsTests: XCTestCase {
                 try reader.scoredAssessmentQuery(type: .phq9) { done($0.isEmpty, $1) }
             }
             try assertReports { done in
-                reader.workoutEffortRelationshipQuery { relationships, _, error in
+                try reader.workoutEffortRelationshipQuery { relationships, _, error in
                     done(relationships.isEmpty, error)
                 }
             }
@@ -158,6 +177,12 @@ class QueryResultsTests: XCTestCase {
         }
     }
 
+    /// An anchor HealthKit itself archived, as a query would hand it back
+    private func storedAnchor() throws -> Anchor {
+        let anchor = HKQueryAnchor(fromValue: 0)
+        let data = try NSKeyedArchiver.archivedData(withRootObject: anchor, requiringSecureCoding: true)
+        return Anchor(data: data)
+    }
     /// Runs the query, waits for its first callback and checks it reported an error with empty results
     private func assertReports(
         file: StaticString = #filePath,

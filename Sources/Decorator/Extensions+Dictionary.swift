@@ -8,12 +8,14 @@
 import HealthKit
 
 extension Dictionary where Key == String, Value == NSPredicate {
-    var sampleTypePredicates: [HKSampleType: NSPredicate] {
+    /// The predicates by sample type; an identifier naming no sample type throws HealthKitError.invalidType
+    func sampleTypePredicates() throws -> [HKSampleType: NSPredicate] {
         var samplePredicates = [HKSampleType: NSPredicate]()
         for (key, value) in self {
-            if let type = key.objectType?.hkObjectType as? HKSampleType {
-                samplePredicates[type] = value
+            guard let type = key.objectType?.hkObjectType as? HKSampleType else {
+                throw HealthKitError.invalidType("\(key) is not a sample type identifier")
             }
+            samplePredicates[type] = value
         }
         return samplePredicates
     }
