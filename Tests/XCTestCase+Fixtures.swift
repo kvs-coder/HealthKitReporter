@@ -21,6 +21,21 @@ extension XCTestCase {
     var startTimestamp: Double {
         return 1626884800
     }
+    var storedUUID: String {
+        return "8B1F9C1E-4E0A-4C38-9D57-1B2F4A6C7D10"
+    }
+    /// `make(from:)` keeps the dictionary's uuid, and creates one when the dictionary carries none
+    func assertMakeKeepsUUID<T: Sample>(
+        from dictionary: [String: Any],
+        make: ([String: Any]) throws -> T,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) throws {
+        var stored = dictionary
+        stored["uuid"] = storedUUID
+        XCTAssertEqual(try make(stored).uuid, storedUUID, file: file, line: line)
+        XCTAssertNotNil(UUID(uuidString: try make(dictionary).uuid), file: file, line: line)
+    }
     var endTimestamp: Double {
         return 1626884860
     }
@@ -200,7 +215,7 @@ extension XCTestCase {
     func save(_ sample: Sample) throws -> Error? {
         let expectation = expectation(description: "completion")
         var saveError: Error?
-        HealthKitReporter().writer.save(sample: sample) { _, error in
+        HealthKitReporter().writer.save(sample: sample) { _, _, error in
             saveError = error
             expectation.fulfill()
         }

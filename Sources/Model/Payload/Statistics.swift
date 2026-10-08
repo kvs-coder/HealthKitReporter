@@ -7,7 +7,7 @@
 
 import HealthKit
 
-public struct Statistics: Identifiable, Sample {
+public struct Statistics: Identifiable, Codable {
     public struct Harmonized: Codable {
         public let summary: Double?
         public let average: Double?

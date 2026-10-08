@@ -39,7 +39,7 @@ public class HealthKitWriter {
      - Parameter samples: **Category** samples
      - Parameter from: **Device** device the samples come from (optional).
      Replaces each sample's device when set
-     - Parameter workout: **Workout** workout
+     - Parameter workout: **Workout** workout already stored in HealthKit, looked up by its uuid
      - Parameter completion: block notifies about operation status
      */
     public func addCategory(
@@ -48,25 +48,23 @@ public class HealthKitWriter {
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
     ) {
+        let categorySamples: [HKSample]
         do {
-            let categorySamples = try samples.map {
+            categorySamples = try samples.map {
                 try $0.copyWith(device: device).asOriginal()
             }
-            healthStore.add(
-                categorySamples,
-                to: try workout.asOriginal(),
-                completion: completion
-            )
         } catch {
             completion(false, error)
+            return
         }
+        add(categorySamples, to: workout, completion: completion)
     }
     /**
      Adds quantity samples to a saved workout
      - Parameter samples: **Quantity** samples
      - Parameter from: **Device** device the samples come from (optional).
      Replaces each sample's device when set
-     - Parameter workout: **Workout** workout
+     - Parameter workout: **Workout** workout already stored in HealthKit, looked up by its uuid
      - Parameter completion: block notifies about operation status
      */
     public func addQuantity(
@@ -75,18 +73,16 @@ public class HealthKitWriter {
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
     ) {
+        let quantitySamples: [HKSample]
         do {
-            let quantitySamples = try samples.map {
+            quantitySamples = try samples.map {
                 try $0.copyWith(device: device).asOriginal()
             }
-            healthStore.add(
-                quantitySamples,
-                to: try workout.asOriginal(),
-                completion: completion
-            )
         } catch {
             completion(false, error)
+            return
         }
+        add(quantitySamples, to: workout, completion: completion)
     }
     /**
      Adds quantity samples to a saved workout
@@ -105,21 +101,25 @@ public class HealthKitWriter {
         addQuantity(samples, from: device, to: workout, completion: completion)
     }
     /**
-     Deletes the previosly created sample.
-     Supports **Quantity**, **Category**, **Workout**, **Correlation**, **Audiogram**, **VisionPrescription**,
-     **StateOfMind**, **ScoredAssessment** and **CDADocument**;
-     any other sample completes with HealthKitError.invalidType
-     - Parameter sample: **Sample** sample
+     Deletes a stored sample, looked up by its uuid and sample type.
+     A sample that is not stored completes with HealthKitError.invalidIdentifier
+     - Parameter sample: **Sample** sample read from HealthKit or saved with **save(sample:completion:)**
      - Parameter completion: block notifies about operation status
      */
     public func delete(
         sample: Sample,
         completion: @escaping StatusCompletionBlock
     ) {
-        do {
-            healthStore.delete(try original(of: sample), withCompletion: completion)
-        } catch {
-            completion(false, error)
+        guard let type = sample.identifier.objectType else {
+            completion(false, HealthKitError.invalidType("Invalid sample type: \(sample.identifier)"))
+            return
+        }
+        healthStore.storedSample(of: type, uuid: sample.uuid) { [healthStore] stored, error in
+            guard let stored = stored else {
+                completion(false, error)
+                return
+            }
+            healthStore.delete(stored, withCompletion: completion)
         }
     }
     /**
@@ -147,18 +147,39 @@ public class HealthKitWriter {
      Saves the created sample.
      Supports **Quantity**, **Category**, **Workout**, **Correlation**, **Audiogram**, **VisionPrescription**,
      **StateOfMind**, **ScoredAssessment** and **CDADocument**;
-     any other sample completes with HealthKitError.invalidType
+     any other sample completes with HealthKitError.invalidType.
+     HealthKit gives the stored sample a new uuid, which the completion reports
      - Parameter sample: **Sample** sample
-     - Parameter completion: block notifies about operation status
+     - Parameter completion: block notifies about operation status and the uuid of the stored sample
      */
     public func save(
         sample: Sample,
-        completion: @escaping StatusCompletionBlock
+        completion: @escaping SaveCompletionBlock
     ) {
         do {
-            healthStore.save(try original(of: sample), withCompletion: completion)
+            let original = try original(of: sample)
+            healthStore.save(original) { success, error in
+                completion(success, success ? original.uuid.uuidString : nil, error)
+            }
         } catch {
-            completion(false, error)
+            completion(false, nil, error)
+        }
+    }
+
+    private func add(
+        _ samples: [HKSample],
+        to workout: Workout,
+        completion: @escaping StatusCompletionBlock
+    ) {
+        healthStore.storedSample(
+            of: WorkoutType.workoutType,
+            uuid: workout.uuid
+        ) { [healthStore] stored, error in
+            guard let stored = stored as? HKWorkout else {
+                completion(false, error)
+                return
+            }
+            healthStore.add(samples, to: stored, completion: completion)
         }
     }
 

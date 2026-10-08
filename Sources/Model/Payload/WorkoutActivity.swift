@@ -31,6 +31,7 @@ public struct WorkoutActivity: Codable {
     public let metadata: Metadata?
 
     public init(
+        uuid: String = UUID().uuidString,
         activityValue: Int,
         activityDescription: String,
         locationValue: Int,
@@ -40,7 +41,7 @@ public struct WorkoutActivity: Codable {
         endTimestamp: Double?,
         metadata: Metadata?
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.activityValue = activityValue
         self.activityDescription = activityDescription
         self.locationValue = locationValue
@@ -111,6 +112,7 @@ extension WorkoutActivity: Payload {
         }
         let metadata = dictionary["metadata"] as? [String: Any]
         return WorkoutActivity(
+            uuid: dictionary.payloadUUID,
             activityValue: activityValue.intValue,
             activityDescription: activityDescription,
             locationValue: locationValue.intValue,

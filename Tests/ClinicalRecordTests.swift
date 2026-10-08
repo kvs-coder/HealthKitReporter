@@ -140,4 +140,15 @@ class ClinicalRecordTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"], file: file, line: line)
     }
 }
+
+// MARK: - Identity
+extension ClinicalRecordTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: ClinicalRecord.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try ClinicalRecord.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}
 #endif

@@ -89,7 +89,7 @@ final class WriterDemos: DemoPerformer {
         var lines = [String]()
         for payload in payloads {
             group.enter()
-            reporter.writer.save(sample: payload) { success, error in
+            reporter.writer.save(sample: payload) { success, _, error in
                 lock.lock()
                 lines.append("\(type(of: payload)): \(success ? "saved" : error?.localizedDescription ?? "failed")")
                 lock.unlock()
@@ -314,15 +314,15 @@ final class WriterDemos: DemoPerformer {
             }
         }
     }
-    /// Saves steps, then deletes the same payload
+    /// Saves steps, then deletes the stored sample by the uuid the save reported
     private func deleteAfterSaving(completion: @escaping DemoCompletion) {
         let steps = samples.quantity(.stepCount, value: 10, unit: "count", start: Date().addingTimeInterval(-60), end: Date())
-        reporter.writer.save(sample: steps) { [unowned self] success, error in
-            guard success else {
+        reporter.writer.save(sample: steps) { [unowned self] _, uuid, error in
+            guard let uuid = uuid else {
                 completion(.failure(error ?? HealthKitError.unknown()))
                 return
             }
-            reporter.writer.delete(sample: steps) { status($0, $1, "Saved, then deleted", completion) }
+            reporter.writer.delete(sample: steps.copyWith(uuid: uuid)) { status($0, $1, "Saved \(uuid), then deleted it", completion) }
         }
     }
     /// Only steps this app wrote, carrying the demo marker

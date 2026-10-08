@@ -119,4 +119,15 @@ class CDADocumentTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true], file: file, line: line)
     }
 }
+
+// MARK: - Identity
+extension CDADocumentTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: CDADocument.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try CDADocument.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}
 #endif

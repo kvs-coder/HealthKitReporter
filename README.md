@@ -252,9 +252,9 @@ do {
                             metadata: nil
                         )
                     )
-                    reporter.writer.save(sample: quantity) { (success, error) in
-                        if success && error == nil {
-                            print("success")
+                    reporter.writer.save(sample: quantity) { (success, uuid, error) in
+                        if let uuid = uuid {
+                            print("saved \(uuid)")
                         } else {
                             print(error)
                         }
@@ -269,6 +269,17 @@ do {
     print(error)
 }
 ```
+
+HealthKit gives every stored sample its own `uuid`, which `save` reports. Updating, deleting and relating act on stored samples, looked up by that `uuid`: a payload read from HealthKit already carries it, `copyWith` and `make(from:)` keep it, and `copyWith(uuid:)` sets it on a payload you built yourself.
+
+```swift
+reporter.writer.save(sample: steps) { _, uuid, _ in
+    guard let uuid = uuid else { return }
+    reporter.writer.delete(sample: steps.copyWith(uuid: uuid)) { success, error in }
+}
+```
+
+`addQuantity` / `addCategory` add new samples to a stored workout, and `unrelateWorkoutEffort` needs the stored effort sample.
 
 Hint: if you have trouble with choosing unit for an object you want to save, you can call a manager's function _preferredUnits_ which will return a dictionary with keys as identifiers of Quantitiy types and Units preferred for current localization.
 

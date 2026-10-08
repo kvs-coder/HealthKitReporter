@@ -123,6 +123,7 @@ public struct Workout: Identifiable, Sample {
     }
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -134,7 +135,7 @@ public struct Workout: Identifiable, Sample {
         statistics: [Statistics]? = nil,
         activities: [WorkoutActivity]? = nil
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -148,6 +149,7 @@ public struct Workout: Identifiable, Sample {
     }
 
     public func copyWith(
+        uuid: String? = nil,
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -160,6 +162,7 @@ public struct Workout: Identifiable, Sample {
         activities: [WorkoutActivity]? = nil
     ) -> Workout {
         return Workout(
+            uuid: uuid ?? self.uuid,
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
@@ -312,6 +315,7 @@ extension Workout: Payload {
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
         let activities = dictionary["activities"] as? [[String: Any]]
         return Workout(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

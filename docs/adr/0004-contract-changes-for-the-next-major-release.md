@@ -44,7 +44,21 @@ HealthKit types also leave the public API in the same release (ADR 0005):
 | `NSPredicate.samplesPredicate(options:)` | `HKQueryOptions` | `SamplePredicateOptions` (`.strictStartDate`, `.strictEndDate`) |
 | `CustomStringConvertible` on HealthKit enums | `description` / `detail` on `HKCategoryValue…`, `HKBiologicalSex`, `HKBloodType`, `HKFitzpatrickSkinType`, `HKActivityMoveMode`, `HKWorkoutActivityType`, `HKWorkoutEventType`, `HKVisionPrescriptionType`, `HKElectrocardiogram.Classification` / `SymptomsStatus` | removed; payload strings are unchanged |
 
-In the Flutter plugin this means: keep `QueryHandle` instead of `ObserverQuery` / `SampleQuery` for running and stopping queries, persist `Anchor` as its encoded string, and pass `SamplePredicateOptions` to `samplesPredicate`.
+Payloads keep the identity of the stored HealthKit sample:
+
+| Change | Before | After |
+| :--- | :--- | :--- |
+| `writer.save(sample:completion:)` | `StatusCompletionBlock` `(success, error)` | `SaveCompletionBlock` `(success, uuid, error)`; `uuid` of the stored sample, `nil` on failure |
+| `writer.delete(sample:)` | rebuilt the sample and deleted that unsaved copy, which never matched | deletes the stored sample with the payload's `uuid`; an unknown `uuid` completes with an error |
+| `addQuantity` / `addCategory` | passed a rebuilt, unsaved workout | add to the stored workout with the payload's `uuid` |
+| `unrelateWorkoutEffort` | rebuilt the effort sample | unrelates the stored effort sample with the payload's `uuid`; `relateWorkoutEffort` uses the stored sample when there is one |
+| `Sample` protocol | `startTimestamp`, `endTimestamp` | also requires `uuid` and `identifier` |
+| `Statistics`, `WorkoutEvent` | conform to `Sample` | `Codable` only; neither is a stored sample |
+| Payload `init` / `copyWith` | `init` and `copyWith` always created a new `uuid` | `init(uuid:…)` defaults to a new `uuid`; `copyWith` keeps it, `copyWith(uuid:)` sets it |
+| `make(from:)` | ignored `"uuid"` | reads `"uuid"`, a new one when missing |
+| `Quantity.converted(to:)` | new `uuid` and the app's own `sourceRevision` | keeps every field but the value and unit |
+
+In the Flutter plugin this means: keep `QueryHandle` instead of `ObserverQuery` / `SampleQuery` for running and stopping queries, persist `Anchor` as its encoded string, pass `SamplePredicateOptions` to `samplesPredicate`, send the `uuid` back in dictionaries for delete and unrelate, and read the `uuid` the save completion reports.
 
 Each change is committed as `feat!` / `fix!` with a `BREAKING CHANGE:` footer, so release-please bumps the major version.
 

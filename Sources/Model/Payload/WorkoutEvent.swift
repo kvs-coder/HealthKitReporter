@@ -7,7 +7,7 @@
 
 import HealthKit
 
-public struct WorkoutEvent: Sample {
+public struct WorkoutEvent: Codable {
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String

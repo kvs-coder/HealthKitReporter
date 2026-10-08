@@ -217,6 +217,8 @@ class QuantityTests: XCTestCase {
         XCTAssertEqual(converted.harmonized.value, 1, accuracy: 0.001)
         XCTAssertEqual(converted.harmonized.unit, "km")
         XCTAssertEqual(converted.harmonized.metadata, ["you": "saved it"])
+        XCTAssertEqual(converted.uuid, sut.uuid)
+        XCTAssertEqual(try json(converted.sourceRevision), try json(sut.sourceRevision))
     }
     func testConvertedToMalformedOrIncompatibleUnitThrows() throws {
         let sut = try Quantity.make(from: dictionary)
@@ -245,5 +247,17 @@ extension QuantityTests {
         default:
             return nil
         }
+    }
+}
+
+// MARK: - Identity
+extension QuantityTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Quantity.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try Quantity.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+        XCTAssertEqual(sut.copyWith(uuid: storedUUID).uuid, storedUUID)
     }
 }

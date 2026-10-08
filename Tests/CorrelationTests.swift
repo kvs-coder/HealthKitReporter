@@ -397,3 +397,14 @@ extension CorrelationTests {
 // MARK: - Factory
 extension CorrelationTests {
 }
+
+// MARK: - Identity
+extension CorrelationTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Correlation.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try Correlation.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

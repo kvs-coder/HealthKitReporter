@@ -362,3 +362,14 @@ extension HeartbeatSeriesTests {
         )
     }
 }
+
+// MARK: - Identity
+extension HeartbeatSeriesTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: HeartbeatSeries.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try HeartbeatSeries.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

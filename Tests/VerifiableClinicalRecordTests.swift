@@ -128,4 +128,11 @@ class VerifiableClinicalRecordTests: XCTestCase {
         )
     }
 }
+
+// MARK: - Identity
+extension VerifiableClinicalRecordTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: VerifiableClinicalRecord.make)
+    }
+}
 #endif

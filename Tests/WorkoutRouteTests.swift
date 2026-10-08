@@ -268,3 +268,10 @@ class WorkoutRouteTests: XCTestCase {
         )
     }
 }
+
+// MARK: - Identity
+extension WorkoutRouteTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: WorkoutRoute.make)
+    }
+}

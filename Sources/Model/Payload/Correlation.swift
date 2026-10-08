@@ -57,6 +57,7 @@ public struct Correlation: Identifiable, Sample {
     }
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -64,7 +65,7 @@ public struct Correlation: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Correlation.Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -74,6 +75,7 @@ public struct Correlation: Identifiable, Sample {
     }
 
     public func copyWith(
+        uuid: String? = nil,
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -82,6 +84,7 @@ public struct Correlation: Identifiable, Sample {
         harmonized: Harmonized? = nil
     ) -> Correlation {
         return Correlation(
+            uuid: uuid ?? self.uuid,
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
@@ -126,6 +129,7 @@ extension Correlation: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Correlation(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

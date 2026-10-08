@@ -79,6 +79,7 @@ public struct Audiogram: Identifiable, Sample {
     public let harmonized: Harmonized
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -86,7 +87,7 @@ public struct Audiogram: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -106,6 +107,7 @@ public struct Audiogram: Identifiable, Sample {
     }
 
     public func copyWith(
+        uuid: String? = nil,
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -114,6 +116,7 @@ public struct Audiogram: Identifiable, Sample {
         harmonized: Harmonized? = nil
     ) -> Audiogram {
         return Audiogram(
+            uuid: uuid ?? self.uuid,
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
@@ -171,6 +174,7 @@ extension Audiogram: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Audiogram(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

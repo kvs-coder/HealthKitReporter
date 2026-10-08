@@ -280,3 +280,10 @@ class ElectrocardiogramTests: XCTestCase {
         assertInvalidValue(try Electrocardiogram.make(from: dictionary))
     }
 }
+
+// MARK: - Identity
+extension ElectrocardiogramTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Electrocardiogram.make)
+    }
+}

@@ -101,3 +101,11 @@ class MedicationTests: XCTestCase {
         )
     }
 }
+
+// MARK: - Identity
+@available(iOS 26.0, watchOS 26.0, *)
+extension MedicationTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: doseEventDictionary, make: MedicationDoseEvent.make)
+    }
+}

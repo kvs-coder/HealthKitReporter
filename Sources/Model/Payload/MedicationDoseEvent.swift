@@ -56,6 +56,7 @@ public struct MedicationDoseEvent: Identifiable, Sample {
     public let harmonized: Harmonized
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -63,7 +64,7 @@ public struct MedicationDoseEvent: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -106,6 +107,7 @@ extension MedicationDoseEvent: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return MedicationDoseEvent(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

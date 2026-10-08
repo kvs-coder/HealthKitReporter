@@ -235,3 +235,14 @@ extension CategoryTests {
     }
 
 }
+
+// MARK: - Identity
+extension CategoryTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Category.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try Category.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

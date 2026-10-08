@@ -92,7 +92,7 @@ class MetadataTests: XCTestCase {
         )
         let expectation = expectation(description: "completion")
         var saveError: Error?
-        HealthKitReporter().writer.save(sample: invalid) { _, error in
+        HealthKitReporter().writer.save(sample: invalid) { _, _, error in
             saveError = error
             expectation.fulfill()
         }

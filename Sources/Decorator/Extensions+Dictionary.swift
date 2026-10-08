@@ -19,6 +19,13 @@ extension Dictionary where Key == String, Value == NSPredicate {
     }
 }
 
+extension Dictionary where Key == String, Value == Any {
+    /// The `uuid` a payload dictionary carries, or a new one when it carries none
+    var payloadUUID: String {
+        return self["uuid"] as? String ?? UUID().uuidString
+    }
+}
+
 public extension Dictionary where Key == String, Value == Any {
     /// HealthKit metadata as **Metadata**; values of unsupported types are skipped
     var asMetadata: Metadata? {

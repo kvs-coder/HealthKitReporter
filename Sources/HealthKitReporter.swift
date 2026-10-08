@@ -37,6 +37,13 @@ public typealias CDADocumentResultsHandler = (
 public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
 /**
  - Parameters:
+    - success: the status
+    - uuid: uuid of the stored sample (optional). nil when saving failed
+    - error: error (optional)
+ */
+public typealias SaveCompletionBlock = (_ success: Bool, _ uuid: String?, _ error: Error?) -> Void
+/**
+ - Parameters:
     - workout: the saved workout
     - error: error (optional)
  */

@@ -351,3 +351,14 @@ extension WorkoutTests {
         )
     }
 }
+
+// MARK: - Identity
+extension WorkoutTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Workout.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try Workout.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

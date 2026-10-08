@@ -71,6 +71,7 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let harmonized: Harmonized
 
     init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -79,7 +80,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         numberOfMeasurements: Int,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -174,6 +175,7 @@ extension Electrocardiogram: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Electrocardiogram(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

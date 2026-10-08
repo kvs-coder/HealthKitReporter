@@ -129,13 +129,19 @@ class WorkoutBuilderTests: XCTestCase {
             notEffort = error
         }
         assertInvalidType(try { throw try XCTUnwrap(notEffort) }())
-        let expectation = expectation(description: "unrelate")
+        let relate = expectation(description: "relate")
+        writer.relateWorkoutEffort(effort, toWorkout: UUID().uuidString) { success, error in
+            XCTAssertFalse(success)
+            XCTAssertNotNil(error)
+            relate.fulfill()
+        }
+        let unrelate = expectation(description: "unrelate")
         writer.unrelateWorkoutEffort(effort, fromWorkout: UUID().uuidString) { success, error in
             XCTAssertFalse(success)
             XCTAssertNotNil(error)
-            expectation.fulfill()
+            unrelate.fulfill()
         }
-        wait(for: [expectation], timeout: 30)
+        wait(for: [relate, unrelate], timeout: 30)
     }
 
     private func saveWithBuilder(_ workout: Workout) throws -> Error? {

@@ -20,6 +20,8 @@ class HealthKitWriterTests: XCTestCase {
     }
     /// **Sample** without an **HKSample** representation
     private struct UnsupportedSample: Sample {
+        let uuid: String
+        let identifier: String
         let startTimestamp: Double
         let endTimestamp: Double
     }
@@ -123,7 +125,7 @@ class HealthKitWriterTests: XCTestCase {
     func testSaveConvertsEverySampleKindBeforeReachingHealthKit() throws {
         let samples: [Sample] = [quantity, category, workout, correlation]
         for sample in samples {
-            let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+            let error = try waitForSave(sample)
             assertReachedHealthKit(error, "\(type(of: sample))")
         }
     }
@@ -139,13 +141,18 @@ class HealthKitWriterTests: XCTestCase {
             )
         ]
         for sample in samples {
-            let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+            let error = try waitForSave(sample)
             assertInvalidType(try { throw try XCTUnwrap(error) }())
         }
     }
     func testSaveAndDeleteUnsupportedSampleCallCompletion() throws {
-        let sample = UnsupportedSample(startTimestamp: startTimestamp, endTimestamp: endTimestamp)
-        let saveError = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+        let sample = UnsupportedSample(
+            uuid: UUID().uuidString,
+            identifier: "invalid",
+            startTimestamp: startTimestamp,
+            endTimestamp: endTimestamp
+        )
+        let saveError = try waitForSave(sample)
         assertInvalidType(try { throw try XCTUnwrap(saveError) }())
         let deleteError = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
         assertInvalidType(try { throw try XCTUnwrap(deleteError) }())
@@ -162,7 +169,7 @@ class HealthKitWriterTests: XCTestCase {
             )
         ]
         for sample in samples {
-            let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+            let error = try waitForSave(sample)
             assertInvalidValue(try { throw try XCTUnwrap(error) }())
         }
     }
@@ -183,16 +190,13 @@ class HealthKitWriterTests: XCTestCase {
                 metadata: nil
             )
         )
-        let error = try waitForStatus { self.sut.save(sample: flightsWorkout, completion: $0) }
+        let error = try waitForSave(flightsWorkout)
         assertReachedHealthKit(error, "flights climbed")
-        let invalidError = try waitForStatus {
-            self.sut.save(
-                sample: flightsWorkout.copyWith(
-                    harmonized: flightsWorkout.harmonized.copyWith(totalFlightsClimbedUnit: "m")
-                ),
-                completion: $0
+        let invalidError = try waitForSave(
+            flightsWorkout.copyWith(
+                harmonized: flightsWorkout.harmonized.copyWith(totalFlightsClimbedUnit: "m")
             )
-        }
+        )
         assertInvalidValue(try { throw try XCTUnwrap(invalidError) }())
     }
     func testDeleteConvertsEverySampleKindBeforeReachingHealthKit() throws {
@@ -211,6 +215,19 @@ class HealthKitWriterTests: XCTestCase {
             let error = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
             assertInvalidType(try { throw try XCTUnwrap(error) }())
         }
+    }
+    func testDeleteWithMalformedUUID() throws {
+        let sample = Quantity(
+            uuid: "not-a-uuid",
+            identifier: quantity.identifier,
+            startTimestamp: startTimestamp,
+            endTimestamp: endTimestamp,
+            device: nil,
+            sourceRevision: sourceRevision,
+            harmonized: quantity.harmonized
+        )
+        let error = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
+        assertInvalidValue(try { throw try XCTUnwrap(error) }())
     }
     func testAddSamplesToWorkout() throws {
         let quantityError = try waitForStatus {
@@ -244,6 +261,22 @@ class HealthKitWriterTests: XCTestCase {
         assertInvalidType(try { throw try XCTUnwrap(deletionError) }())
     }
 
+    /// Saves the sample, waits for its **SaveCompletionBlock** and returns the reported error
+    private func waitForSave(_ sample: Sample) throws -> Error? {
+        let expectation = expectation(description: "completion")
+        var status: (success: Bool, error: Error?)?
+        var savedUUID: String?
+        sut.save(sample: sample) { success, uuid, error in
+            status = (success, error)
+            savedUUID = uuid
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 30)
+        let result = try XCTUnwrap(status)
+        XCTAssertFalse(result.success)
+        XCTAssertNil(savedUUID)
+        return result.error
+    }
     /// Calls the operation and waits for its **StatusCompletionBlock**, returning the reported error
     private func waitForStatus(
         _ operation: (@escaping StatusCompletionBlock) -> Void

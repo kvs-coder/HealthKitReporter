@@ -93,3 +93,15 @@ class ScoredAssessmentTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true], file: file, line: line)
     }
 }
+
+// MARK: - Identity
+@available(iOS 18.0, watchOS 11.0, *)
+extension ScoredAssessmentTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: ScoredAssessment.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try ScoredAssessment.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

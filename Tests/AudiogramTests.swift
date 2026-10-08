@@ -96,3 +96,14 @@ class AudiogramTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true], file: file, line: line)
     }
 }
+
+// MARK: - Identity
+extension AudiogramTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: Audiogram.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try Audiogram.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

@@ -164,7 +164,7 @@ final class SeedingDemos: DemoPerformer {
         var failed = 0
         for payload in payloads {
             group.enter()
-            reporter.writer.save(sample: payload) { success, _ in
+            reporter.writer.save(sample: payload) { success, _, _ in
                 lock.lock()
                 if success {
                     saved += 1

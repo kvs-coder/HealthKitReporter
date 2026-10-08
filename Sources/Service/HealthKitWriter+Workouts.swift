@@ -137,6 +137,7 @@ extension HealthKitWriter {
 extension HealthKitWriter {
     /**
      Relates a workout effort score sample to a stored workout, or to one of its activities.
+     A sample already stored in HealthKit is looked up by its uuid; a new sample is saved by the relation
      - Parameter sample: **Quantity** workout effort score or estimated workout effort score
      - Parameter workoutUUID: **String** uuid of the stored workout
      - Parameter activityUUID: **String** uuid of one of the workout's activities (optional)
@@ -148,13 +149,19 @@ extension HealthKitWriter {
         activity activityUUID: String? = nil,
         completion: @escaping StatusCompletionBlock
     ) {
-        effortRelation(sample, workoutUUID: workoutUUID, activityUUID: activityUUID, completion: completion) {
+        effortRelation(
+            sample,
+            storedOnly: false,
+            workout: (workoutUUID, activityUUID),
+            completion: completion
+        ) {
             self.healthStore.relateWorkoutEffortSample($0, with: $1, activity: $2, completion: completion)
         }
     }
     /**
      Removes the relation between a workout effort score sample and a stored workout.
-     - Parameter sample: **Quantity** workout effort score or estimated workout effort score
+     - Parameter sample: **Quantity** stored workout effort score or estimated workout effort score,
+     looked up by its uuid
      - Parameter workoutUUID: **String** uuid of the stored workout
      - Parameter activityUUID: **String** uuid of one of the workout's activities (optional)
      - Parameter completion: block notifies about operation status
@@ -165,44 +172,70 @@ extension HealthKitWriter {
         activity activityUUID: String? = nil,
         completion: @escaping StatusCompletionBlock
     ) {
-        effortRelation(sample, workoutUUID: workoutUUID, activityUUID: activityUUID, completion: completion) {
+        effortRelation(
+            sample,
+            storedOnly: true,
+            workout: (workoutUUID, activityUUID),
+            completion: completion
+        ) {
             self.healthStore.unrelateWorkoutEffortSample($0, from: $1, activity: $2, completion: completion)
         }
     }
 
     private func effortRelation(
         _ sample: Quantity,
-        workoutUUID: String,
-        activityUUID: String?,
+        storedOnly: Bool,
+        workout target: (uuid: String, activity: String?),
         completion: @escaping StatusCompletionBlock,
-        relate: @escaping (HKQuantitySample, HKWorkout, HKWorkoutActivity?) -> Void
+        relate: @escaping (HKSample, HKWorkout, HKWorkoutActivity?) -> Void
     ) {
         let effortTypes: [QuantityType] = [.workoutEffortScore, .estimatedWorkoutEffortScore]
-        guard effortTypes.contains(where: { $0.identifier == sample.identifier }) else {
+        guard let effortType = effortTypes.first(where: { $0.identifier == sample.identifier }) else {
             completion(
                 false,
                 HealthKitError.invalidType("\(sample.identifier) is not a workout effort score")
             )
             return
         }
-        let hkSample: HKQuantitySample
-        do {
-            hkSample = try sample.asOriginal()
-        } catch {
-            completion(false, error)
-            return
-        }
-        healthStore.storedSample(of: WorkoutType.workoutType, uuid: workoutUUID) { workout, error in
-            guard let workout = workout as? HKWorkout else {
+        effortSample(sample, of: effortType, storedOnly: storedOnly) { [healthStore] hkSample, error in
+            guard let hkSample = hkSample else {
                 completion(false, error)
                 return
             }
-            let activity = workout.workoutActivities.first { $0.uuid.uuidString == activityUUID }
-            guard activityUUID == nil || activity != nil else {
-                completion(false, HealthKitError.invalidIdentifier("No activity \(activityUUID ?? "")"))
+            healthStore.storedSample(of: WorkoutType.workoutType, uuid: target.uuid) { workout, error in
+                guard let workout = workout as? HKWorkout else {
+                    completion(false, error)
+                    return
+                }
+                let activity = workout.workoutActivities.first { $0.uuid.uuidString == target.activity }
+                guard target.activity == nil || activity != nil else {
+                    completion(
+                        false,
+                        HealthKitError.invalidIdentifier("No activity \(target.activity ?? "")")
+                    )
+                    return
+                }
+                relate(hkSample, workout, activity)
+            }
+        }
+    }
+
+    private func effortSample(
+        _ sample: Quantity,
+        of type: QuantityType,
+        storedOnly: Bool,
+        completion: @escaping (HKSample?, Error?) -> Void
+    ) {
+        healthStore.storedSample(of: type, uuid: sample.uuid) { stored, error in
+            guard stored == nil, !storedOnly else {
+                completion(stored, error)
                 return
             }
-            relate(hkSample, workout, activity)
+            do {
+                completion(try sample.asOriginal(), nil)
+            } catch {
+                completion(nil, error)
+            }
         }
     }
 }

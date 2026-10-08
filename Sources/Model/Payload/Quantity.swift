@@ -68,6 +68,7 @@ public struct Quantity: Identifiable, Sample {
     }
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -75,7 +76,7 @@ public struct Quantity: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -85,6 +86,7 @@ public struct Quantity: Identifiable, Sample {
     }
 
     public func copyWith(
+        uuid: String? = nil,
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -93,6 +95,7 @@ public struct Quantity: Identifiable, Sample {
         harmonized: Harmonized? = nil
     ) -> Quantity {
         return Quantity(
+            uuid: uuid ?? self.uuid,
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
@@ -137,6 +140,7 @@ extension Quantity: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return Quantity(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),
@@ -201,10 +205,21 @@ extension Quantity: UnitConvertable {
         guard harmonized.unit != unit else {
             return self
         }
-        let quantitySample = try asOriginal()
-        return try Quantity(
-            quantitySample: quantitySample,
-            unit: try quantitySample.quantityType.compatibleUnit(from: unit)
+        guard let type = identifier.objectType?.hkObjectType as? HKQuantityType else {
+            throw HealthKitError.invalidType(
+                "Quantitiy type identifier: \(identifier) could not be formatted"
+            )
+        }
+        let quantity = HKQuantity(
+            unit: try type.compatibleUnit(from: harmonized.unit),
+            doubleValue: harmonized.value
+        )
+        let toUnit = try type.compatibleUnit(from: unit)
+        return copyWith(
+            harmonized: harmonized.copyWith(
+                value: quantity.doubleValue(for: toUnit),
+                unit: toUnit.unitString
+            )
         )
     }
 }

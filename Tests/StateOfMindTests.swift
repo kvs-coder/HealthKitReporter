@@ -97,3 +97,15 @@ class StateOfMindTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true], file: file, line: line)
     }
 }
+
+// MARK: - Identity
+@available(iOS 18.0, watchOS 11.0, *)
+extension StateOfMindTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: StateOfMind.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try StateOfMind.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+    }
+}

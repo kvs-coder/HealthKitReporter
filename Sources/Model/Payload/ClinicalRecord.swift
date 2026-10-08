@@ -81,6 +81,7 @@ public struct ClinicalRecord: Identifiable, Sample {
     }
     
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -88,7 +89,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -98,6 +99,7 @@ public struct ClinicalRecord: Identifiable, Sample {
     }
     
     public func copyWith(
+        uuid: String? = nil,
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -106,6 +108,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         harmonized: Harmonized? = nil
     ) -> ClinicalRecord {
         return ClinicalRecord(
+            uuid: uuid ?? self.uuid,
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
@@ -129,6 +132,7 @@ extension ClinicalRecord: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return ClinicalRecord(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

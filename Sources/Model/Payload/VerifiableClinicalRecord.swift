@@ -69,6 +69,7 @@ public struct VerifiableClinicalRecord: Identifiable, Sample {
     public let harmonized: Harmonized
 
     public init(
+        uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
@@ -76,7 +77,7 @@ public struct VerifiableClinicalRecord: Identifiable, Sample {
         sourceRevision: SourceRevision,
         harmonized: Harmonized
     ) {
-        self.uuid = UUID().uuidString
+        self.uuid = uuid
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
@@ -128,6 +129,7 @@ extension VerifiableClinicalRecord: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         return VerifiableClinicalRecord(
+            uuid: dictionary.payloadUUID,
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
             endTimestamp: Double(truncating: endTimestamp),

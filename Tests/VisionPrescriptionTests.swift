@@ -146,6 +146,7 @@ class VisionPrescriptionTests: XCTestCase {
 }
 // MARK: - Factory
 @available(iOS 16.0, watchOS 9.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescriptionTests {
     func testSaveConvertsGlassesAndContactsBeforeReachingHealthKit() throws {
         let glasses = try VisionPrescription.make(from: dictionary)
@@ -248,5 +249,17 @@ extension VisionPrescriptionTests {
         XCTAssertEqual(sut.harmonized.leftEye?.sphere ?? 0, -1, accuracy: 0.001, file: file, line: line)
         XCTAssertNil(sut.harmonized.brand, file: file, line: line)
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true], file: file, line: line)
+    }
+}
+
+// MARK: - Identity
+@available(iOS 16.0, watchOS 9.0, *)
+extension VisionPrescriptionTests {
+    func testCreateFromDictionaryKeepsUUID() throws {
+        try assertMakeKeepsUUID(from: dictionary, make: VisionPrescription.make)
+    }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try VisionPrescription.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
     }
 }
