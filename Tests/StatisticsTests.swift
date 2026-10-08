@@ -20,7 +20,21 @@ class StatisticsTests: XCTestCase {
                 "recent": 100,
                 "min": 10,
                 "max": 900,
-                "unit": "count"
+                "unit": "count",
+                "duration": 60
+            ],
+            "sourceStatistics": [
+                [
+                    "source": [
+                        "name": "Health",
+                        "bundleIdentifier": "com.apple.Health"
+                    ],
+                    "harmonized": [
+                        "summary": 1200.5,
+                        "unit": "count",
+                        "duration": 60
+                    ]
+                ]
             ],
             "sources": [
                 [
@@ -81,19 +95,37 @@ class StatisticsTests: XCTestCase {
                 recent: nil,
                 min: 10,
                 max: 900,
-                unit: "m"
-            )
+                unit: "m",
+                duration: 60
+            ),
+            sourceStatistics: [
+                Statistics.SourceStatistics(
+                    source: Source(name: "Health", bundleIdentifier: "com.apple.Health"),
+                    harmonized: Statistics.Harmonized(
+                        summary: 1000,
+                        average: nil,
+                        recent: nil,
+                        min: nil,
+                        max: nil,
+                        unit: "m"
+                    )
+                )
+            ]
         )
         let converted = try sut.converted(to: "km")
         XCTAssertEqual(converted.harmonized.unit, "km")
+        XCTAssertEqual(try XCTUnwrap(converted.harmonized.duration), 60, accuracy: 0.000001)
+        let sourceStatistics = try XCTUnwrap(converted.sourceStatistics?.first)
+        XCTAssertEqual(sourceStatistics.harmonized.unit, "km")
+        XCTAssertEqual(try XCTUnwrap(sourceStatistics.harmonized.summary), 1, accuracy: 0.000001)
         XCTAssertEqual(try XCTUnwrap(converted.harmonized.summary), 1, accuracy: 0.000001)
         XCTAssertEqual(try XCTUnwrap(converted.harmonized.average), 0.5, accuracy: 0.000001)
         XCTAssertNil(converted.harmonized.recent)
         XCTAssertEqual(try XCTUnwrap(converted.harmonized.min), 0.01, accuracy: 0.000001)
         XCTAssertEqual(try XCTUnwrap(converted.harmonized.max), 0.9, accuracy: 0.000001)
         XCTAssertEqual(
-            try json(converted, excluding: ["harmonized"]),
-            try json(sut, excluding: ["harmonized"])
+            try json(converted, excluding: ["harmonized", "sourceStatistics"]),
+            try json(sut, excluding: ["harmonized", "sourceStatistics"])
         )
     }
     func testConvertedToMalformedOrIncompatibleUnitThrows() throws {
@@ -120,6 +152,16 @@ class StatisticsTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.min ?? 0, 10, accuracy: 0.001, file: file, line: line)
         XCTAssertEqual(sut.harmonized.max ?? 0, 900, accuracy: 0.001, file: file, line: line)
         XCTAssertEqual(sut.harmonized.unit, "count", file: file, line: line)
+        XCTAssertEqual(sut.harmonized.duration ?? 0, 60, accuracy: 0.001, file: file, line: line)
+        XCTAssertEqual(sut.sourceStatistics?.count, 1, file: file, line: line)
+        XCTAssertEqual(sut.sourceStatistics?.first?.source.name, "Health", file: file, line: line)
+        XCTAssertEqual(
+            sut.sourceStatistics?.first?.harmonized.summary ?? 0,
+            1200.5,
+            accuracy: 0.001,
+            file: file,
+            line: line
+        )
         XCTAssertEqual(sut.sources.count, 1, file: file, line: line)
         XCTAssertEqual(sut.sources.first?.name, "Health", file: file, line: line)
         XCTAssertEqual(sut.sources.first?.bundleIdentifier, "com.apple.Health", file: file, line: line)

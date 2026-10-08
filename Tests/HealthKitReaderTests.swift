@@ -188,7 +188,7 @@ class HealthKitReaderTests: XCTestCase {
         XCTAssertEqual(cumulative.predicate, predicate)
         XCTAssertEqual(cumulative.anchorDate, anchorDate)
         XCTAssertEqual(cumulative.intervalComponents, intervalComponents)
-        XCTAssertEqual(cumulative.options, .cumulativeSum)
+        XCTAssertEqual(cumulative.options, [.cumulativeSum, .duration])
         XCTAssertNotNil(cumulative.initialResultsHandler)
         XCTAssertNotNil(cumulative.statisticsUpdateHandler)
         let discrete = try sut.statisticsCollectionQuery(
@@ -199,7 +199,10 @@ class HealthKitReaderTests: XCTestCase {
             enumerateTo: anchorDate.addingTimeInterval(86400),
             intervalComponents: intervalComponents
         ) { _, _ in }
-        XCTAssertEqual(discrete.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent])
+        XCTAssertEqual(
+            discrete.options,
+            [.discreteAverage, .discreteMin, .discreteMax, .mostRecent, .duration]
+        )
         XCTAssertEqual(discrete.predicate, .allSamples)
         XCTAssertNil(discrete.statisticsUpdateHandler)
     }
@@ -343,12 +346,13 @@ extension HealthKitReaderTests {
             anchorDate: anchorDate,
             enumerateFrom: anchorDate,
             intervalComponents: DateComponents(day: 1),
-            monitorUpdates: true
+            monitorUpdates: true,
+            separateBySource: true
         ) { (_: [Statistics], _) in }
         XCTAssertEqual(monitoring.objectType?.identifier, "HKQuantityTypeIdentifierStepCount")
         XCTAssertEqual(monitoring.predicate, predicate)
         XCTAssertEqual(monitoring.anchorDate, anchorDate)
-        XCTAssertEqual(monitoring.options, .cumulativeSum)
+        XCTAssertEqual(monitoring.options, [.cumulativeSum, .duration, .separateBySource])
         XCTAssertNotNil(monitoring.initialResultsHandler)
         XCTAssertNotNil(monitoring.statisticsUpdateHandler)
         let once = try sut.statisticsCollectionQuery(
@@ -359,7 +363,7 @@ extension HealthKitReaderTests {
             enumerateTo: anchorDate.addingTimeInterval(86400),
             intervalComponents: DateComponents(hour: 1)
         ) { (_: [Statistics], _) in }
-        XCTAssertEqual(once.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent])
+        XCTAssertEqual(once.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent, .duration])
         XCTAssertNil(once.statisticsUpdateHandler)
         assertInvalidValue(
             try sut.statisticsCollectionQuery(

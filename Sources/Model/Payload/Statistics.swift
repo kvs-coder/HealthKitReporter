@@ -15,6 +15,8 @@ public struct Statistics: Identifiable, Sample {
         public let min: Double?
         public let max: Double?
         public let unit: String
+        /// seconds covered by data
+        public let duration: Double?
 
         public init(
             summary: Double?,
@@ -22,7 +24,8 @@ public struct Statistics: Identifiable, Sample {
             recent: Double?,
             min: Double?,
             max: Double?,
-            unit: String
+            unit: String,
+            duration: Double? = nil
         ) {
             self.summary = summary
             self.average = average
@@ -30,6 +33,7 @@ public struct Statistics: Identifiable, Sample {
             self.min = min
             self.max = max
             self.unit = unit
+            self.duration = duration
         }
 
         public func copyWith(
@@ -38,7 +42,8 @@ public struct Statistics: Identifiable, Sample {
             recent: Double? = nil,
             min: Double? = nil,
             max: Double? = nil,
-            unit: String? = nil
+            unit: String? = nil,
+            duration: Double? = nil
         ) -> Harmonized {
             return Harmonized(
                 summary: summary ?? self.summary,
@@ -46,8 +51,19 @@ public struct Statistics: Identifiable, Sample {
                 recent: recent ?? self.recent,
                 min: min ?? self.min,
                 max: max ?? self.max,
-                unit: unit ?? self.unit
+                unit: unit ?? self.unit,
+                duration: duration ?? self.duration
             )
+        }
+    }
+    /// Statistics of one source, when the query separates by source
+    public struct SourceStatistics: Codable {
+        public let source: Source
+        public let harmonized: Harmonized
+
+        public init(source: Source, harmonized: Harmonized) {
+            self.source = source
+            self.harmonized = harmonized
         }
     }
 
@@ -56,56 +72,57 @@ public struct Statistics: Identifiable, Sample {
     public let endTimestamp: Double
     public let harmonized: Harmonized
     public let sources: [Source]
+    /// per-source statistics; nil unless the query separates by source
+    public let sourceStatistics: [SourceStatistics]?
 
     init(statistics: HKStatistics, unit: HKUnit) throws {
         self.identifier = statistics.quantityType.identifier
         self.startTimestamp = statistics.startDate.timeIntervalSince1970
         self.endTimestamp = statistics.endDate.timeIntervalSince1970
         self.sources = statistics.sources?.map { Source(source: $0) } ?? []
-        self.harmonized = Harmonized(
-            summary: statistics.sumQuantity()?.doubleValue(for: unit),
-            average: statistics.averageQuantity()?.doubleValue(for: unit),
-            recent: statistics.mostRecentQuantity()?.doubleValue(for: unit),
-            min: statistics.minimumQuantity()?.doubleValue(for: unit),
-            max: statistics.maximumQuantity()?.doubleValue(for: unit),
-            unit: unit.unitString
-        )
+        self.harmonized = statistics.harmonized(unit: unit)
+        self.sourceStatistics = statistics.sources?.map {
+            SourceStatistics(
+                source: Source(source: $0),
+                harmonized: statistics.harmonized(unit: unit, for: $0)
+            )
+        }
     }
     init(statistics: HKStatistics) throws {
-        self.identifier = statistics.quantityType.identifier
-        self.startTimestamp = statistics.startDate.timeIntervalSince1970
-        self.endTimestamp = statistics.endDate.timeIntervalSince1970
-        self.sources = statistics.sources?.map { Source(source: $0) } ?? []
-        self.harmonized = try statistics.harmonize()
+        try self.init(statistics: statistics, unit: try statistics.quantityType.siUnit)
     }
-    
+
     private init(
         identifier: String,
         startTimestamp: Double,
         endTimestamp: Double,
         harmonized: Harmonized,
-        sources: [Source]
+        sources: [Source],
+        sourceStatistics: [SourceStatistics]?
     ) {
         self.identifier = identifier
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
         self.harmonized = harmonized
         self.sources = sources
+        self.sourceStatistics = sourceStatistics
     }
-    
+
     public func copyWith(
         identifier: String? = nil,
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
         harmonized: Harmonized? = nil,
-        sources: [Source]? = nil
+        sources: [Source]? = nil,
+        sourceStatistics: [SourceStatistics]? = nil
     ) -> Statistics {
         return Statistics(
             identifier: identifier ?? self.identifier,
             startTimestamp: startTimestamp ?? self.startTimestamp,
             endTimestamp: endTimestamp ?? self.endTimestamp,
             harmonized: harmonized ?? self.harmonized,
-            sources: sources ?? self.sources
+            sources: sources ?? self.sources,
+            sourceStatistics: sourceStatistics ?? self.sourceStatistics
         )
     }
 }
@@ -122,18 +139,25 @@ extension Statistics: UnitConvertable {
         }
         let fromUnit = try type.compatibleUnit(from: harmonized.unit)
         let toUnit = try type.compatibleUnit(from: unit)
-        let convert: (Double?) -> Double? = { value in
-            value.map { HKQuantity(unit: fromUnit, doubleValue: $0).doubleValue(for: toUnit) }
+        let convert: (Harmonized) -> Harmonized = { harmonized in
+            let value: (Double?) -> Double? = { value in
+                value.map { HKQuantity(unit: fromUnit, doubleValue: $0).doubleValue(for: toUnit) }
+            }
+            return Harmonized(
+                summary: value(harmonized.summary),
+                average: value(harmonized.average),
+                recent: value(harmonized.recent),
+                min: value(harmonized.min),
+                max: value(harmonized.max),
+                unit: unit,
+                duration: harmonized.duration
+            )
         }
         return copyWith(
-            harmonized: Harmonized(
-                summary: convert(harmonized.summary),
-                average: convert(harmonized.average),
-                recent: convert(harmonized.recent),
-                min: convert(harmonized.min),
-                max: convert(harmonized.max),
-                unit: unit
-            )
+            harmonized: convert(harmonized),
+            sourceStatistics: sourceStatistics?.map {
+                SourceStatistics(source: $0.source, harmonized: convert($0.harmonized))
+            }
         )
     }
 }

@@ -14,6 +14,7 @@ extension HealthKitReader {
      - Parameter type: **ObjectType** types
      - Parameter unit: **String** unit compatible with the type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
+     - Parameter separateBySource: **Bool** also compute **Statistics.sourceStatistics**. False by default
      - Parameter completionHandler: returns a block with statistics
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
@@ -21,6 +22,7 @@ extension HealthKitReader {
         type: QuantityType,
         unit: String,
         predicate: NSPredicate? = .allSamples,
+        separateBySource: Bool = false,
         completionHandler: @escaping StatisticsCompletionHandler
     ) throws -> StatisticsQuery {
         guard let quantityType = type.original as? HKQuantityType else {
@@ -32,7 +34,7 @@ extension HealthKitReader {
         let query = HKStatisticsQuery(
             quantityType: quantityType,
             quantitySamplePredicate: predicate,
-            options: quantityType.statisticsOptions
+            options: quantityType.statisticsOptions(separateBySource: separateBySource)
         ) { (_, data, error) in
             guard
                 error == nil,
@@ -65,6 +67,7 @@ extension HealthKitReader {
      of a collection appearing
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Every update enumerates the whole range again.
+     - Parameter separateBySource: **Bool** also compute **Statistics.sourceStatistics**. False by default
      - Parameter enumerationBlock: returns a block with statistics on every iteration, without an end signal.
      Use the **StatisticsCollectionResultsHandler** variant to receive whole batches
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
@@ -78,6 +81,7 @@ extension HealthKitReader {
         enumerateTo: Date,
         intervalComponents: DateComponents,
         monitorUpdates: Bool = false,
+        separateBySource: Bool = false,
         enumerationBlock: @escaping StatisticsCompletionHandler
     ) throws -> StatisticsCollectionQuery {
         guard let quantityType = type.original as? HKQuantityType else {
@@ -112,7 +116,7 @@ extension HealthKitReader {
         let query = HKStatisticsCollectionQuery(
             quantityType: quantityType,
             quantitySamplePredicate: quantitySamplePredicate,
-            options: quantityType.statisticsOptions,
+            options: quantityType.statisticsOptions(separateBySource: separateBySource),
             anchorDate: anchorDate,
             intervalComponents: intervalComponents
         )
@@ -139,6 +143,7 @@ extension HealthKitReader {
      - Parameter intervalComponents: **DateComponents** components to set the frequency
      of a collection appearing
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
+     - Parameter separateBySource: **Bool** also compute **Statistics.sourceStatistics**. False by default
      - Parameter resultsHandler: returns one batch per initial result and per update
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
@@ -151,6 +156,7 @@ extension HealthKitReader {
         enumerateTo: Date? = nil,
         intervalComponents: DateComponents,
         monitorUpdates: Bool = false,
+        separateBySource: Bool = false,
         resultsHandler: @escaping StatisticsCollectionResultsHandler
     ) throws -> StatisticsCollectionQuery {
         guard let quantityType = type.original as? HKQuantityType else {
@@ -162,7 +168,7 @@ extension HealthKitReader {
         let query = HKStatisticsCollectionQuery(
             quantityType: quantityType,
             quantitySamplePredicate: quantitySamplePredicate,
-            options: quantityType.statisticsOptions,
+            options: quantityType.statisticsOptions(separateBySource: separateBySource),
             anchorDate: anchorDate,
             intervalComponents: intervalComponents
         )

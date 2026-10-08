@@ -191,6 +191,16 @@ extension HKQuantityType {
         return unit
     }
 
+    /// The options for this type, plus the data duration and, on request, per-source values
+    func statisticsOptions(separateBySource: Bool) -> HKStatisticsOptions {
+        var options = statisticsOptions
+        options.insert(.duration)
+        if separateBySource {
+            options.insert(.separateBySource)
+        }
+        return options
+    }
+
     var statisticsOptions: HKStatisticsOptions {
         switch aggregationStyle {
         case .cumulative:
