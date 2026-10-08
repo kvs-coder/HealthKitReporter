@@ -99,3 +99,9 @@ jobs:
             -scheme HealthKitReporter_Example \
             -destination "$IOS_DESTINATION" \
             CODE_SIGNING_ALLOWED=NO
+      - name: Build (watch companion)
+        run: |
+          xcodebuild build -project Example/HealthKitReporter.xcodeproj \
+            -scheme HealthKitReporterWatch \
+            -destination "generic/platform=watchOS Simulator" \
+            CODE_SIGNING_ALLOWED=NO
