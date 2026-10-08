@@ -190,9 +190,14 @@ extension WorkoutRoute.Location: Payload {
     public static func collect(from array: [Any]) throws -> [WorkoutRoute.Location] {
         var locations = [WorkoutRoute.Location]()
         for element in array {
-            if let dictionary = element as? [String: Any] {
+            guard let dictionary = element as? [String: Any] else {
+                continue
+            }
+            do {
                 let location = try WorkoutRoute.Location.make(from: dictionary)
                 locations.append(location)
+            } catch {
+                continue
             }
         }
         return locations
@@ -260,9 +265,14 @@ extension WorkoutRoute.Route: Payload {
     public static func collect(from array: [Any]) throws -> [WorkoutRoute.Route] {
         var routes = [WorkoutRoute.Route]()
         for element in array {
-            if let dictionary = element as? [String: Any] {
+            guard let dictionary = element as? [String: Any] else {
+                continue
+            }
+            do {
                 let route = try WorkoutRoute.Route.make(from: dictionary)
                 routes.append(route)
+            } catch {
+                continue
             }
         }
         return routes

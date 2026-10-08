@@ -343,10 +343,12 @@ extension HeartbeatSeriesTests {
         XCTAssertFalse(sut[0].precededByGap)
         XCTAssertTrue(sut[0].done)
     }
-    func testCollectMeasurementsThrowsOnInvalidDictionary() throws {
-        assertInvalidValue(
-            try HeartbeatSeries.Measurement.collect(from: [measurementDictionary, ["done": true]])
+    func testCollectMeasurementsSkipsInvalidDictionaries() throws {
+        let sut = try HeartbeatSeries.Measurement.collect(
+            from: [measurementDictionary, ["done": true], measurementDictionary]
         )
+        XCTAssertEqual(sut.count, 2)
+        XCTAssertEqual(sut[0].timeSinceSeriesStart, 0.5, accuracy: 0.001)
     }
     func testCopyWithNoArgumentsKeepsAllFields() throws {
         let sut = try HeartbeatSeries.make(from: dictionary)

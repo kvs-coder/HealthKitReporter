@@ -224,6 +224,20 @@ class HealthKitReaderTests: XCTestCase {
         ) { _, _, _, _, _ in }
         XCTAssertNotNil(monitoring.updateHandler)
     }
+    func testAnchoredObjectQueryMonitoringUpdatesWithLimit() throws {
+        XCTAssertThrowsError(
+            try sut.anchoredObjectQuery(
+                type: QuantityType.stepCount,
+                limit: 10,
+                monitorUpdates: true
+            ) { _, _, _, _, _ in }
+        ) { error in
+            guard case HealthKitError.invalidOption = error else {
+                XCTFail("Expected invalidOption, got \(error)")
+                return
+            }
+        }
+    }
     func testAnchoredObjectQueryWithInvalidType() throws {
         for type in [InvalidSampleType.characteristic, .unavailable] {
             assertInvalidType(try sut.anchoredObjectQuery(type: type) { _, _, _, _, _ in })

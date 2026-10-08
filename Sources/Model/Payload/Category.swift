@@ -139,9 +139,14 @@ extension Category: Payload {
     public static func collect(from array: [Any]) throws -> [Category] {
         var results = [Category]()
         for element in array {
-            if let dictionary = element as? [String: Any] {
+            guard let dictionary = element as? [String: Any] else {
+                continue
+            }
+            do {
                 let harmonized = try Category.make(from: dictionary)
                 results.append(harmonized)
+            } catch {
+                continue
             }
         }
         return results

@@ -150,9 +150,14 @@ extension Quantity: Payload {
     public static func collect(from array: [Any]) throws -> [Quantity] {
         var results = [Quantity]()
         for element in array {
-            if let dictionary = element as? [String: Any] {
+            guard let dictionary = element as? [String: Any] else {
+                continue
+            }
+            do {
                 let harmonized = try Quantity.make(from: dictionary)
                 results.append(harmonized)
+            } catch {
+                continue
             }
         }
         return results

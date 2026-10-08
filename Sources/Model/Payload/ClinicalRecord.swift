@@ -147,9 +147,14 @@ extension ClinicalRecord: Payload {
     public static func collect(from array: [Any]) throws -> [ClinicalRecord] {
         var results = [ClinicalRecord]()
         for element in array {
-            if let dictionary = element as? [String: Any] {
+            guard let dictionary = element as? [String: Any] else {
+                continue
+            }
+            do {
                 let harmonized = try ClinicalRecord.make(from: dictionary)
                 results.append(harmonized)
+            } catch {
+                continue
             }
         }
         return results

@@ -559,8 +559,9 @@ public class HealthKitReader {
      - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
      - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
+     Requires **limit** to be HKObjectQueryNoLimit.
      - Parameter completionHandler: returns a block with samples
-     - Throws: HealthKitError.invalidType
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidOption
      */
     public func anchoredObjectQuery(
         type: SampleType,
@@ -577,18 +578,15 @@ public class HealthKitReader {
                 "\(type) can not be represented as HKSampleType"
             )
         }
+        guard !monitorUpdates || limit == HKObjectQueryNoLimit else {
+            throw HealthKitError.invalidOption("monitorUpdates requires limit HKObjectQueryNoLimit: \(limit)")
+        }
         let resultsHandler: AnchoredObjectQueryHandler = { (query, data, deletedData, anchor, error) in
             guard
                 error == nil,
                 let result = data
             else {
-                completionHandler(
-                    query,
-                    [],
-                    [],
-                    anchor,
-                    error
-                )
+                completionHandler(query, [], [], anchor, error)
                 return
             }
             var samples = [Sample]()

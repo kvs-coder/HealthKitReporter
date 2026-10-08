@@ -197,8 +197,10 @@ class QuantityTests: XCTestCase {
         XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
         XCTAssertEqual(sut[1].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
     }
-    func testCollectThrowsOnInvalidDictionary() throws {
-        assertInvalidValue(try Quantity.collect(from: [dictionary, ["identifier": "invalid"]]))
+    func testCollectSkipsInvalidDictionaries() throws {
+        let sut = try Quantity.collect(from: [dictionary, ["identifier": "invalid"], dictionary])
+        XCTAssertEqual(sut.count, 2)
+        XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
     }
     func testConvertedToSameUnitReturnsSelf() throws {
         let sut = try Quantity.make(from: dictionary)
