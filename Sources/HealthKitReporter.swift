@@ -46,6 +46,20 @@ public typealias ObserverUpdateHandler = (
 ) -> Void
 /**
  - Parameters:
+    - query: the observer query
+    - identifier: the object type identifier
+    - error: error (optional)
+    - completion: must be called once the update is processed, on every path.
+    HealthKit throttles background delivery if it isn't
+ */
+public typealias ObserverCompletionUpdateHandler = (
+    _ query: Query?,
+    _ identifier: String?,
+    _ error: Error?,
+    _ completion: @escaping () -> Void
+) -> Void
+/**
+ - Parameters:
     - success: the status
     - id: the deleted object id
     - error: error (optional)

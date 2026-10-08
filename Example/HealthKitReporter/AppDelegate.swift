@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     do {
                         let query = try reporter.observer.observerQuery(
                             type: type
-                        ) { (_, identifier, _) in
+                        ) { (_, identifier, _, completion) in
                             if let identifier = identifier {
                                 let notification = LocalNotification(
                                     title: "Observed",
@@ -45,6 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                 )
                                 localNotificationManager.scheduleNotification(notification)
                             }
+                            completion()
                         }
                         reporter.observer.enableBackgroundDelivery(
                             type: type,

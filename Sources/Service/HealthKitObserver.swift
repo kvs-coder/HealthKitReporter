@@ -15,45 +15,63 @@ public class HealthKitObserver {
         self.healthStore = healthStore
     }
     /**
-     Sets observer query for type
+     Sets observer query for type.
+     HealthKit's completion handler is called right after **updateHandler** returns,
+     so asynchronous work started there may be suspended in background delivery.
+     Use the **ObserverCompletionUpdateHandler** variant to signal completion yourself.
      - Parameter type: **SampleType** type
      - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
      - Parameter updateHandler: is called as soon any change happened in AppleHealth App
+     - Throws: HealthKitError.invalidType
      */
     public func observerQuery(
         type: SampleType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverUpdateHandler
     ) throws -> ObserverQuery {
-        guard let sampleType = type.original as? HKSampleType else {
-            throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
+        return try observerQuery(
+            type: type,
+            predicate: predicate
+        ) { (query, identifier, error, completion) in
+            updateHandler(query, identifier, error)
+            completion()
         }
-        let query = HKObserverQuery(
+    }
+    /**
+     Sets observer query for type, handing HealthKit's completion handler to the consumer.
+     - Parameter type: **SampleType** type
+     - Parameter predicate: **NSPredicate** predicate (optional). Nil by default
+     - Parameter updateHandler: is called as soon any change happened in AppleHealth App.
+     Call its **completion** once the update is processed, also on the error path
+     - Throws: HealthKitError.invalidType
+     */
+    public func observerQuery(
+        type: SampleType,
+        predicate: NSPredicate? = nil,
+        updateHandler: @escaping ObserverCompletionUpdateHandler
+    ) throws -> ObserverQuery {
+        guard let sampleType = type.original as? HKSampleType else {
+            throw HealthKitError.invalidType("Invalid HKSampleType: \(type)")
+        }
+        return HKObserverQuery(
             sampleType: sampleType,
             predicate: predicate
         ) { (query, completion, error) in
-            guard error == nil else {
-                updateHandler(query, nil, error)
+            if let error = error {
+                updateHandler(query, nil, error, completion)
                 return
             }
-            guard #available(iOS 9.3, *) else {
-                updateHandler(query, nil, HealthKitError.notAvailable(
-                    "Query objectType is not available for the current iOS"
-                ))
-                return
-            }
-            guard let id = query.objectType?.identifier else {
+            guard let identifier = query.objectType?.identifier else {
                 updateHandler(
                     query,
                     nil,
-                    HealthKitError.unknown("Unknown object type for query: \(query)")
+                    HealthKitError.unknown("Unknown object type for query: \(query)"),
+                    completion
                 )
                 return
             }
-            updateHandler(query, id, nil)
-            completion()
+            updateHandler(query, identifier, nil, completion)
         }
-        return query
     }
     /**
      Enables background notifications about changes in AppleHealth

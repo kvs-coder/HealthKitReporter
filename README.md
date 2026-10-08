@@ -248,6 +248,8 @@ Call the observation query method inside your AppDelegate's method. This will le
 
 Warning: to run **observerQuery** when the app is killed by the system, provide an additional capability **Background Mode** and select **Background fetch**
 
+The update handler receives HealthKit's **completion**. Call it once the update is processed, on every path: HealthKit throttles background delivery when it isn't called, and may suspend the app if it is called before the fetch finishes. The three-argument update handler is still available and calls **completion** right after it returns.
+
 Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
 ```swift
@@ -270,10 +272,14 @@ func application(
                     do {
                         let query = try reporter.observer.observerQuery(
                             type: type
-                        ) { (query, identifier, error) in
-                            if error == nil && identifier != nil {
-                                print("updates for \(identifier!)")
+                        ) { (query, identifier, error, completion) in
+                            guard error == nil, let identifier = identifier else {
+                                completion()
+                                return
                             }
+                            // fetch the new samples, then tell HealthKit the update is processed
+                            print("updates for \(identifier)")
+                            completion()
                         }
                         reporter.observer.enableBackgroundDelivery(
                             type: type,
