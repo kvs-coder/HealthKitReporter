@@ -2,7 +2,7 @@
 
 * Added support for HKClinicalRecord
 
-## [4.0.0](https://github.com/kvs-coder/HealthKitReporter/compare/3.1.0...4.0.0) (2026-10-08)
+## [4.0.0] - 08.10.2026.
 
 
 ### ⚠ BREAKING CHANGES
