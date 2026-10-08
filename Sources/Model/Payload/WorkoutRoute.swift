@@ -230,7 +230,7 @@ extension WorkoutRoute.Harmonized: Payload {
         return WorkoutRoute.Harmonized(
             count: count,
             routes: try WorkoutRoute.Route.collect(from: routes),
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

@@ -1,80 +1,131 @@
 //
 //  MetadataTests.swift
-//  
+//
 //
 //  Created by Victor Kachalov on 29.10.22.
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class MetadataTests: XCTestCase {
-    func testMetadataString() {
-        let metadataExpressible: Metadata = ["HKWasUserEntered": "1"]
-        XCTAssertEqual(metadataExpressible, ["HKWasUserEntered": "1"])
-        let metadataStringDictionary = Metadata.string(dictionary: ["HKWasUserEntered": "1"])
-        XCTAssertEqual(metadataStringDictionary, ["HKWasUserEntered": "1"])
+    /// Mixed metadata as the Flutter plugin sends it over the channel
+    private var dictionary: [String: Any] {
+        return [
+            "HKTimeZone": "Europe/Berlin",
+            "HKWasUserEntered": true,
+            "HKAverageMETs": 4.5,
+            "HKDateOfEarliestDataUsedForEstimate": ["timestamp": 1626884800],
+            "HKHeartRateEventThreshold": ["value": 120, "unit": "count/min"]
+        ]
     }
-    func testMetadataDate() {
-        let date = Date()
-        let metadataExpressible: Metadata = ["HKWasUserEnteredOn": date]
-        XCTAssertEqual(metadataExpressible, ["HKWasUserEnteredOn": date])
-        let metadataStringDictionary = Metadata.date(dictionary: ["HKWasUserEnteredOn": date])
-        XCTAssertEqual(metadataStringDictionary, ["HKWasUserEnteredOn": date])
+    private var expected: Metadata {
+        return [
+            "HKTimeZone": "Europe/Berlin",
+            "HKWasUserEntered": true,
+            "HKAverageMETs": 4.5,
+            "HKDateOfEarliestDataUsedForEstimate": .date(timestamp: 1626884800),
+            "HKHeartRateEventThreshold": .quantity(value: 120, unit: "count/min")
+        ]
     }
-    func testMetadataDouble() {
-        let metadataExpressible: Metadata = ["HKWasUserEnteredValue": 10.0]
-        XCTAssertEqual(metadataExpressible, ["HKWasUserEnteredValue": 10.0])
-        let metadataStringDictionary = Metadata.double(dictionary: ["HKWasUserEnteredValue": 10.0])
-        XCTAssertEqual(metadataStringDictionary, ["HKWasUserEnteredValue": 10.0])
+
+    func testCreateFromDictionary() throws {
+        let sut = try Metadata.make(from: dictionary)
+        XCTAssertEqual(sut, expected)
+        XCTAssertEqual(sut["HKTimeZone"], .string("Europe/Berlin"))
+        XCTAssertEqual(sut["HKWasUserEntered"], .bool(true))
+        XCTAssertEqual(sut["HKAverageMETs"], .number(4.5))
+        XCTAssertNil(sut["missing"])
     }
     func testCreateThenEncodeThenDecode() throws {
-        let date = Date(timeIntervalSince1970: 1626884800)
-        let suts: [Metadata] = [
-            .string(dictionary: ["HKWasUserEntered": "1"]),
-            .date(dictionary: ["HKWasUserEnteredOn": date]),
-            .double(dictionary: ["HKWasUserEnteredValue": 10.5]),
-            .string(dictionary: nil)
-        ]
-        for sut in suts {
-            let encoded = try sut.encoded()
-            let decoded = try JSONDecoder().decode(
-                Metadata.self,
-                from: try XCTUnwrap(encoded.data(using: .utf8))
+        let encoded = try expected.encoded()
+        let decoded = try JSONDecoder().decode(
+            Metadata.self,
+            from: try XCTUnwrap(encoded.data(using: .utf8))
+        )
+        XCTAssertEqual(decoded, expected)
+    }
+    func testEncodesAsFlatJSONObject() throws {
+        let sut = try json(expected)
+        XCTAssertEqual(sut["HKTimeZone"] as? String, "Europe/Berlin")
+        XCTAssertEqual(sut["HKWasUserEntered"] as? Bool, true)
+        XCTAssertEqual(sut["HKAverageMETs"] as? Double, 4.5)
+        XCTAssertEqual(
+            sut["HKDateOfEarliestDataUsedForEstimate"] as? NSDictionary,
+            ["timestamp": 1626884800] as NSDictionary
+        )
+        XCTAssertEqual(
+            sut["HKHeartRateEventThreshold"] as? NSDictionary,
+            ["value": 120, "unit": "count/min"] as NSDictionary
+        )
+        XCTAssertEqual(try decode(Metadata.self, from: sut as? [String: Any] ?? [:]), expected)
+    }
+    func testCreateFromDictionaryWithUnsupportedValueThrows() throws {
+        assertInvalidValue(try Metadata.make(from: ["key": [1, 2]]))
+        assertInvalidValue(try Metadata.make(from: ["key": ["value": 1]]))
+    }
+    func testReadMixedMetadataFromHealthKit() throws {
+        let sample = HKQuantitySample(
+            type: HKQuantityType(.heartRate),
+            quantity: HKQuantity(unit: .count().unitDivided(by: .minute()), doubleValue: 130),
+            start: startDate,
+            end: endDate,
+            metadata: [
+                HKMetadataKeyTimeZone: "Europe/Berlin",
+                HKMetadataKeyWasUserEntered: true,
+                HKMetadataKeyHeartRateEventThreshold: HKQuantity(
+                    unit: .count().unitDivided(by: .minute()),
+                    doubleValue: 120
+                ),
+                "custom date": startDate,
+                "custom number": 7
+            ]
+        )
+        let sut = try XCTUnwrap(parse([sample]).first as? Quantity)
+        XCTAssertEqual(
+            sut.harmonized.metadata,
+            [
+                "HKTimeZone": "Europe/Berlin",
+                "HKWasUserEntered": true,
+                "HKHeartRateEventThreshold": .quantity(value: 120, unit: "count/min"),
+                "custom date": .date(timestamp: 1626884800),
+                "custom number": 7
+            ]
+        )
+    }
+    func testWriteMixedMetadataToHealthKit() throws {
+        let quantity = try Quantity.make(
+            from: [
+                "identifier": "HKQuantityTypeIdentifierHeartRate",
+                "startTimestamp": startTimestamp,
+                "endTimestamp": endTimestamp,
+                "sourceRevision": sourceRevisionDictionary,
+                "harmonized": [
+                    "value": 130,
+                    "unit": "count/min",
+                    "metadata": dictionary
+                ]
+            ]
+        )
+        XCTAssertEqual(quantity.harmonized.metadata, expected)
+        let invalid = quantity.copyWith(
+            harmonized: quantity.harmonized.copyWith(
+                metadata: ["HKHeartRateEventThreshold": .quantity(value: 120, unit: "notAUnit")]
             )
-            XCTAssertEqual(decoded, sut)
+        )
+        let expectation = expectation(description: "completion")
+        var saveError: Error?
+        HealthKitReporter().writer.save(sample: invalid) { _, error in
+            saveError = error
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: 30)
+        assertInvalidValue(try { throw try XCTUnwrap(saveError) }())
     }
-    func testCreateFromDictionary() throws {
-        let date = Date(timeIntervalSince1970: 1626884800)
-        XCTAssertEqual(
-            try Metadata.make(from: ["HKWasUserEntered": "1"]),
-            .string(dictionary: ["HKWasUserEntered": "1"])
+    func testCreateFromInvalidPayloadDictionaryThrows() throws {
+        assertInvalidValue(
+            try Quantity.Harmonized.make(from: ["value": 1, "unit": "count", "metadata": ["key": [1]]])
         )
-        XCTAssertEqual(
-            try Metadata.make(from: ["HKWasUserEnteredOn": date]),
-            .date(dictionary: ["HKWasUserEnteredOn": date])
-        )
-        XCTAssertEqual(
-            try Metadata.make(from: ["HKWasUserEnteredValue": 10.5]),
-            .double(dictionary: ["HKWasUserEnteredValue": 10.5])
-        )
-        let dictionary: [String: Any] = ["HKWasUserEntered": "1"]
-        XCTAssertEqual(dictionary.asMetadata, .string(dictionary: ["HKWasUserEntered": "1"]))
-    }
-    func testCreateFromMixedDictionaryThrows() throws {
-        let dictionary: [String: Any] = ["HKWasUserEntered": "1", "HKWasUserEnteredValue": 10.5]
-        assertInvalidValue(try Metadata.make(from: dictionary))
-        XCTAssertNil(dictionary.asMetadata)
-    }
-    func testOriginal() throws {
-        let date = Date(timeIntervalSince1970: 1626884800)
-        let string = try XCTUnwrap(Metadata.string(dictionary: ["key": "1"]).original as? [String: String])
-        XCTAssertEqual(string, ["key": "1"])
-        let dates = try XCTUnwrap(Metadata.date(dictionary: ["key": date]).original as? [String: Date])
-        XCTAssertEqual(dates, ["key": date])
-        let double = try XCTUnwrap(Metadata.double(dictionary: ["key": 1.5]).original as? [String: Double])
-        XCTAssertEqual(double, ["key": 1.5])
-        XCTAssertNil(Metadata.string(dictionary: nil).original)
     }
 }

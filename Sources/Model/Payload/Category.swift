@@ -108,7 +108,7 @@ extension Category: Original {
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata?.original
+            metadata: try harmonized.metadata?.asOriginal()
         )
     }
 }
@@ -181,7 +181,7 @@ extension Category.Harmonized: Payload {
             value: value,
             description: description,
             detail: detail,
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

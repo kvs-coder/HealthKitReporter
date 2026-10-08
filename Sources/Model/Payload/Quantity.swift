@@ -119,7 +119,7 @@ extension Quantity: Original {
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata?.original
+            metadata: try harmonized.metadata?.asOriginal()
         )
     }
 }
@@ -191,7 +191,7 @@ extension Quantity.Harmonized: Payload {
         return Quantity.Harmonized(
             value: Double(truncating: value),
             unit: unit,
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

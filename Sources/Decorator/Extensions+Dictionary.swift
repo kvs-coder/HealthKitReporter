@@ -20,7 +20,8 @@ public extension Dictionary where Key == String, Value == NSPredicate {
 }
 
 public extension Dictionary where Key == String, Value == Any {
+    /// HealthKit metadata as **Metadata**; values of unsupported types are skipped
     var asMetadata: Metadata? {
-        try? Metadata.make(from: self)
+        return Metadata(compactMapValues { Metadata.Value($0) })
     }
 }

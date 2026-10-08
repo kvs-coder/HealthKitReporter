@@ -90,7 +90,7 @@ extension WorkoutEvent: Original {
                 start: startTimestamp.asDate,
                 end: endTimestamp.asDate
             ),
-            metadata: harmonized.metadata?.original
+            metadata: try harmonized.metadata?.asOriginal()
         )
     }
 }
@@ -109,7 +109,7 @@ extension WorkoutEvent.Harmonized: Payload {
         return WorkoutEvent.Harmonized(
             value: value,
             description: description,
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

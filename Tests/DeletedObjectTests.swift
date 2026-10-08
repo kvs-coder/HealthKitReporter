@@ -13,11 +13,8 @@ class DeletedObjectTests: XCTestCase {
         return [
             "uuid": "BA0ADD39-638C-4FF8-AF48-0FC88CDCC48A",
             "metadata": [
-                "string": [
-                    "dictionary": [
-                        "HKWasUserEntered": "1"
-                    ]
-                ]
+                "HKWasUserEntered": true,
+                "HKTimeZone": "Europe/Berlin"
             ]
         ]
     }
@@ -25,7 +22,7 @@ class DeletedObjectTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let sut = try decode(DeletedObject.self, from: dictionary)
         XCTAssertEqual(sut.uuid, "BA0ADD39-638C-4FF8-AF48-0FC88CDCC48A")
-        XCTAssertEqual(sut.metadata, ["HKWasUserEntered": "1"])
+        XCTAssertEqual(sut.metadata, ["HKWasUserEntered": true, "HKTimeZone": "Europe/Berlin"])
     }
     func testCreateThenEncodeThenDecode() throws {
         let sut = try decode(DeletedObject.self, from: dictionary)
@@ -35,7 +32,7 @@ class DeletedObjectTests: XCTestCase {
             from: try XCTUnwrap(encoded.data(using: .utf8))
         )
         XCTAssertEqual(decoded.uuid, "BA0ADD39-638C-4FF8-AF48-0FC88CDCC48A")
-        XCTAssertEqual(decoded.metadata, ["HKWasUserEntered": "1"])
+        XCTAssertEqual(decoded.metadata, ["HKWasUserEntered": true, "HKTimeZone": "Europe/Berlin"])
     }
     func testCreateFromDictionaryWithoutMetadata() throws {
         let sut = try decode(

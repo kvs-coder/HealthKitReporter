@@ -151,7 +151,7 @@ extension Correlation.Harmonized: Payload {
         return Correlation.Harmonized(
             quantitySamples: try Quantity.collect(from: quantitySamples),
             categorySamples: try Category.collect(from: categorySamples),
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }
@@ -179,7 +179,7 @@ extension Correlation: Original {
             end: endTimestamp.asDate,
             objects: set,
             device: device?.asOriginal(),
-            metadata: harmonized.metadata?.original
+            metadata: try harmonized.metadata?.asOriginal()
         )
     }
 }

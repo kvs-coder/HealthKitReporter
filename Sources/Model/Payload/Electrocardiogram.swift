@@ -135,7 +135,7 @@ extension Electrocardiogram.Harmonized: Payload {
             voltageMeasurements: voltageMeasurements != nil
                 ? try Electrocardiogram.VoltageMeasurement.collect(from: voltageMeasurements!)
                 : [],
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

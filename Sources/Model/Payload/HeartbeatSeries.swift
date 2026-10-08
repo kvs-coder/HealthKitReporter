@@ -125,7 +125,7 @@ extension HeartbeatSeries.Harmonized: Payload {
         return HeartbeatSeries.Harmonized(
             count: count,
             measurements: try HeartbeatSeries.Measurement.collect(from: measurements),
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

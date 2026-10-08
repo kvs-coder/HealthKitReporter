@@ -99,7 +99,7 @@ extension VisionPrescription.Harmonized: Payload {
                 ? Double(truncating: expirationDateTimestamp!)
                 : nil,
             prescriptionType: try VisionPrescription.PrescriptionType.make(from: prescriptionType),
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

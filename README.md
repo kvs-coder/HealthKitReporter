@@ -143,6 +143,16 @@ Here is a sample response for steps:
 }
 ```
 
+Metadata encodes as a flat object. Strings, numbers and booleans are plain JSON values, a date is `{"timestamp": <seconds since 1970>}` and a quantity is `{"value": <number>, "unit": <unit>}`:
+
+```json
+"metadata" : {
+  "HKTimeZone" : "Europe/Berlin",
+  "HKWasUserEntered" : true,
+  "HKHeartRateEventThreshold" : { "value" : 120, "unit" : "count/min" }
+}
+```
+
 Timestamps are seconds since 1970. JSON has no infinity or NaN, so `encoded()` writes non-finite numbers as the strings `"Infinity"`, `"-Infinity"` and `"NaN"`, which Dart's `double.parse` and JavaScript's `Number` accept.
 
 ### Writing Data

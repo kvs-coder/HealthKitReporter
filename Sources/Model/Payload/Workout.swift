@@ -185,7 +185,7 @@ extension Workout: Original {
                 totalDistance: totalDistance,
                 totalFlightsClimbed: totalFlightsClimbed,
                 device: device?.asOriginal(),
-                metadata: harmonized.metadata?.original
+                metadata: try harmonized.metadata?.asOriginal()
             )
         }
         return HKWorkout(
@@ -201,7 +201,7 @@ extension Workout: Original {
                 compatibleWith: .swimmingStrokeCount
             ),
             device: device?.asOriginal(),
-            metadata: harmonized.metadata?.original
+            metadata: try harmonized.metadata?.asOriginal()
         )
     }
 
@@ -311,7 +311,7 @@ extension Workout.Harmonized: Payload {
                 ? Double(truncating: totalFlightsClimbed!)
                 : nil,
             totalFlightsClimbedUnit: totalFlightsClimbedUnit,
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }

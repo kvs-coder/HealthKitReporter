@@ -185,7 +185,7 @@ extension ClinicalRecord.Harmonized: Payload {
             fhirSourceUrl: fhirSourceUrl,
             fhirVersion: fhirVersion,
             fhirData: fhirData,
-            metadata: metadata?.asMetadata
+            metadata: try metadata.map(Metadata.make)
         )
     }
 }
