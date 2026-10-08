@@ -204,9 +204,7 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(sut[0].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
         XCTAssertEqual(sut[1].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
     }
-    func testCollectSkipsInvalidDictionaries() throws {
-        let sut = try Category.collect(from: [dictionary, ["identifier": "invalid"], dictionary])
-        XCTAssertEqual(sut.count, 2)
-        XCTAssertEqual(sut[0].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
+    func testCollectThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(try Category.collect(from: [dictionary, ["identifier": "invalid"]]))
     }
 }

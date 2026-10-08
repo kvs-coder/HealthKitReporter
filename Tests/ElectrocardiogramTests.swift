@@ -271,13 +271,11 @@ class ElectrocardiogramTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.voltageMeasurements[0].harmonized.unit, "V")
         XCTAssertEqual(sut.harmonized.voltageMeasurements[0].timeSinceSampleStart, 0.5, accuracy: 0.001)
     }
-    func testCreateFromDictionarySkipsInvalidVoltageMeasurements() throws {
+    func testCreateFromDictionaryWithInvalidVoltageMeasurementThrows() throws {
         var harmonized = harmonizedDictionary
-        harmonized["voltageMeasurements"] = [["timeSinceSampleStart": 0.5], voltageMeasurementDictionary]
+        harmonized["voltageMeasurements"] = [["timeSinceSampleStart": 0.5]]
         var dictionary = dictionary
         dictionary["harmonized"] = harmonized
-        let sut = try Electrocardiogram.make(from: dictionary)
-        XCTAssertEqual(sut.harmonized.voltageMeasurements.count, 1)
-        XCTAssertEqual(sut.harmonized.voltageMeasurements[0].timeSinceSampleStart, 0.5, accuracy: 0.001)
+        assertInvalidValue(try Electrocardiogram.make(from: dictionary))
     }
 }

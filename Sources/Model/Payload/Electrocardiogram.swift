@@ -208,14 +208,9 @@ extension Electrocardiogram.VoltageMeasurement: Payload {
     static func collect(from array: [Any]) throws -> [Electrocardiogram.VoltageMeasurement] {
         var measurements = [Electrocardiogram.VoltageMeasurement]()
         for element in array {
-            guard let dictionary = element as? [String: Any] else {
-                continue
-            }
-            do {
+            if let dictionary = element as? [String: Any] {
                 let measurement = try Electrocardiogram.VoltageMeasurement.make(from: dictionary)
                 measurements.append(measurement)
-            } catch {
-                continue
             }
         }
         return measurements

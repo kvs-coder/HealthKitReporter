@@ -152,14 +152,9 @@ extension HeartbeatSeries.Measurement: Payload {
     public static func collect(from array: [Any]) throws -> [HeartbeatSeries.Measurement] {
         var measurements = [HeartbeatSeries.Measurement]()
         for element in array {
-            guard let dictionary = element as? [String: Any] else {
-                continue
-            }
-            do {
+            if let dictionary = element as? [String: Any] {
                 let measurement = try HeartbeatSeries.Measurement.make(from: dictionary)
                 measurements.append(measurement)
-            } catch {
-                continue
             }
         }
         return measurements

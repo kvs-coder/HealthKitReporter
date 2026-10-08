@@ -108,10 +108,8 @@ class ClinicalRecordTests: XCTestCase {
         assertClinicalRecord(sut[0])
         assertClinicalRecord(sut[1])
     }
-    func testCollectSkipsInvalidDictionaries() throws {
-        let sut = try ClinicalRecord.collect(from: [dictionary, ["identifier": "invalid"], dictionary])
-        XCTAssertEqual(sut.count, 2)
-        XCTAssertEqual(sut[0].identifier, "HKClinicalTypeIdentifierAllergyRecord")
+    func testCollectThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(try ClinicalRecord.collect(from: [dictionary, ["identifier": "invalid"]]))
     }
 
     private func assertClinicalRecord(
