@@ -28,7 +28,7 @@ final class RecordsDemos: DemoPerformer {
                 guard reporter.manager.supportsHealthRecords() else {
                     throw HealthKitError.notAvailable("Health records are not supported on this device")
                 }
-                let types = ClinicalType.allCases.filter { $0.original != nil }
+                let types = ClinicalType.allCases.filter { $0.identifier != nil }
                 reporter.countEveryType(types, completion: completion) { type, done in
                     try reader.clinicalRecordQuery(type: type) { records, _ in done(records) }
                 }

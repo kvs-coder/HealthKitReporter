@@ -170,7 +170,6 @@
 				E3AF36C0587A0BB81C3A5F50 /* DemoViewController.swift */,
 				9778DFE1D9633B197827F125 /* DemoViewModel.swift */,
 			);
-			name = Demo;
 			path = Demo;
 			sourceTree = "<group>";
 		};
@@ -195,7 +194,6 @@
 				070BD0EBAE78B36F6353742C /* StatisticsDemos.swift */,
 				1A176DB429BA8C55C3132CA3 /* WriterDemos.swift */,
 			);
-			name = Service;
 			path = Service;
 			sourceTree = "<group>";
 		};
@@ -291,7 +289,6 @@
 				399B47909B1CB7776672347C /* WorkoutView.swift */,
 				4225B1F2FA7288FF2B5908B1 /* HealthKitReporterWatch.entitlements */,
 			);
-			name = HealthKitReporterWatch;
 			path = HealthKitReporterWatch;
 			sourceTree = "<group>";
 		};
@@ -380,9 +377,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = MAVP5V2N7V;
 						LastSwiftMigration = 1200;
-						ProvisioningStyle = Automatic;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -658,7 +653,7 @@
 				CODE_SIGN_ENTITLEMENTS = HealthKitReporter_Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 22XJH423PD;
 				INFOPLIST_FILE = HealthKitReporter/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -681,7 +676,7 @@
 				CODE_SIGN_ENTITLEMENTS = HealthKitReporter_Example.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 22XJH423PD;
 				INFOPLIST_FILE = HealthKitReporter/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (

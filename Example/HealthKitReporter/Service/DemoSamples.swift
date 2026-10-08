@@ -101,7 +101,12 @@ final class DemoSamples {
     }
 
     /// A run with a pause and a resume
-    func workout(_ activity: HKWorkoutActivityType = .running, start: Date, minutes: Double) -> Workout {
+    func workout(
+        _ activity: HKWorkoutActivityType = .running,
+        named name: String = "Running",
+        start: Date,
+        minutes: Double
+    ) -> Workout {
         let end = start.addingTimeInterval(minutes * 60)
         let pause = start.addingTimeInterval(minutes * 20)
         let resume = start.addingTimeInterval(minutes * 25)
@@ -113,12 +118,12 @@ final class DemoSamples {
             sourceRevision: sourceRevision,
             duration: minutes * 60,
             workoutEvents: [
-                event(.pause, at: pause),
-                event(.resume, at: resume)
+                event(.pause, named: "Pause", at: pause),
+                event(.resume, named: "Resume", at: resume)
             ],
             harmonized: Workout.Harmonized(
                 value: Int(activity.rawValue),
-                description: activity.description,
+                description: name,
                 totalEnergyBurned: minutes * 10,
                 totalEnergyBurnedUnit: "kcal",
                 totalDistance: minutes * 160,
@@ -142,12 +147,12 @@ final class DemoSamples {
             harmonized: Correlation.Harmonized(quantitySamples: quantities, categorySamples: [], metadata: metadata)
         )
     }
-    private func event(_ type: HKWorkoutEventType, at date: Date) -> WorkoutEvent {
+    private func event(_ type: HKWorkoutEventType, named name: String, at date: Date) -> WorkoutEvent {
         return WorkoutEvent(
             startTimestamp: date.timeIntervalSince1970,
             endTimestamp: date.timeIntervalSince1970,
             duration: 0,
-            harmonized: WorkoutEvent.Harmonized(value: type.rawValue, description: type.description, metadata: nil)
+            harmonized: WorkoutEvent.Harmonized(value: type.rawValue, description: name, metadata: nil)
         )
     }
 }

@@ -250,9 +250,10 @@ final class SeedingDemos: DemoPerformer {
         if let override = overrides[type] {
             return override
         }
-        guard let original = type.original as? HKQuantityType else {
+        guard let identifier = type.identifier else {
             return nil
         }
+        let original = HKQuantityType(HKQuantityTypeIdentifier(rawValue: identifier))
         return candidateUnits
             .first { original.is(compatibleWith: HKUnit(from: $0)) }
             .flatMap { unit in defaultRanges[unit].map { (unit, $0) } }

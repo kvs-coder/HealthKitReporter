@@ -13,7 +13,7 @@ import HealthKitReporter
 final class LiveQueries {
     private let reporter: HealthKitReporter
     private let queue = DispatchQueue(label: "HealthKitReporter_Example.LiveQueries")
-    private var queries = [DemoRow: Query]()
+    private var queries = [DemoRow: QueryHandle]()
 
     init(reporter: HealthKitReporter) {
         self.reporter = reporter
@@ -22,7 +22,7 @@ final class LiveQueries {
     /// Executes the query when subscribed, replacing a running one of the same row
     func publisher(
         for row: DemoRow,
-        makeQuery: @escaping (PassthroughSubject<String, Error>) throws -> Query
+        makeQuery: @escaping (PassthroughSubject<String, Error>) throws -> QueryHandle
     ) -> AnyPublisher<String, Error> {
         let subject = PassthroughSubject<String, Error>()
         return subject
@@ -39,7 +39,7 @@ final class LiveQueries {
 
     /// Stops every running query and tells how many there were
     func stopAll() -> Int {
-        let running = queue.sync { () -> [Query] in
+        let running = queue.sync { () -> [QueryHandle] in
             defer { queries.removeAll() }
             return Array(queries.values)
         }
@@ -47,8 +47,8 @@ final class LiveQueries {
         return running.count
     }
 
-    private func replace(_ row: DemoRow, with query: Query) {
-        let previous = queue.sync { () -> Query? in
+    private func replace(_ row: DemoRow, with query: QueryHandle) {
+        let previous = queue.sync { () -> QueryHandle? in
             defer { queries[row] = query }
             return queries[row]
         }

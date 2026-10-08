@@ -54,7 +54,7 @@ extension HealthKitReporter {
             StateOfMindType.allCases,
             ScoredAssessmentType.allCases
         ]
-        return types.joined().filter { $0.original != nil }
+        return types.joined().filter { $0.identifier != nil }
     }
 
     /// Read access: every sample type, characteristics, activity summaries and,
@@ -67,10 +67,10 @@ extension HealthKitReporter {
         let includingHealthRecords = false
         #endif
         var types: [ObjectType] = demoSampleTypes
-        types += CharacteristicType.allCases.filter { $0.original != nil } as [ObjectType]
-        types += ActivitySummaryType.allCases.filter { $0.original != nil } as [ObjectType]
+        types += CharacteristicType.allCases.filter { $0.identifier != nil } as [ObjectType]
+        types += ActivitySummaryType.allCases.filter { $0.identifier != nil } as [ObjectType]
         if includingHealthRecords {
-            types += ClinicalType.allCases.filter { $0.original != nil } as [ObjectType]
+            types += ClinicalType.allCases.filter { $0.identifier != nil } as [ObjectType]
         }
         return types
     }
@@ -81,10 +81,10 @@ extension HealthKitReporter {
     }
 
     var demoQuantityTypes: [QuantityType] {
-        return QuantityType.allCases.filter { $0.original != nil }
+        return QuantityType.allCases.filter { $0.identifier != nil }
     }
     var demoCategoryTypes: [CategoryType] {
-        return CategoryType.allCases.filter { $0.original != nil }
+        return CategoryType.allCases.filter { $0.identifier != nil }
     }
 }
 // MARK: - Counting
@@ -93,7 +93,7 @@ extension HealthKitReporter {
     func countEveryType<Type, Item>(
         _ types: [Type],
         completion: @escaping DemoCompletion,
-        makeQuery: (Type, @escaping ([Item]) -> Void) throws -> Query
+        makeQuery: (Type, @escaping ([Item]) -> Void) throws -> QueryHandle
     ) {
         let group = DispatchGroup()
         let lock = NSLock()
