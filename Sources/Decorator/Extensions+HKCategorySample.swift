@@ -33,7 +33,9 @@ extension HKCategorySample: Harmonizable {
              .persistentIntermenstrualBleeding,
              .prolongedMenstrualPeriods,
              .irregularMenstrualCycles,
-             .infrequentMenstrualCycles:
+             .infrequentMenstrualCycles,
+             .sleepApneaEvent,
+             .hypertensionEvent:
             if let value = HKCategoryValue(rawValue: value) {
                 description = value.description
                 detail = value.detail
@@ -188,6 +190,18 @@ extension HKCategorySample: Harmonizable {
         case .appleWalkingSteadinessEvent:
             if #available(iOS 15.0, *) {
                 if let value = HKCategoryValueAppleWalkingSteadinessEvent(rawValue: value) {
+                    description = value.description
+                    detail = value.detail
+                }
+            } else {
+                throw HealthKitError.notAvailable(
+                    "\(type) is not available for the current iOS"
+                )
+            }
+        case .bleedingAfterPregnancy,
+             .bleedingDuringPregnancy:
+            if #available(iOS 18.0, *) {
+                if let value = HKCategoryValueVaginalBleeding(rawValue: value) {
                     description = value.description
                     detail = value.detail
                 }

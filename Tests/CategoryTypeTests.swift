@@ -31,6 +31,18 @@ class CategoryTypeTests: XCTestCase {
         let sut = CategoryType.audioExposureEvent
         XCTAssertEqual(sut.identifier, CategoryType.environmentalAudioExposureEvent.identifier)
     }
+    func testMakeFromIdentifiersAddedSinceIOS18() throws {
+        let identifiers: [String: CategoryType] = [
+            "HKCategoryTypeIdentifierBleedingAfterPregnancy": .bleedingAfterPregnancy,
+            "HKCategoryTypeIdentifierBleedingDuringPregnancy": .bleedingDuringPregnancy,
+            "HKCategoryTypeIdentifierSleepApneaEvent": .sleepApneaEvent,
+            "HKCategoryTypeIdentifierHypertensionEvent": .hypertensionEvent
+        ]
+        for (identifier, sut) in identifiers {
+            XCTAssertEqual(try CategoryType.make(from: identifier), sut, identifier)
+            XCTAssertEqual(sut.identifier, identifier)
+        }
+    }
     func testMakeFromInvalidIdentifier() throws {
         XCTAssertThrowsError(try CategoryType.make(from: "invalid")) { error in
             guard case HealthKitError.invalidIdentifier = error else {

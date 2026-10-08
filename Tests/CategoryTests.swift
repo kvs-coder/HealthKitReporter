@@ -213,7 +213,7 @@ class CategoryTests: XCTestCase {
 extension CategoryTests {
     /// Valid sample values for types whose value enum has no case at 0
     private var values: [CategoryType: Int] {
-        return [
+        var values: [CategoryType: Int] = [
             .menstrualFlow: HKCategoryValueMenstrualFlow.unspecified.rawValue,
             .ovulationTestResult: HKCategoryValueOvulationTestResult.negative.rawValue,
             .cervicalMucusQuality: HKCategoryValueCervicalMucusQuality.dry.rawValue,
@@ -227,6 +227,11 @@ extension CategoryTests {
             .progesteroneTestResult: HKCategoryValueProgesteroneTestResult.negative.rawValue,
             .appleWalkingSteadinessEvent: HKCategoryValueAppleWalkingSteadinessEvent.initialLow.rawValue
         ]
+        if #available(iOS 18.0, *) {
+            values[.bleedingAfterPregnancy] = HKCategoryValueVaginalBleeding.light.rawValue
+            values[.bleedingDuringPregnancy] = HKCategoryValueVaginalBleeding.heavy.rawValue
+        }
+        return values
     }
 
     func testCollectResults() throws {

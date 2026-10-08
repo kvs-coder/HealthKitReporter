@@ -77,6 +77,10 @@ public enum CategoryType: Int, CaseIterable, SampleType {
     case irregularMenstrualCycles
     case infrequentMenstrualCycles
     case appleWalkingSteadinessEvent
+    case bleedingAfterPregnancy
+    case bleedingDuringPregnancy
+    case sleepApneaEvent
+    case hypertensionEvent
 
     public var identifier: String? {
         return original?.identifier
@@ -333,6 +337,22 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         case .appleWalkingSteadinessEvent:
             if #available(iOS 15.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .appleWalkingSteadinessEvent)
+            }
+        case .bleedingAfterPregnancy:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.categoryType(forIdentifier: .bleedingAfterPregnancy)
+            }
+        case .bleedingDuringPregnancy:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.categoryType(forIdentifier: .bleedingDuringPregnancy)
+            }
+        case .sleepApneaEvent:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.categoryType(forIdentifier: .sleepApneaEvent)
+            }
+        case .hypertensionEvent:
+            if #available(iOS 26.2, *) {
+                return HKObjectType.categoryType(forIdentifier: .hypertensionEvent)
             }
         }
         return nil
