@@ -115,7 +115,7 @@ extension WorkoutEventTests {
             .motionPaused: "Motion paused",
             .motionResumed: "Motion Resumed",
             .segment: "Segment",
-            .pauseOrResumeRequest: "Pause on resume request"
+            .pauseOrResumeRequest: "Pause or resume request"
         ]
         for (sut, description) in descriptions {
             XCTAssertEqual(sut.description, description)

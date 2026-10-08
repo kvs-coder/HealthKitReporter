@@ -25,7 +25,7 @@ extension HKWorkoutEventType: @retroactive CustomStringConvertible {
         case .segment:
             return "Segment"
         case .pauseOrResumeRequest:
-            return "Pause on resume request"
+            return "Pause or resume request"
         @unknown default:
             return "Unknown"
         }

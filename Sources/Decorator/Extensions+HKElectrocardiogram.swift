@@ -43,7 +43,7 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
             let quantitiy = quantity(for: .appleWatchSimilarToLeadI)
         else {
             throw HealthKitError.invalidValue(
-                "Invalid averageHeartRate value for HKElectrocardiogram"
+                "No Apple Watch lead I voltage in HKElectrocardiogram.VoltageMeasurement"
             )
         }
         let unit = HKUnit.volt()
@@ -58,7 +58,7 @@ extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertib
         case .notSet:
             return "na"
         case .sinusRhythm:
-            return "Sinus rhytm"
+            return "Sinus rhythm"
         case .atrialFibrillation:
             return "Atrial fibrillation"
         case .inconclusiveLowHeartRate:

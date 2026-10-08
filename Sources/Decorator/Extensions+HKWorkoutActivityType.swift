@@ -75,7 +75,7 @@ extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
         case .play:
             return "Play"
         case .preparationAndRecovery:
-            return "Prepare and Recovery"
+            return "Preparation and Recovery"
         case .racquetball:
             return "Racquetball"
         case .rowing:
@@ -157,7 +157,7 @@ extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
         case .mixedCardio:
             return "Mixed Cardio"
         case .handCycling:
-            return "Handy Cycling"
+            return "Hand Cycling"
         case .discSports:
             return "Disc Sports"
         case .fitnessGaming:
@@ -167,7 +167,7 @@ extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
         case .socialDance:
             return "Social Dance"
         case .pickleball:
-            return "Pickerball"
+            return "Pickleball"
         case .cooldown:
             return "Cooldown"
         case .swimBikeRun:

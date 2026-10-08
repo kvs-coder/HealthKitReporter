@@ -373,6 +373,10 @@ extension WorkoutTests {
         XCTAssertEqual(Set(described).count, described.count)
         XCTAssertEqual(HKWorkoutActivityType.running.description, "Running")
         XCTAssertEqual(HKWorkoutActivityType.other.description, "Other")
+        XCTAssertEqual(HKWorkoutActivityType.pickleball.description, "Pickleball")
+        XCTAssertEqual(HKWorkoutActivityType.handCycling.description, "Hand Cycling")
+        XCTAssertEqual(HKWorkoutActivityType.preparationAndRecovery.description, "Preparation and Recovery")
+        XCTAssertEqual(HKWorkoutEventType.pauseOrResumeRequest.description, "Pause or resume request")
         XCTAssertEqual(HKWorkoutActivityType(rawValue: 2999)?.description, "Unknown Workout")
     }
 

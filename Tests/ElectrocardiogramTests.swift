@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 @available(iOS 14.0, *)
@@ -57,7 +58,7 @@ class ElectrocardiogramTests: XCTestCase {
                     ]
                 ],
                 "averageHeartRate" : 61,
-                "classification" : "Sinus rhytm",
+                "classification" : "Sinus rhythm",
                 "samplingFrequencyUnit" : "Hz",
                 "count" : 2,
                 "averageHeartRateUnit" : "count/min",
@@ -98,7 +99,7 @@ class ElectrocardiogramTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.count, 2)
         XCTAssertEqual(sut.harmonized.voltageMeasurements.count, 2)
         XCTAssertEqual(sut.harmonized.averageHeartRate, 61)
-        XCTAssertEqual(sut.harmonized.classification, "Sinus rhytm")
+        XCTAssertEqual(sut.harmonized.classification, "Sinus rhythm")
         XCTAssertEqual(sut.harmonized.samplingFrequencyUnit, "Hz")
         XCTAssertEqual(sut.harmonized.averageHeartRateUnit, "count/min")
         XCTAssertEqual(sut.harmonized.symptomsStatus, "na")
@@ -141,7 +142,7 @@ class ElectrocardiogramTests: XCTestCase {
             "startTimestamp" : 1650213462.810982,
             "harmonized" : [
                 "averageHeartRate" : 61,
-                "classification" : "Sinus rhytm",
+                "classification" : "Sinus rhythm",
                 "samplingFrequencyUnit" : "Hz",
                 "count" : 2,
                 "averageHeartRateUnit" : "count/min",
@@ -175,7 +176,7 @@ class ElectrocardiogramTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.voltageMeasurements.count, 0)
         XCTAssertEqual(sut.harmonized.count, 2)
         XCTAssertEqual(sut.harmonized.averageHeartRate, 61)
-        XCTAssertEqual(sut.harmonized.classification, "Sinus rhytm")
+        XCTAssertEqual(sut.harmonized.classification, "Sinus rhythm")
         XCTAssertEqual(sut.harmonized.samplingFrequencyUnit, "Hz")
         XCTAssertEqual(sut.harmonized.averageHeartRateUnit, "count/min")
         XCTAssertEqual(sut.harmonized.symptomsStatus, "na")
@@ -277,5 +278,8 @@ class ElectrocardiogramTests: XCTestCase {
         var dictionary = dictionary
         dictionary["harmonized"] = harmonized
         assertInvalidValue(try Electrocardiogram.make(from: dictionary))
+    }
+    func testClassificationDescriptions() throws {
+        XCTAssertEqual(HKElectrocardiogram.Classification.sinusRhythm.description, "Sinus rhythm")
     }
 }
