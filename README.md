@@ -143,6 +143,8 @@ Here is a sample response for steps:
 }
 ```
 
+Timestamps are seconds since 1970. JSON has no infinity or NaN, so `encoded()` writes non-finite numbers as the strings `"Infinity"`, `"-Infinity"` and `"NaN"`, which Dart's `double.parse` and JavaScript's `Number` accept.
+
 ### Writing Data
 
 ***NOTE:*** *Clinical Records are read only, Health Kit does not allow writing any data to Clinical Records.*
