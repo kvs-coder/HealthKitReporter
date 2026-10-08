@@ -47,6 +47,18 @@ class ObjectTypeTests: XCTestCase {
         try assertAllCases(WorkoutType.self)
         try assertSampleTypeIdentifiers(WorkoutType.self)
     }
+    func testWellbeingAndMedicationTypesAllCases() throws {
+        try assertAllCases(AudiogramType.self)
+        try assertSampleTypeIdentifiers(AudiogramType.self)
+        guard #available(iOS 26.0, watchOS 26.0, *) else {
+            throw XCTSkip("State of mind, assessments and medications require iOS 26 to test together")
+        }
+        try assertAllCases(StateOfMindType.self)
+        try assertSampleTypeIdentifiers(StateOfMindType.self)
+        try assertAllCases(ScoredAssessmentType.self)
+        try assertSampleTypeIdentifiers(ScoredAssessmentType.self)
+        try assertAllCases(MedicationType.self)
+    }
     func testQuantityTypeMakeFromIdentifiersAddedSinceIOS16() throws {
         let identifiers: [String: QuantityType] = [
             "HKQuantityTypeIdentifierEnvironmentalSoundReduction": .environmentalSoundReduction,

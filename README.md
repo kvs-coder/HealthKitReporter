@@ -302,6 +302,40 @@ let query = reporter.reader.verifiableClinicalRecordQuery(
 reporter.manager.executeQuery(query)
 ```
 
+### Hearing, mental wellbeing and medications
+
+Audiograms (Hz / dBHL), State of Mind (iOS 18), GAD-7 / PHQ-9 assessments (iOS 18) and medications (iOS 26) have their own types, payloads and queries:
+
+```swift
+let audiograms = try reporter.reader.audiogramQuery { audiograms, error in
+    audiograms.forEach { print($0.harmonized.sensitivityPoints.map(\.frequency)) }
+}
+let moods = try reporter.reader.stateOfMindQuery { states, error in
+    states.forEach { print($0.harmonized.valence, $0.harmonized.labels) }
+}
+let anxiety = try reporter.reader.scoredAssessmentQuery(type: .gad7) { assessments, error in
+    assessments.forEach { print($0.harmonized.score ?? 0, $0.harmonized.risk ?? 0) }
+}
+[audiograms, moods, anxiety].forEach(reporter.manager.executeQuery)
+```
+
+Audiograms, states of mind and assessments can be saved with `writer.save(sample:completion:)`; HealthKit computes the valence classification, score and risk. Medications are read-only and need per-object authorization:
+
+```swift
+reporter.manager.requestPerObjectReadAuthorization(for: MedicationType.userAnnotatedMedication) { success, _ in
+    let medications = reporter.reader.userAnnotatedMedicationQuery { medications, error in
+        for medication in medications {
+            // the concept identifier narrows the dose events to this medication
+            let doses = try? reporter.reader.medicationDoseEventQuery(
+                medicationConceptIdentifier: medication.medication.identifier
+            ) { doses, _ in print(medication.medication.displayText, doses.count) }
+            doses.map(reporter.manager.executeQuery)
+        }
+    }
+    reporter.manager.executeQuery(medications)
+}
+```
+
 ### Vision prescriptions
 
 Vision prescriptions (iOS 16+) need per-object read authorization: the user picks which prescriptions the app may read.

@@ -252,6 +252,58 @@ public typealias ClinicalRecordResultsHandler = (
 #endif
 /**
  - Parameters:
+    - audiograms: audiogram sample array
+    - error: error (optional)
+ */
+public typealias AudiogramResultsHandler = (
+    _ audiograms: [Audiogram],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - statesOfMind: state of mind sample array
+    - error: error (optional)
+ */
+@available(iOS 18.0, watchOS 11.0, *)
+public typealias StateOfMindResultsHandler = (
+    _ statesOfMind: [StateOfMind],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - assessments: GAD-7 or PHQ-9 sample array
+    - error: error (optional)
+ */
+@available(iOS 18.0, watchOS 11.0, *)
+public typealias ScoredAssessmentResultsHandler = (
+    _ assessments: [ScoredAssessment],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - doseEvents: medication dose event sample array
+    - error: error (optional)
+ */
+@available(iOS 26.0, watchOS 26.0, *)
+public typealias MedicationDoseEventResultsHandler = (
+    _ doseEvents: [MedicationDoseEvent],
+    _ error: Error?
+) -> Void
+/// **HKUserAnnotatedMedicationQuery** typealias
+@available(iOS 26.0, watchOS 26.0, *)
+public typealias UserAnnotatedMedicationQuery = HKUserAnnotatedMedicationQuery
+/**
+ - Parameters:
+    - medications: every matching medication, delivered once
+    - error: error (optional)
+ */
+@available(iOS 26.0, watchOS 26.0, *)
+public typealias UserAnnotatedMedicationResultsHandler = (
+    _ medications: [UserAnnotatedMedication],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - prescriptions: vision prescription sample array
     - error: error (optional)
  */

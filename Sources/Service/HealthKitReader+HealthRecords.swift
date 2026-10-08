@@ -31,25 +31,14 @@ extension HealthKitReader {
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping VisionPrescriptionResultsHandler
     ) throws -> SampleQuery {
-        let type = VisionPrescriptionType.visionPrescription
-        guard let sampleType = type.original as? HKSampleType else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
-        }
-        return HKSampleQuery(
-            sampleType: sampleType,
+        return try typedSampleQuery(
+            type: VisionPrescriptionType.visionPrescription,
             predicate: predicate,
+            sortDescriptors: sortDescriptors,
             limit: limit,
-            sortDescriptors: sortDescriptors
-        ) { (_, data, error) in
-            guard
-                error == nil,
-                let results = data
-            else {
-                resultsHandler([], error)
-                return
-            }
-            resultsHandler(VisionPrescription.collect(results: results), nil)
-        }
+            collect: VisionPrescription.collect,
+            resultsHandler: resultsHandler
+        )
     }
     #if os(iOS)
     /**
@@ -75,24 +64,14 @@ extension HealthKitReader {
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping ClinicalRecordResultsHandler
     ) throws -> SampleQuery {
-        guard let sampleType = type.original as? HKSampleType else {
-            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
-        }
-        return HKSampleQuery(
-            sampleType: sampleType,
+        return try typedSampleQuery(
+            type: type,
             predicate: predicate,
+            sortDescriptors: sortDescriptors,
             limit: limit,
-            sortDescriptors: sortDescriptors
-        ) { (_, data, error) in
-            guard
-                error == nil,
-                let results = data
-            else {
-                resultsHandler([], error)
-                return
-            }
-            resultsHandler(ClinicalRecord.collect(results: results), nil)
-        }
+            collect: ClinicalRecord.collect,
+            resultsHandler: resultsHandler
+        )
     }
     /**
      Queries verifiable clinical records, such as SMART Health Cards.

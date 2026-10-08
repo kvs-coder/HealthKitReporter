@@ -280,16 +280,6 @@ extension VisionPrescriptionTests {
         }
     }
 
-    private func save(_ sample: VisionPrescription) throws -> Error? {
-        let expectation = expectation(description: "completion")
-        var saveError: Error?
-        HealthKitReporter().writer.save(sample: sample) { _, error in
-            saveError = error
-            expectation.fulfill()
-        }
-        wait(for: [expectation], timeout: 30)
-        return saveError
-    }
     private func assertRightEye(
         _ rightEye: VisionPrescription.LensSpecification?,
         file: StaticString = #filePath,

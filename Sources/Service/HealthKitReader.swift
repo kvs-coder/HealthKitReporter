@@ -248,4 +248,32 @@ public class HealthKitReader {
         }
         return query
     }
+    /// Sample query whose results are converted with **collect**; the shared body of the typed queries
+    func typedSampleQuery<Result>( // swiftlint:disable:this function_parameter_count
+        type: ObjectType,
+        predicate: NSPredicate?,
+        sortDescriptors: [NSSortDescriptor],
+        limit: Int,
+        collect: @escaping ([HKSample]) -> [Result],
+        resultsHandler: @escaping ([Result], Error?) -> Void
+    ) throws -> SampleQuery {
+        guard let sampleType = type.original as? HKSampleType else {
+            throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
+        }
+        return HKSampleQuery(
+            sampleType: sampleType,
+            predicate: predicate,
+            limit: limit,
+            sortDescriptors: sortDescriptors
+        ) { (_, data, error) in
+            guard
+                error == nil,
+                let results = data
+            else {
+                resultsHandler([], error)
+                return
+            }
+            resultsHandler(collect(results), nil)
+        }
+    }
 }

@@ -123,14 +123,16 @@ public class HealthKitManager {
     }
     #endif
     /**
-     Asks the user which objects of a per-object authorization type (vision prescriptions) the app may read.
-     - Parameter type: **SampleType** type, e.g. **VisionPrescriptionType.visionPrescription**
+     Asks the user which objects of a per-object authorization type (vision prescriptions, medications)
+     the app may read.
+     - Parameter type: **ObjectType** type, e.g. **VisionPrescriptionType.visionPrescription**
+     or **MedicationType.userAnnotatedMedication**
      - Parameter predicate: **NSPredicate** narrowing the objects offered (optional). nil by default
      - Parameter completion: block notifies about operation status
      */
     @available(iOS 16.0, watchOS 9.0, *)
     public func requestPerObjectReadAuthorization(
-        for type: SampleType,
+        for type: ObjectType,
         predicate: NSPredicate? = nil,
         completion: @escaping StatusCompletionBlock
     ) {

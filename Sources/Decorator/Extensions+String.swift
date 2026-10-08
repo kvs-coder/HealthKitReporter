@@ -20,7 +20,11 @@ private let objectTypesByIdentifier: [String: ObjectType] = {
         WorkoutType.allCases,
         ElectrocardiogramType.allCases,
         ClinicalType.allCases,
-        VisionPrescriptionType.allCases
+        VisionPrescriptionType.allCases,
+        AudiogramType.allCases,
+        StateOfMindType.allCases,
+        ScoredAssessmentType.allCases,
+        MedicationType.allCases
     ]
     return Dictionary(
         types.joined().compactMap { type in

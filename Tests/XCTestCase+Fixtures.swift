@@ -206,3 +206,17 @@ extension XCTestCase {
         }
     }
 }
+// MARK: - Writing
+extension XCTestCase {
+    /// Saves the sample through the public writer and returns the reported error
+    func save(_ sample: Sample) throws -> Error? {
+        let expectation = expectation(description: "completion")
+        var saveError: Error?
+        HealthKitReporter().writer.save(sample: sample) { _, error in
+            saveError = error
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 30)
+        return saveError
+    }
+}

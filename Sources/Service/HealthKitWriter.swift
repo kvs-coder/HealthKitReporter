@@ -106,8 +106,8 @@ public class HealthKitWriter {
     }
     /**
      Deletes the previosly created sample.
-     Supports **Quantity**, **Category**, **Workout**, **Correlation**, **VisionPrescription**
-     and **CDADocument**;
+     Supports **Quantity**, **Category**, **Workout**, **Correlation**, **Audiogram**, **VisionPrescription**,
+     **StateOfMind**, **ScoredAssessment** and **CDADocument**;
      any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
@@ -145,8 +145,8 @@ public class HealthKitWriter {
     }
     /**
      Saves the created sample.
-     Supports **Quantity**, **Category**, **Workout**, **Correlation**, **VisionPrescription**
-     and **CDADocument**;
+     Supports **Quantity**, **Category**, **Workout**, **Correlation**, **Audiogram**, **VisionPrescription**,
+     **StateOfMind**, **ScoredAssessment** and **CDADocument**;
      any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
@@ -166,6 +166,14 @@ public class HealthKitWriter {
         if #available(iOS 16.0, watchOS 9.0, *), let prescription = sample as? VisionPrescription {
             return try prescription.asOriginal()
         }
+        if #available(iOS 18.0, watchOS 11.0, *) {
+            if let stateOfMind = sample as? StateOfMind {
+                return try stateOfMind.asOriginal()
+            }
+            if let assessment = sample as? ScoredAssessment {
+                return try assessment.asOriginal()
+            }
+        }
         #if os(iOS)
         if let document = sample as? CDADocument {
             return try document.asOriginal()
@@ -180,6 +188,8 @@ public class HealthKitWriter {
             return try workout.asOriginal()
         case let correlation as Correlation:
             return try correlation.asOriginal()
+        case let audiogram as Audiogram:
+            return try audiogram.asOriginal()
         default:
             throw HealthKitError.invalidType(
                 "\(type(of: sample)) can not be represented as HKSample"
