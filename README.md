@@ -54,14 +54,14 @@ Every property is responsible for an appropriate part of HealthKit framework. Ba
 
 If you want to read, write data or observe data changes, you always need to be sure that the data types are authorized to be read/written/observed. In that case manager has authorization method with completion block telling about the presentation of the authorization window. Notice that Apple Health Kit will show this window only once during the whole time app is installed on the device, in this case if some types were denied to be read or written, user should manually allow this in Apple Health App.
 
-In examples below every operation is hapenning iside authorization block. It is recommended to do so, because if new type will be added, there will be thrown a permission exception. If you are sure that no new types will appear, you can call operations outside authorization block in your app, only if the type's data reading/writing permissions were granted.
+In examples below every operation is happening inside the authorization block. It is recommended to do so, because if new type will be added, there will be thrown a permission exception. If you are sure that no new types will appear, you can call operations outside authorization block in your app, only if the type's data reading/writing permissions were granted.
 
 ### Reading Data
 Create a <i>HealthKitReporter</i> instance.
 
 Authorize desired types to read, like step count.
 
-If authorization was successfull (the authorization window was shown) call a quantity query with type step count; it returns a **QueryHandle**.
+If authorization was successful (the authorization window was shown) call a quantity query with type step count; it returns a **QueryHandle**.
 
 Use reporter's **manager's** _executeQuery_ to execute the query. (Or _stopQuery_ to stop)
 
@@ -206,7 +206,7 @@ Saving checks the payload first, too: a sample that ends before it starts, a cat
 
 You may call manager's <i>preferredUnits(for: )</i> function to pass units (for <b>Quantity Types</b>).
 
-If authorization was successfull (the authorization window was shown) call save method with type step count.
+If authorization was successful (the authorization window was shown) call save method with type step count.
 
 ```swift
 guard HealthKitReporter.isHealthDataAvailable else { return }
@@ -476,7 +476,7 @@ Authorize desired types to read/write, like step count and sleep analysis.
 
 You might create an App which will be called every time by HealthKit, and receive notifications, that some data was changed in HealthKit depending on frequency. But keep in mind that sometimes the desired frequency you set cannot be fulfilled by HealthKit.
 
-Call the observation query method inside your AppDelegate's method. This will let Apple Health to send events even if the app is in background or wake up your app,  if it was previosly put into "Not Running" state and execute the code provided inside **observerQuery** update handler.
+Call the observation query method inside your AppDelegate's method. This will let Apple Health to send events even if the app is in background or wake up your app,  if it was previously put into "Not Running" state and execute the code provided inside **observerQuery** update handler.
 
 Warning: to run **observerQuery** when the app is killed by the system, provide an additional capability **Background Mode** and select **Background fetch**
 
@@ -535,14 +535,24 @@ func application(
 ## Example
 
 To run the example project, clone the repo and open `Example/HealthKitReporter.xcodeproj`.
-Xcode resolves the library from the repository root as a local Swift package. Select your development team, since HealthKit needs the signed entitlements, even on the simulator.
+Xcode resolves the library from the repository root as a local Swift package. Select your development team, since HealthKit needs the signed entitlements, even on the simulator. Without a team, the simulator also accepts an ad-hoc signed build: `xcodebuild build -project Example/HealthKitReporter.xcodeproj -scheme HealthKitReporter_Example -destination "platform=iOS Simulator,name=iPhone 17" CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=`.
 
 The app lists every public method of the reader, writer, observer and manager, grouped by area. Tap a row to run it; its result, live updates or error appear in the row. Live queries (observers, anchored updates, statistics collections) keep updating until **Stop live queries**.
 
-- **Authorization** requests every type the library supports: read access for all sample types, characteristics, activity summaries and (where supported) clinical records; write access for every type HealthKit lets apps write. Vision prescriptions and medications use their own per-object authorization rows.
+- **Authorization** requests every type the library supports: read access for all sample types, characteristics and activity summaries; write access for every type whose `isWritable` is true. Clinical records have their own row, since they start Health's records flow, which needs an Apple Account; vision prescriptions and medications use per-object authorization rows.
 - **Simulator data:** on the first launch in the simulator the app authorizes and then seeds 7 days of plausible samples for every writable type, through the library's own writer. Seeded samples carry an `HKMetadataKeyExternalUUID` starting with `hkr-seed-`; seeding runs once per day and type, and **Delete seeded data** removes only data this app wrote.
 - **Read-only data** (ECGs, characteristics, activity summaries, clinical records, medications) can't be written by apps; heartbeat series and routes come from their own write demos, not from seeding. On the simulator, enter characteristics in the Health app's profile, add sample clinical records under Health › Browse › Health Records, and pair an Apple Watch simulator for watch-recorded data; on a device, record them with Apple Watch. Their rows show an empty result until then.
 - **Watch companion:** **Start a run on the watch** calls `startWatchApp`, which launches the embedded watch app (`HealthKitReporterWatch`) on a paired Apple Watch or watch simulator. It runs the workout live and saves it on End; the **Workouts** row then shows it.
+
+## Migrating to 4.0.0
+
+4.0.0 removes HealthKit types from the public API and fixes several wrong outputs, so it changes code and JSON:
+
+- queries return a `QueryHandle`, anchors are a `Codable` `Anchor`, and every `Query` typealias is gone;
+- `save` reports the stored sample's `uuid`; `delete`, `addQuantity` / `addCategory` and `unrelateWorkoutEffort` act on the stored sample with the payload's `uuid`;
+- metadata encodes as a flat JSON object, vision prescription dates are seconds, and non-finite numbers are `"Infinity"`, `"-Infinity"` and `"NaN"`.
+
+Every removed or changed symbol, with its replacement, is listed in [ADR 0004](docs/adr/0004-contract-changes-for-the-next-major-release.md).
 
 ## Requirements
 
@@ -557,7 +567,7 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.1.0") // x-release-please-version
+    .package(url: "https://github.com/kvs-coder/HealthKitReporter.git", from: "3.1.0") // x-release-please-version
 ]
 ```
 
@@ -586,5 +596,5 @@ Victor Kachalov, victorkachalov@gmail.com
 
 HealthKitReporter is available under the MIT license. See the LICENSE file for more info.
 
-## Sponsorhip
+## Sponsorship
 If you think that my repo helped you to solve the issues you struggle with, please don't be shy and sponsor :-)
