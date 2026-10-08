@@ -16,7 +16,7 @@ extension HKActivityMoveMode: @retroactive CustomStringConvertible {
         case .appleMoveTime:
             return "Apple move time"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

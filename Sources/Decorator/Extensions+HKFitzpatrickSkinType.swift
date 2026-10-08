@@ -25,7 +25,7 @@ extension HKFitzpatrickSkinType: @retroactive CustomStringConvertible {
         case .VI:
             return "VI"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

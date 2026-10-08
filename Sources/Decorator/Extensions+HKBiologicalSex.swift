@@ -19,7 +19,7 @@ extension HKBiologicalSex: @retroactive CustomStringConvertible {
         case .other:
             return "Other"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

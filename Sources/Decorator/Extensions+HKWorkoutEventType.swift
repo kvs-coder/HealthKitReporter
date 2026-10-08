@@ -27,7 +27,7 @@ extension HKWorkoutEventType: @retroactive CustomStringConvertible {
         case .pauseOrResumeRequest:
             return "Pause on resume request"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

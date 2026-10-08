@@ -29,7 +29,7 @@ extension HKBloodType: @retroactive CustomStringConvertible {
         case .oNegative:
             return "O-"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

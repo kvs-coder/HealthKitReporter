@@ -18,7 +18,7 @@ extension HKWheelchairUse {
         case .yes:
             return "Yes"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }

@@ -75,7 +75,7 @@ extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertib
         case .unrecognized:
             return "Unrecognized"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }
@@ -91,7 +91,7 @@ extension HKElectrocardiogram.SymptomsStatus: @retroactive CustomStringConvertib
         case .present:
             return "Present"
         @unknown default:
-            fatalError()
+            return "Unknown"
         }
     }
 }
