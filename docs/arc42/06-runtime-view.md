@@ -1,0 +1,108 @@
+# 6. Runtime View
+
+## 6.1 Authorization
+
+```plantuml
+@startuml
+participant Consumer
+participant HealthKitManager as M
+participant HKHealthStore as S
+Consumer -> M : requestAuthorization(toRead:toWrite:completion:)
+M -> M : map ObjectType → HKObjectType (drop nil / unavailable)
+M -> S : requestAuthorization(toShare:read:)
+S --> Consumer : completion(success, error)
+@enduml
+```
+
+HealthKit never reveals whether *read* access was granted; `authorizationRequestStatus` only tells whether the sheet
+would be shown. `HealthKitWriter.isAuthorizedToWrite(type:)` reports write access.
+
+## 6.2 Read — build, then execute
+
+```plantuml
+@startuml
+participant Consumer
+participant HealthKitReader as R
+participant HealthKitManager as M
+participant HKHealthStore as S
+participant "Quantity.collect" as F
+Consumer -> R : quantityQuery(type:unit:predicate:resultsHandler:)
+R -> R : type.original as? HKQuantityType\nelse throw invalidType
+R -> R : compatibleUnit(from: unit)\nelse throw invalidValue
+R --> Consumer : SampleQuery (not running)
+Consumer -> M : executeQuery(query)
+M -> S : execute(query)
+S -> R : results / error (background queue)
+alt error or no data
+  R --> Consumer : resultsHandler([], error)
+else
+  R -> F : collect(results:unit:)
+  F -> F : per sample: harmonize()\nskip samples that fail
+  R --> Consumer : resultsHandler([Quantity], nil)
+end
+@enduml
+```
+
+The same shape applies to category, workout, correlation, statistics, anchored and series queries. Input errors
+throw synchronously at build time; HealthKit errors arrive in the handler.
+
+## 6.3 Write
+
+1. The consumer builds a payload (memberwise `init` or `make(from:)` from a Flutter dictionary).
+2. `HealthKitWriter.save(sample:)` / `addQuantity(...)` calls `asOriginal()`, which resolves the identifier, parses the
+   unit and metadata, and throws `HealthKitError.invalidType` / `invalidValue` on bad input.
+3. The resulting `HKSample` is saved to the store; `StatusCompletionBlock(success, error)` is always called.
+
+Workouts (ADR 0003) use `saveWorkout(_:samples:route:completion:)`: `HKWorkoutBuilder` begins collection, adds
+samples, ends collection, finishes the workout, then an `HKWorkoutRouteBuilder` attaches the route; the handler
+receives the saved `Workout` payload.
+
+## 6.4 Observe and background delivery
+
+```plantuml
+@startuml
+participant Consumer
+participant HealthKitObserver as O
+participant HealthKitManager as M
+participant HKHealthStore as S
+Consumer -> O : observerQuery(type:updateHandler:)
+O --> Consumer : ObserverQuery
+Consumer -> M : executeQuery(query)
+Consumer -> O : enableBackgroundDelivery(type:frequency:)
+O -> S : enableBackgroundDelivery
+... data changes in Health ...
+S -> O : (query, completion, error)
+O --> Consumer : updateHandler(query, identifier, error, completion)
+Consumer -> Consumer : fetch changes (e.g. anchored query)
+Consumer -> S : completion()
+@enduml
+```
+
+The `ObserverCompletionUpdateHandler` variant hands HealthKit's completion to the consumer, who must call it after
+processing — also on the error path — or HealthKit throttles background delivery. The plain `ObserverUpdateHandler`
+variant calls it immediately after the handler returns.
+
+## 6.5 Multi-step retrieval (ECG with voltages)
+
+```plantuml
+@startuml
+participant Consumer
+participant ElectrocardiogramRetriever as E
+participant SampleResultsCollector as C
+participant HKHealthStore as S
+Consumer -> S : execute(HKSampleQuery for ECGs)
+S -> E : [HKElectrocardiogram]
+E -> C : init(count: n)
+loop each sample i
+  E -> C : enter()
+  E -> S : execute(HKElectrocardiogramQuery(sample))
+  S -> E : .measurement ... .done | .error
+  E -> C : finish(i, ecg) | fail(i, error)
+end
+C --> Consumer : notify → ([Electrocardiogram] in sample order, first error)
+@enduml
+```
+
+`SampleResultsCollector` serializes writes from concurrent HealthKit callbacks on a private queue, keeps results in
+sample order and reports the first failure. Heartbeat series and workout routes use the same collector via
+`SeriesSampleRetriever`.
