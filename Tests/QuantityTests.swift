@@ -1,6 +1,6 @@
 //
 //  QuantityTests.swift
-//  
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 03.09.21.
 //
@@ -240,13 +240,12 @@ extension QuantityTests {
         ].map { HKUnit(from: $0) }
     }
 
+    /// Insulin delivery is the only type HealthKit requires metadata for
     private func metadata(for type: QuantityType) -> [String: Any]? {
-        switch type {
-        case .insulinDelivery:
-            return [HKMetadataKeyInsulinDeliveryReason: HKInsulinDeliveryReason.basal.rawValue]
-        default:
+        guard type == .insulinDelivery else {
             return nil
         }
+        return [HKMetadataKeyInsulinDeliveryReason: HKInsulinDeliveryReason.basal.rawValue]
     }
 }
 

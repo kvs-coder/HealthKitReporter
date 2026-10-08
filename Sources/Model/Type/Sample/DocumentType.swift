@@ -17,7 +17,7 @@ public enum DocumentType: Int, CaseIterable, SampleType {
     public var identifier: String? {
         return original?.identifier
     }
-    
+
     var original: HKObjectType? {
         switch self {
         case .cda:

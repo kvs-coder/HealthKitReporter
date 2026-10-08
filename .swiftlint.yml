@@ -9,8 +9,8 @@ opt_in_rules: # some rules are only opt-in
 included: # paths to include during linting. `--path` is ignored if present.
   - Sources
   - Tests
-excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Example
+excluded: # paths to ignore during linting. Takes precedence over `included`.
   - .build
 analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
   - explicit_self

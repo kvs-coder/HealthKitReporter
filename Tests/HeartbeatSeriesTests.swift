@@ -1,6 +1,6 @@
 //
 //  HeartbeatSeriesTests.swift
-//  
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 03.09.21.
 //
@@ -262,7 +262,10 @@ class HeartbeatSeriesTests: XCTestCase {
         XCTAssertEqual(sut.device?.hardwareVersion, "Watch6,1")
         XCTAssertEqual(sut.device?.softwareVersion, "8.0.1")
         XCTAssertEqual(sut.sourceRevision.source.name, "Apple Watch von Victor")
-        XCTAssertEqual(sut.sourceRevision.source.bundleIdentifier, "com.apple.health.9482C212-CB6B-4949-A400-E448CCA82CEF")
+        XCTAssertEqual(
+            sut.sourceRevision.source.bundleIdentifier,
+            "com.apple.health.9482C212-CB6B-4949-A400-E448CCA82CEF"
+        )
         XCTAssertEqual(sut.sourceRevision.version, "8.0.1")
         XCTAssertEqual(sut.sourceRevision.productType, "Watch6,1")
         XCTAssertEqual(sut.sourceRevision.systemVersion, "8.0.1")

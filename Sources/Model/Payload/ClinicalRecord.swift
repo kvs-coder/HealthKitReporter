@@ -17,7 +17,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         public let fhirVersion: String?
         public let fhirData: String?
         public let metadata: Metadata?
-        
+
         /// Creates the **Harmonized** from its fields
         public init(
             displayName: String,
@@ -32,7 +32,7 @@ public struct ClinicalRecord: Identifiable, Sample {
             self.fhirData = fhirData
             self.metadata = metadata
         }
-        
+
         /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             displayName: String? = nil,
@@ -50,7 +50,7 @@ public struct ClinicalRecord: Identifiable, Sample {
             )
         }
     }
-    
+
     public let uuid: String
     public let identifier: String
     public let startTimestamp: Double
@@ -58,7 +58,7 @@ public struct ClinicalRecord: Identifiable, Sample {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
-    
+
     init(clinicalRecord: HKClinicalRecord) throws {
         let fhirVersion: String? = clinicalRecord.fhirResource?.fhirVersion.stringRepresentation
         var fhirData: String? {
@@ -68,7 +68,7 @@ public struct ClinicalRecord: Identifiable, Sample {
             }
             return jsonString
         }
-        
+
         self.uuid = clinicalRecord.uuid.uuidString
         self.identifier = clinicalRecord.clinicalType.identifier
         self.startTimestamp = clinicalRecord.startDate.timeIntervalSince1970
@@ -83,7 +83,7 @@ public struct ClinicalRecord: Identifiable, Sample {
             metadata: clinicalRecord.metadata?.asMetadata
         )
     }
-    
+
     /**
      Creates the payload. **uuid** names the stored sample; a new one by default,
      since HealthKit gives every saved sample its own
@@ -105,7 +105,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         self.sourceRevision = sourceRevision
         self.harmonized = harmonized
     }
-    
+
     /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,

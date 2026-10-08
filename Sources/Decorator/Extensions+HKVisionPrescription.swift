@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 @available(iOS 16.0, watchOS 9.0, *)
 extension HKVisionPrescription: Harmonizable {
     typealias Harmonized = VisionPrescription.Harmonized

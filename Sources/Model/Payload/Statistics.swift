@@ -9,7 +9,7 @@ import HealthKit
 
 /// **Statistics** statistics of a quantity type over an interval
 public struct Statistics: Identifiable, Codable {
-    /// The value part of **Statistics**, with its metadata
+    /// The value part of **Statistics**
     public struct Harmonized: Codable {
         public let summary: Double?
         public let average: Double?

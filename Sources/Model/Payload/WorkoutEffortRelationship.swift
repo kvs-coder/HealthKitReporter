@@ -31,3 +31,24 @@ public struct WorkoutEffortRelationship: Codable {
             .compactMap { try? Quantity(quantitySample: $0) }
     }
 }
+// MARK: - Payload
+extension WorkoutEffortRelationship: Payload {
+    /**
+     Makes a **WorkoutEffortRelationship** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
+    public static func make(from dictionary: [String: Any]) throws -> WorkoutEffortRelationship {
+        guard
+            let workout = dictionary["workout"] as? [String: Any],
+            let samples = dictionary["samples"] as? [Any]
+        else {
+            throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
+        }
+        return WorkoutEffortRelationship(
+            workout: try Workout.make(from: workout),
+            activityUUID: dictionary["activityUUID"] as? String,
+            samples: try Quantity.collect(from: samples)
+        )
+    }
+}

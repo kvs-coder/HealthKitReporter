@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKActivitySummary: Harmonizable {
     typealias Harmonized = ActivitySummary.Harmonized
 

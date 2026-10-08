@@ -15,7 +15,7 @@ public struct Characteristic: Codable {
     public let fitzpatrickSkinType: String?
     public let wheelchairUse: String?
     public let activityMoveMode: String?
-    
+
     init(
         biologicalSex: HKBiologicalSexObject?,
         bloodType: HKBloodTypeObject?,
@@ -28,7 +28,7 @@ public struct Characteristic: Codable {
         self.wheelchairUse = nil
         self.activityMoveMode = nil
     }
-    
+
     init(
         biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,
@@ -43,7 +43,7 @@ public struct Characteristic: Codable {
         self.wheelchairUse = wheelchairUse?.wheelchairUse.string
         self.activityMoveMode = nil
     }
-    
+
     init(
         biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,

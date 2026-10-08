@@ -132,7 +132,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
     case estimatedWorkoutEffortScore
     case appleSleepingBreathingDisturbances
 }
-// MARK: - SampleType
+// MARK: - Identifier
 extension QuantityType {
     /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {

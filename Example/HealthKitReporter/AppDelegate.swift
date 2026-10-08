@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  HealthKitReporter
+//  HealthKitReporter_Example
 //
 //  Created by Victor Kachalov on 09/14/2020.
 //  Copyright (c) 2020 Victor Kachalov. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  WorkoutRouteTests.swift
-//  
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 04.09.21.
 //
@@ -57,7 +57,7 @@ class WorkoutRouteTests: XCTestCase {
                                 "courseAccuracy" : 398.32894897460938,
                                 "speedAccuracy" : 0.86697620153427124,
                                 "altitude" : 36.923385620117188,
-                                "timestamp" : 1650106382.259656,
+                                "timestamp" : 1650106382.259656
                             ],
                             [
                                 "course" : 212.49124145507812,
@@ -70,7 +70,7 @@ class WorkoutRouteTests: XCTestCase {
                                 "speedAccuracy" : 0.71512973308563232,
                                 "altitude" : 36.95831298828125,
                                 "timestamp" : 1650106382.9997792
-                            ],
+                            ]
                         ],
                         "done": false
                     ],
@@ -99,7 +99,7 @@ class WorkoutRouteTests: XCTestCase {
                                 "speedAccuracy" : 0.53077465295791626,
                                 "altitude" : 46.917694091796875,
                                 "timestamp" : 1650107482.9998574
-                            ],
+                            ]
                         ],
                         "done": true
                     ]
@@ -118,7 +118,10 @@ class WorkoutRouteTests: XCTestCase {
         XCTAssertEqual(sut.device?.hardwareVersion, "Watch6,1")
         XCTAssertEqual(sut.device?.softwareVersion, "8.5.1")
         XCTAssertEqual(sut.sourceRevision.source.name, "Apple Watch von Victor")
-        XCTAssertEqual(sut.sourceRevision.source.bundleIdentifier, "com.apple.health.9482C212-CB6B-4949-A400-E448CCA82CEF")
+        XCTAssertEqual(
+            sut.sourceRevision.source.bundleIdentifier,
+            "com.apple.health.9482C212-CB6B-4949-A400-E448CCA82CEF"
+        )
         XCTAssertEqual(sut.sourceRevision.version, "8.5.1")
         XCTAssertEqual(sut.sourceRevision.productType, "Watch6,1")
         XCTAssertEqual(sut.sourceRevision.systemVersion, "8.5.1")
@@ -131,11 +134,27 @@ class WorkoutRouteTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].course, 211.54032897949219, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].speed, 0.124705970287323, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].longitude, 13.354639734623429, accuracy: epsilon)
-        XCTAssertEqual(sut.harmonized.routes[0].locations[0].horizontalAccuracy, 2.3436229228973389, accuracy: epsilon)
-        XCTAssertEqual(sut.harmonized.routes[0].locations[0].verticalAccuracy, 1.3776830434799194, accuracy: epsilon)
+        XCTAssertEqual(
+            sut.harmonized.routes[0].locations[0].horizontalAccuracy,
+            2.3436229228973389,
+            accuracy: epsilon
+        )
+        XCTAssertEqual(
+            sut.harmonized.routes[0].locations[0].verticalAccuracy,
+            1.3776830434799194,
+            accuracy: epsilon
+        )
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].latitude, 52.517285348919636, accuracy: epsilon)
-        XCTAssertEqual(sut.harmonized.routes[0].locations[0].courseAccuracy!, 398.32894897460938, accuracy: epsilon)
-        XCTAssertEqual(sut.harmonized.routes[0].locations[0].speedAccuracy!, 0.86697620153427124, accuracy: epsilon)
+        XCTAssertEqual(
+            sut.harmonized.routes[0].locations[0].courseAccuracy!,
+            398.32894897460938,
+            accuracy: epsilon
+        )
+        XCTAssertEqual(
+            sut.harmonized.routes[0].locations[0].speedAccuracy!,
+            0.86697620153427124,
+            accuracy: epsilon
+        )
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].altitude, 36.923385620117188, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].timestamp, 1650106382.259656, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.routes[0].locations[0].floor, 1)

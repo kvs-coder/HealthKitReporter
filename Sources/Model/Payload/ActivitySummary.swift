@@ -9,7 +9,7 @@ import HealthKit
 
 /// **ActivitySummary** the move, exercise and stand rings of one day
 public struct ActivitySummary: Identifiable {
-    /// The value part of **ActivitySummary**, with its metadata
+    /// The value part of **ActivitySummary**
     public struct Harmonized: Codable {
         public let activeEnergyBurned: Double
         public let activeEnergyBurnedGoal: Double

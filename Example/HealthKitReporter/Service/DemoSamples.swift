@@ -7,6 +7,9 @@
 
 import HealthKit
 import HealthKitReporter
+// Category alone is ambiguous with the Objective-C runtime type, and the module name is shadowed
+// by the HealthKitReporter class, so the struct is imported by name
+// swiftlint:disable:next duplicate_imports
 import struct HealthKitReporter.Category
 
 /// Builds the payloads the demo writes, each marked so the demo can find and delete its own data
@@ -21,11 +24,18 @@ final class DemoSamples {
     /// HealthKit sets the real source on save; the payload only needs a placeholder
     var sourceRevision: SourceRevision {
         return SourceRevision(
-            source: Source(name: "HealthKitReporter Example", bundleIdentifier: Bundle.main.bundleIdentifier ?? ""),
+            source: Source(
+                name: "HealthKitReporter Example",
+                bundleIdentifier: Bundle.main.bundleIdentifier ?? ""
+            ),
             version: nil,
             productType: nil,
             systemVersion: ProcessInfo.processInfo.operatingSystemVersionString,
-            operatingSystem: SourceRevision.OperatingSystem(majorVersion: 26, minorVersion: 0, patchVersion: 0)
+            operatingSystem: SourceRevision.OperatingSystem(
+                majorVersion: 26,
+                minorVersion: 0,
+                patchVersion: 0
+            )
         )
     }
 
@@ -144,7 +154,11 @@ final class DemoSamples {
             endTimestamp: date.timeIntervalSince1970,
             device: nil,
             sourceRevision: sourceRevision,
-            harmonized: Correlation.Harmonized(quantitySamples: quantities, categorySamples: [], metadata: metadata)
+            harmonized: Correlation.Harmonized(
+                quantitySamples: quantities,
+                categorySamples: [],
+                metadata: metadata
+            )
         )
     }
     private func event(_ type: HKWorkoutEventType, named name: String, at date: Date) -> WorkoutEvent {

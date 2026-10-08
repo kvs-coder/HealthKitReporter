@@ -1,6 +1,6 @@
 //
 //  StatisticsTests.swift
-//
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 03.09.21.
 //

@@ -35,7 +35,9 @@ final class StatisticsDemos: DemoPerformer {
                 statistics(completion: completion)
             case .electrocardiogramQuery:
                 let query = try reader.electrocardiogramQuery(withVoltageMeasurements: true) { ecgs, error in
-                    completion(error.map { .failure($0) } ?? .success(ecgs.summary("ECGs (record one on a watch)")))
+                    completion(
+                        error.map { .failure($0) } ?? .success(ecgs.summary("ECGs (record one on a watch)"))
+                    )
                 }
                 reporter.manager.executeQuery(query)
             case .heartbeatSeriesQuery:
@@ -49,7 +51,11 @@ final class StatisticsDemos: DemoPerformer {
                 }
                 reporter.manager.executeQuery(query)
             case .quantitySeriesQuery:
-                let query = try reader.quantitySeriesQuery(type: .stepCount, unit: "count", predicate: .lastWeek) { values, error in
+                let query = try reader.quantitySeriesQuery(
+                    type: .stepCount,
+                    unit: "count",
+                    predicate: .lastWeek
+                ) { values, error in
                     completion(error.map { .failure($0) } ?? .success(values.summary("step series values")))
                 }
                 reporter.manager.executeQuery(query)
@@ -59,23 +65,37 @@ final class StatisticsDemos: DemoPerformer {
         }
     }
 
+    /// A quantity type read in **unit**, optionally split by source
+    private struct StatisticsRequest {
+        let type: QuantityType
+        let unit: String
+        let separateBySource: Bool
+    }
+
     /// Cumulative steps and discrete heart rate this week, steps split by source
     private func statistics(completion: @escaping DemoCompletion) {
         let group = DispatchGroup()
         let lock = NSLock()
         var lines = [String]()
-        let types: [(QuantityType, String, Bool)] = [(.stepCount, "count", true), (.heartRate, "count/min", false)]
-        for (type, unit, separateBySource) in types {
+        let requests = [
+            StatisticsRequest(type: .stepCount, unit: "count", separateBySource: true),
+            StatisticsRequest(type: .heartRate, unit: "count/min", separateBySource: false)
+        ]
+        for request in requests {
+            let type = request.type
             group.enter()
             do {
                 let query = try reporter.reader.statisticsQuery(
                     type: type,
-                    unit: unit,
+                    unit: request.unit,
                     predicate: .lastWeek,
-                    separateBySource: separateBySource
+                    separateBySource: request.separateBySource
                 ) { statistics, error in
                     lock.lock()
-                    lines.append(error.map { "\(type): \($0.localizedDescription)" } ?? "\(type): \(statistics?.json ?? "no data")")
+                    lines.append(
+                        error.map { "\(type): \($0.localizedDescription)" }
+                            ?? "\(type): \(statistics?.json ?? "no data")"
+                    )
                     lock.unlock()
                     group.leave()
                 }
@@ -111,7 +131,8 @@ final class StatisticsDemos: DemoPerformer {
                 guard let statistics = statistics else {
                     return
                 }
-                let day = Date(timeIntervalSince1970: statistics.startTimestamp).formatted(date: .abbreviated, time: .omitted)
+                let day = Date(timeIntervalSince1970: statistics.startTimestamp)
+                    .formatted(date: .abbreviated, time: .omitted)
                 days.append("\(day): \(Int(statistics.harmonized.summary ?? 0)) steps")
                 subject.send(days.suffix(7).joined(separator: "\n"))
             }

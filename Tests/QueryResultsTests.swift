@@ -12,7 +12,7 @@ import HealthKitReporter
 /// Every query reports back through its handler. The test host has no HealthKit entitlement,
 /// so HealthKit answers with an error and the handler gets empty results
 class QueryResultsTests: XCTestCase {
-    private let reporter = HealthKitReporter()
+    private let sut = HealthKitReporter()
     private let anchorDate = Date(timeIntervalSince1970: 1626884800)
 
     override class func setUp() {
@@ -21,7 +21,7 @@ class QueryResultsTests: XCTestCase {
     }
 
     func testSampleQueriesReportErrors() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         try assertReports { done in
             try reader.quantityQuery(type: .stepCount, unit: "count") { done($0.isEmpty, $1) }
         }
@@ -50,7 +50,7 @@ class QueryResultsTests: XCTestCase {
         try assertReports { done in reader.queryActivitySummary { done($0.isEmpty, $1) } }
     }
     func testAnchoredQueriesReportErrors() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         try assertReports { done in
             try reader.anchoredObjectQuery(type: QuantityType.stepCount) { _, samples, deleted, _, error in
                 done(samples.isEmpty && deleted.isEmpty, error)
@@ -66,7 +66,7 @@ class QueryResultsTests: XCTestCase {
         }
     }
     func testCorruptAnchorThrows() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         let corrupt = Anchor(data: Data("not an anchor".utf8))
         assertInvalidValue(
             try reader.anchoredObjectQuery(type: QuantityType.stepCount, anchor: corrupt) { _, _, _, _, _ in }
@@ -77,14 +77,14 @@ class QueryResultsTests: XCTestCase {
     }
     func testCorrelationQueryWithUnknownTypePredicateThrows() throws {
         assertInvalidType(
-            try reporter.reader.correlationQuery(
+            try sut.reader.correlationQuery(
                 type: .food,
                 typePredicates: ["invalid": .allSamples]
             ) { _, _ in }
         )
     }
     func testStatisticsQueriesReportErrors() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         try assertReports { done in
             try reader.statisticsQuery(type: .stepCount, unit: "count", separateBySource: true) {
                 done($0 == nil, $1)
@@ -115,7 +115,7 @@ class QueryResultsTests: XCTestCase {
         }
     }
     func testSeriesQueriesReportErrors() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         try assertReports { done in
             try reader.electrocardiogramQuery(withVoltageMeasurements: true) { done($0.isEmpty, $1) }
         }
@@ -127,7 +127,7 @@ class QueryResultsTests: XCTestCase {
         }
     }
     func testRecordAndWellbeingQueriesReportErrors() throws {
-        let reader = reporter.reader
+        let reader = sut.reader
         try assertReports { done in try reader.audiogramQuery { done($0.isEmpty, $1) } }
         if #available(iOS 16.0, watchOS 9.0, *) {
             try assertReports { done in try reader.visionPrescriptionQuery { done($0.isEmpty, $1) } }
@@ -157,7 +157,7 @@ class QueryResultsTests: XCTestCase {
         #endif
     }
     func testObserverQueriesReportErrors() throws {
-        let observer = reporter.observer
+        let observer = sut.observer
         try assertReports { done in
             try observer.observerQuery(type: QuantityType.stepCount) { _, _, error in done(true, error) }
         }
@@ -198,9 +198,9 @@ class QueryResultsTests: XCTestCase {
             }
             expectation.fulfill()
         }
-        reporter.manager.executeQuery(query)
+        sut.manager.executeQuery(query)
         wait(for: [expectation], timeout: 30)
-        reporter.manager.stopQuery(query)
+        sut.manager.stopQuery(query)
         let result = try XCTUnwrap(reported, file: file, line: line)
         XCTAssertTrue(result.empty, file: file, line: line)
         XCTAssertNotNil(result.error, file: file, line: line)

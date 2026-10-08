@@ -26,7 +26,7 @@ public struct Category: Identifiable, Sample {
             self.value = value
             self.description = description
             self.detail = detail
-            self.metadata = metadata 
+            self.metadata = metadata
         }
 
         /// A copy with the given fields replaced; nil keeps the current value

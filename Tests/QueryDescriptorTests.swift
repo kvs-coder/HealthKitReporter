@@ -29,6 +29,49 @@ class QueryDescriptorTests: XCTestCase {
         ]
     }
 
+    func testSampleQuery() throws {
+        let sut = HealthKitReporter().reader
+        XCTAssertNotNil(try sut.sampleQuery(descriptors: descriptors, limit: 4) { _, _, _ in })
+        assertInvalidType(
+            try sut.sampleQuery(
+                descriptors: [QueryDescriptor(type: UnavailableType.unavailable)]
+            ) { _, _, _ in }
+        )
+    }
+    func testAnchoredObjectQuery() throws {
+        let sut = HealthKitReporter().reader
+        XCTAssertNotNil(
+            try sut.anchoredObjectQuery(descriptors: descriptors, monitorUpdates: true) { _, _, _, _, _ in }
+        )
+        assertInvalidOption(
+            try sut.anchoredObjectQuery(
+                descriptors: descriptors,
+                limit: 1,
+                monitorUpdates: true
+            ) { _, _, _, _, _ in }
+        )
+        assertInvalidType(
+            try sut.anchoredObjectQuery(
+                descriptors: [QueryDescriptor(type: UnavailableType.unavailable)]
+            ) { _, _, _, _, _ in }
+        )
+    }
+    func testObserverQuery() throws {
+        let sut = HealthKitReporter().observer
+        XCTAssertNotNil(
+            try sut.observerQuery(descriptors: descriptors) { _, _, _, completion in
+                completion()
+            }
+        )
+        assertInvalidType(
+            try sut.observerQuery(
+                descriptors: [QueryDescriptor(type: UnavailableType.unavailable)]
+            ) { _, _, _, completion in
+                completion()
+            }
+        )
+    }
+
     private func assertInvalidOption<T>(
         _ expression: @autoclosure () throws -> T,
         file: StaticString = #filePath,

@@ -21,8 +21,8 @@ Please note we have a code of conduct, please follow it in all your interactions
 ## Swift
 
 We follow the [Swift API Design Guidelines](https://swift.org/documentation/api-design-guidelines/).
-SwiftLint enforces the style (`.swiftlint.yml`, lines ≤ 110 characters); only violations that are not in
-`.swiftlint.baseline` fail.
+SwiftLint enforces the style (`.swiftlint.yml`, lines ≤ 110 characters; `Tests/.swiftlint.yml` allows longer
+test bodies). Every violation fails CI.
 
 ## Checks
 
@@ -30,7 +30,7 @@ CI runs these on every pull request; run them locally before pushing:
 
 ```bash
 # Lint
-swiftlint lint --strict --baseline .swiftlint.baseline
+swiftlint lint --strict
 
 # Test on a simulator, with coverage (must stay ≥ COVERAGE_THRESHOLD in .github/workflows/ci.yml)
 xcodebuild test -scheme HealthKitReporter \

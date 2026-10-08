@@ -31,7 +31,9 @@ public class HealthKitWriter {
         case .sharingAuthorized:
             return true
         @unknown default:
-            throw HealthKitError.notAvailable("Invalid status")
+            throw HealthKitError.notAvailable(
+                "Unknown authorization status \(status.rawValue) for \(objectType.identifier)"
+            )
         }
     }
     /**

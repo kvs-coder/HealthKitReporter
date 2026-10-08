@@ -14,7 +14,7 @@ extension HealthKitReader {
      - Parameter type: **CorrelationType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType

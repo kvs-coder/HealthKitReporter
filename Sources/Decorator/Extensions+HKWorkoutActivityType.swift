@@ -1,5 +1,5 @@
 //
-//  Extensions+HKQuantityType.swift
+//  Extensions+HKWorkoutActivityType.swift
 //  HealthKitReporter
 //
 //  Created by Oliver Searle-Barnes on 01.04.21.

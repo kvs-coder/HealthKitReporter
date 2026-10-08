@@ -1,6 +1,6 @@
 //
 //  WorkoutEventTests.swift
-//
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 04.09.21.
 //

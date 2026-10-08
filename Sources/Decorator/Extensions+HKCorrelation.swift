@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKCorrelation: Harmonizable {
     typealias Harmonized = Correlation.Harmonized
 

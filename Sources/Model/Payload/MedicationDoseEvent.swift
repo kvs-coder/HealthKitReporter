@@ -137,7 +137,7 @@ extension MedicationDoseEvent {
             .map { MedicationDoseEvent(doseEvent: $0) }
     }
 }
-// MARK: - Harmonized: Payload
+// MARK: - Payload
 @available(iOS 26.0, watchOS 26.0, *)
 extension MedicationDoseEvent.Harmonized: Payload {
     /**

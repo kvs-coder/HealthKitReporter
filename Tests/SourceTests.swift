@@ -1,6 +1,6 @@
 //
 //  SourceTests.swift
-//  
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 03.09.21.
 //
@@ -22,7 +22,7 @@ class SourceTests: XCTestCase {
     func testCreateFromDictionary() throws {
         let dictionary = [
             "name": "myApp",
-            "bundleIdentifier": "com.my.app",
+            "bundleIdentifier": "com.my.app"
         ]
         let sut = try Source.make(from: dictionary)
         XCTAssertEqual(sut.name, "myApp")

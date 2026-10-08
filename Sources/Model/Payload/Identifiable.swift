@@ -10,5 +10,3 @@ import Foundation
 protocol Identifiable: Codable {
     var identifier: String { get }
 }
-
-

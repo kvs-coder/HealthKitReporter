@@ -13,7 +13,7 @@ extension HealthKitReader {
      Queries electrocardiogram.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter withVoltageMeasurements: the query will show the count of made measurements,
      and if set to **true** will provide ECG with voltage measurments array.
@@ -34,8 +34,8 @@ extension HealthKitReader {
         withVoltageMeasurements: Bool = false,
         resultsHandler: @escaping ElectrocardiogramResultsHandler
     ) throws -> QueryHandle {
-        return QueryHandle(try ElectrocardiogramRetriever().makeElectrocardiogramQuery(
-            healthStore: healthStore,
+        let retriever = ElectrocardiogramRetriever(healthStore: healthStore)
+        return QueryHandle(try retriever.makeElectrocardiogramQuery(
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
@@ -47,7 +47,7 @@ extension HealthKitReader {
      Queries heartbeat series.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with every heartbeat series and its measurements,
      once all series are read
@@ -79,7 +79,7 @@ extension HealthKitReader {
      and “Privacy - Location When In Use Usage Description”.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with workout routes
      - Throws: HealthKitError.invalidType

@@ -38,13 +38,12 @@ final class ReaderDemos: DemoPerformer {
                 }
             case .sampleQuery:
                 reporter.countEveryType(reporter.demoSampleTypes, completion: completion) { type, done in
-                    try reader.sampleQuery(type: type, predicate: .lastWeek) { _, samples, _ in done(samples) }
+                    try reader.sampleQuery(type: type, predicate: .lastWeek) { _, samples, _ in
+                        done(samples)
+                    }
                 }
             case .sampleQueryDescriptors:
-                let query = try reader.sampleQuery(descriptors: stepsAndSleep) { _, samples, error in
-                    completion(error.map { .failure($0) } ?? .success(samples.summary("steps and sleep samples")))
-                }
-                reporter.manager.executeQuery(query)
+                try stepsAndSleepSamples(completion: completion)
             case .workoutQuery:
                 let query = try reader.workoutQuery(predicate: .lastWeek) { workouts, error in
                     completion(error.map { .failure($0) } ?? .success(workouts.summary("workouts")))
@@ -53,29 +52,9 @@ final class ReaderDemos: DemoPerformer {
             case .correlationSampleQuery:
                 correlations(completion: completion)
             case .correlationQuery:
-                let query = try reader.correlationQuery(
-                    type: .bloodPressure,
-                    predicate: .lastWeek,
-                    typePredicates: ["HKQuantityTypeIdentifierBloodPressureSystolic": .lastWeek]
-                ) { correlations, error in
-                    completion(error.map { .failure($0) } ?? .success(correlations.summary("blood pressure readings")))
-                }
-                reporter.manager.executeQuery(query)
+                try bloodPressure(completion: completion)
             case .anchoredObjectQuery:
-                let firstRun = anchor == nil
-                let query = try reader.anchoredObjectQuery(
-                    type: QuantityType.stepCount,
-                    predicate: .lastWeek,
-                    anchor: anchor
-                ) { [weak self] _, samples, deleted, anchor, error in
-                    self?.anchor = anchor
-                    let run = firstRun ? "First run" : "Since the stored anchor"
-                    completion(
-                        error.map { .failure($0) }
-                            ?? .success("\(run): \(samples.count) new, \(deleted.count) deleted. Tap again for changes")
-                    )
-                }
-                reporter.manager.executeQuery(query)
+                try anchoredSteps(completion: completion)
             case .sourceQuery:
                 let query = try reader.sourceQuery(type: QuantityType.stepCount) { sources, error in
                     completion(error.map { .failure($0) } ?? .success(sources.summary("sources")))
@@ -83,7 +62,9 @@ final class ReaderDemos: DemoPerformer {
                 reporter.manager.executeQuery(query)
             case .activitySummary:
                 let query = reader.queryActivitySummary { summaries, error in
-                    completion(error.map { .failure($0) } ?? .success(summaries.summary("activity summaries")))
+                    completion(
+                        error.map { .failure($0) } ?? .success(summaries.summary("activity summaries"))
+                    )
                 }
                 reporter.manager.executeQuery(query)
             default:
@@ -106,7 +87,10 @@ final class ReaderDemos: DemoPerformer {
                 completion(.failure(error ?? HealthKitError.unknown()))
                 return
             }
-            let unitByIdentifier = Dictionary(units.map { ($0.identifier, $0.unit) }, uniquingKeysWith: { first, _ in first })
+            let unitByIdentifier = Dictionary(
+                units.map { ($0.identifier, $0.unit) },
+                uniquingKeysWith: { first, _ in first }
+            )
             let types = reporter.demoQuantityTypes.filter { unitByIdentifier[$0.identifier ?? ""] != nil }
             reporter.countEveryType(types, completion: completion) { type, done in
                 try reporter.reader.quantityQuery(
@@ -119,6 +103,41 @@ final class ReaderDemos: DemoPerformer {
             }
         }
     }
+    /// One sample query over steps and sleep
+    private func stepsAndSleepSamples(completion: @escaping DemoCompletion) throws {
+        let query = try reporter.reader.sampleQuery(descriptors: stepsAndSleep) { _, samples, error in
+            completion(error.map { .failure($0) } ?? .success(samples.summary("steps and sleep samples")))
+        }
+        reporter.manager.executeQuery(query)
+    }
+    /// Blood pressure readings whose systolic value is from the last week
+    private func bloodPressure(completion: @escaping DemoCompletion) throws {
+        let query = try reporter.reader.correlationQuery(
+            type: .bloodPressure,
+            predicate: .lastWeek,
+            typePredicates: ["HKQuantityTypeIdentifierBloodPressureSystolic": .lastWeek]
+        ) { correlations, error in
+            completion(
+                error.map { .failure($0) } ?? .success(correlations.summary("blood pressure readings"))
+            )
+        }
+        reporter.manager.executeQuery(query)
+    }
+    /// Steps since the stored anchor, which each run replaces
+    private func anchoredSteps(completion: @escaping DemoCompletion) throws {
+        let firstRun = anchor == nil
+        let query = try reporter.reader.anchoredObjectQuery(
+            type: QuantityType.stepCount,
+            predicate: .lastWeek,
+            anchor: anchor
+        ) { [weak self] _, samples, deleted, anchor, error in
+            self?.anchor = anchor
+            let run = firstRun ? "First run" : "Since the stored anchor"
+            let message = "\(run): \(samples.count) new, \(deleted.count) deleted. Tap again for changes"
+            completion(error.map { .failure($0) } ?? .success(message))
+        }
+        reporter.manager.executeQuery(query)
+    }
     private func correlations(completion: @escaping DemoCompletion) {
         let group = DispatchGroup()
         var lines = [String]()
@@ -126,9 +145,15 @@ final class ReaderDemos: DemoPerformer {
         for type in CorrelationType.allCases {
             group.enter()
             do {
-                let query = try reporter.reader.correlationQuery(type: type, predicate: .lastWeek) { samples, error in
+                let query = try reporter.reader.correlationQuery(
+                    type: type,
+                    predicate: .lastWeek
+                ) { samples, error in
                     lock.lock()
-                    lines.append(error.map { "\(type): \($0.localizedDescription)" } ?? "\(type): \(samples.summary("samples"))")
+                    lines.append(
+                        error.map { "\(type): \($0.localizedDescription)" }
+                            ?? "\(type): \(samples.summary("samples"))"
+                    )
                     lock.unlock()
                     group.leave()
                 }
@@ -154,7 +179,9 @@ final class ReaderDemos: DemoPerformer {
                     return
                 }
                 updates += 1
-                subject.send("Update \(updates): \(samples.count) samples, \(deleted.count) deleted. Live until Stop")
+                subject.send(
+                    "Update \(updates): \(samples.count) samples, \(deleted.count) deleted. Live until Stop"
+                )
             }
         }
     }
@@ -163,8 +190,13 @@ final class ReaderDemos: DemoPerformer {
 extension String {
     /// HKQuantityTypeIdentifierStepCount → StepCount
     var shortIdentifier: String {
-        for prefix in ["HKQuantityTypeIdentifier", "HKCategoryTypeIdentifier", "HKDataTypeIdentifier", "HKDataType"]
-        where hasPrefix(prefix) {
+        let prefixes = [
+            "HKQuantityTypeIdentifier",
+            "HKCategoryTypeIdentifier",
+            "HKDataTypeIdentifier",
+            "HKDataType"
+        ]
+        for prefix in prefixes where hasPrefix(prefix) {
             return String(dropFirst(prefix.count))
         }
         return self

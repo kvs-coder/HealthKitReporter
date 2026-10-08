@@ -1,6 +1,6 @@
 //
 //  HealthKitReader.swift
-//  HealthKitReader
+//  HealthKitReporter
 //
 //  Created by Victor on 23.09.20.
 //
@@ -9,9 +9,6 @@ import HealthKit
 
 typealias ActivitySummaryUpdateHandler = (
     HKActivitySummaryQuery, [HKActivitySummary]?, Error?
-) -> Void
-typealias HKStatisticsCollectionHandler = (
-    HKStatisticsCollection?, Error?
 ) -> Void
 typealias AnchoredObjectQueryHandler = (
     HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?
@@ -53,7 +50,8 @@ public class HealthKitReader {
      - Parameter type: **QuantityType** types
      - Parameter unit: **String** unit compatible with the type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
@@ -80,7 +78,7 @@ public class HealthKitReader {
             predicate: predicate,
             limit: limit,
             sortDescriptors: sortDescriptors
-        ) { (query, data, error) in
+        ) { (_, data, error) in
             guard
                 error == nil,
                 let results = data
@@ -100,7 +98,8 @@ public class HealthKitReader {
      Queries category types.
      - Parameter type: **CategoryType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
@@ -141,7 +140,8 @@ public class HealthKitReader {
     /**
      Queries workouts.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
@@ -168,7 +168,7 @@ public class HealthKitReader {
             predicate: predicate,
             limit: limit,
             sortDescriptors: sortDescriptors
-        ) { (query, data, error) in
+        ) { (_, data, error) in
             guard
                 error == nil,
                 let results = data
@@ -188,7 +188,8 @@ public class HealthKitReader {
      come without their measurements, which their own queries deliver
      - Parameter type: **SampleType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
@@ -248,7 +249,7 @@ public class HealthKitReader {
      Queries samples of several types at once.
      - Parameter descriptors: **QueryDescriptor** types and predicates
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples of every type
      - Throws: HealthKitError.invalidType

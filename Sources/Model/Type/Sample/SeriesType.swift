@@ -18,7 +18,7 @@ public enum SeriesType: Int, CaseIterable, SampleType {
     public var identifier: String? {
         return original?.identifier
     }
-    
+
     var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:

@@ -9,7 +9,7 @@ import HealthKit
 
 /// **WorkoutConfiguration** the activity, location and lap length a watch workout starts with
 public struct WorkoutConfiguration: Codable {
-    /// The value part of **WorkoutConfiguration**, with its metadata
+    /// The value part of **WorkoutConfiguration**
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String

@@ -3,7 +3,6 @@
 //  HealthKitReporter_Example
 //
 //  Created by Victor Kachalov on 27.05.22.
-//  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
 import Combine
@@ -23,12 +22,13 @@ final class HealthKitReporterService {
         let reader = ReaderDemos(reporter: reporter, liveQueries: liveQueries)
         let records = RecordsDemos(reporter: reporter)
         let writer = WriterDemos(reporter: reporter)
+        let statistics = StatisticsDemos(reporter: reporter, liveQueries: liveQueries)
         performers = [
             .authorization: AuthorizationDemos(reporter: reporter),
             .characteristics: reader,
             .read: reader,
-            .statistics: StatisticsDemos(reporter: reporter, liveQueries: liveQueries),
-            .series: StatisticsDemos(reporter: reporter, liveQueries: liveQueries),
+            .statistics: statistics,
+            .series: statistics,
             .records: records,
             .wellbeing: records,
             .write: writer,

@@ -32,14 +32,22 @@ final class ObserverDemos: DemoPerformer {
             let observer = reporter.observer
             switch row {
             case .enableBackgroundDelivery:
-                enableEveryFrequency([.immediate, .hourly, .daily, .weekly], lines: [], completion: completion)
+                enableEveryFrequency(
+                    [.immediate, .hourly, .daily, .weekly],
+                    lines: [],
+                    completion: completion
+                )
             case .disableBackgroundDelivery:
                 observer.disableBackgroundDelivery(type: QuantityType.stepCount) {
-                    completion($0 ? .success("Step delivery disabled") : .failure($1 ?? HealthKitError.unknown()))
+                    completion(
+                        $0 ? .success("Step delivery disabled") : .failure($1 ?? HealthKitError.unknown())
+                    )
                 }
             case .disableAllBackgroundDelivery:
                 observer.disableAllBackgroundDelivery {
-                    completion($0 ? .success("All delivery disabled") : .failure($1 ?? HealthKitError.unknown()))
+                    completion(
+                        $0 ? .success("All delivery disabled") : .failure($1 ?? HealthKitError.unknown())
+                    )
                 }
             default:
                 throw HealthKitError.invalidOption("\(row) is not an observer demo")
@@ -51,7 +59,9 @@ final class ObserverDemos: DemoPerformer {
     private func observeSteps() -> AnyPublisher<String, Error> {
         liveQueries.publisher(for: .observerQuery) { [unowned self] subject in
             var updates = 0
-            return try reporter.observer.observerQuery(type: QuantityType.stepCount) { _, identifier, error, completion in
+            return try reporter.observer.observerQuery(
+                type: QuantityType.stepCount
+            ) { _, identifier, error, completion in
                 defer { completion() }
                 if let error = error {
                     subject.send(completion: .failure(error))
@@ -71,7 +81,9 @@ final class ObserverDemos: DemoPerformer {
                 QueryDescriptor(type: QuantityType.stepCount),
                 QueryDescriptor(type: CategoryType.sleepAnalysis)
             ]
-            return try reporter.observer.observerQuery(descriptors: descriptors) { _, identifiers, error, completion in
+            return try reporter.observer.observerQuery(
+                descriptors: descriptors
+            ) { _, identifiers, error, completion in
                 defer { completion() }
                 if let error = error {
                     subject.send(completion: .failure(error))
@@ -92,7 +104,10 @@ final class ObserverDemos: DemoPerformer {
             completion(.success(lines.joined(separator: "\n")))
             return
         }
-        reporter.observer.enableBackgroundDelivery(type: QuantityType.stepCount, frequency: frequency) { [unowned self] success, error in
+        reporter.observer.enableBackgroundDelivery(
+            type: QuantityType.stepCount,
+            frequency: frequency
+        ) { [unowned self] success, error in
             let line = "\(frequency): \(success ? "enabled" : error?.localizedDescription ?? "failed")"
             enableEveryFrequency(frequencies.dropFirst(), lines: lines + [line], completion: completion)
         }

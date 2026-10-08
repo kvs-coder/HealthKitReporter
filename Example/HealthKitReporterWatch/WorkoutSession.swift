@@ -30,9 +30,16 @@ final class WorkoutSession: NSObject, ObservableObject {
     private var timer: AnyCancellable?
 
     func start(_ configuration: HKWorkoutConfiguration) {
-        let toWrite: [SampleType] = [WorkoutType.workoutType, QuantityType.activeEnergyBurned, QuantityType.heartRate]
+        let toWrite: [SampleType] = [
+            WorkoutType.workoutType,
+            QuantityType.activeEnergyBurned,
+            QuantityType.heartRate
+        ]
         let toRead: [ObjectType] = toWrite + [QuantityType.distanceWalkingRunning]
-        reporter.manager.requestAuthorization(toRead: toRead, toWrite: toWrite) { [weak self] success, error in
+        reporter.manager.requestAuthorization(
+            toRead: toRead,
+            toWrite: toWrite
+        ) { [weak self] success, error in
             DispatchQueue.main.async {
                 guard success else {
                     self?.state = .failed(error?.localizedDescription ?? "Not authorized")
@@ -51,7 +58,10 @@ final class WorkoutSession: NSObject, ObservableObject {
         do {
             let session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
             let builder = session.associatedWorkoutBuilder()
-            builder.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: configuration)
+            builder.dataSource = HKLiveWorkoutDataSource(
+                healthStore: healthStore,
+                workoutConfiguration: configuration
+            )
             session.delegate = self
             builder.delegate = self
             self.session = session
@@ -97,8 +107,9 @@ final class WorkoutSession: NSObject, ObservableObject {
     private func showSavedWorkout() {
         let query = try? reporter.reader.workoutQuery(limit: 1) { [weak self] workouts, _ in
             let minutes = Int((workouts.first?.duration ?? 0) / 60)
+            let name = workouts.first?.harmonized.description ?? "workout"
             DispatchQueue.main.async {
-                self?.state = .ended("Saved \(workouts.first?.harmonized.description ?? "workout"), \(minutes) min")
+                self?.state = .ended("Saved \(name), \(minutes) min")
             }
         }
         query.map(reporter.manager.executeQuery)
@@ -125,7 +136,10 @@ extension WorkoutSession: HKWorkoutSessionDelegate {
 }
 // MARK: - HKLiveWorkoutBuilderDelegate
 extension WorkoutSession: HKLiveWorkoutBuilderDelegate {
-    func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+    func workoutBuilder(
+        _ workoutBuilder: HKLiveWorkoutBuilder,
+        didCollectDataOf collectedTypes: Set<HKSampleType>
+    ) {
         let heartRateType = HKQuantityType(.heartRate)
         guard collectedTypes.contains(heartRateType) else {
             return

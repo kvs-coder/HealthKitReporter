@@ -8,9 +8,10 @@
 #if os(iOS)
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKClinicalRecord: Harmonizable {
     typealias Harmonized = ClinicalRecord.Harmonized
-    
+
     func harmonize() throws -> Harmonized {
         let fhirVersion: String? = fhirResource?.fhirVersion.stringRepresentation
         var fhirData: String? {
@@ -20,7 +21,7 @@ extension HKClinicalRecord: Harmonizable {
             }
             return jsonString
         }
-        
+
         return Harmonized(
             displayName: displayName,
             fhirSourceUrl: fhirResource?.sourceURL?.absoluteString,

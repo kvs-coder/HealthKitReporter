@@ -8,6 +8,9 @@
 import Combine
 import HealthKit
 import HealthKitReporter
+// Category alone is ambiguous with the Objective-C runtime type, and the module name is shadowed
+// by the HealthKitReporter class, so the struct is imported by name
+// swiftlint:disable:next duplicate_imports
 import struct HealthKitReporter.Category
 
 /// Writes a week of plausible data for every writable type, and deletes it again
@@ -59,7 +62,10 @@ final class SeedingDemos: DemoPerformer {
         for type in reporter.demoWriteTypes {
             group.enter()
             do {
-                let query = try reporter.reader.sampleQuery(type: type, predicate: ownData) { [unowned self] _, found, _ in
+                let query = try reporter.reader.sampleQuery(
+                    type: type,
+                    predicate: ownData
+                ) { [unowned self] _, found, _ in
                     let days = found.compactMap { seedDay(of: $0) }
                     lock.lock()
                     seeded[type.identifier ?? "", default: []].formUnion(days)
@@ -87,7 +93,10 @@ final class SeedingDemos: DemoPerformer {
         default:
             metadata = nil
         }
-        guard case .string(let marker) = metadata?[HKMetadataKeyExternalUUID], marker.hasPrefix(samples.marker) else {
+        guard
+            case .string(let marker) = metadata?[HKMetadataKeyExternalUUID],
+            marker.hasPrefix(samples.marker)
+        else {
             return nil
         }
         return String(marker.dropFirst(samples.marker.count).prefix(10))
@@ -106,19 +115,41 @@ final class SeedingDemos: DemoPerformer {
             payloads += quantities(on: day, offset: offset, with: marker, isMissing: isMissing)
             payloads += categories(on: day, offset: offset, with: marker, isMissing: isMissing)
             if isMissing(WorkoutType.workoutType) {
-                payloads.append(marker.workout(start: day.addingTimeInterval(18 * 3_600), minutes: 30 + Double(offset * 5)))
+                payloads.append(
+                    marker.workout(
+                        start: day.addingTimeInterval(18 * 3_600),
+                        minutes: 30 + Double(offset * 5)
+                    )
+                )
             }
             if isMissing(QuantityType.bloodPressureSystolic) {
-                payloads.append(marker.bloodPressure(systolic: 115 + Double(offset), diastolic: 75, at: day.addingTimeInterval(8 * 3_600)))
+                payloads.append(
+                    marker.bloodPressure(
+                        systolic: 115 + Double(offset),
+                        diastolic: 75,
+                        at: day.addingTimeInterval(8 * 3_600)
+                    )
+                )
             }
             if isMissing(QuantityType.dietaryEnergyConsumed) {
-                payloads.append(marker.food(kilocalories: 600 + Double(offset * 20), protein: 30, at: day.addingTimeInterval(13 * 3_600)))
+                payloads.append(
+                    marker.food(
+                        kilocalories: 600 + Double(offset * 20),
+                        protein: 30,
+                        at: day.addingTimeInterval(13 * 3_600)
+                    )
+                )
             }
         }
         return payloads
     }
     /// Two samples per writable quantity type and day, morning and evening
-    private func quantities(on day: Date, offset: Int, with marker: DemoSamples, isMissing: (SampleType) -> Bool) -> [Sample] {
+    private func quantities(
+        on day: Date,
+        offset: Int,
+        with marker: DemoSamples,
+        isMissing: (SampleType) -> Bool
+    ) -> [Sample] {
         let types = reporter.demoQuantityTypes.filter { isMissing($0) && isWritable($0) }
         return types.flatMap { type -> [Sample] in
             guard let (unit, range) = plausibleValues(of: type) else {
@@ -126,18 +157,31 @@ final class SeedingDemos: DemoPerformer {
             }
             var extra = [String: Metadata.Value]()
             if type == .insulinDelivery {
-                extra[HKMetadataKeyInsulinDeliveryReason] = .number(Double(HKInsulinDeliveryReason.basal.rawValue))
+                let basal = Double(HKInsulinDeliveryReason.basal.rawValue)
+                extra[HKMetadataKeyInsulinDeliveryReason] = .number(basal)
             }
             return [9.0, 19.0].map { hour in
                 let start = day.addingTimeInterval(hour * 3_600)
                 let fraction = Double((offset * 7 + Int(hour)) % 10) / 10
                 let value = range.lowerBound + (range.upperBound - range.lowerBound) * fraction
-                return marker.quantity(type, value: value, unit: unit, start: start, end: start.addingTimeInterval(600), metadata: extra)
+                return marker.quantity(
+                    type,
+                    value: value,
+                    unit: unit,
+                    start: start,
+                    end: start.addingTimeInterval(600),
+                    metadata: extra
+                )
             }
         }
     }
     /// One sample per writable category type and day, cycling through its valid values
-    private func categories(on day: Date, offset: Int, with marker: DemoSamples, isMissing: (SampleType) -> Bool) -> [Sample] {
+    private func categories(
+        on day: Date,
+        offset: Int,
+        with marker: DemoSamples,
+        isMissing: (SampleType) -> Bool
+    ) -> [Sample] {
         return reporter.demoCategoryTypes.filter { isMissing($0) && isWritable($0) }.map { type in
             let values = validValues(of: type)
             var extra = [String: Metadata.Value]()
@@ -223,7 +267,8 @@ final class SeedingDemos: DemoPerformer {
         "count/min": 60...100, "count": 1...200, "%": 0.2...0.9, "m/s": 1...3, "m": 200...3_000,
         "g": 1...30, "kcal": 20...300, "s": 300...1_800, "degC": 36.4...37.2, "mmHg": 75...120,
         "mL/kg·min": 35...50, "L/min": 300...500, "L": 2.5...4.5, "mg/dL": 80...120, "IU": 1...8,
-        "S": 0.000_001...0.000_01, "W": 80...250, "dBASPL": 40...75, "kcal/hr·kg": 2...8, "appleEffortScore": 2...8
+        "S": 0.000_001...0.000_01, "W": 80...250, "dBASPL": 40...75, "kcal/hr·kg": 2...8,
+        "appleEffortScore": 2...8
     ]
     /// Types whose plausible values differ from the default of their unit
     private let overrides: [QuantityType: (String, ClosedRange<Double>)] = [
@@ -246,6 +291,9 @@ final class SeedingDemos: DemoPerformer {
         .walkingSpeed: ("m/s", 1.1...1.5), .stairAscentSpeed: ("m/s", 0.3...0.6),
         .stairDescentSpeed: ("m/s", 0.3...0.6), .timeInDaylight: ("s", 600...3_600)
     ]
+}
+// MARK: - Plausible values
+extension SeedingDemos {
     private func plausibleValues(of type: QuantityType) -> (String, ClosedRange<Double>)? {
         if let override = overrides[type] {
             return override
@@ -263,22 +311,10 @@ final class SeedingDemos: DemoPerformer {
         switch type {
         case .sleepAnalysis:
             return Array(0...5) // HKCategoryValueSleepAnalysis
-        case .intermenstrualBleeding,
-             .mindfulSession,
-             .highHeartRateEvent,
-             .lowHeartRateEvent,
-             .irregularHeartRhythmEvent,
-             .toothbrushingEvent,
-             .pregnancy,
-             .lactation,
-             .sexualActivity,
-             .handwashingEvent,
-             .persistentIntermenstrualBleeding,
-             .prolongedMenstrualPeriods,
-             .irregularMenstrualCycles,
-             .infrequentMenstrualCycles,
-             .sleepApneaEvent,
-             .hypertensionEvent:
+        case .intermenstrualBleeding, .mindfulSession, .highHeartRateEvent, .lowHeartRateEvent,
+             .irregularHeartRhythmEvent, .toothbrushingEvent, .pregnancy, .lactation, .sexualActivity,
+             .handwashingEvent, .persistentIntermenstrualBleeding, .prolongedMenstrualPeriods,
+             .irregularMenstrualCycles, .infrequentMenstrualCycles, .sleepApneaEvent, .hypertensionEvent:
             return Array(0...0) // HKCategoryValue
         case .menstrualFlow:
             return Array(1...5) // HKCategoryValueMenstrualFlow
@@ -299,42 +335,12 @@ final class SeedingDemos: DemoPerformer {
             return Array(1...1) // HKCategoryValueLowCardioFitnessEvent
         case .appetiteChanges:
             return Array(0...3) // HKCategoryValueAppetiteChanges
-        case .abdominalCramps,
-             .acne,
-             .bladderIncontinence,
-             .bloating,
-             .breastPain,
-             .chestTightnessOrPain,
-             .chills,
-             .constipation,
-             .coughing,
-             .diarrhea,
-             .dizziness,
-             .drySkin,
-             .fainting,
-             .fatigue,
-             .fever,
-             .generalizedBodyAche,
-             .hairLoss,
-             .headache,
-             .heartburn,
-             .hotFlashes,
-             .lossOfSmell,
-             .lossOfTaste,
-             .lowerBackPain,
-             .memoryLapse,
-             .nausea,
-             .nightSweats,
-             .pelvicPain,
-             .rapidPoundingOrFlutteringHeartbeat,
-             .runnyNose,
-             .shortnessOfBreath,
-             .sinusCongestion,
-             .skippedHeartbeat,
-             .soreThroat,
-             .vaginalDryness,
-             .vomiting,
-             .wheezing:
+        case .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain, .chestTightnessOrPain,
+             .chills, .constipation, .coughing, .diarrhea, .dizziness, .drySkin, .fainting, .fatigue, .fever,
+             .generalizedBodyAche, .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste,
+             .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain,
+             .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath, .sinusCongestion,
+             .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing:
             return Array(0...4) // HKCategoryValueSeverity
         case .moodChanges,
              .sleepChanges:

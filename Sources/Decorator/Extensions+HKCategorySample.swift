@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKCategorySample: Harmonizable {
     typealias Harmonized = Category.Harmonized
 

@@ -1,5 +1,5 @@
 //
-//  Extensions+HKQuantitiySample.swift
+//  Extensions+HKQuantitySample.swift
 //  HealthKitReporter
 //
 //  Created by Victor on 15.09.20.
@@ -8,6 +8,7 @@
 import HealthKit
 
 // SI parsing
+// MARK: - Harmonizable
 extension HKQuantitySample: Harmonizable {
     typealias Harmonized = Quantity.Harmonized
 

@@ -128,7 +128,7 @@ class QueryHandleTests: XCTestCase {
         let options: SamplePredicateOptions = [.strictStartDate, .strictEndDate]
         XCTAssertTrue(options.contains(.strictStartDate))
         XCTAssertEqual(SamplePredicateOptions.strictEndDate.rawValue, 2)
-        XCTAssertNotNil(NSPredicate.samplesPredicate(startDate: Date(), endDate: Date(), options: []))
+        XCTAssertNotNil(NSPredicate.samplesPredicate(startDate: startDate, endDate: endDate, options: []))
     }
 
     private func assertRunAndStop(

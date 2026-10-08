@@ -1,5 +1,5 @@
 //
-//  SampleType.swift
+//  ClinicalType.swift
 //  HealthKitReporter
 //
 //  Created by Quentin on 01.08.24.
@@ -18,12 +18,12 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
     case vitalSignRecord
     case coverageRecord
     case clinicalNoteRecord
-    
+
     /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }
-    
+
     var original: HKObjectType? {
         switch self {
         case .allergyRecord:

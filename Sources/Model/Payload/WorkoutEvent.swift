@@ -110,7 +110,7 @@ extension WorkoutEvent.Harmonized: Payload {
      */
     public static func make(
         from dictionary: [String: Any]
-    ) throws ->  WorkoutEvent.Harmonized {
+    ) throws -> WorkoutEvent.Harmonized {
         guard
             let value = dictionary.int("value"),
             let description = dictionary["description"] as? String

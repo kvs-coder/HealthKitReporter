@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKWorkoutEvent: Harmonizable {
     typealias Harmonized = WorkoutEvent.Harmonized
 

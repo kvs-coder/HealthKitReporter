@@ -23,41 +23,31 @@ final class RecordsDemos: DemoPerformer {
             let execute = reporter.manager.executeQuery
             switch row {
             case .supportsHealthRecords:
-                completion(.success(reporter.manager.supportsHealthRecords() ? "Supported" : "Not supported on this device"))
+                let supported = reporter.manager.supportsHealthRecords()
+                completion(.success(supported ? "Supported" : "Not supported on this device"))
             case .clinicalRecordQuery:
-                guard reporter.manager.supportsHealthRecords() else {
-                    throw HealthKitError.notAvailable("Health records are not supported on this device")
-                }
-                let types = ClinicalType.allCases.filter { $0.identifier != nil }
-                reporter.countEveryType(types, completion: completion) { type, done in
-                    try reader.clinicalRecordQuery(type: type) { records, _ in done(records) }
-                }
+                try clinicalRecords(completion: completion)
             case .verifiableClinicalRecordQuery:
                 execute(
                     reader.verifiableClinicalRecordQuery(
                         recordTypes: ["https://smarthealth.cards#immunization"]
                     ) { records, error in
-                        completion(error.map { .failure($0) } ?? .success(records.summary("verifiable records")))
+                        completion(
+                            error.map { .failure($0) } ?? .success(records.summary("verifiable records"))
+                        )
                     }
                 )
             case .cdaDocumentQuery:
-                var documents = [CDADocument]()
-                execute(
-                    try reader.cdaDocumentQuery { batch, done, error in
-                        documents += batch
-                        guard done else {
-                            return
-                        }
-                        completion(error.map { .failure($0) } ?? .success(documents.summary("CDA documents")))
-                    }
-                )
+                try cdaDocuments(completion: completion)
             case .visionPrescriptionQuery:
                 guard #available(iOS 16.0, *) else {
                     throw HealthKitError.notAvailable("Vision prescriptions need iOS 16")
                 }
                 execute(
                     try reader.visionPrescriptionQuery { prescriptions, error in
-                        completion(error.map { .failure($0) } ?? .success(prescriptions.summary("prescriptions")))
+                        completion(
+                            error.map { .failure($0) } ?? .success(prescriptions.summary("prescriptions"))
+                        )
                     }
                 )
             case .audiogramQuery:
@@ -72,6 +62,30 @@ final class RecordsDemos: DemoPerformer {
         }
     }
 
+    /// Every clinical record type, when the device supports health records
+    private func clinicalRecords(completion: @escaping DemoCompletion) throws {
+        guard reporter.manager.supportsHealthRecords() else {
+            throw HealthKitError.notAvailable("Health records are not supported on this device")
+        }
+        let reader = reporter.reader
+        let types = ClinicalType.allCases.filter { $0.identifier != nil }
+        reporter.countEveryType(types, completion: completion) { type, done in
+            try reader.clinicalRecordQuery(type: type) { records, _ in done(records) }
+        }
+    }
+    /// Every CDA document, reported once the last batch arrives
+    private func cdaDocuments(completion: @escaping DemoCompletion) throws {
+        var documents = [CDADocument]()
+        reporter.manager.executeQuery(
+            try reporter.reader.cdaDocumentQuery { batch, done, error in
+                documents += batch
+                guard done else {
+                    return
+                }
+                completion(error.map { .failure($0) } ?? .success(documents.summary("CDA documents")))
+            }
+        )
+    }
     private func wellbeing(_ row: DemoRow, completion: @escaping DemoCompletion) throws {
         let reader = reporter.reader
         let execute = reporter.manager.executeQuery
@@ -93,7 +107,10 @@ final class RecordsDemos: DemoPerformer {
             } else {
                 execute(
                     try reader.workoutEffortRelationshipQuery { relationships, _, error in
-                        completion(error.map { .failure($0) } ?? .success(relationships.summary("workouts with effort")))
+                        completion(
+                            error.map { .failure($0) }
+                                ?? .success(relationships.summary("workouts with effort"))
+                        )
                     }
                 )
             }
@@ -101,29 +118,38 @@ final class RecordsDemos: DemoPerformer {
             guard #available(iOS 26.0, *) else {
                 throw HealthKitError.notAvailable("Medications need iOS 26")
             }
-            execute(
-                reader.userAnnotatedMedicationQuery { medications, error in
-                    guard row == .medicationDoseEventQuery else {
-                        completion(error.map { .failure($0) } ?? .success(medications.summary("medications")))
-                        return
-                    }
-                    do {
-                        let medication = medications.first?.medication
-                        execute(
-                            try reader.medicationDoseEventQuery(
-                                medicationConceptIdentifier: medication?.identifier
-                            ) { doses, error in
-                                let name = medication?.displayText ?? "every medication"
-                                completion(error.map { .failure($0) } ?? .success(doses.summary("doses of \(name)")))
-                            }
-                        )
-                    } catch {
-                        completion(.failure(error))
-                    }
-                }
-            )
+            medications(row, completion: completion)
         default:
             throw HealthKitError.invalidOption("\(row) is not a records or wellbeing demo")
         }
+    }
+    /// The user's medications, or the doses of the first one
+    @available(iOS 26.0, *)
+    private func medications(_ row: DemoRow, completion: @escaping DemoCompletion) {
+        let reader = reporter.reader
+        let execute = reporter.manager.executeQuery
+        execute(
+            reader.userAnnotatedMedicationQuery { medications, error in
+                guard row == .medicationDoseEventQuery else {
+                    completion(error.map { .failure($0) } ?? .success(medications.summary("medications")))
+                    return
+                }
+                do {
+                    let medication = medications.first?.medication
+                    execute(
+                        try reader.medicationDoseEventQuery(
+                            medicationConceptIdentifier: medication?.identifier
+                        ) { doses, error in
+                            let name = medication?.displayText ?? "every medication"
+                            completion(
+                                error.map { .failure($0) } ?? .success(doses.summary("doses of \(name)"))
+                            )
+                        }
+                    )
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        )
     }
 }

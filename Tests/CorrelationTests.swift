@@ -1,6 +1,6 @@
 //
 //  CorrelationTests.swift
-//  
+//  HealthKitReporter
 //
 //  Created by Kachalov, Victor on 03.09.21.
 //
@@ -99,7 +99,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(decoded.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(decoded.harmonized.quantitySamples.count, 2)
-        XCTAssertEqual(decoded.harmonized.quantitySamples[0].identifier, "HKQuantityTypeIdentifierBloodPressureSystolic")
+        XCTAssertEqual(
+            decoded.harmonized.quantitySamples[0].identifier,
+            "HKQuantityTypeIdentifierBloodPressureSystolic"
+        )
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].startTimestamp, 1626884800)
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].endTimestamp, 1626884800 + 60)
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].device?.name, "Guy's iPhone")
@@ -111,7 +114,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].device?.localIdentifier, "some_3")
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].device?.udiDeviceIdentifier, "some_4")
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].sourceRevision.source.name, "mySource")
-        XCTAssertEqual(decoded.harmonized.quantitySamples[0].sourceRevision.source.bundleIdentifier, "com.kvs.hkreporter")
+        XCTAssertEqual(
+            decoded.harmonized.quantitySamples[0].sourceRevision.source.bundleIdentifier,
+            "com.kvs.hkreporter"
+        )
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].sourceRevision.version, "1.0.0")
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].sourceRevision.productType, "CocoaPod")
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].sourceRevision.systemVersion, "1.0.0.0")
@@ -121,7 +127,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].harmonized.value, 123)
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].harmonized.unit, "mmHg")
         XCTAssertEqual(decoded.harmonized.quantitySamples[0].harmonized.metadata, ["you": "saved it"])
-        XCTAssertEqual(decoded.harmonized.quantitySamples[1].identifier, "HKQuantityTypeIdentifierBloodPressureDiastolic")
+        XCTAssertEqual(
+            decoded.harmonized.quantitySamples[1].identifier,
+            "HKQuantityTypeIdentifierBloodPressureDiastolic"
+        )
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].startTimestamp, 1626884800)
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].endTimestamp, 1626884800 + 60)
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].device?.name, "Guy's iPhone")
@@ -133,7 +142,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].device?.localIdentifier, "some_3")
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].device?.udiDeviceIdentifier, "some_4")
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].sourceRevision.source.name, "mySource")
-        XCTAssertEqual(decoded.harmonized.quantitySamples[1].sourceRevision.source.bundleIdentifier, "com.kvs.hkreporter")
+        XCTAssertEqual(
+            decoded.harmonized.quantitySamples[1].sourceRevision.source.bundleIdentifier,
+            "com.kvs.hkreporter"
+        )
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].sourceRevision.version, "1.0.0")
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].sourceRevision.productType, "CocoaPod")
         XCTAssertEqual(decoded.harmonized.quantitySamples[1].sourceRevision.systemVersion, "1.0.0.0")
@@ -283,7 +295,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(sut.sourceRevision.operatingSystem.minorVersion, 1)
         XCTAssertEqual(sut.sourceRevision.operatingSystem.patchVersion, 1)
         XCTAssertEqual(sut.harmonized.quantitySamples.count, 2)
-        XCTAssertEqual(sut.harmonized.quantitySamples[0].identifier, "HKQuantityTypeIdentifierBloodPressureSystolic")
+        XCTAssertEqual(
+            sut.harmonized.quantitySamples[0].identifier,
+            "HKQuantityTypeIdentifierBloodPressureSystolic"
+        )
         XCTAssertEqual(sut.harmonized.quantitySamples[0].startTimestamp, 1653657145.998812, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.quantitySamples[0].endTimestamp, 1653657205.998812, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.quantitySamples[0].device?.name, "Guy's iPhone")
@@ -295,7 +310,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.quantitySamples[0].device?.localIdentifier, "some_3")
         XCTAssertEqual(sut.harmonized.quantitySamples[0].device?.udiDeviceIdentifier, "some_4")
         XCTAssertEqual(sut.harmonized.quantitySamples[0].sourceRevision.source.name, "mySource")
-        XCTAssertEqual(sut.harmonized.quantitySamples[0].sourceRevision.source.bundleIdentifier, "com.kvs.hkreporter")
+        XCTAssertEqual(
+            sut.harmonized.quantitySamples[0].sourceRevision.source.bundleIdentifier,
+            "com.kvs.hkreporter"
+        )
         XCTAssertEqual(sut.harmonized.quantitySamples[0].sourceRevision.version, "1.0.0")
         XCTAssertEqual(sut.harmonized.quantitySamples[0].sourceRevision.productType, "CocoaPod")
         XCTAssertEqual(sut.harmonized.quantitySamples[0].sourceRevision.systemVersion, "1.0.0.0")
@@ -305,7 +323,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.quantitySamples[0].harmonized.value, 123)
         XCTAssertEqual(sut.harmonized.quantitySamples[0].harmonized.unit, "mmHg")
         XCTAssertEqual(sut.harmonized.quantitySamples[0].harmonized.metadata, ["you": "saved it"])
-        XCTAssertEqual(sut.harmonized.quantitySamples[1].identifier, "HKQuantityTypeIdentifierBloodPressureDiastolic")
+        XCTAssertEqual(
+            sut.harmonized.quantitySamples[1].identifier,
+            "HKQuantityTypeIdentifierBloodPressureDiastolic"
+        )
         XCTAssertEqual(sut.harmonized.quantitySamples[1].startTimestamp, 1653657145.998812, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.quantitySamples[1].endTimestamp, 1653657205.998812, accuracy: epsilon)
         XCTAssertEqual(sut.harmonized.quantitySamples[1].device?.name, "Guy's iPhone")
@@ -317,7 +338,10 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.quantitySamples[1].device?.localIdentifier, "some_3")
         XCTAssertEqual(sut.harmonized.quantitySamples[1].device?.udiDeviceIdentifier, "some_4")
         XCTAssertEqual(sut.harmonized.quantitySamples[1].sourceRevision.source.name, "mySource")
-        XCTAssertEqual(sut.harmonized.quantitySamples[1].sourceRevision.source.bundleIdentifier, "com.kvs.hkreporter")
+        XCTAssertEqual(
+            sut.harmonized.quantitySamples[1].sourceRevision.source.bundleIdentifier,
+            "com.kvs.hkreporter"
+        )
         XCTAssertEqual(sut.harmonized.quantitySamples[1].sourceRevision.version, "1.0.0")
         XCTAssertEqual(sut.harmonized.quantitySamples[1].sourceRevision.productType, "CocoaPod")
         XCTAssertEqual(sut.harmonized.quantitySamples[1].sourceRevision.systemVersion, "1.0.0.0")

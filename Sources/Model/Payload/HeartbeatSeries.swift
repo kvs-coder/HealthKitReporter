@@ -65,7 +65,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
     public let device: Device?
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
-    
+
     /**
      Creates the payload. **uuid** names the stored sample; a new one by default,
      since HealthKit gives every saved sample its own

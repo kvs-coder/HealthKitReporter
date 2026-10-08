@@ -1,10 +1,11 @@
 //
-//  DemoTypes.swift
+//  Extensions+HealthKitReporter.swift
 //  HealthKitReporter_Example
 //
 //  Created by Victor Kachalov on 08.10.26.
 //
 
+import Combine
 import Foundation
 import HealthKitReporter
 
@@ -28,7 +29,8 @@ extension HealthKitReporter {
     }
 
     /// Read access: every sample type, characteristics and activity summaries.
-    /// Clinical records start Health's records flow, which needs an Apple Account, so they have their own request;
+    /// Clinical records start Health's records flow, which needs an Apple Account,
+    /// so they have their own request;
     /// vision prescriptions and medications use per-object authorization
     var demoReadTypes: [ObjectType] {
         var types: [ObjectType] = demoSampleTypes
@@ -90,5 +92,23 @@ extension HealthKitReporter {
             }
             completion(.success(lines.joined(separator: "\n")))
         }
+    }
+}
+// MARK: - Publisher
+extension HealthKitReporter {
+    /// One result: wraps a callback based library call in a publisher
+    func publisher(
+        _ body: @escaping (@escaping DemoCompletion) throws -> Void
+    ) -> AnyPublisher<String, Error> {
+        return Deferred {
+            Future { promise in
+                do {
+                    try body(promise)
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }

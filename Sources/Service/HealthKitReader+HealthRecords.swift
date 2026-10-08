@@ -14,7 +14,7 @@ extension HealthKitReader {
      - Requires: per-object read authorization, see **HealthKitManager.requestPerObjectReadAuthorization**
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with vision prescriptions
      - Throws: HealthKitError.invalidType
@@ -47,7 +47,7 @@ extension HealthKitReader {
      - Parameter type: **ClinicalType** type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with clinical records
      - Throws: HealthKitError.invalidType
@@ -120,7 +120,7 @@ extension HealthKitReader {
      The user authorizes each document the first time it matches.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter includeDocumentData: **Bool** include the CDA XML. True by default
      - Parameter resultsHandler: returns a block with CDA documents

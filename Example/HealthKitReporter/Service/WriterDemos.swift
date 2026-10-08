@@ -28,12 +28,26 @@ final class WriterDemos: DemoPerformer {
             let now = Date()
             switch row {
             case .saveQuantity:
-                save([samples.quantity(.stepCount, value: 1_200, unit: "count", start: now.addingTimeInterval(-3_600), end: now)], completion)
+                let steps = samples.quantity(
+                    .stepCount,
+                    value: 1_200,
+                    unit: "count",
+                    start: now.addingTimeInterval(-3_600),
+                    end: now
+                )
+                save([steps], completion)
             case .saveCategory:
                 let night = Calendar.current.startOfDay(for: now)
-                save([samples.category(.sleepAnalysis, value: 0, start: night.addingTimeInterval(-7_200), end: night.addingTimeInterval(21_600))], completion)
+                let sleep = samples.category(
+                    .sleepAnalysis,
+                    value: 0,
+                    start: night.addingTimeInterval(-7_200),
+                    end: night.addingTimeInterval(21_600)
+                )
+                save([sleep], completion)
             case .saveCorrelation:
-                save([samples.bloodPressure(systolic: 118, diastolic: 76, at: now), samples.food(kilocalories: 450, protein: 25, at: now)], completion)
+                let pressure = samples.bloodPressure(systolic: 118, diastolic: 76, at: now)
+                save([pressure, samples.food(kilocalories: 450, protein: 25, at: now)], completion)
             case .saveWorkout:
                 save([samples.workout(start: now.addingTimeInterval(-3_600), minutes: 30)], completion)
             case .saveWorkoutWithBuilder:
@@ -43,7 +57,9 @@ final class WriterDemos: DemoPerformer {
             case .saveQuantitySeries:
                 saveQuantitySeries(completion: completion)
             case .saveHeartbeatSeries:
-                reporter.writer.saveHeartbeatSeries(heartbeatSeries(at: now)) { status($0, $1, "Heartbeat series saved", completion) }
+                reporter.writer.saveHeartbeatSeries(heartbeatSeries(at: now)) {
+                    status($0, $1, "Heartbeat series saved", completion)
+                }
             case .saveAudiogram:
                 save([audiogram(at: now)], completion)
             case .delete:
@@ -91,7 +107,8 @@ final class WriterDemos: DemoPerformer {
             group.enter()
             reporter.writer.save(sample: payload) { success, _, error in
                 lock.lock()
-                lines.append("\(type(of: payload)): \(success ? "saved" : error?.localizedDescription ?? "failed")")
+                let result = success ? "saved" : error?.localizedDescription ?? "failed"
+                lines.append("\(type(of: payload)): \(result)")
                 lock.unlock()
                 group.leave()
             }
@@ -104,7 +121,12 @@ final class WriterDemos: DemoPerformer {
     private func saveWithBuilder(completion: @escaping DemoCompletion) {
         let start = Date().addingTimeInterval(-7_200)
         let heartRates = (0..<6).map {
-            samples.quantity(.heartRate, value: 120 + Double($0 * 5), unit: "count/min", start: start.addingTimeInterval(Double($0) * 300))
+            samples.quantity(
+                .heartRate,
+                value: 120 + Double($0 * 5),
+                unit: "count/min",
+                start: start.addingTimeInterval(Double($0) * 300)
+            )
         }
         let route = (0..<5).map { index in
             WorkoutRoute.Location(
@@ -121,8 +143,15 @@ final class WriterDemos: DemoPerformer {
                 verticalAccuracy: 3
             )
         }
-        reporter.writer.saveWorkout(samples.workout(start: start, minutes: 30), samples: heartRates, route: route) { workout, error in
-            completion(workout.map { .success("Saved through the builder:\n\($0.json)") } ?? .failure(error ?? HealthKitError.unknown()))
+        reporter.writer.saveWorkout(
+            samples.workout(start: start, minutes: 30),
+            samples: heartRates,
+            route: route
+        ) { workout, error in
+            completion(
+                workout.map { .success("Saved through the builder:\n\($0.json)") }
+                    ?? .failure(error ?? HealthKitError.unknown())
+            )
         }
     }
     /// The latest stored workout, which samples are added to and effort is related to
@@ -146,11 +175,21 @@ final class WriterDemos: DemoPerformer {
                 let end = Date(timeIntervalSince1970: workout.endTimestamp)
                 let message = "Added to the workout of \(start.formatted())"
                 if row == .addQuantity {
-                    let energy = samples.quantity(.activeEnergyBurned, value: 120, unit: "kcal", start: start, end: end)
-                    reporter.writer.addQuantity([energy], from: nil, to: workout) { status($0, $1, message, completion) }
+                    let energy = samples.quantity(
+                        .activeEnergyBurned,
+                        value: 120,
+                        unit: "kcal",
+                        start: start,
+                        end: end
+                    )
+                    reporter.writer.addQuantity([energy], from: nil, to: workout) {
+                        status($0, $1, message, completion)
+                    }
                 } else {
                     let mindful = samples.category(.mindfulSession, value: 0, start: start, end: end)
-                    reporter.writer.addCategory([mindful], from: nil, to: workout) { status($0, $1, message, completion) }
+                    reporter.writer.addCategory([mindful], from: nil, to: workout) {
+                        status($0, $1, message, completion)
+                    }
                 }
             }
         }
@@ -170,9 +209,83 @@ final class WriterDemos: DemoPerformer {
             status($0, $1, "Series of \(values.count) step counts saved", completion)
         }
     }
+    @available(iOS 18.0, *)
+    private func effort(relate: Bool, completion: @escaping DemoCompletion) throws {
+        try latestWorkout { [unowned self] result in
+            guard case .success(let workout) = result else {
+                completion(.failure(HealthKitError.invalidValue("Save a workout first")))
+                return
+            }
+            let date = Date(timeIntervalSince1970: workout.endTimestamp)
+            let effort = samples.quantity(
+                .workoutEffortScore,
+                value: 7,
+                unit: "appleEffortScore",
+                start: date
+            )
+            let writer = reporter.writer
+            if relate {
+                writer.relateWorkoutEffort(effort, toWorkout: workout.uuid) {
+                    status($0, $1, "Effort 7 related", completion)
+                }
+            } else {
+                writer.unrelateWorkoutEffort(effort, fromWorkout: workout.uuid) {
+                    status($0, $1, "Effort unrelated", completion)
+                }
+            }
+        }
+    }
+    /// Saves two step samples at once, then deletes the stored ones by the uuids the save reported
+    private func deleteAfterSaving(completion: @escaping DemoCompletion) {
+        let steps = [10.0, 20.0].map { value in
+            samples.quantity(
+                .stepCount,
+                value: value,
+                unit: "count",
+                start: Date().addingTimeInterval(-60),
+                end: Date()
+            )
+        }
+        reporter.writer.save(samples: steps) { [unowned self] success, uuids, error in
+            guard success else {
+                completion(.failure(error ?? HealthKitError.unknown()))
+                return
+            }
+            let stored = zip(steps, uuids).map { $0.copyWith(uuid: $1) }
+            reporter.writer.delete(samples: stored) {
+                status($0, $1, "Saved \(uuids.count) samples, then deleted them", completion)
+            }
+        }
+    }
+    /// Only steps this app wrote, carrying the demo marker
+    private func deleteOwnSteps(completion: @escaping DemoCompletion) {
+        let predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                HKQuery.predicateForObjects(from: HKSource.default()),
+                HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeyExternalUUID)
+            ]
+        )
+        reporter.writer.deleteObjects(
+            of: QuantityType.stepCount,
+            predicate: predicate
+        ) { success, count, error in
+            completion(
+                success
+                    ? .success("Deleted \(count) of the demo's own step samples")
+                    : .failure(error ?? HealthKitError.unknown())
+            )
+        }
+    }
+}
+// MARK: - Payloads
+extension WriterDemos {
     private func heartbeatSeries(at date: Date) -> HeartbeatSeries {
         let beats = (0..<20).map {
-            HeartbeatSeries.Measurement(timeSinceSeriesStart: Double($0) * 0.8, precededByGap: false, done: $0 == 19)
+            HeartbeatSeries.Measurement(
+                timeSinceSeriesStart: Double($0) * 0.8,
+                precededByGap: false,
+                done: $0 == 19
+            )
         }
         return HeartbeatSeries(
             identifier: SeriesType.heartbeatSeries.identifier ?? "",
@@ -180,7 +293,11 @@ final class WriterDemos: DemoPerformer {
             endTimestamp: date.timeIntervalSince1970,
             device: nil,
             sourceRevision: samples.sourceRevision,
-            harmonized: HeartbeatSeries.Harmonized(count: beats.count, measurements: beats, metadata: samples.metadata)
+            harmonized: HeartbeatSeries.Harmonized(
+                count: beats.count,
+                measurements: beats,
+                metadata: samples.metadata
+            )
         )
     }
     private func audiogram(at date: Date) -> Audiogram {
@@ -212,7 +329,12 @@ final class WriterDemos: DemoPerformer {
                 dateIssuedTimestamp: date.timeIntervalSince1970,
                 expirationDateTimestamp: date.addingTimeInterval(2 * 365 * 86_400).timeIntervalSince1970,
                 prescriptionType: VisionPrescription.PrescriptionType(id: 1, detail: "Glasses"),
-                rightEye: VisionPrescription.LensSpecification(sphere: -1.25, cylinder: -0.5, axis: 180, vertexDistance: 12),
+                rightEye: VisionPrescription.LensSpecification(
+                    sphere: -1.25,
+                    cylinder: -0.5,
+                    axis: 180,
+                    vertexDistance: 12
+                ),
                 leftEye: VisionPrescription.LensSpecification(sphere: -1.0),
                 brand: nil,
                 metadata: samples.metadata
@@ -292,52 +414,14 @@ final class WriterDemos: DemoPerformer {
                 endTimestamp: date.timeIntervalSince1970,
                 device: nil,
                 sourceRevision: self.samples.sourceRevision,
-                harmonized: ScoredAssessment.Harmonized(answers: answers, score: nil, risk: nil, metadata: self.samples.metadata)
+                harmonized: ScoredAssessment.Harmonized(
+                    answers: answers,
+                    score: nil,
+                    risk: nil,
+                    metadata: self.samples.metadata
+                )
             )
         }
         return [assessment(.gad7, [1, 0, 1, 2, 0, 1, 0]), assessment(.phq9, [0, 1, 1, 0, 2, 0, 1, 0, 0])]
-    }
-    @available(iOS 18.0, *)
-    private func effort(relate: Bool, completion: @escaping DemoCompletion) throws {
-        try latestWorkout { [unowned self] result in
-            guard case .success(let workout) = result else {
-                completion(.failure(HealthKitError.invalidValue("Save a workout first")))
-                return
-            }
-            let date = Date(timeIntervalSince1970: workout.endTimestamp)
-            let effort = samples.quantity(.workoutEffortScore, value: 7, unit: "appleEffortScore", start: date)
-            let writer = reporter.writer
-            if relate {
-                writer.relateWorkoutEffort(effort, toWorkout: workout.uuid) { status($0, $1, "Effort 7 related", completion) }
-            } else {
-                writer.unrelateWorkoutEffort(effort, fromWorkout: workout.uuid) { status($0, $1, "Effort unrelated", completion) }
-            }
-        }
-    }
-    /// Saves two step samples at once, then deletes the stored ones by the uuids the save reported
-    private func deleteAfterSaving(completion: @escaping DemoCompletion) {
-        let steps = [10.0, 20.0].map { value in
-            samples.quantity(.stepCount, value: value, unit: "count", start: Date().addingTimeInterval(-60), end: Date())
-        }
-        reporter.writer.save(samples: steps) { [unowned self] success, uuids, error in
-            guard success else {
-                completion(.failure(error ?? HealthKitError.unknown()))
-                return
-            }
-            let stored = zip(steps, uuids).map { $0.copyWith(uuid: $1) }
-            reporter.writer.delete(samples: stored) { status($0, $1, "Saved \(uuids.count) samples, then deleted them", completion) }
-        }
-    }
-    /// Only steps this app wrote, carrying the demo marker
-    private func deleteOwnSteps(completion: @escaping DemoCompletion) {
-        let predicate = NSCompoundPredicate(
-            andPredicateWithSubpredicates: [
-                HKQuery.predicateForObjects(from: HKSource.default()),
-                HKQuery.predicateForObjects(withMetadataKey: HKMetadataKeyExternalUUID)
-            ]
-        )
-        reporter.writer.deleteObjects(of: QuantityType.stepCount, predicate: predicate) { success, count, error in
-            completion(success ? .success("Deleted \(count) of the demo's own step samples") : .failure(error ?? HealthKitError.unknown()))
-        }
     }
 }

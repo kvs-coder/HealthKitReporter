@@ -46,7 +46,9 @@ public struct Electrocardiogram: Identifiable, Sample {
     }
     /// **VoltageMeasurement** one voltage of an ECG at a time since its start
     public struct VoltageMeasurement: Codable {
-        /// The value part of **Electrocardiogram.VoltageMeasurement**, with its metadata
+        // Nested twice: the name is public API the Flutter plugin decodes
+        // swiftlint:disable nesting
+        /// The value part of **Electrocardiogram.VoltageMeasurement**
         public struct Harmonized: Codable {
             public let value: Double
             public let unit: String
@@ -57,6 +59,7 @@ public struct Electrocardiogram: Identifiable, Sample {
                 self.unit = unit
             }
         }
+        // swiftlint:enable nesting
 
         public let harmonized: Harmonized
         public let timeSinceSampleStart: Double

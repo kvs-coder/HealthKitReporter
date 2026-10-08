@@ -8,6 +8,7 @@
 import HealthKit
 
 // SI parsing
+// MARK: - Harmonizable
 extension HKStatistics: Harmonizable {
     typealias Harmonized = Statistics.Harmonized
 

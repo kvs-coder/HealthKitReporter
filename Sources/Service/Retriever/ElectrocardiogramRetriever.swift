@@ -8,8 +8,13 @@
 import HealthKit
 
 class ElectrocardiogramRetriever {
+    private let healthStore: HKHealthStore
+
+    init(healthStore: HKHealthStore) {
+        self.healthStore = healthStore
+    }
+
     func makeElectrocardiogramQuery(
-        healthStore: HKHealthStore,
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
@@ -48,7 +53,7 @@ class ElectrocardiogramRetriever {
             )
             for (index, sample) in results.enumerated() {
                 collector.enter()
-                healthStore.execute(
+                self.healthStore.execute(
                     self.makeVoltageQuery(for: sample, at: index, collector: collector)
                 )
             }

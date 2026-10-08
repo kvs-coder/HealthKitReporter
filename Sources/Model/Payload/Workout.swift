@@ -72,7 +72,8 @@ public struct Workout: Identifiable, Sample {
                 totalDistance: totalDistance ?? self.totalDistance,
                 totalDistanceUnit: totalDistanceUnit ?? self.totalDistanceUnit,
                 totalSwimmingStrokeCount: totalSwimmingStrokeCount ?? self.totalSwimmingStrokeCount,
-                totalSwimmingStrokeCountUnit: totalSwimmingStrokeCountUnit ?? self.totalSwimmingStrokeCountUnit,
+                totalSwimmingStrokeCountUnit: totalSwimmingStrokeCountUnit
+                    ?? self.totalSwimmingStrokeCountUnit,
                 totalFlightsClimbed: totalFlightsClimbed ?? self.totalFlightsClimbed,
                 totalFlightsClimbedUnit: totalFlightsClimbedUnit ?? self.totalFlightsClimbedUnit,
                 metadata: metadata ?? self.metadata

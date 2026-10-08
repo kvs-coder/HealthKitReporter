@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HealthKitReporter
 
 extension Sequence {
     /// "N <noun>" followed by the first element as JSON, what a demo row shows for a list result
@@ -19,19 +18,5 @@ extension Sequence {
             return "\(items.count) \(noun)"
         }
         return "\(items.count) \(noun), first:\n\(json.clipped)"
-    }
-}
-
-extension String {
-    /// Long JSON cut so a cell stays readable
-    var clipped: String {
-        return count > 1_200 ? prefix(1_200) + "\n…" : self
-    }
-}
-
-extension Encodable {
-    /// The value as JSON, or the encoding error
-    var json: String {
-        return (try? encoded())?.clipped ?? "Could not encode \(self)"
     }
 }

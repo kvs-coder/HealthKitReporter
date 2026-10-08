@@ -23,7 +23,7 @@ public struct VerifiableClinicalRecord: Identifiable, Sample {
         }
     }
 
-    /// The value part of **VerifiableClinicalRecord**, with its metadata
+    /// The value part of **VerifiableClinicalRecord**
     public struct Harmonized: Codable {
         public let recordTypes: [String]
         public let issuerIdentifier: String
@@ -158,7 +158,7 @@ extension VerifiableClinicalRecord {
         return results.map { VerifiableClinicalRecord(verifiableClinicalRecord: $0) }
     }
 }
-// MARK: - Harmonized: Payload
+// MARK: - Payload
 extension VerifiableClinicalRecord.Harmonized: Payload {
     /**
      Makes a **VerifiableClinicalRecord.Harmonized** from a dictionary with the keys of its JSON encoding.

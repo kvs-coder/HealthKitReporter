@@ -26,8 +26,9 @@
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		674CBD1893A9EFF7386D7989 /* HealthKitReporter in Frameworks */ = {isa = PBXBuildFile; productRef = F4C4ACD184EFE2E22AFFB9F2 /* HealthKitReporter */; };
+		76B5473E561501E6A15874C5 /* DemoSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B103E0B288EFF86C60FFAE6 /* DemoSectionHeaderView.swift */; };
+		77C7B8B5021356F6A9536FD2 /* Extensions+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06470CCEF42ED44D57F72157 /* Extensions+String.swift */; };
 		79D38A611469DF8B137672C5 /* DemoPerformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D968EEFB9FA2F9572D2D21 /* DemoPerformer.swift */; };
 		7CC9EFF65B542E9EDA1E64FA /* WatchAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50B30F25074366B11C222EC /* WatchAppDelegate.swift */; };
 		851FB4AE717EF8869E4CA6E4 /* Extensions+NSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1A41E35678FC29B46044C2 /* Extensions+NSPredicate.swift */; };
@@ -40,6 +41,7 @@
 		AE5A04A51E92F5CEFD47772A /* SeedingDemos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2711930C03A6CF07308CA1F2 /* SeedingDemos.swift */; };
 		BB3D2988B7C86A7A836EEF8E /* ObserverDemos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9127C5684F3F1B80DFA628A0 /* ObserverDemos.swift */; };
 		BE602FE58B41A2CABA79C73F /* HealthKitReporterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F305D5C0C878EEA203AE98 /* HealthKitReporterService.swift */; };
+		C1F799065E5417D08A957DB2 /* Extensions+Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E2CE50725920879C6CC967 /* Extensions+Encodable.swift */; };
 		D9E5DA09CCFD8FCB44918A89 /* WriterDemos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A176DB429BA8C55C3132CA3 /* WriterDemos.swift */; };
 		DA6428C07EBFC785EE444D8E /* ReaderDemos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3210B57F8ADF82F0E89BF5F8 /* ReaderDemos.swift */; };
 		E6F5815BBA0B5A7DB9893315 /* HealthKitReporter in Frameworks */ = {isa = PBXBuildFile; productRef = CB29EA5850873314422F3F49 /* HealthKitReporter */; };
@@ -48,13 +50,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		607FACE61AFB9204008FA782 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
-			remoteInfo = HealthKitReporter;
-		};
 		AC746AC60A2670C5A8A6B375 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
@@ -80,6 +75,7 @@
 
 /* Begin PBXFileReference section */
 		04F570C725DC5EC80084336C /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../.swiftlint.yml; sourceTree = "<group>"; };
+		06470CCEF42ED44D57F72157 /* Extensions+String.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+String.swift"; sourceTree = "<group>"; };
 		070BD0EBAE78B36F6353742C /* StatisticsDemos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StatisticsDemos.swift; sourceTree = "<group>"; };
 		0E94B4AA9F04E3B682573F96 /* DemoSamples.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoSamples.swift; sourceTree = "<group>"; };
 		1619DC4A33FE5CBB92213A85 /* DemoRow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoRow.swift; sourceTree = "<group>"; };
@@ -94,12 +90,14 @@
 		1A176DB429BA8C55C3132CA3 /* WriterDemos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WriterDemos.swift; sourceTree = "<group>"; };
 		1F2A75198314747587C8AF62 /* Extensions+Sequence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+Sequence.swift"; sourceTree = "<group>"; };
 		2091E65F20470315B7CE52AC /* Extensions+HealthKitReporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+HealthKitReporter.swift"; sourceTree = "<group>"; };
+		24E2CE50725920879C6CC967 /* Extensions+Encodable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Extensions+Encodable.swift"; sourceTree = "<group>"; };
 		26F305D5C0C878EEA203AE98 /* HealthKitReporterService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthKitReporterService.swift; sourceTree = "<group>"; };
 		2711930C03A6CF07308CA1F2 /* SeedingDemos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SeedingDemos.swift; sourceTree = "<group>"; };
 		3210B57F8ADF82F0E89BF5F8 /* ReaderDemos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ReaderDemos.swift; sourceTree = "<group>"; };
 		399B47909B1CB7776672347C /* WorkoutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		4225B1F2FA7288FF2B5908B1 /* HealthKitReporterWatch.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HealthKitReporterWatch.entitlements; sourceTree = "<group>"; };
 		4A74A54802A8F0D920E648D3 /* HealthKitReporterWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HealthKitReporterWatchApp.swift; sourceTree = "<group>"; };
+		4B103E0B288EFF86C60FFAE6 /* DemoSectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoSectionHeaderView.swift; sourceTree = "<group>"; };
 		50903794B3083DFFBD2E410E /* LiveQueries.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveQueries.swift; sourceTree = "<group>"; };
 		5CD9502953B49AA83BC74E74 /* HealthKitReporterWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthKitReporterWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* HealthKitReporter_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthKitReporter_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,9 +105,6 @@
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		607FACE51AFB9204008FA782 /* HealthKitReporter_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HealthKitReporter_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		784CB4452F8A563A8EC84C82 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		78574B0DE430F32780E70D46 /* DemoCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DemoCell.swift; sourceTree = "<group>"; };
 		831CAB0A312C48E5713E6AAF /* AuthorizationDemos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AuthorizationDemos.swift; sourceTree = "<group>"; };
@@ -139,13 +134,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		607FACE21AFB9204008FA782 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CBE4EABE27654744AEF72623 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,6 +157,7 @@
 				8DB0CE9F810F0BE3697A5E06 /* DemoView.swift */,
 				E3AF36C0587A0BB81C3A5F50 /* DemoViewController.swift */,
 				9778DFE1D9633B197827F125 /* DemoViewModel.swift */,
+				4B103E0B288EFF86C60FFAE6 /* DemoSectionHeaderView.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -193,6 +182,8 @@
 				2711930C03A6CF07308CA1F2 /* SeedingDemos.swift */,
 				070BD0EBAE78B36F6353742C /* StatisticsDemos.swift */,
 				1A176DB429BA8C55C3132CA3 /* WriterDemos.swift */,
+				06470CCEF42ED44D57F72157 /* Extensions+String.swift */,
+				24E2CE50725920879C6CC967 /* Extensions+Encodable.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -212,7 +203,6 @@
 				179DA3AF25250601003A2C22 /* HealthKitReporter_Example.entitlements */,
 				607FACF51AFB993E008FA782 /* Metadata */,
 				607FACD21AFB9204008FA782 /* HealthKitReporter_Example */,
-				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
 				EFEE644578DD36BEA5CC9322 /* Frameworks */,
 				929908072B11F4DF14FAFADE /* HealthKitReporterWatch */,
@@ -223,7 +213,6 @@
 			isa = PBXGroup;
 			children = (
 				607FACD01AFB9204008FA782 /* HealthKitReporter_Example.app */,
-				607FACE51AFB9204008FA782 /* HealthKitReporter_Tests.xctest */,
 				5CD9502953B49AA83BC74E74 /* HealthKitReporterWatch.app */,
 			);
 			name = Products;
@@ -247,23 +236,6 @@
 			isa = PBXGroup;
 			children = (
 				607FACD41AFB9204008FA782 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		607FACE81AFB9204008FA782 /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
-				607FACE91AFB9204008FA782 /* Supporting Files */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		607FACE91AFB9204008FA782 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				607FACEA1AFB9204008FA782 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -311,7 +283,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				04F570C625DC5E930084336C /* ShellScript */,
+				04F570C625DC5E930084336C /* SwiftLint */,
 				9879F941837E4C5DEACFC021 /* Embed Watch Content */,
 			);
 			buildRules = (
@@ -326,24 +298,6 @@
 			productName = HealthKitReporter;
 			productReference = 607FACD01AFB9204008FA782 /* HealthKitReporter_Example.app */;
 			productType = "com.apple.product-type.application";
-		};
-		607FACE41AFB9204008FA782 /* HealthKitReporter_Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "HealthKitReporter_Tests" */;
-			buildPhases = (
-				607FACE11AFB9204008FA782 /* Sources */,
-				607FACE21AFB9204008FA782 /* Frameworks */,
-				607FACE31AFB9204008FA782 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
-			);
-			name = HealthKitReporter_Tests;
-			productName = Tests;
-			productReference = 607FACE51AFB9204008FA782 /* HealthKitReporter_Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		E5D2EE5702AB2A511D84D548 /* HealthKitReporterWatch */ = {
 			isa = PBXNativeTarget;
@@ -404,7 +358,6 @@
 			projectRoot = "";
 			targets = (
 				607FACCF1AFB9204008FA782 /* HealthKitReporter_Example */,
-				607FACE41AFB9204008FA782 /* HealthKitReporter_Tests */,
 				E5D2EE5702AB2A511D84D548 /* HealthKitReporterWatch */,
 			);
 		};
@@ -420,13 +373,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		607FACE31AFB9204008FA782 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A66466442D7CE86DFF6FB4DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -437,8 +383,9 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		04F570C625DC5E930084336C /* ShellScript */ = {
+		04F570C625DC5E930084336C /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -446,13 +393,14 @@
 			);
 			inputPaths = (
 			);
+			name = SwiftLint;
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Lints the whole repository with its .swiftlint.yml, as CI does\nif which swiftlint >/dev/null; then\n  cd \"${SRCROOT}/..\" && swiftlint lint --quiet\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -487,14 +435,9 @@
 				AE5A04A51E92F5CEFD47772A /* SeedingDemos.swift in Sources */,
 				90F47831AD5EEBC2902E5632 /* StatisticsDemos.swift in Sources */,
 				D9E5DA09CCFD8FCB44918A89 /* WriterDemos.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		607FACE11AFB9204008FA782 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				77C7B8B5021356F6A9536FD2 /* Extensions+String.swift in Sources */,
+				C1F799065E5417D08A957DB2 /* Extensions+Encodable.swift in Sources */,
+				76B5473E561501E6A15874C5 /* DemoSectionHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,11 +455,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		607FACE71AFB9204008FA782 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 607FACCF1AFB9204008FA782 /* HealthKitReporter_Example */;
-			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
-		};
 		EC567FB538DBDDFFDCE90283 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = HealthKitReporterWatch;
@@ -692,56 +630,6 @@
 			};
 			name = Release;
 		};
-		607FACF31AFB9204008FA782 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEVELOPMENT_TEAM = MAVP5V2N7V;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kvs.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthKitReporter_Example.app/HealthKitReporter_Example";
-			};
-			name = Debug;
-		};
-		607FACF41AFB9204008FA782 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEVELOPMENT_TEAM = MAVP5V2N7V;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.kvs.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthKitReporter_Example.app/HealthKitReporter_Example";
-			};
-			name = Release;
-		};
 		99EB4805C23D5B8A0313DF26 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -825,15 +713,6 @@
 			buildConfigurations = (
 				607FACF01AFB9204008FA782 /* Debug */,
 				607FACF11AFB9204008FA782 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "HealthKitReporter_Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				607FACF31AFB9204008FA782 /* Debug */,
-				607FACF41AFB9204008FA782 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,5 +1,5 @@
 //
-//  MedicationTests.swift
+//  MedicationDoseEventTests.swift
 //  HealthKitReporter
 //
 //  Created by Victor Kachalov on 08.10.26.
@@ -10,7 +10,7 @@ import HealthKit
 import HealthKitReporter
 
 @available(iOS 26.0, watchOS 26.0, *)
-class MedicationTests: XCTestCase {
+class MedicationDoseEventTests: XCTestCase {
     private var doseEventDictionary: [String: Any] {
         return [
             "identifier": "HKMedicationDoseEventTypeIdentifierMedicationDoseEvent",
@@ -29,24 +29,8 @@ class MedicationTests: XCTestCase {
             ]
         ]
     }
-    private var medicationDictionary: [String: Any] {
-        return [
-            "nickname": "Morning pill",
-            "isArchived": false,
-            "hasSchedule": true,
-            "medication": [
-                "identifier": "YXJjaGl2ZWQ=",
-                "domain": "medication",
-                "displayText": "Ibuprofen 200 mg Oral Tablet",
-                "generalForm": "tablet",
-                "relatedCodings": [
-                    ["system": "http://www.nlm.nih.gov/research/umls/rxnorm", "code": "310965"]
-                ]
-            ]
-        ]
-    }
 
-    func testDoseEventFromDictionaryThenEncodeThenDecode() throws {
+    func testCreateFromDictionaryThenEncodeThenDecode() throws {
         let sut = try MedicationDoseEvent.make(from: doseEventDictionary)
         let decoded = try JSONDecoder().decode(
             MedicationDoseEvent.self,
@@ -77,34 +61,10 @@ class MedicationTests: XCTestCase {
             make: MedicationDoseEvent.make
         )
     }
-    func testUserAnnotatedMedicationFromDictionaryThenEncodeThenDecode() throws {
-        let sut = try UserAnnotatedMedication.make(from: medicationDictionary)
-        let decoded = try JSONDecoder().decode(
-            UserAnnotatedMedication.self,
-            from: try XCTUnwrap(sut.encoded().data(using: .utf8))
-        )
-        for medication in [sut, decoded] {
-            XCTAssertEqual(medication.nickname, "Morning pill")
-            XCTAssertFalse(medication.isArchived)
-            XCTAssertTrue(medication.hasSchedule)
-            XCTAssertEqual(medication.medication.identifier, "YXJjaGl2ZWQ=")
-            XCTAssertEqual(medication.medication.domain, "medication")
-            XCTAssertEqual(medication.medication.displayText, "Ibuprofen 200 mg Oral Tablet")
-            XCTAssertEqual(medication.medication.generalForm, "tablet")
-            XCTAssertEqual(medication.medication.relatedCodings.map(\.code), ["310965"])
-            XCTAssertNil(medication.medication.relatedCodings.first?.version)
-        }
-        assertEachKeyIsRequired(
-            ["isArchived", "hasSchedule", "medication"],
-            in: medicationDictionary,
-            make: UserAnnotatedMedication.make
-        )
-    }
 }
-
 // MARK: - Identity
 @available(iOS 26.0, watchOS 26.0, *)
-extension MedicationTests {
+extension MedicationDoseEventTests {
     func testCreateFromDictionaryKeepsUUID() throws {
         try assertMakeKeepsUUID(from: doseEventDictionary, make: MedicationDoseEvent.make)
     }

@@ -17,16 +17,17 @@ final class AuthorizationDemos: DemoPerformer {
     }
 
     func publisher(for row: DemoRow) -> AnyPublisher<String, Error> {
-        reporter.publisher { [reporter] completion in
+        reporter.publisher { [unowned self] completion in
             let manager = reporter.manager
             let readTypes = reporter.demoReadTypes
             let writeTypes = reporter.demoWriteTypes
             switch row {
             case .requestAuthorization:
                 manager.requestAuthorization(toRead: readTypes, toWrite: writeTypes) { success, error in
+                    let message = "Requested \(readTypes.count) read and \(writeTypes.count) write types"
                     completion(
                         success
-                            ? .success("Requested \(readTypes.count) read and \(writeTypes.count) write types")
+                            ? .success(message)
                             : .failure(error ?? HealthKitError.unknown())
                     )
                 }
@@ -36,13 +37,17 @@ final class AuthorizationDemos: DemoPerformer {
                 }
             case .isAuthorizedToWrite:
                 let authorized = try writeTypes.filter { try reporter.writer.isAuthorizedToWrite(type: $0) }
-                completion(.success("\(authorized.count) of \(writeTypes.count) writable types are authorized"))
+                completion(
+                    .success("\(authorized.count) of \(writeTypes.count) writable types are authorized")
+                )
             case .visionPrescriptionAuthorization:
                 guard #available(iOS 16.0, *) else {
                     throw HealthKitError.notAvailable("Vision prescriptions need iOS 16")
                 }
                 manager.requestPerObjectReadAuthorization(for: VisionPrescriptionType.visionPrescription) {
-                    completion($0 ? .success("Prescriptions chosen") : .failure($1 ?? HealthKitError.unknown()))
+                    completion(
+                        $0 ? .success("Prescriptions chosen") : .failure($1 ?? HealthKitError.unknown())
+                    )
                 }
             case .medicationAuthorization:
                 guard #available(iOS 26.0, *) else {
@@ -52,20 +57,26 @@ final class AuthorizationDemos: DemoPerformer {
                     completion($0 ? .success("Medications chosen") : .failure($1 ?? HealthKitError.unknown()))
                 }
             case .healthRecordsAuthorization:
-                guard manager.supportsHealthRecords() else {
-                    throw HealthKitError.notAvailable("Health records are not supported on this device")
-                }
-                let clinicalTypes = reporter.demoClinicalTypes
-                manager.requestAuthorization(toRead: clinicalTypes, toWrite: []) { success, error in
-                    completion(
-                        success
-                            ? .success("Requested \(clinicalTypes.count) clinical record types")
-                            : .failure(error ?? HealthKitError.unknown())
-                    )
-                }
+                try requestHealthRecords(completion: completion)
             default:
                 throw HealthKitError.invalidOption("\(row) is not an authorization demo")
             }
+        }
+    }
+
+    /// Clinical record types, which start Health's records flow
+    private func requestHealthRecords(completion: @escaping DemoCompletion) throws {
+        let manager = reporter.manager
+        guard manager.supportsHealthRecords() else {
+            throw HealthKitError.notAvailable("Health records are not supported on this device")
+        }
+        let clinicalTypes = reporter.demoClinicalTypes
+        manager.requestAuthorization(toRead: clinicalTypes, toWrite: []) { success, error in
+            completion(
+                success
+                    ? .success("Requested \(clinicalTypes.count) clinical record types")
+                    : .failure(error ?? HealthKitError.unknown())
+            )
         }
     }
 }

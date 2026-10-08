@@ -7,6 +7,7 @@
 
 import HealthKit
 
+// MARK: - Harmonizable
 extension HKAudiogramSample: Harmonizable {
     typealias Harmonized = Audiogram.Harmonized
 

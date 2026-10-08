@@ -13,8 +13,17 @@ final class DemoView: UIView {
     /// Rows the user taps
     let rowSelected = PassthroughSubject<DemoRow, Never>()
 
-    private let headerView = DemoHeaderView()
-    private let headerContainerView = UIView()
+    private let headerView: DemoHeaderView = {
+        let headerView = DemoHeaderView()
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        return headerView
+    }()
+    /// Sized by hand in layoutSubviews, since a table header view doesn't follow Auto Layout
+    private let headerContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.backgroundColor = .clear
@@ -91,14 +100,15 @@ final class DemoView: UIView {
     }
 
     func makeConstraints() {
-        [tableView, headerView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        let headerMargins = headerContainerView.layoutMarginsGuide
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.topAnchor.constraint(equalTo: topAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            headerView.leadingAnchor.constraint(equalTo: headerContainerView.layoutMarginsGuide.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: headerContainerView.layoutMarginsGuide.trailingAnchor),
+            headerView.leadingAnchor.constraint(equalTo: headerMargins.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: headerMargins.trailingAnchor),
             headerView.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 8),
             headerView.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8)
         ])
@@ -114,28 +124,21 @@ extension DemoView: UITableViewDelegate {
         guard let section = dataSource.sectionIdentifier(for: section) else {
             return nil
         }
-        let icon = UIImageView(image: UIImage(systemName: section.symbol))
-        icon.tintColor = section.tint
-        icon.contentMode = .scaleAspectFit
-        icon.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 13, weight: .bold)
-        icon.setContentHuggingPriority(.required, for: .horizontal)
-        let label = UILabel()
-        label.text = section.title.uppercased()
-        label.font = .systemFont(ofSize: 13, weight: .bold)
-        label.textColor = section.tint
-        label.setContentHuggingPriority(.required, for: .horizontal)
-        let stack = UIStackView(arrangedSubviews: [icon, label, UIView()])
-        stack.spacing = 6
-        stack.alignment = .center
-        stack.isLayoutMarginsRelativeArrangement = true
-        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20)
-        return stack
+        return DemoSectionHeaderView(section: section)
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
         cell.alpha = 0
         cell.transform = CGAffineTransform(translationX: 0, y: 12)
-        UIView.animate(withDuration: 0.35, delay: 0.02 * Double(indexPath.row % 8), options: .curveEaseOut) {
+        UIView.animate(
+            withDuration: 0.35,
+            delay: 0.02 * Double(indexPath.row % 8),
+            options: .curveEaseOut
+        ) {
             cell.alpha = 1
             cell.transform = .identity
         }

@@ -17,7 +17,7 @@
 | :--- | :--- |
 | Distribution via Swift Package Manager | CocoaPods is frozen at `3.1.0` (trunk read-only since 02.12.2026); no CocoaPods files are re-added. |
 | Releases via release-please | Conventional Commits on `master` determine the SemVer bump and `CHANGELOG.md`; tags are bare `X.Y.Z`. No manual tagging or version edits. |
-| CI gates on every PR | SwiftLint (against `.swiftlint.baseline`, including the `no_public_healthkit_types` rule), iOS tests with a coverage floor, watchOS build, Example app and watch companion builds, changelog/manifest guard. |
+| CI gates on every PR | SwiftLint with no baseline (including the `no_public_healthkit_types` rule), iOS tests with a coverage floor, watchOS build, Example app and watch companion builds, changelog/manifest guard. |
 | Test-first | Every payload and type has XCTest coverage before production code changes. |
 
 ## 2.3 Conventions

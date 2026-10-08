@@ -36,7 +36,11 @@ final class ManagerDemos: DemoPerformer {
                 }
             case .startWatchApp:
                 manager.startWatchApp(with: runConfiguration) {
-                    completion($0 ? .success("Watch app started, run on the watch") : .failure($1 ?? HealthKitError.unknown()))
+                    completion(
+                        $0
+                            ? .success("Watch app started, run on the watch")
+                            : .failure($1 ?? HealthKitError.unknown())
+                    )
                 }
             case .stopQuery:
                 completion(.success("Stopped \(liveQueries.stopAll()) live queries"))
@@ -63,16 +67,23 @@ final class ManagerDemos: DemoPerformer {
     /// Attachments belong to the newest glasses prescription the demo saved
     @available(iOS 16.0, *)
     private func attachment(_ row: DemoRow, completion: @escaping DemoCompletion) throws {
-        let query = try reporter.reader.visionPrescriptionQuery(limit: 1) { [unowned self] prescriptions, error in
+        let query = try reporter.reader.visionPrescriptionQuery(
+            limit: 1
+        ) { [unowned self] prescriptions, error in
             guard let uuid = prescriptions.first?.uuid else {
-                completion(.failure(error ?? HealthKitError.invalidValue("Save glasses and grant access first")))
+                completion(
+                    .failure(error ?? HealthKitError.invalidValue("Save glasses and grant access first"))
+                )
                 return
             }
             switch row {
             case .addAttachment:
                 addScan(to: uuid, completion: completion)
             case .attachments:
-                reporter.manager.attachments(forSampleOf: VisionPrescriptionType.visionPrescription, uuid: uuid) {
+                reporter.manager.attachments(
+                    forSampleOf: VisionPrescriptionType.visionPrescription,
+                    uuid: uuid
+                ) {
                     completion($1.map { .failure($0) } ?? .success($0.summary("attachments")))
                 }
             default:
@@ -90,7 +101,9 @@ final class ManagerDemos: DemoPerformer {
             contentType: "public.png",
             url: scanImageURL
         ) { attachment, error in
-            completion(attachment.map { .success($0.json) } ?? .failure(error ?? HealthKitError.unknown()))
+            completion(
+                attachment.map { .success($0.json) } ?? .failure(error ?? HealthKitError.unknown())
+            )
         }
     }
     @available(iOS 16.0, *)
@@ -103,13 +116,26 @@ final class ManagerDemos: DemoPerformer {
                 return
             }
             guard row == .attachmentData else {
-                manager.removeAttachment(fromSampleOf: type, uuid: uuid, attachmentIdentifier: attachment.identifier) {
-                    completion($0 ? .success("Removed \(attachment.name)") : .failure($1 ?? HealthKitError.unknown()))
+                manager.removeAttachment(
+                    fromSampleOf: type,
+                    uuid: uuid,
+                    attachmentIdentifier: attachment.identifier
+                ) {
+                    completion(
+                        $0 ? .success("Removed \(attachment.name)") : .failure($1 ?? HealthKitError.unknown())
+                    )
                 }
                 return
             }
-            manager.attachmentData(forSampleOf: type, uuid: uuid, attachmentIdentifier: attachment.identifier) {
-                completion($0.map { .success("\(attachment.name): \($0.count) bytes") } ?? .failure($1 ?? HealthKitError.unknown()))
+            manager.attachmentData(
+                forSampleOf: type,
+                uuid: uuid,
+                attachmentIdentifier: attachment.identifier
+            ) {
+                completion(
+                    $0.map { .success("\(attachment.name): \($0.count) bytes") }
+                        ?? .failure($1 ?? HealthKitError.unknown())
+                )
             }
         }
     }

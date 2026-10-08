@@ -13,7 +13,7 @@ extension HealthKitReader {
      Queries audiograms.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with audiograms
      - Throws: HealthKitError.invalidType
@@ -42,7 +42,7 @@ extension HealthKitReader {
      Queries logged emotions and moods.
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with states of mind
      - Throws: HealthKitError.invalidType
@@ -73,7 +73,7 @@ extension HealthKitReader {
      - Parameter type: **ScoredAssessmentType** type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with assessments
      - Throws: HealthKitError.invalidType

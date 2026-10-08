@@ -9,7 +9,7 @@ import HealthKit
 
 extension HKHeartbeatSeriesSample {
     typealias Harmonized = HeartbeatSeries.Harmonized
-    
+
     func harmonize(measurements: [HeartbeatSeries.Measurement]) -> Harmonized {
         Harmonized(
             count: count,

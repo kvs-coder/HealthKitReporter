@@ -62,7 +62,11 @@ final class DemoCell: UITableViewCell {
         label.numberOfLines = 14
         return label
     }()
-    private let statusContainerView = UIView()
+    private let statusContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
     private let statusImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -193,8 +197,16 @@ final class DemoCell: UITableViewCell {
     }
 
     func makeConstraints() {
-        [rowStackView, badgeView, badgeImageView, statusContainerView, statusImageView, spinner, liveLabel, resultLabel]
-            .forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
+        [
+            rowStackView,
+            badgeView,
+            badgeImageView,
+            statusContainerView,
+            statusImageView,
+            spinner,
+            liveLabel,
+            resultLabel
+        ].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         let margins = contentView.layoutMarginsGuide
         NSLayoutConstraint.activate([
             rowStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),

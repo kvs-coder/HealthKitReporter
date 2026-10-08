@@ -17,7 +17,7 @@ extension HealthKitReader {
      see **UserAnnotatedMedication.Concept.identifier**
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
-     By default sorting by startData without ascending
+     By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with dose events
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on an invalid medication identifier
