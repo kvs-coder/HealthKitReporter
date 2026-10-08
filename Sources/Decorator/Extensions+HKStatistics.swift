@@ -92,7 +92,6 @@ extension HKStatistics: Harmonizable {
              .dietaryIron,
              .dietaryMagnesium,
              .dietaryManganese,
-             .dietaryWater,
              .dietaryPhosphorus,
              .dietaryPotassium,
              .dietarySodium,
@@ -142,11 +141,12 @@ extension HKStatistics: Harmonizable {
                 )
             }
         case .forcedVitalCapacity,
-             .forcedExpiratoryVolume1:
+             .forcedExpiratoryVolume1,
+             .dietaryWater:
             return statistics(unit: HKUnit.literUnit(with: .milli))
         case .environmentalAudioExposure,
              .headphoneAudioExposure:
-            return statistics(unit: HKUnit.pascal())
+            return statistics(unit: HKUnit.decibelAWeightedSoundPressureLevel())
         case .runningPower:
             if #available(iOS 16.0, *) {
                 return statistics(unit: HKUnit.watt())

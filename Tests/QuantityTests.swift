@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class QuantityTests: XCTestCase {
@@ -220,5 +221,90 @@ class QuantityTests: XCTestCase {
     func testConvertedWithInvalidIdentifierThrows() throws {
         let sut = try Quantity.make(from: dictionary).copyWith(identifier: "invalid")
         assertInvalidType(try sut.converted(to: "km"))
+    }
+}
+// MARK: - Factory
+extension QuantityTests {
+    /// Units covering every **QuantityType** dimension; the first compatible one is used to build a sample
+    private var candidateUnits: [HKUnit] {
+        return [
+            "count", "m", "kg", "kcal", "s", "%", "count/min", "degC", "mmHg", "dBASPL", "ml/kg*min",
+            "L", "L/min", "mg/dL", "IU", "S", "m/s", "W", "mL", "g", "kcal/hr·kg", "appleEffortScore"
+        ].map { HKUnit(from: $0) }
+    }
+
+    func testCollectResults() throws {
+        let sample = HKQuantitySample(
+            type: HKQuantityType(.distanceWalkingRunning),
+            quantity: HKQuantity(unit: .meter(), doubleValue: 1000),
+            start: startDate,
+            end: endDate,
+            device: HKDevice(
+                name: "Guy's iPhone",
+                manufacturer: "Guy",
+                model: "6.1.1",
+                hardwareVersion: "some_0",
+                firmwareVersion: "some_1",
+                softwareVersion: "some_2",
+                localIdentifier: "some_3",
+                udiDeviceIdentifier: "some_4"
+            ),
+            metadata: ["you": "saved it"]
+        )
+        let sut = Quantity.collect(results: [sample], unit: HKUnit(from: "km"))
+        XCTAssertEqual(sut.count, 1)
+        XCTAssertEqual(sut[0].uuid, sample.uuid.uuidString)
+        XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
+        XCTAssertEqual(sut[0].startTimestamp, 1626884800, accuracy: 0.001)
+        XCTAssertEqual(sut[0].endTimestamp, 1626884860, accuracy: 0.001)
+        assertDevice(sut[0].device)
+        XCTAssertEqual(sut[0].harmonized.value, 1, accuracy: 0.001)
+        XCTAssertEqual(sut[0].harmonized.unit, "km")
+        XCTAssertEqual(sut[0].harmonized.metadata, ["you": "saved it"])
+    }
+    func testCollectResultsIgnoresOtherSamples() throws {
+        let sample = HKCategorySample(
+            type: HKCategoryType(.sleepAnalysis),
+            value: HKCategoryValueSleepAnalysis.inBed.rawValue,
+            start: startDate,
+            end: endDate
+        )
+        XCTAssertTrue(Quantity.collect(results: [sample], unit: .count()).isEmpty)
+    }
+    func testHarmonizeEveryQuantityTypeToItsSIUnit() throws {
+        for type in QuantityType.allCases {
+            let original = try XCTUnwrap(type.original as? HKQuantityType, "\(type)")
+            let unit = try XCTUnwrap(
+                candidateUnits.first { original.is(compatibleWith: $0) },
+                "No candidate unit for \(type)"
+            )
+            let quantity = HKQuantity(unit: unit, doubleValue: 1)
+            let sample = HKQuantitySample(
+                type: original,
+                quantity: quantity,
+                start: startDate,
+                end: endDate,
+                metadata: metadata(for: type)
+            )
+            let sut = try XCTUnwrap(parse([sample]).first as? Quantity, "\(type)")
+            XCTAssertEqual(sut.identifier, original.identifier, "\(type)")
+            let harmonizedUnit = HKUnit(from: sut.harmonized.unit)
+            XCTAssertTrue(original.is(compatibleWith: harmonizedUnit), "\(type): \(sut.harmonized.unit)")
+            XCTAssertEqual(
+                sut.harmonized.value,
+                quantity.doubleValue(for: harmonizedUnit),
+                accuracy: 0.000001,
+                "\(type)"
+            )
+        }
+    }
+
+    private func metadata(for type: QuantityType) -> [String: Any]? {
+        switch type {
+        case .insulinDelivery:
+            return [HKMetadataKeyInsulinDeliveryReason: HKInsulinDeliveryReason.basal.rawValue]
+        default:
+            return nil
+        }
     }
 }
