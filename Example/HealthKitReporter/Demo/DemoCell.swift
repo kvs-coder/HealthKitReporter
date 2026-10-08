@@ -11,20 +11,94 @@ import UIKit
 final class DemoCell: UITableViewCell {
     static let reuseIdentifier = "DemoCell"
 
-    private let badgeView = UIView()
-    private let badgeImageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let callLabel = UILabel()
-    private let statusImageView = UIImageView()
-    private let spinner = UIActivityIndicatorView(style: .medium)
-    private let liveLabel = UILabel()
-    private let resultContainer = UIView()
-    private let resultLabel = UILabel()
+    private let badgeView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 9
+        view.layer.cornerCurve = .continuous
+        return view
+    }()
+    private let badgeImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .preferredFont(forTextStyle: .headline)
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return label
+    }()
+    private let liveLabel: UILabel = {
+        let label = UILabel()
+        label.text = "LIVE"
+        label.font = .systemFont(ofSize: 10, weight: .heavy)
+        label.textColor = .white
+        label.backgroundColor = .systemRed
+        label.textAlignment = .center
+        label.layer.cornerRadius = 4
+        label.layer.masksToBounds = true
+        return label
+    }()
+    private let callLabel: UILabel = {
+        let label = UILabel()
+        label.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 0
+        return label
+    }()
+    private let resultContainerView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.layer.cornerCurve = .continuous
+        view.layer.borderWidth = 1
+        return view
+    }()
+    private let resultLabel: UILabel = {
+        let label = UILabel()
+        label.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
+        label.numberOfLines = 14
+        return label
+    }()
+    private let statusContainerView = UIView()
+    private let statusImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
+        return imageView
+    }()
+    private let spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
+    private let titleStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 8
+        stackView.alignment = .center
+        return stackView
+    }()
+    private let textStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4
+        return stackView
+    }()
+    private let rowStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.spacing = 12
+        stackView.alignment = .top
+        return stackView
+    }()
     private var shownResult: DemoResult = .idle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        buildViews()
+        selectionStyle = .none
+        addSubviews()
+        makeConstraints()
     }
 
     required init?(coder: NSCoder) {
@@ -38,8 +112,8 @@ final class DemoCell: UITableViewCell {
         titleLabel.text = row.title
         callLabel.text = row.call
         liveLabel.isHidden = !row.isLive
-        resultContainer.backgroundColor = tint.withAlphaComponent(0.08)
-        resultContainer.layer.borderColor = tint.withAlphaComponent(0.25).cgColor
+        resultContainerView.backgroundColor = tint.withAlphaComponent(0.08)
+        resultContainerView.layer.borderColor = tint.withAlphaComponent(0.25).cgColor
         apply(result, tint: tint)
     }
 
@@ -60,7 +134,7 @@ final class DemoCell: UITableViewCell {
         let changed = result != shownResult
         shownResult = result
         resultLabel.text = result.text
-        resultContainer.isHidden = result == .idle
+        resultContainerView.isHidden = result == .idle
         switch result {
         case .idle:
             spinner.stopAnimating()
@@ -85,11 +159,11 @@ final class DemoCell: UITableViewCell {
             return
         }
         popStatus()
-        resultContainer.alpha = 0
-        resultContainer.transform = CGAffineTransform(translationX: 0, y: -6)
+        resultContainerView.alpha = 0
+        resultContainerView.transform = CGAffineTransform(translationX: 0, y: -6)
         UIView.animate(withDuration: 0.35, delay: 0.05, options: .curveEaseOut) {
-            self.resultContainer.alpha = 1
-            self.resultContainer.transform = .identity
+            self.resultContainerView.alpha = 1
+            self.resultContainerView.transform = .identity
         }
     }
     /// The status icon springs in when a result arrives
@@ -106,60 +180,27 @@ final class DemoCell: UITableViewCell {
         }
     }
 
-    private func buildViews() {
-        selectionStyle = .none
-        badgeView.layer.cornerRadius = 9
-        badgeView.layer.cornerCurve = .continuous
-        badgeImageView.tintColor = .white
-        badgeImageView.contentMode = .scaleAspectFit
-        titleLabel.font = .preferredFont(forTextStyle: .headline)
-        titleLabel.numberOfLines = 0
-        callLabel.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
-        callLabel.textColor = .secondaryLabel
-        callLabel.numberOfLines = 0
-        statusImageView.contentMode = .scaleAspectFit
-        statusImageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 22, weight: .semibold)
-        spinner.hidesWhenStopped = true
-        liveLabel.text = "LIVE"
-        liveLabel.font = .systemFont(ofSize: 10, weight: .heavy)
-        liveLabel.textColor = .white
-        liveLabel.backgroundColor = .systemRed
-        liveLabel.textAlignment = .center
-        liveLabel.layer.cornerRadius = 4
-        liveLabel.layer.masksToBounds = true
-        resultContainer.layer.cornerRadius = 10
-        resultContainer.layer.cornerCurve = .continuous
-        resultContainer.layer.borderWidth = 1
-        resultLabel.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
-        resultLabel.numberOfLines = 14
-
-        let titleRow = UIStackView(arrangedSubviews: [titleLabel, liveLabel, UIView()])
-        titleRow.spacing = 8
-        titleRow.alignment = .center
-        let textStack = UIStackView(arrangedSubviews: [titleRow, callLabel, resultContainer])
-        textStack.axis = .vertical
-        textStack.spacing = 4
-        textStack.setCustomSpacing(10, after: callLabel)
-        let statusContainer = UIView()
-        statusContainer.addSubview(statusImageView)
-        statusContainer.addSubview(spinner)
-        let row = UIStackView(arrangedSubviews: [badgeView, textStack, statusContainer])
-        row.spacing = 12
-        row.alignment = .top
+    func addSubviews() {
         badgeView.addSubview(badgeImageView)
-        resultContainer.addSubview(resultLabel)
-        contentView.addSubview(row)
+        resultContainerView.addSubview(resultLabel)
+        statusContainerView.addSubview(statusImageView)
+        statusContainerView.addSubview(spinner)
+        [titleLabel, liveLabel, UIView()].forEach(titleStackView.addArrangedSubview)
+        [titleStackView, callLabel, resultContainerView].forEach(textStackView.addArrangedSubview)
+        textStackView.setCustomSpacing(10, after: callLabel)
+        [badgeView, textStackView, statusContainerView].forEach(rowStackView.addArrangedSubview)
+        contentView.addSubview(rowStackView)
+    }
 
-        [row, badgeView, badgeImageView, statusContainer, statusImageView, spinner, liveLabel, resultLabel]
+    func makeConstraints() {
+        [rowStackView, badgeView, badgeImageView, statusContainerView, statusImageView, spinner, liveLabel, resultLabel]
             .forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
-        titleLabel.setContentHuggingPriority(.required, for: .horizontal)
-        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         let margins = contentView.layoutMarginsGuide
         NSLayoutConstraint.activate([
-            row.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
-            row.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
-            row.topAnchor.constraint(equalTo: margins.topAnchor),
-            row.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
+            rowStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
+            rowStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
+            rowStackView.topAnchor.constraint(equalTo: margins.topAnchor),
+            rowStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
 
             badgeView.widthAnchor.constraint(equalToConstant: 34),
             badgeView.heightAnchor.constraint(equalToConstant: 34),
@@ -168,22 +209,22 @@ final class DemoCell: UITableViewCell {
             badgeImageView.widthAnchor.constraint(equalToConstant: 20),
             badgeImageView.heightAnchor.constraint(equalToConstant: 20),
 
-            statusContainer.widthAnchor.constraint(equalToConstant: 28),
-            statusContainer.heightAnchor.constraint(equalToConstant: 28),
-            statusImageView.topAnchor.constraint(equalTo: statusContainer.topAnchor),
-            statusImageView.bottomAnchor.constraint(equalTo: statusContainer.bottomAnchor),
-            statusImageView.leadingAnchor.constraint(equalTo: statusContainer.leadingAnchor),
-            statusImageView.trailingAnchor.constraint(equalTo: statusContainer.trailingAnchor),
-            spinner.centerXAnchor.constraint(equalTo: statusContainer.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: statusContainer.centerYAnchor),
+            statusContainerView.widthAnchor.constraint(equalToConstant: 28),
+            statusContainerView.heightAnchor.constraint(equalToConstant: 28),
+            statusImageView.topAnchor.constraint(equalTo: statusContainerView.topAnchor),
+            statusImageView.bottomAnchor.constraint(equalTo: statusContainerView.bottomAnchor),
+            statusImageView.leadingAnchor.constraint(equalTo: statusContainerView.leadingAnchor),
+            statusImageView.trailingAnchor.constraint(equalTo: statusContainerView.trailingAnchor),
+            spinner.centerXAnchor.constraint(equalTo: statusContainerView.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: statusContainerView.centerYAnchor),
 
             liveLabel.widthAnchor.constraint(equalToConstant: 34),
             liveLabel.heightAnchor.constraint(equalToConstant: 16),
 
-            resultLabel.leadingAnchor.constraint(equalTo: resultContainer.leadingAnchor, constant: 10),
-            resultLabel.trailingAnchor.constraint(equalTo: resultContainer.trailingAnchor, constant: -10),
-            resultLabel.topAnchor.constraint(equalTo: resultContainer.topAnchor, constant: 8),
-            resultLabel.bottomAnchor.constraint(equalTo: resultContainer.bottomAnchor, constant: -8)
+            resultLabel.leadingAnchor.constraint(equalTo: resultContainerView.leadingAnchor, constant: 10),
+            resultLabel.trailingAnchor.constraint(equalTo: resultContainerView.trailingAnchor, constant: -10),
+            resultLabel.topAnchor.constraint(equalTo: resultContainerView.topAnchor, constant: 8),
+            resultLabel.bottomAnchor.constraint(equalTo: resultContainerView.bottomAnchor, constant: -8)
         ])
     }
 }

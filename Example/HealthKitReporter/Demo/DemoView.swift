@@ -14,7 +14,14 @@ final class DemoView: UIView {
     let rowSelected = PassthroughSubject<DemoRow, Never>()
 
     private let headerView = DemoHeaderView()
-    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    private let headerContainerView = UIView()
+    private let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.backgroundColor = .clear
+        tableView.sectionHeaderTopPadding = 12
+        tableView.register(DemoCell.self, forCellReuseIdentifier: DemoCell.reuseIdentifier)
+        return tableView
+    }()
     private var results = [DemoRow: DemoResult]()
     private lazy var dataSource = UITableViewDiffableDataSource<DemoSection, DemoRow>(
         tableView: tableView
@@ -24,13 +31,12 @@ final class DemoView: UIView {
         return cell
     }
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        buildViews()
-    }
-
-    required init?(coder: NSCoder) {
-        nil
+    convenience init() {
+        self.init(frame: .zero)
+        backgroundColor = .systemGroupedBackground
+        tableView.delegate = self
+        addSubviews()
+        makeConstraints()
     }
 
     override func layoutSubviews() {
@@ -62,9 +68,9 @@ final class DemoView: UIView {
     }
 
     private func sizeHeaderToFit() {
-        let container = tableView.tableHeaderView
+        let container = headerContainerView
         let width = tableView.bounds.width
-        guard let container = container, width > 0 else {
+        guard width > 0 else {
             return
         }
         let size = container.systemLayoutSizeFitting(
@@ -78,30 +84,24 @@ final class DemoView: UIView {
         }
     }
 
-    private func buildViews() {
-        backgroundColor = .systemGroupedBackground
-        tableView.backgroundColor = .clear
-        tableView.register(DemoCell.self, forCellReuseIdentifier: DemoCell.reuseIdentifier)
-        tableView.delegate = self
-        tableView.sectionHeaderTopPadding = 12
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+    func addSubviews() {
         addSubview(tableView)
+        headerContainerView.addSubview(headerView)
+        tableView.tableHeaderView = headerContainerView
+    }
+
+    func makeConstraints() {
+        [tableView, headerView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.topAnchor.constraint(equalTo: topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            headerView.leadingAnchor.constraint(equalTo: headerContainerView.layoutMarginsGuide.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: headerContainerView.layoutMarginsGuide.trailingAnchor),
+            headerView.topAnchor.constraint(equalTo: headerContainerView.topAnchor, constant: 8),
+            headerView.bottomAnchor.constraint(equalTo: headerContainerView.bottomAnchor, constant: -8)
         ])
-        let container = UIView()
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(headerView)
-        NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: container.layoutMarginsGuide.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: container.layoutMarginsGuide.trailingAnchor),
-            headerView.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
-            headerView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8)
-        ])
-        tableView.tableHeaderView = container
     }
 }
 // MARK: - UITableViewDelegate
