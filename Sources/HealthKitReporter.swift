@@ -61,6 +61,15 @@ public typealias CorrelationQuery = HKCorrelationQuery
 public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
 /**
  - Parameters:
+    - status: whether the permission sheet would be shown
+    - error: error (optional)
+ */
+public typealias AuthorizationRequestStatusCompletion = (
+    _ status: AuthorizationRequestStatus,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - identifier: the object type identifier
     - error: error (optional)
  */

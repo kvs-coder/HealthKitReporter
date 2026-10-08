@@ -58,6 +58,60 @@ public class HealthKitManager {
         )
     }
     /**
+     Tells whether requesting authorization for these types would show the permission sheet.
+     - Parameter toRead: an array of **ObjectType** types to read
+     - Parameter toWrite: an array of **SampleType** types to write
+     - Parameter completion: returns a block with the request status
+     */
+    public func authorizationRequestStatus(
+        toRead: [ObjectType],
+        toWrite: [SampleType],
+        completion: @escaping AuthorizationRequestStatusCompletion
+    ) {
+        let readTypes = toRead.compactMap(\.original)
+        let writeTypes = toWrite.compactMap { $0.original as? HKSampleType }
+        guard readTypes.count == toRead.count, writeTypes.count == toWrite.count else {
+            completion(
+                .unknown,
+                HealthKitError.invalidType("Types \(toRead) \(toWrite) are not all available")
+            )
+            return
+        }
+        healthStore.getRequestStatusForAuthorization(
+            toShare: Set(writeTypes),
+            read: Set(readTypes)
+        ) { status, error in
+            completion(AuthorizationRequestStatus(requestStatus: status), error)
+        }
+    }
+    /**
+     The oldest date samples can be saved or queried for on this device.
+     - Returns: **Date** earliest permitted sample date
+     */
+    public func earliestPermittedSampleDate() -> Date {
+        return healthStore.earliestPermittedSampleDate()
+    }
+    /**
+     Recalibrates the estimates HealthKit computes for a type, e.g. after a change in the user's health
+     - Parameter type: **SampleType** type that allows recalibration, e.g. **QuantityType.vo2Max**
+     - Parameter date: **Date** date from which to recalibrate
+     - Parameter completion: block notifies about operation status
+     */
+    public func recalibrateEstimates(
+        for type: SampleType,
+        at date: Date,
+        completion: @escaping StatusCompletionBlock
+    ) {
+        guard
+            let sampleType = type.original as? HKSampleType,
+            sampleType.allowsRecalibrationForEstimates
+        else {
+            completion(false, HealthKitError.invalidType("\(type) does not allow recalibrating estimates"))
+            return
+        }
+        healthStore.recalibrateEstimates(sampleType: sampleType, date: date, completion: completion)
+    }
+    /**
      Queries preferred units.
      - Parameter quantityTypes: an array of **QuantityType** types
      - Parameter completion: returns a block with information preferred units
