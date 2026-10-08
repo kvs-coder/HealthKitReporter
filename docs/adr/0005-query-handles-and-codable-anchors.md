@@ -16,7 +16,7 @@ Public API takes and returns library types, yet the reader returned HealthKit qu
 
 ## Decision
 
-- **`QueryHandle`**: a `final class` wrapping the internal `HKQuery`. Every reader and observer method returns it, `HealthKitManager.executeQuery(_:)` and `stopQuery(_:)` take it, and callbacks that used to pass `Query?` pass `QueryHandle?`. It exposes nothing but identity (`==` compares the wrapped query).
+- **`QueryHandle`**: a `final class` wrapping the internal `HKQuery`. Every reader and observer method that builds a query returns it (`reader.characteristics()` reads synchronously and returns a `Characteristic`), `HealthKitManager.executeQuery(_:)` and `stopQuery(_:)` take it, and callbacks that used to pass `Query?` pass `QueryHandle?`. It exposes nothing but identity (`==` compares the wrapped query).
 - **`Anchor`**: a `Codable` struct holding the securely archived `HKQueryAnchor` bytes. It encodes as one base64 string, so it can be stored as plain data or text. Anchored and workout effort callbacks return it, and `anchoredObjectQuery(anchor:)` / `workoutEffortRelationshipQuery(anchor:)` accept it (`nil` starts from the beginning).
 - All HealthKit query typealiases are removed. A swiftlint custom rule (`no_public_healthkit_types`) fails any public declaration in `Sources/` that names an `HK*` type.
 

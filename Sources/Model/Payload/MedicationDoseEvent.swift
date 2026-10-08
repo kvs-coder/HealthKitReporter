@@ -14,6 +14,7 @@ import HealthKit
  */
 @available(iOS 26.0, watchOS 26.0, *)
 public struct MedicationDoseEvent: Identifiable, Sample {
+    /// The value part of **MedicationDoseEvent**, with its metadata
     public struct Harmonized: Codable {
         public let scheduleType: Int
         /// opaque identifier of the medication, see **UserAnnotatedMedication.Concept.identifier**
@@ -26,6 +27,7 @@ public struct MedicationDoseEvent: Identifiable, Sample {
         public let unit: String
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             scheduleType: Int,
             medicationConceptIdentifier: String,
@@ -55,6 +57,10 @@ public struct MedicationDoseEvent: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -95,6 +101,11 @@ public struct MedicationDoseEvent: Identifiable, Sample {
 // MARK: - Payload
 @available(iOS 26.0, watchOS 26.0, *)
 extension MedicationDoseEvent: Payload {
+    /**
+     Makes a **MedicationDoseEvent** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> MedicationDoseEvent {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -129,6 +140,11 @@ extension MedicationDoseEvent {
 // MARK: - Harmonized: Payload
 @available(iOS 26.0, watchOS 26.0, *)
 extension MedicationDoseEvent.Harmonized: Payload {
+    /**
+     Makes a **MedicationDoseEvent.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> MedicationDoseEvent.Harmonized {
         guard
             let scheduleType = dictionary["scheduleType"] as? NSNumber,

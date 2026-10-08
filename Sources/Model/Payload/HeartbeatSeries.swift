@@ -7,12 +7,15 @@
 
 import HealthKit
 
+/// **HeartbeatSeries** the beat-to-beat timings of a heart rate variability recording
 public struct HeartbeatSeries: Identifiable, Sample {
+    /// **Measurement** one heartbeat of a series
     public struct Measurement: Codable {
         public let timeSinceSeriesStart: Double
         public let precededByGap: Bool
         public let done: Bool
 
+        /// Creates the **Measurement** from its fields
         public init(
             timeSinceSeriesStart: Double,
             precededByGap: Bool,
@@ -24,11 +27,13 @@ public struct HeartbeatSeries: Identifiable, Sample {
         }
     }
 
+    /// The value part of **HeartbeatSeries**, with its metadata
     public struct Harmonized: Codable {
         public let count: Int
         public let measurements: [Measurement]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             count: Int,
             measurements: [Measurement],
@@ -39,6 +44,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             count: Int? = nil,
             measurements: [Measurement]? = nil,
@@ -60,6 +66,10 @@ public struct HeartbeatSeries: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
     
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -88,6 +98,7 @@ public struct HeartbeatSeries: Identifiable, Sample {
         self.harmonized = sample.harmonize(measurements: measurements)
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -110,6 +121,11 @@ public struct HeartbeatSeries: Identifiable, Sample {
 }
 // MARK: - Payload
 extension HeartbeatSeries: Payload {
+    /**
+     Makes a **HeartbeatSeries** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -136,6 +152,11 @@ extension HeartbeatSeries: Payload {
 }
 // MARK: - Payload
 extension HeartbeatSeries.Harmonized: Payload {
+    /**
+     Makes a **HeartbeatSeries.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Harmonized {
         guard
             let count = dictionary.int("count"),
@@ -153,6 +174,11 @@ extension HeartbeatSeries.Harmonized: Payload {
 }
 // MARK: - Payload
 extension HeartbeatSeries.Measurement: Payload {
+    /**
+     Makes a **HeartbeatSeries.Measurement** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Measurement {
         guard
             let timeSinceSeriesStart = dictionary["timeSinceSeriesStart"] as? NSNumber,

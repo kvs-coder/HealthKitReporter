@@ -7,12 +7,15 @@
 
 import HealthKit
 
+/// **Quantity** a quantity sample, e.g. step count or heart rate
 public struct Quantity: Identifiable, Sample {
+    /// The value part of **Quantity**, with its metadata
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             value: Double,
             unit: String,
@@ -23,6 +26,7 @@ public struct Quantity: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             value: Double? = nil,
             unit: String? = nil,
@@ -67,6 +71,10 @@ public struct Quantity: Identifiable, Sample {
         self.harmonized = try quantitySample.harmonize()
     }
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -85,6 +93,7 @@ public struct Quantity: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -129,6 +138,11 @@ extension Quantity: Original {
 }
 // MARK: - Payload
 extension Quantity: Payload {
+    /**
+     Makes a **Quantity** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Quantity {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -175,6 +189,11 @@ extension Quantity {
 }
 // MARK: - Payload
 extension Quantity.Harmonized: Payload {
+    /**
+     Makes a **Quantity.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Quantity.Harmonized {
         guard
             let value = dictionary["value"] as? NSNumber,
@@ -192,6 +211,11 @@ extension Quantity.Harmonized: Payload {
 }
 // MARK: - UnitConvertable
 extension Quantity: UnitConvertable {
+    /**
+     A copy with the values in another unit; every other field stays the same.
+     - Parameter unit: **String** unit compatible with the type, e.g. "km"
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
+     */
     public func converted(to unit: String) throws -> Quantity {
         guard harmonized.unit != unit else {
             return self

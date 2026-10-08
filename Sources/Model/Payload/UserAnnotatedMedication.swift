@@ -10,11 +10,13 @@ import HealthKit
 /// Medication the user tracks in the Health app. Read only
 @available(iOS 26.0, watchOS 26.0, *)
 public struct UserAnnotatedMedication: Codable {
+    /// **Coding** one code of a medication concept, e.g. RxNorm
     public struct Coding: Codable {
         public let system: String
         public let version: String?
         public let code: String
 
+        /// Creates the **Coding** from its fields
         public init(system: String, version: String?, code: String) {
             self.system = system
             self.version = version
@@ -22,6 +24,7 @@ public struct UserAnnotatedMedication: Codable {
         }
     }
 
+    /// **Concept** the medication a user tracks, with its codings
     public struct Concept: Codable {
         /// opaque identifier, securely archived and base64 encoded;
         /// pass it to **HealthKitReader.medicationDoseEventQuery** to read this medication's doses
@@ -32,6 +35,7 @@ public struct UserAnnotatedMedication: Codable {
         public let generalForm: String
         public let relatedCodings: [Coding]
 
+        /// Creates the **Concept** from its fields
         public init(
             identifier: String,
             domain: String,
@@ -52,6 +56,7 @@ public struct UserAnnotatedMedication: Codable {
     public let hasSchedule: Bool
     public let medication: Concept
 
+    /// Creates the **UserAnnotatedMedication** from its fields
     public init(nickname: String?, isArchived: Bool, hasSchedule: Bool, medication: Concept) {
         self.nickname = nickname
         self.isArchived = isArchived
@@ -78,6 +83,11 @@ public struct UserAnnotatedMedication: Codable {
 // MARK: - Payload
 @available(iOS 26.0, watchOS 26.0, *)
 extension UserAnnotatedMedication: Payload {
+    /**
+     Makes an **UserAnnotatedMedication** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> UserAnnotatedMedication {
         guard
             let isArchived = dictionary.bool("isArchived"),

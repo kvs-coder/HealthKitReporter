@@ -134,6 +134,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
 }
 // MARK: - SampleType
 extension QuantityType {
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

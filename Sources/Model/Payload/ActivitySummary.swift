@@ -7,7 +7,9 @@
 
 import HealthKit
 
+/// **ActivitySummary** the move, exercise and stand rings of one day
 public struct ActivitySummary: Identifiable {
+    /// The value part of **ActivitySummary**, with its metadata
     public struct Harmonized: Codable {
         public let activeEnergyBurned: Double
         public let activeEnergyBurnedGoal: Double
@@ -27,6 +29,7 @@ public struct ActivitySummary: Identifiable {
         /// the user paused their rings (iOS 18+)
         public let paused: Bool?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             activeEnergyBurned: Double,
             activeEnergyBurnedGoal: Double,

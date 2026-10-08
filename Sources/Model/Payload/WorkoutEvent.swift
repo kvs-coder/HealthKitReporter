@@ -7,18 +7,22 @@
 
 import HealthKit
 
+/// **WorkoutEvent** an event of a workout, e.g. a pause or a lap
 public struct WorkoutEvent: Codable {
+    /// The value part of **WorkoutEvent**, with its metadata
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(value: Int, description: String, metadata: Metadata?) {
             self.value = value
             self.description = description
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             value: Int? = nil,
             description: String? = nil,
@@ -50,6 +54,7 @@ public struct WorkoutEvent: Codable {
         self.harmonized = try workoutEvent.harmonize()
     }
 
+    /// Creates the **WorkoutEvent** from its fields
     public init(
         startTimestamp: Double,
         endTimestamp: Double,
@@ -62,6 +67,7 @@ public struct WorkoutEvent: Codable {
         self.harmonized = harmonized
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value
     public func copyWith(
         startTimestamp: Double? = nil,
         endTimestamp: Double? = nil,
@@ -97,6 +103,11 @@ extension WorkoutEvent: Original {
 }
 // MARK: - Payload
 extension WorkoutEvent.Harmonized: Payload {
+    /**
+     Makes a **WorkoutEvent.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws ->  WorkoutEvent.Harmonized {
@@ -116,6 +127,11 @@ extension WorkoutEvent.Harmonized: Payload {
 }
 // MARK: - Payload
 extension WorkoutEvent: Payload {
+    /**
+     Makes a **WorkoutEvent** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> WorkoutEvent {

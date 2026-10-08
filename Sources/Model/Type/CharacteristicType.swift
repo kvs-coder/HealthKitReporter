@@ -18,6 +18,7 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case wheelchairUse
     case activityMoveMode
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

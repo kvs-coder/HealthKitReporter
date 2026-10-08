@@ -9,6 +9,11 @@ import Foundation
 
 // MARK: - Payload
 extension DateComponents: Payload {
+    /**
+     Makes **DateComponents** in the current calendar and time zone from a dictionary of component names,
+     e.g. ["day": 1]; missing components stay nil
+     - Parameter dictionary: **[String: Any]** dictionary
+     */
     public static func make(
         from dictionary: [String: Any]
     ) -> DateComponents {

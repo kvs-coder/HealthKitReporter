@@ -14,6 +14,7 @@ public enum CorrelationType: Int, CaseIterable, SampleType {
     case bloodPressure
     case food
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

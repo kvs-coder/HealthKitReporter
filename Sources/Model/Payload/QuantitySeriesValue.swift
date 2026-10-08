@@ -18,6 +18,7 @@ public struct QuantitySeriesValue: Codable {
     /// uuid of the series sample the value belongs to; nil when writing
     public let sampleUUID: String?
 
+    /// Creates the **QuantitySeriesValue** from its fields
     public init(
         value: Double,
         unit: String,
@@ -34,6 +35,11 @@ public struct QuantitySeriesValue: Codable {
 }
 // MARK: - Payload
 extension QuantitySeriesValue: Payload {
+    /**
+     Makes a **QuantitySeriesValue** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> QuantitySeriesValue {
         guard
             let value = dictionary["value"] as? NSNumber,

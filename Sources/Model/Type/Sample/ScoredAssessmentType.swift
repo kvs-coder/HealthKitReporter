@@ -16,6 +16,7 @@ public enum ScoredAssessmentType: Int, CaseIterable, SampleType {
     /// PHQ-9 depression assessment
     case phq9
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

@@ -107,6 +107,7 @@ public typealias AuthorizationRequestStatusCompletion = (
 ) -> Void
 /**
  - Parameters:
+    - query: the observer query
     - identifier: the object type identifier
     - error: error (optional)
  */
@@ -156,6 +157,7 @@ public typealias DeletionCompletionBlock = (
 ) -> Void
 /**
  - Parameters:
+    - query: the sample query
     - samples: sample array. Empty by default
     - error: error (optional)
  */
@@ -166,6 +168,7 @@ public typealias SampleResultsHandler = (
 ) -> Void
 /**
  - Parameters:
+    - query: the anchored object query
     - samples: sample array. Empty by default
     - deletedObjects: samples array that has been deleted
     - anchor: anchor to pass to the next anchored object query, so it only delivers changes
@@ -378,12 +381,6 @@ public typealias VisionPrescriptionResultsHandler = (
     _ prescriptions: [VisionPrescription],
     _ error: Error?
 ) -> Void
-/**
- - Parameters:
-    - samples: electrocardiogram voltage measurements sample array. Empty by default
-    - error: error (optional)
- */
-
 /// **HealthKitReporter** class for HK easy integration
 public class HealthKitReporter {
     /// **HealthKitReader** is reponsible for reading operations in HK
@@ -405,7 +402,7 @@ public class HealthKitReporter {
     /**
      Inits the instance of **HealthKitReporter** class.
      Every time when called, the new instance of **HKHealthStore** is created.
-     - Requires: Apple Healt App is installed on the device.
+     Check **isHealthDataAvailable** first: on devices without Apple Health every request fails.
      - Returns: **HealthKitReporter** instance
      */
     public init() {

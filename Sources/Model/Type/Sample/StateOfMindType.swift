@@ -13,6 +13,7 @@ import HealthKit
 public enum StateOfMindType: Int, CaseIterable, SampleType {
     case stateOfMind
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

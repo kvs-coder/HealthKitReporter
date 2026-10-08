@@ -7,7 +7,9 @@
 
 import HealthKit
 
+/// **Workout** a workout with its events, totals, statistics and activities
 public struct Workout: Identifiable, Sample {
+    /// The value part of **Workout**, with its metadata
     public struct Harmonized: Codable {
         public let value: Int
         public let description: String
@@ -21,6 +23,7 @@ public struct Workout: Identifiable, Sample {
         public let totalFlightsClimbedUnit: String
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             value: Int,
             description: String,
@@ -47,6 +50,7 @@ public struct Workout: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             value: Int? = nil,
             description: String? = nil,
@@ -122,6 +126,10 @@ public struct Workout: Identifiable, Sample {
         }
     }
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -148,6 +156,7 @@ public struct Workout: Identifiable, Sample {
         self.activities = activities
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -328,6 +337,11 @@ extension Workout: Original {
 }
 // MARK: - Payload
 extension Workout: Payload {
+    /**
+     Makes a **Workout** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Workout {
@@ -386,6 +400,11 @@ extension Workout: Payload {
 }
 // MARK: - Payload
 extension Workout.Harmonized: Payload {
+    /**
+     Makes a **Workout.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Workout.Harmonized {

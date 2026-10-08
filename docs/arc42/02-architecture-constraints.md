@@ -30,4 +30,4 @@
 | Library types in the public API | No public declaration takes or returns an `HK*` type; queries are `QueryHandle`s and anchors `Anchor`s (ADR 0005). |
 | One error type | `HealthKitError` with a descriptive message; no `NSError`, no `fatalError`, no `try!` in new code. |
 | No singletons, no static-only utility types | Consumers instantiate `HealthKitReporter()`; helpers are extensions on the type they belong to. |
-| Swift API Design Guidelines, SwiftLint, line length ≤ 110 | `.swiftlint.yml`, `CONTRIBUTING.md`. |
+| Swift API Design Guidelines, SwiftLint, line length ≤ 110 | `CONTRIBUTING.md` (guidelines and commands), `.swiftlint.yml` (rules and limits). |

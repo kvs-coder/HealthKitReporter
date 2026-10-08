@@ -95,7 +95,7 @@ public class HealthKitObserver {
      Enables background notifications about changes in AppleHealth
      - Parameter type: **ObjectType** type
      - Parameter frequency: **UpdateFrequency** frequency. Hourly by default
-     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     - Parameter completionHandler: block notifies whether background delivery was enabled
      */
     public func enableBackgroundDelivery(
         type: ObjectType,
@@ -116,8 +116,8 @@ public class HealthKitObserver {
         )
     }
     /**
-     Disables All background notifications about changes in AppleHealth
-     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     Disables all background notifications about changes in AppleHealth
+     - Parameter completionHandler: block notifies whether background delivery was disabled
      */
     public func disableAllBackgroundDelivery(
         completionHandler: @escaping StatusCompletionBlock
@@ -125,9 +125,9 @@ public class HealthKitObserver {
         healthStore.disableAllBackgroundDelivery(completion: completionHandler)
     }
     /**
-     Disables All background notifications about changes in AppleHealth
+     Disables background notifications about changes of one type in AppleHealth
      - Parameter type: **ObjectType** type
-     - Parameter completionHandler: is called as soon any change happened in AppleHealth App
+     - Parameter completionHandler: block notifies whether background delivery was disabled
      */
     public func disableBackgroundDelivery(
         type: ObjectType,

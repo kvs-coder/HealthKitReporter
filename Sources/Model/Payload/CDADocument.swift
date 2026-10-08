@@ -10,6 +10,7 @@ import HealthKit
 
 /// Consolidated Clinical Document (CDA) sample
 public struct CDADocument: Identifiable, Sample {
+    /// The value part of **CDADocument**, with its metadata
     public struct Harmonized: Codable {
         public let title: String?
         public let patientName: String?
@@ -19,6 +20,7 @@ public struct CDADocument: Identifiable, Sample {
         public let documentData: String?
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             title: String?,
             patientName: String?,
@@ -35,6 +37,7 @@ public struct CDADocument: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             title: String? = nil,
             patientName: String? = nil,
@@ -62,6 +65,10 @@ public struct CDADocument: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -98,6 +105,7 @@ public struct CDADocument: Identifiable, Sample {
         )
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -139,6 +147,11 @@ extension CDADocument: Original {
 }
 // MARK: - Payload
 extension CDADocument: Payload {
+    /**
+     Makes a **CDADocument** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> CDADocument {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -171,6 +184,11 @@ extension CDADocument {
 }
 // MARK: - Harmonized: Payload
 extension CDADocument.Harmonized: Payload {
+    /**
+     Makes a **CDADocument.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> CDADocument.Harmonized {
         let metadata = dictionary["metadata"] as? [String: Any]
         return CDADocument.Harmonized(

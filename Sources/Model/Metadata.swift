@@ -25,18 +25,22 @@ public struct Metadata: Codable, Equatable {
 
     public let values: [String: Value]
 
+    /// Creates **Metadata** from values by key
     public init(_ values: [String: Value]) {
         self.values = values
     }
 
+    /// The value at the metadata key, e.g. "HKWasUserEntered"
     public subscript(key: String) -> Value? {
         return values[key]
     }
 
+    /// Decodes the value from its JSON encoding
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         self.values = try container.decode([String: Value].self)
     }
+    /// Encodes the value as its JSON form
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(values)
@@ -44,6 +48,7 @@ public struct Metadata: Codable, Equatable {
 }
 // MARK: - ExpressibleByDictionaryLiteral
 extension Metadata: ExpressibleByDictionaryLiteral {
+    /// Creates **Metadata** from a dictionary literal, e.g. ["HKWasUserEntered": true]
     public init(dictionaryLiteral elements: (String, Value)...) {
         self.init(Dictionary(elements, uniquingKeysWith: { _, last in last }))
     }
@@ -90,6 +95,7 @@ extension Metadata.Value: Codable {
         case unit
     }
 
+    /// Decodes the value from its JSON encoding
     public init(from decoder: Decoder) throws {
         if let container = try? decoder.singleValueContainer() {
             if let bool = try? container.decode(Bool.self) {
@@ -115,6 +121,7 @@ extension Metadata.Value: Codable {
             unit: try container.decode(String.self, forKey: .unit)
         )
     }
+    /// Encodes the value as its JSON form
     public func encode(to encoder: Encoder) throws {
         switch self {
         case .string(let string):
@@ -141,15 +148,19 @@ extension Metadata.Value: ExpressibleByStringLiteral,
                           ExpressibleByFloatLiteral,
                           ExpressibleByIntegerLiteral,
                           ExpressibleByBooleanLiteral {
+    /// A string value from a string literal
     public init(stringLiteral value: String) {
         self = .string(value)
     }
+    /// A number value from a float literal
     public init(floatLiteral value: Double) {
         self = .number(value)
     }
+    /// A number value from an integer literal
     public init(integerLiteral value: Int) {
         self = .number(Double(value))
     }
+    /// A boolean value from a boolean literal
     public init(booleanLiteral value: Bool) {
         self = .bool(value)
     }

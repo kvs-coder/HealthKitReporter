@@ -140,7 +140,7 @@ public class HealthKitManager {
     /**
      Starts Watch App.
      - Parameter workoutConfiguration: **WorkoutConfiguration** workout configuration
-     - Parameter completion: returns a block with samples
+     - Parameter completion: block notifies whether the watch app was started
      */
     public func startWatchApp(
         with workoutConfiguration: WorkoutConfiguration,

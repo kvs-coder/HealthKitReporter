@@ -7,12 +7,15 @@
 
 import HealthKit
 
+/// **Correlation** samples that belong together, e.g. blood pressure or food
 public struct Correlation: Identifiable, Sample {
+    /// The value part of **Correlation**, with its metadata
     public struct Harmonized: Codable {
         public let quantitySamples: [Quantity]
         public let categorySamples: [Category]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             quantitySamples: [Quantity],
             categorySamples: [Category],
@@ -23,6 +26,7 @@ public struct Correlation: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             quantitySamples: [Quantity]? = nil,
             categorySamples: [Category]? = nil,
@@ -56,6 +60,10 @@ public struct Correlation: Identifiable, Sample {
         self.harmonized = try correlation.harmonize()
     }
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -74,6 +82,7 @@ public struct Correlation: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -117,6 +126,11 @@ extension Correlation {
 }
 // MARK: - Payload
 extension Correlation: Payload {
+    /**
+     Makes a **Correlation** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Correlation {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -143,6 +157,11 @@ extension Correlation: Payload {
 }
 // MARK: - Payload
 extension Correlation.Harmonized: Payload {
+    /**
+     Makes a **Correlation.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Correlation.Harmonized {
         guard
             let quantitySamples = dictionary["quantitySamples"] as? [Any],

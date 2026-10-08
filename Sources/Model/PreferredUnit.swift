@@ -7,6 +7,7 @@
 
 import HealthKit
 
+/// **PreferredUnit** the unit the user prefers for a quantity type
 public struct PreferredUnit: Codable {
     public let identifier: String
     public let unit: String
@@ -16,6 +17,7 @@ public struct PreferredUnit: Codable {
         self.unit = unit.unitString
     }
 
+    /// Creates the **PreferredUnit** from its fields
     public init(identifier: String, unit: String) {
         self.identifier = identifier
         self.unit = unit
@@ -49,6 +51,11 @@ public extension PreferredUnit {
 }
 // MARK: - Payload
 extension PreferredUnit: Payload {
+    /**
+     Makes a **PreferredUnit** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> PreferredUnit {
         guard
             let identifier = dictionary["identifier"] as? String,

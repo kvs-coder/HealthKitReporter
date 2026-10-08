@@ -7,7 +7,9 @@
 
 import HealthKit
 
+/// **SourceRevision** the version of the source that saved a sample
 public struct SourceRevision: Codable {
+    /// **OperatingSystem** the operating system version of a source revision
     public struct OperatingSystem: Codable {
         public let majorVersion: Int
         public let minorVersion: Int
@@ -27,6 +29,7 @@ public struct SourceRevision: Codable {
             self.patchVersion = version.patchVersion
         }
 
+        /// Creates the **OperatingSystem** from its fields
         public init(
             majorVersion: Int,
             minorVersion: Int,
@@ -37,6 +40,7 @@ public struct SourceRevision: Codable {
             self.patchVersion = patchVersion
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             majorVersion: Int? = nil,
             minorVersion: Int? = nil,
@@ -66,6 +70,7 @@ public struct SourceRevision: Codable {
         )
     }
 
+    /// Creates the **SourceRevision** from its fields
     public init(
         source: Source,
         version: String?,
@@ -80,6 +85,7 @@ public struct SourceRevision: Codable {
         self.operatingSystem = operatingSystem
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value
     public func copyWith(
         source: Source? = nil,
         version: String? = nil,
@@ -109,6 +115,11 @@ extension SourceRevision: Original {
 }
 // MARK: - Payload
 extension SourceRevision.OperatingSystem: Payload {
+    /**
+     Makes a **SourceRevision.OperatingSystem** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> SourceRevision.OperatingSystem {
@@ -128,6 +139,11 @@ extension SourceRevision.OperatingSystem: Payload {
 }
 // MARK: - Payload
 extension SourceRevision: Payload {
+    /**
+     Makes a **SourceRevision** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> SourceRevision {

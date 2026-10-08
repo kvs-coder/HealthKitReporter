@@ -93,7 +93,7 @@ participant SampleResultsCollector as C
 participant HKHealthStore as S
 Consumer -> S : executeQuery(electrocardiogramQuery handle)
 S -> E : [HKElectrocardiogram]
-E -> C : init(count: n)
+E -> C : init(label:count: n)
 loop each sample i
   E -> C : enter()
   E -> S : execute(HKElectrocardiogramQuery(sample))

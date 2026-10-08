@@ -12,6 +12,7 @@ public struct QueryDescriptor {
     public let type: SampleType
     public let predicate: NSPredicate?
 
+    /// Creates the **QueryDescriptor** from its fields
     public init(type: SampleType, predicate: NSPredicate? = nil) {
         self.type = type
         self.predicate = predicate

@@ -20,6 +20,7 @@ public struct Attachment: Codable {
     public let creationTimestamp: Double
     public let metadata: Metadata?
 
+    /// Creates the **Attachment** from its fields
     public init(
         identifier: String,
         name: String,
@@ -48,6 +49,11 @@ public struct Attachment: Codable {
 }
 // MARK: - Payload
 extension Attachment: Payload {
+    /**
+     Makes an **Attachment** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Attachment {
         guard
             let identifier = dictionary["identifier"] as? String,

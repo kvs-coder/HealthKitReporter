@@ -7,11 +7,14 @@
 
 import HealthKit
 
+/// **WorkoutConfiguration** the activity, location and lap length a watch workout starts with
 public struct WorkoutConfiguration: Codable {
+    /// The value part of **WorkoutConfiguration**, with its metadata
     public struct Harmonized: Codable {
         public let value: Double
         public let unit: String
 
+        /// Creates the **Harmonized** from its fields
         public init(
             value: Double,
             unit: String
@@ -20,6 +23,7 @@ public struct WorkoutConfiguration: Codable {
             self.unit = unit
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             value: Double? = nil,
             unit: String? = nil
@@ -36,6 +40,7 @@ public struct WorkoutConfiguration: Codable {
     public let swimmingValue: Int
     public let harmonized: Harmonized
 
+    /// Creates the **WorkoutConfiguration** from its fields
     public init(
         activityValue: Int,
         locationValue: Int,
@@ -48,6 +53,7 @@ public struct WorkoutConfiguration: Codable {
         self.harmonized = harmonized
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value
     public func copyWith(
         activityValue: Int? = nil,
         locationValue: Int? = nil,
@@ -92,6 +98,11 @@ extension WorkoutConfiguration: Original {
 }
 // MARK: - Payload
 extension WorkoutConfiguration: Payload {
+    /**
+     Makes a **WorkoutConfiguration** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> WorkoutConfiguration {
@@ -115,6 +126,11 @@ extension WorkoutConfiguration: Payload {
 }
 // MARK: - Payload
 extension WorkoutConfiguration.Harmonized: Payload {
+    /**
+     Makes a **WorkoutConfiguration.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> WorkoutConfiguration.Harmonized {

@@ -11,7 +11,7 @@ import HealthKit
 extension HealthKitReader {
     /**
      Queries statistics.
-     - Parameter type: **ObjectType** types
+     - Parameter type: **QuantityType** type
      - Parameter unit: **String** unit compatible with the type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter separateBySource: **Bool** also compute **Statistics.sourceStatistics**. False by default

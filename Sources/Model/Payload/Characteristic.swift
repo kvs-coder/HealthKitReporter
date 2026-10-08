@@ -7,6 +7,7 @@
 
 import HealthKit
 
+/// **Characteristic** the user's sex, birthday, blood type, skin type, wheelchair use and move mode
 public struct Characteristic: Codable {
     public let biologicalSex: String?
     public let birthday: String?

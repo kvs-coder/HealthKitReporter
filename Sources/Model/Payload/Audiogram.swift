@@ -19,6 +19,7 @@ public struct Audiogram: Identifiable, Sample {
         /// 0 left, 1 right (**HKAudiogramSensitivityTestSide**)
         public let side: Int
 
+        /// Creates the **Test** from its fields
         public init(sensitivity: Double, conductionType: Int, masked: Bool, side: Int) {
             self.sensitivity = sensitivity
             self.conductionType = conductionType
@@ -27,6 +28,7 @@ public struct Audiogram: Identifiable, Sample {
         }
     }
 
+    /// **SensitivityPoint** hearing sensitivity of both ears at one frequency
     public struct SensitivityPoint: Codable {
         /// Hz
         public let frequency: Double
@@ -37,6 +39,7 @@ public struct Audiogram: Identifiable, Sample {
         /// tests behind the sensitivities (iOS 18.1+, read only)
         public let tests: [Test]?
 
+        /// Creates the **SensitivityPoint** from its fields
         public init(
             frequency: Double,
             leftEarSensitivity: Double?,
@@ -50,15 +53,18 @@ public struct Audiogram: Identifiable, Sample {
         }
     }
 
+    /// The value part of **Audiogram**, with its metadata
     public struct Harmonized: Codable {
         public let sensitivityPoints: [SensitivityPoint]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(sensitivityPoints: [SensitivityPoint], metadata: Metadata?) {
             self.sensitivityPoints = sensitivityPoints
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             sensitivityPoints: [SensitivityPoint]? = nil,
             metadata: Metadata? = nil
@@ -78,6 +84,10 @@ public struct Audiogram: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -106,6 +116,7 @@ public struct Audiogram: Identifiable, Sample {
         self.harmonized = try audiogramSample.harmonize()
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -163,6 +174,11 @@ extension Audiogram: Original {
 }
 // MARK: - Payload
 extension Audiogram: Payload {
+    /**
+     Makes an **Audiogram** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Audiogram {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -195,6 +211,11 @@ extension Audiogram {
 }
 // MARK: - Harmonized: Payload
 extension Audiogram.Harmonized: Payload {
+    /**
+     Makes an **Audiogram.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Audiogram.Harmonized {
         guard let sensitivityPoints = dictionary["sensitivityPoints"] as? [[String: Any]] else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -208,6 +229,11 @@ extension Audiogram.Harmonized: Payload {
 }
 // MARK: - SensitivityPoint: Payload
 extension Audiogram.SensitivityPoint: Payload {
+    /**
+     Makes an **Audiogram.SensitivityPoint** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Audiogram.SensitivityPoint {
         guard let frequency = dictionary["frequency"] as? NSNumber else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")

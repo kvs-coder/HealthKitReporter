@@ -51,7 +51,7 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
         return Harmonized(value: voltage, unit: unit.unitString)
     }
 }
-// MARK: - CustomStringConvertible
+// MARK: - Label
 extension HKElectrocardiogram.Classification {
     /// Name of the value in payload strings
     var label: String {
@@ -77,7 +77,7 @@ extension HKElectrocardiogram.Classification {
         }
     }
 }
-// MARK: - CustomStringConvertible
+// MARK: - Label
 extension HKElectrocardiogram.SymptomsStatus {
     /// Name of the value in payload strings
     var label: String {

@@ -7,6 +7,7 @@
 
 import HealthKit
 
+/// **Device** the device that recorded a sample
 public struct Device: Codable {
     public let name: String?
     public let manufacturer: String?
@@ -28,6 +29,7 @@ public struct Device: Codable {
         self.udiDeviceIdentifier = device?.udiDeviceIdentifier
     }
 
+    /// Creates the **Device** from its fields
     public init(
         name: String?,
         manufacturer: String?,
@@ -48,11 +50,13 @@ public struct Device: Codable {
         self.udiDeviceIdentifier = udiDeviceIdentifier
     }
 
+    /// The device the app runs on
     public static func local() -> Device {
         let local = HKDevice.local()
         return Device(device: local)
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value
     public func copyWith(
         name: String? = nil,
         manufacturer: String? = nil,
@@ -92,6 +96,11 @@ extension Device: Original {
 }
 // MARK: - Payload
 extension Device: Payload {
+    /**
+     Makes a **Device** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Device {

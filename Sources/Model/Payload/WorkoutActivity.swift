@@ -30,6 +30,7 @@ public struct WorkoutActivity: Codable {
     public let statistics: [Statistics]
     public let metadata: Metadata?
 
+    /// Creates the **WorkoutActivity** from its fields
     public init(
         uuid: String = UUID().uuidString,
         activityValue: Int,
@@ -169,6 +170,11 @@ extension WorkoutActivity {
 }
 // MARK: - Payload
 extension WorkoutActivity: Payload {
+    /**
+     Makes a **WorkoutActivity** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> WorkoutActivity {
         guard
             let activityValue = dictionary["activityValue"] as? NSNumber,

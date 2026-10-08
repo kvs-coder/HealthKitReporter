@@ -49,8 +49,8 @@ extension HealthKitReader {
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
      By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter resultsHandler: returns a block with heartbeat series for each
-     iteration until **done** of **HeartbeatSeries**  is True.
+     - Parameter resultsHandler: returns a block with every heartbeat series and its measurements,
+     once all series are read
      - Throws: HealthKitError.invalidType
      */
     public func heartbeatSeriesQuery(

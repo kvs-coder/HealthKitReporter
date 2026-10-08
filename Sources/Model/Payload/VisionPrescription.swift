@@ -14,10 +14,12 @@ import HealthKit
  */
 @available(iOS 16.0, watchOS 9.0, *)
 public struct VisionPrescription: Identifiable, Sample {
+    /// **PrescriptionType** glasses or contacts
     public struct PrescriptionType: Codable {
         public let id: Int
         public let detail: String
 
+        /// Creates the **PrescriptionType** from its fields
         public init(id: Int, detail: String) {
             self.id = id
             self.detail = detail
@@ -29,6 +31,7 @@ public struct VisionPrescription: Identifiable, Sample {
         }
     }
 
+    /// The value part of **VisionPrescription**, with its metadata
     public struct Harmonized: Codable {
         /// seconds since 1970
         public let dateIssuedTimestamp: Double
@@ -41,6 +44,7 @@ public struct VisionPrescription: Identifiable, Sample {
         public let brand: String?
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             dateIssuedTimestamp: Double,
             expirationDateTimestamp: Double?,
@@ -59,6 +63,7 @@ public struct VisionPrescription: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             dateIssuedTimestamp: Double? = nil,
             expirationDateTimestamp: Double? = nil,
@@ -88,6 +93,10 @@ public struct VisionPrescription: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -116,6 +125,7 @@ public struct VisionPrescription: Identifiable, Sample {
         self.harmonized = try visionPrescription.harmonize()
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -162,6 +172,7 @@ extension VisionPrescription {
         /// mm
         public let diameter: Double?
 
+        /// Creates the **LensSpecification** from its fields
         public init(
             sphere: Double,
             cylinder: Double? = nil,
@@ -195,6 +206,7 @@ extension VisionPrescription {
         /// 1 left, 2 right (**HKVisionEye**)
         public let eye: Int
 
+        /// Creates the **Prism** from its fields
         public init(amount: Double, angle: Double, eye: Int) {
             self.amount = amount
             self.angle = angle
@@ -307,6 +319,11 @@ extension VisionPrescription.Prism {
 // MARK: - Payload
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription: Payload {
+    /**
+     Makes a **VisionPrescription** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -341,6 +358,11 @@ extension VisionPrescription {
 // MARK: - Harmonized: Payload
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.Harmonized: Payload {
+    /**
+     Makes a **VisionPrescription.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.Harmonized {
         guard
             let dateIssuedTimestamp = dictionary["dateIssuedTimestamp"] as? NSNumber,
@@ -366,6 +388,11 @@ extension VisionPrescription.Harmonized: Payload {
 // MARK: - PrescriptionType: Payload
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.PrescriptionType: Payload {
+    /**
+     Makes a **VisionPrescription.PrescriptionType** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.PrescriptionType {
         guard
             let id = dictionary["id"] as? NSNumber,
@@ -379,6 +406,11 @@ extension VisionPrescription.PrescriptionType: Payload {
 // MARK: - LensSpecification: Payload
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.LensSpecification: Payload {
+    /**
+     Makes a **VisionPrescription.LensSpecification** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.LensSpecification {
         guard let sphere = dictionary["sphere"] as? NSNumber else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -404,6 +436,11 @@ extension VisionPrescription.LensSpecification: Payload {
 // MARK: - Prism: Payload
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.Prism: Payload {
+    /**
+     Makes a **VisionPrescription.Prism** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.Prism {
         guard
             let amount = dictionary["amount"] as? NSNumber,

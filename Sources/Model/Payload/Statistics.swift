@@ -7,7 +7,9 @@
 
 import HealthKit
 
+/// **Statistics** statistics of a quantity type over an interval
 public struct Statistics: Identifiable, Codable {
+    /// The value part of **Statistics**, with its metadata
     public struct Harmonized: Codable {
         public let summary: Double?
         public let average: Double?
@@ -18,6 +20,7 @@ public struct Statistics: Identifiable, Codable {
         /// seconds covered by data
         public let duration: Double?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             summary: Double?,
             average: Double?,
@@ -36,6 +39,7 @@ public struct Statistics: Identifiable, Codable {
             self.duration = duration
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             summary: Double? = nil,
             average: Double? = nil,
@@ -61,6 +65,7 @@ public struct Statistics: Identifiable, Codable {
         public let source: Source
         public let harmonized: Harmonized
 
+        /// Creates the **SourceStatistics** from its fields
         public init(source: Source, harmonized: Harmonized) {
             self.source = source
             self.harmonized = harmonized
@@ -92,6 +97,7 @@ public struct Statistics: Identifiable, Codable {
         try self.init(statistics: statistics, unit: try statistics.quantityType.siUnit)
     }
 
+    /// Creates the **Statistics** from its fields
     public init(
         identifier: String,
         startTimestamp: Double,
@@ -108,6 +114,7 @@ public struct Statistics: Identifiable, Codable {
         self.sourceStatistics = sourceStatistics
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value
     public func copyWith(
         identifier: String? = nil,
         startTimestamp: Double? = nil,
@@ -128,6 +135,11 @@ public struct Statistics: Identifiable, Codable {
 }
 // MARK: - Payload
 extension Statistics: Payload {
+    /**
+     Makes a **Statistics** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Statistics {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -151,6 +163,11 @@ extension Statistics: Payload {
 }
 // MARK: - Payload
 extension Statistics.Harmonized: Payload {
+    /**
+     Makes a **Statistics.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Statistics.Harmonized {
         guard let unit = dictionary["unit"] as? String else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -169,6 +186,11 @@ extension Statistics.Harmonized: Payload {
 }
 // MARK: - Payload
 extension Statistics.SourceStatistics: Payload {
+    /**
+     Makes a **Statistics.SourceStatistics** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Statistics.SourceStatistics {
         guard
             let source = dictionary["source"] as? [String: Any],
@@ -184,6 +206,11 @@ extension Statistics.SourceStatistics: Payload {
 }
 // MARK: - UnitConvertable
 extension Statistics: UnitConvertable {
+    /**
+     A copy with the values in another unit; every other field stays the same.
+     - Parameter unit: **String** unit compatible with the type, e.g. "km"
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
+     */
     public func converted(to unit: String) throws -> Statistics {
         guard harmonized.unit != unit else {
             return self

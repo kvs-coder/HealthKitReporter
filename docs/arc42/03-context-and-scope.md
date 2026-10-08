@@ -22,7 +22,7 @@ Rel(user, health, "Grants / denies access", "System authorization sheet")
 
 | Partner | Input to HealthKitReporter | Output from HealthKitReporter |
 | :--- | :--- | :--- |
-| Consumer app (Swift) | Library types (`QuantityType`, `Quantity`, ...), predicates, callbacks | Payload structs, `HealthKitError`, built `Query` objects |
+| Consumer app (Swift) | Library types (`QuantityType`, `Quantity`, ...), predicates, callbacks | Payload structs, `HealthKitError`, `QueryHandle`s to run and stop, `Anchor`s |
 | Flutter plugin | Type identifiers as strings, payload dictionaries (`[String: Any]`) | Payload JSON strings (`encoded()`) |
 | HealthKit | `HK*` samples, statistics, query results, authorization status | `HK*` queries, samples to save/delete, authorization requests |
 | End user | Authorization decisions (via the system sheet) | — |

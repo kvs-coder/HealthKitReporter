@@ -30,7 +30,7 @@ public class HealthKitReader {
     /**
      Gets user's characteristics.
      A characteristic that is not authorized or not set is nil.
-     - Returns: **Characteristics** characteristics
+     - Returns: **Characteristic** characteristics
      */
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()

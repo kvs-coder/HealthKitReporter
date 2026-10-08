@@ -7,7 +7,9 @@
 
 import HealthKit
 
+/// **Electrocardiogram** an ECG recording
 public struct Electrocardiogram: Identifiable, Sample {
+    /// The value part of **Electrocardiogram**, with its metadata
     public struct Harmonized: Codable {
         public let averageHeartRate: Double?
         public let averageHeartRateUnit: String
@@ -19,6 +21,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let voltageMeasurements: [VoltageMeasurement]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             averageHeartRate: Double?,
             averageHeartRateUnit: String,
@@ -41,11 +44,14 @@ public struct Electrocardiogram: Identifiable, Sample {
             self.metadata = metadata
         }
     }
+    /// **VoltageMeasurement** one voltage of an ECG at a time since its start
     public struct VoltageMeasurement: Codable {
+        /// The value part of **Electrocardiogram.VoltageMeasurement**, with its metadata
         public struct Harmonized: Codable {
             public let value: Double
             public let unit: String
 
+            /// Creates the **Harmonized** from its fields
             public init(value: Double, unit: String) {
                 self.value = value
                 self.unit = unit
@@ -55,6 +61,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let harmonized: Harmonized
         public let timeSinceSampleStart: Double
 
+        /// Creates the **VoltageMeasurement** from its fields
         public init(harmonized: Harmonized, timeSinceSampleStart: Double) {
             self.harmonized = harmonized
             self.timeSinceSampleStart = timeSinceSampleStart
@@ -75,6 +82,10 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let numberOfMeasurements: Int
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -114,6 +125,11 @@ public struct Electrocardiogram: Identifiable, Sample {
 }
 // MARK: - Payload
 extension Electrocardiogram.Harmonized: Payload {
+    /**
+     Makes an **Electrocardiogram.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.Harmonized {
         guard
             let averageHeartRateUnit = dictionary["averageHeartRateUnit"] as? String,
@@ -167,6 +183,11 @@ extension Electrocardiogram {
 }
 // MARK: - Payload
 extension Electrocardiogram: Payload {
+    /**
+     Makes an **Electrocardiogram** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -195,6 +216,11 @@ extension Electrocardiogram: Payload {
 }
 // MARK: - Payload
 extension Electrocardiogram.VoltageMeasurement: Payload {
+    /**
+     Makes an **Electrocardiogram.VoltageMeasurement** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.VoltageMeasurement {
         guard
             let harmonized = dictionary["harmonized"] as? [String: Any],
@@ -210,6 +236,12 @@ extension Electrocardiogram.VoltageMeasurement: Payload {
 }
 // MARK: - Payload
 extension Electrocardiogram.VoltageMeasurement.Harmonized: Payload {
+    /**
+     Makes an **Electrocardiogram.VoltageMeasurement.Harmonized** from a dictionary
+     with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(
         from dictionary: [String: Any]
     ) throws -> Electrocardiogram.VoltageMeasurement.Harmonized {

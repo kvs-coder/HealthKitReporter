@@ -7,6 +7,7 @@
 
 import HealthKit
 
+/// **UpdateFrequency** how often HealthKit wakes the app for background delivery
 public enum UpdateFrequency: Int {
     case immediate = 1
     case hourly = 2
@@ -26,6 +27,11 @@ public enum UpdateFrequency: Int {
         }
     }
 
+    /**
+     Makes an **UpdateFrequency** from its raw value.
+     - Parameter integer: **Int** raw value, 1 (immediate) to 4 (weekly)
+     - Throws: HealthKitError.invalidValue for other values
+     */
     public static func make(from integer: Int) throws -> Self {
         switch integer {
         case 1:

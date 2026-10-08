@@ -14,6 +14,7 @@ import HealthKit
 public struct Anchor: Codable, Equatable {
     public let data: Data
 
+    /// Creates the anchor from the archived data an earlier query handed back
     public init(data: Data) {
         self.data = data
     }
@@ -28,10 +29,12 @@ public struct Anchor: Codable, Equatable {
         self.data = data
     }
 
+    /// Decodes the anchor from its base64 string
     public init(from decoder: Decoder) throws {
         self.data = try decoder.singleValueContainer().decode(Data.self)
     }
 
+    /// Encodes the value as its JSON form
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(data)

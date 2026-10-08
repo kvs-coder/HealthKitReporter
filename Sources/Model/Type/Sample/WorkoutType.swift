@@ -13,6 +13,7 @@ import HealthKit
 public enum WorkoutType: Int, CaseIterable, SampleType {
     case workoutType
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

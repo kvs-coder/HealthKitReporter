@@ -36,7 +36,7 @@ Rel(bin, store, "HealthKit framework")
 | `lint` | ubuntu, SwiftLint container | `swiftlint lint --strict --baseline .swiftlint.baseline` |
 | `release-guard` | ubuntu | Top `CHANGELOG.md` entry matches `.release-please-manifest.json` |
 | `package` | macOS | manifest validation, iOS simulator tests with coverage, coverage ≥ `COVERAGE_THRESHOLD`, watchOS build |
-| `example` | macOS | Builds `Example/HealthKitReporter.xcodeproj` |
+| `example` | macOS | Builds the `HealthKitReporter_Example` iOS app and the `HealthKitReporterWatch` watch companion from `Example/HealthKitReporter.xcodeproj` |
 
 ## 7.3 Release (`.github/workflows/release.yml`)
 

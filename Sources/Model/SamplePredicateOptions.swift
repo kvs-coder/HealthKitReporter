@@ -11,6 +11,7 @@ import HealthKit
 public struct SamplePredicateOptions: OptionSet, Codable {
     public let rawValue: Int
 
+    /// Creates the options from their raw value
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }

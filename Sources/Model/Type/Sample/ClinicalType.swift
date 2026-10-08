@@ -7,6 +7,7 @@
 
 import HealthKit
 
+/// **ClinicalType** the FHIR health record types (iOS); read-only, requested apart from other types
 public enum ClinicalType: Int, CaseIterable, SampleType {
     case allergyRecord
     case conditionRecord
@@ -18,6 +19,7 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
     case coverageRecord
     case clinicalNoteRecord
     
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }

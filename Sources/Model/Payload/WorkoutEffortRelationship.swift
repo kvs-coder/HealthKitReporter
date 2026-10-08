@@ -15,6 +15,7 @@ public struct WorkoutEffortRelationship: Codable {
     /// workout effort score and estimated workout effort score samples
     public let samples: [Quantity]
 
+    /// Creates the **WorkoutEffortRelationship** from its fields
     public init(workout: Workout, activityUUID: String?, samples: [Quantity]) {
         self.workout = workout
         self.activityUUID = activityUUID

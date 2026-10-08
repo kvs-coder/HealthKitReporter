@@ -8,7 +8,9 @@
 #if os(iOS)
 import HealthKit
 
+/// **ClinicalRecord** a FHIR health record (iOS)
 public struct ClinicalRecord: Identifiable, Sample {
+    /// The value part of **ClinicalRecord**, with its metadata
     public struct Harmonized: Codable {
         public let displayName: String
         public let fhirSourceUrl: String?
@@ -16,6 +18,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         public let fhirData: String?
         public let metadata: Metadata?
         
+        /// Creates the **Harmonized** from its fields
         public init(
             displayName: String,
             fhirSourceUrl: String?,
@@ -30,6 +33,7 @@ public struct ClinicalRecord: Identifiable, Sample {
             self.metadata = metadata
         }
         
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             displayName: String? = nil,
             fhirSourceUrl: String? = nil,
@@ -80,6 +84,10 @@ public struct ClinicalRecord: Identifiable, Sample {
         )
     }
     
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -98,6 +106,7 @@ public struct ClinicalRecord: Identifiable, Sample {
         self.harmonized = harmonized
     }
     
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -120,6 +129,11 @@ public struct ClinicalRecord: Identifiable, Sample {
 }
 // MARK: - Payload
 extension ClinicalRecord: Payload {
+    /**
+     Makes a **ClinicalRecord** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> ClinicalRecord {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -165,6 +179,11 @@ extension ClinicalRecord {
 }
 // MARK: - Payload
 extension ClinicalRecord.Harmonized: Payload {
+    /**
+     Makes a **ClinicalRecord.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> ClinicalRecord.Harmonized {
         guard
             let displayName = dictionary["displayName"] as? String,

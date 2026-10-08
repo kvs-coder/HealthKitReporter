@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// **ObjectType** a HealthKit data type the library supports, named by its HealthKit identifier
 public protocol ObjectType {
     /**
      The HealthKit identifier of the type, e.g. "HKQuantityTypeIdentifierStepCount".

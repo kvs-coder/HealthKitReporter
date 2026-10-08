@@ -14,6 +14,7 @@ import HealthKit
  */
 @available(iOS 18.0, watchOS 11.0, *)
 public struct StateOfMind: Identifiable, Sample {
+    /// The value part of **StateOfMind**, with its metadata
     public struct Harmonized: Codable {
         public let kind: Int
         /// -1 very unpleasant ... 1 very pleasant
@@ -24,6 +25,7 @@ public struct StateOfMind: Identifiable, Sample {
         public let associations: [Int]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             kind: Int,
             valence: Double,
@@ -40,6 +42,7 @@ public struct StateOfMind: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             kind: Int? = nil,
             valence: Double? = nil,
@@ -67,6 +70,10 @@ public struct StateOfMind: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -102,6 +109,7 @@ public struct StateOfMind: Identifiable, Sample {
         )
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -150,6 +158,11 @@ extension StateOfMind: Original {
 // MARK: - Payload
 @available(iOS 18.0, watchOS 11.0, *)
 extension StateOfMind: Payload {
+    /**
+     Makes a **StateOfMind** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> StateOfMind {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -184,6 +197,11 @@ extension StateOfMind {
 // MARK: - Harmonized: Payload
 @available(iOS 18.0, watchOS 11.0, *)
 extension StateOfMind.Harmonized: Payload {
+    /**
+     Makes a **StateOfMind.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> StateOfMind.Harmonized {
         guard
             let kind = dictionary["kind"] as? NSNumber,

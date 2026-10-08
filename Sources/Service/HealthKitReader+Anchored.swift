@@ -14,7 +14,7 @@ extension HealthKitReader {
      - Parameter type: **SampleType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter anchor: **Anchor** anchor of a previous run (optional). From the beginning by default
-     - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
      - Parameter completionHandler: returns a block with samples
@@ -87,7 +87,7 @@ extension HealthKitReader {
      Queries objects of several types (with anchors).
      - Parameter descriptors: **QueryDescriptor** types and predicates
      - Parameter anchor: **Anchor** anchor of a previous run (optional). From the beginning by default
-     - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
      - Parameter completionHandler: returns a block with samples of every type

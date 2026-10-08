@@ -15,6 +15,7 @@ import HealthKit
  */
 @available(iOS 18.0, watchOS 11.0, *)
 public struct ScoredAssessment: Identifiable, Sample {
+    /// The value part of **ScoredAssessment**, with its metadata
     public struct Harmonized: Codable {
         public let answers: [Int]
         /// read only, computed by HealthKit
@@ -23,6 +24,7 @@ public struct ScoredAssessment: Identifiable, Sample {
         public let risk: Int?
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(answers: [Int], score: Int?, risk: Int?, metadata: Metadata?) {
             self.answers = answers
             self.score = score
@@ -30,6 +32,7 @@ public struct ScoredAssessment: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             answers: [Int]? = nil,
             score: Int? = nil,
@@ -53,6 +56,10 @@ public struct ScoredAssessment: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -99,6 +106,7 @@ public struct ScoredAssessment: Identifiable, Sample {
         }
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -162,6 +170,11 @@ extension ScoredAssessment: Original {
 // MARK: - Payload
 @available(iOS 18.0, watchOS 11.0, *)
 extension ScoredAssessment: Payload {
+    /**
+     Makes a **ScoredAssessment** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> ScoredAssessment {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -196,6 +209,11 @@ extension ScoredAssessment {
 // MARK: - Harmonized: Payload
 @available(iOS 18.0, watchOS 11.0, *)
 extension ScoredAssessment.Harmonized: Payload {
+    /**
+     Makes a **ScoredAssessment.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> ScoredAssessment.Harmonized {
         guard let answers = dictionary["answers"] as? [NSNumber] else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")

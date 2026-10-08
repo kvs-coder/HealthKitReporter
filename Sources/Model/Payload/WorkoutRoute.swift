@@ -8,11 +8,14 @@
 import HealthKit
 import CoreLocation
 
+/// **WorkoutRoute** the GPS route of a workout
 public struct WorkoutRoute: Identifiable, Sample {
+    /// **Route** a batch of route locations
     public struct Route: Codable {
         public let locations: [Location]
         public let done: Bool
 
+        /// Creates the **Route** from its fields
         public init(
             locations: [Location],
             done: Bool
@@ -22,6 +25,7 @@ public struct WorkoutRoute: Identifiable, Sample {
         }
     }
 
+    /// **Location** one location of a route
     public struct Location: Codable {
         public let latitude: Double
         public let longitude: Double
@@ -54,6 +58,7 @@ public struct WorkoutRoute: Identifiable, Sample {
             self.verticalAccuracy = location.verticalAccuracy
         }
 
+        /// Creates the **Location** from its fields
         public init(
             latitude: Double,
             longitude: Double,
@@ -81,11 +86,13 @@ public struct WorkoutRoute: Identifiable, Sample {
         }
     }
 
+    /// The value part of **WorkoutRoute**, with its metadata
     public struct Harmonized: Codable {
         public let count: Int
         public let routes: [Route]
         public let metadata: Metadata?
 
+        /// Creates the **Harmonized** from its fields
         public init(
             count: Int,
             routes: [Route],
@@ -96,6 +103,7 @@ public struct WorkoutRoute: Identifiable, Sample {
             self.metadata = metadata
         }
 
+        /// A copy with the given fields replaced; nil keeps the current value
         public func copyWith(
             count: Int? = nil,
             routes: [Route]? = nil,
@@ -117,6 +125,10 @@ public struct WorkoutRoute: Identifiable, Sample {
     public let sourceRevision: SourceRevision
     public let harmonized: Harmonized
 
+    /**
+     Creates the payload. **uuid** names the stored sample; a new one by default,
+     since HealthKit gives every saved sample its own
+     */
     public init(
         uuid: String = UUID().uuidString,
         identifier: String,
@@ -135,6 +147,7 @@ public struct WorkoutRoute: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    /// A copy with the given fields replaced; nil keeps the current value, including the **uuid**
     public func copyWith(
         uuid: String? = nil,
         identifier: String? = nil,
@@ -183,6 +196,11 @@ extension WorkoutRoute.Location {
 }
 // MARK: - Payload
 extension WorkoutRoute.Location: Payload {
+    /**
+     Makes a **WorkoutRoute.Location** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Location {
         guard
             let latitude = dictionary["latitude"] as? NSNumber,
@@ -222,6 +240,11 @@ extension WorkoutRoute.Location: Payload {
 }
 // MARK: - Payload
 extension WorkoutRoute: Payload {
+    /**
+     Makes a **WorkoutRoute** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute {
         guard
             let identifier = dictionary["identifier"] as? String,
@@ -248,6 +271,11 @@ extension WorkoutRoute: Payload {
 }
 // MARK: - Payload
 extension WorkoutRoute.Harmonized: Payload {
+    /**
+     Makes a **WorkoutRoute.Harmonized** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Harmonized {
         guard
             let count = dictionary.int("count"),
@@ -265,6 +293,11 @@ extension WorkoutRoute.Harmonized: Payload {
 }
 // MARK: - Payload
 extension WorkoutRoute.Route: Payload {
+    /**
+     Makes a **WorkoutRoute.Route** from a dictionary with the keys of its JSON encoding.
+     - Parameter dictionary: **[String: Any]** dictionary
+     - Throws: HealthKitError.invalidValue when a required key is missing or malformed
+     */
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Route {
         guard
             let locations = dictionary["locations"] as? [Any],

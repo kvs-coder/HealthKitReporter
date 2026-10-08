@@ -13,6 +13,7 @@ import HealthKit
 public enum VisionPrescriptionType: Int, CaseIterable, SampleType {
     case visionPrescription
 
+    /// The HealthKit identifier of the type; nil when the type is not available on the running OS
     public var identifier: String? {
         return original?.identifier
     }
