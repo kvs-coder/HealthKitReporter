@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.0, *)
 extension HKElectrocardiogram {
     typealias Harmonized = Electrocardiogram.Harmonized
 
@@ -36,7 +35,6 @@ extension HKElectrocardiogram {
     }
 }
 
-@available(iOS 14.0, *)
 extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
     typealias Harmonized = Electrocardiogram.VoltageMeasurement.Harmonized
 
@@ -54,7 +52,6 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
     }
 }
 // MARK: - CustomStringConvertible
-@available(iOS 14.0, *)
 extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {
@@ -80,7 +77,6 @@ extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertib
     }
 }
 // MARK: - CustomStringConvertible
-@available(iOS 14.0, *)
 extension HKElectrocardiogram.SymptomsStatus: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {

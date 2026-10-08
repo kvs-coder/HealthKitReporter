@@ -22,7 +22,6 @@ extension HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
-    @available(iOS 14.0, *)
     public func electrocardiogramQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -54,7 +53,6 @@ extension HealthKitReader {
      iteration until **done** of **HeartbeatSeries**  is True.
      - Throws: HealthKitError.invalidType
      */
-    @available(iOS 13.0, *)
     public func heartbeatSeriesQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [
@@ -86,7 +84,6 @@ extension HealthKitReader {
      - Parameter resultsHandler: returns a block with workout routes
      - Throws: HealthKitError.invalidType
      */
-    @available(iOS 11.0, *)
     public func workoutRouteQuery(
         predicate: NSPredicate? = .allSamples,
         sortDescriptors: [NSSortDescriptor] = [

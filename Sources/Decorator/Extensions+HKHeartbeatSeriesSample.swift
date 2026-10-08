@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 13.0, *)
 extension HKHeartbeatSeriesSample {
     typealias Harmonized = HeartbeatSeries.Harmonized
     

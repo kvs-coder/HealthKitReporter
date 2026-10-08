@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 11.0, *)
 extension HKWorkoutRoute {
     typealias Harmonized = WorkoutRoute.Harmonized
 

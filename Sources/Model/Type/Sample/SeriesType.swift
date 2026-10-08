@@ -21,23 +21,15 @@ public enum SeriesType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:
-            if #available(iOS 13.0, *) {
-                let heartbeatSeries = HKObjectType.seriesType(
-                    forIdentifier: HKDataTypeIdentifierHeartbeatSeries
-                )
-                return heartbeatSeries ?? HKSeriesType.heartbeat()
-            } else {
-                return nil
-            }
+            let heartbeatSeries = HKObjectType.seriesType(
+                forIdentifier: HKDataTypeIdentifierHeartbeatSeries
+            )
+            return heartbeatSeries ?? HKSeriesType.heartbeat()
         case .workoutRoute:
-            if #available(iOS 11.0, *) {
-                let workoutRoute = HKObjectType.seriesType(
-                    forIdentifier: HKWorkoutRouteTypeIdentifier
-                )
-                return workoutRoute ?? HKSeriesType.workoutRoute()
-            } else {
-                return nil
-            }
+            let workoutRoute = HKObjectType.seriesType(
+                forIdentifier: HKWorkoutRouteTypeIdentifier
+            )
+            return workoutRoute ?? HKSeriesType.workoutRoute()
         }
     }
 }

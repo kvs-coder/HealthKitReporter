@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 12.0, *)
 public struct ClinicalRecord: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let displayName: String
@@ -56,11 +55,7 @@ public struct ClinicalRecord: Identifiable, Sample {
     public let harmonized: Harmonized
     
     init(clinicalRecord: HKClinicalRecord) throws {
-        let fhirVersion: String? = if #available(iOS 14.0, *) {
-            clinicalRecord.fhirResource?.fhirVersion.stringRepresentation
-        } else {
-            nil
-        }
+        let fhirVersion: String? = clinicalRecord.fhirResource?.fhirVersion.stringRepresentation
         var fhirData: String? {
             guard let data: Data = clinicalRecord.fhirResource?.data,
                   let jsonString = String(data: data, encoding: .utf8) else {
@@ -120,7 +115,6 @@ public struct ClinicalRecord: Identifiable, Sample {
     }
 }
 // MARK: - Payload
-@available(iOS 12.0, *)
 extension ClinicalRecord: Payload {
     public static func make(from dictionary: [String: Any]) throws -> ClinicalRecord {
         guard
@@ -156,7 +150,6 @@ extension ClinicalRecord: Payload {
     }
 }
 // MARK: - Factory
-@available(iOS 12.0, *)
 extension ClinicalRecord {
     public static func collect(results: [HKSample]) -> [ClinicalRecord] {
         var samples = [ClinicalRecord]()
@@ -176,7 +169,6 @@ extension ClinicalRecord {
     }
 }
 // MARK: - Payload
-@available(iOS 12.0, *)
 extension ClinicalRecord.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> ClinicalRecord.Harmonized {
         guard

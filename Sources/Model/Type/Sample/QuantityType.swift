@@ -131,7 +131,9 @@ public enum QuantityType: Int, CaseIterable, SampleType {
     case workoutEffortScore
     case estimatedWorkoutEffortScore
     case appleSleepingBreathingDisturbances
-
+}
+// MARK: - SampleType
+extension QuantityType {
     public var identifier: String? {
         return original?.identifier
     }
@@ -139,9 +141,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .heartRateVariabilitySDNN:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
-            }
+            return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
         case .bodyMassIndex:
             return HKObjectType.quantityType(forIdentifier: .bodyMassIndex)
         case .bodyFatPercentage:
@@ -167,23 +167,15 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .bodyMass:
             return HKObjectType.quantityType(forIdentifier: .bodyMass)
         case .restingHeartRate:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .restingHeartRate)
-            }
+            return HKObjectType.quantityType(forIdentifier: .restingHeartRate)
         case .vo2Max:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .vo2Max)
-            }
+            return HKObjectType.quantityType(forIdentifier: .vo2Max)
         case .waistCircumference:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .waistCircumference)
-            }
+            return HKObjectType.quantityType(forIdentifier: .waistCircumference)
         case .stepCount:
             return HKObjectType.quantityType(forIdentifier: .stepCount)
         case .distanceSwimming:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .distanceSwimming)
-            }
+            return HKObjectType.quantityType(forIdentifier: .distanceSwimming)
         case .distanceWalkingRunning:
             return HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)
         case .distanceCycling:
@@ -195,9 +187,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .flightsClimbed:
             return HKObjectType.quantityType(forIdentifier: .flightsClimbed)
         case .appleExerciseTime:
-            if #available(iOS 9.3, *) {
-                return HKObjectType.quantityType(forIdentifier: .appleExerciseTime)
-            }
+            return HKObjectType.quantityType(forIdentifier: .appleExerciseTime)
         case .dietaryEnergyConsumed:
             return HKObjectType.quantityType(forIdentifier: .dietaryEnergyConsumed)
         case .dietaryCarbohydrates:
@@ -261,27 +251,17 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .leanBodyMass:
             return HKObjectType.quantityType(forIdentifier: .leanBodyMass)
         case .distanceWheelchair:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .distanceWheelchair)
-            }
+            return HKObjectType.quantityType(forIdentifier: .distanceWheelchair)
         case .nikeFuel:
             return HKObjectType.quantityType(forIdentifier: .nikeFuel)
         case .pushCount:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .pushCount)
-            }
+            return HKObjectType.quantityType(forIdentifier: .pushCount)
         case .swimmingStrokeCount:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount)
-            }
+            return HKObjectType.quantityType(forIdentifier: .swimmingStrokeCount)
         case .distanceDownhillSnowSports:
-            if #available(iOS 11.2, *) {
-                return HKObjectType.quantityType(forIdentifier: .distanceDownhillSnowSports)
-            }
+            return HKObjectType.quantityType(forIdentifier: .distanceDownhillSnowSports)
         case .walkingHeartRateAverage:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .walkingHeartRateAverage)
-            }
+            return HKObjectType.quantityType(forIdentifier: .walkingHeartRateAverage)
         case .peripheralPerfusionIndex:
             return HKObjectType.quantityType(forIdentifier: .peripheralPerfusionIndex)
         case .numberOfTimesFallen:
@@ -291,9 +271,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .inhalerUsage:
             return HKObjectType.quantityType(forIdentifier: .inhalerUsage)
         case .insulinDelivery:
-            if #available(iOS 11.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .insulinDelivery)
-            }
+            return HKObjectType.quantityType(forIdentifier: .insulinDelivery)
         case .bloodAlcoholContent:
             return HKObjectType.quantityType(forIdentifier: .bloodAlcoholContent)
         case .forcedVitalCapacity:
@@ -323,53 +301,29 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .uvExposure:
             return HKObjectType.quantityType(forIdentifier: .uvExposure)
         case .environmentalAudioExposure:
-            if #available(iOS 13.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)
-            }
+            return HKObjectType.quantityType(forIdentifier: .environmentalAudioExposure)
         case .headphoneAudioExposure:
-            if #available(iOS 13.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)
-            }
+            return HKObjectType.quantityType(forIdentifier: .headphoneAudioExposure)
         case .appleStandTime:
-            if #available(iOS 13.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .appleStandTime)
-            }
+            return HKObjectType.quantityType(forIdentifier: .appleStandTime)
         case .walkingSpeed:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .walkingSpeed)
-            }
+            return HKObjectType.quantityType(forIdentifier: .walkingSpeed)
         case .walkingDoubleSupportPercentage:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .walkingDoubleSupportPercentage)
-            }
+            return HKObjectType.quantityType(forIdentifier: .walkingDoubleSupportPercentage)
         case .walkingAsymmetryPercentage:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .walkingAsymmetryPercentage)
-            }
+            return HKObjectType.quantityType(forIdentifier: .walkingAsymmetryPercentage)
         case .walkingStepLength:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .walkingStepLength)
-            }
+            return HKObjectType.quantityType(forIdentifier: .walkingStepLength)
         case .sixMinuteWalkTestDistance:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .sixMinuteWalkTestDistance)
-            }
+            return HKObjectType.quantityType(forIdentifier: .sixMinuteWalkTestDistance)
         case .stairAscentSpeed:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .stairAscentSpeed)
-            }
+            return HKObjectType.quantityType(forIdentifier: .stairAscentSpeed)
         case .stairDescentSpeed:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .stairDescentSpeed)
-            }
+            return HKObjectType.quantityType(forIdentifier: .stairDescentSpeed)
         case .appleMoveTime:
-            if #available(iOS 14.5, *) {
-                return HKObjectType.quantityType(forIdentifier: .appleMoveTime)
-            }
+            return HKObjectType.quantityType(forIdentifier: .appleMoveTime)
         case .appleWalkingSteadiness:
-            if #available(iOS 15.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .appleWalkingSteadiness)
-            }
+            return HKObjectType.quantityType(forIdentifier: .appleWalkingSteadiness)
         case .appleSleepingWristTemperature:
             if #available(iOS 16.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .appleSleepingWristTemperature)
@@ -399,9 +353,7 @@ public enum QuantityType: Int, CaseIterable, SampleType {
                 return HKObjectType.quantityType(forIdentifier: .heartRateRecoveryOneMinute)
             }
         case .numberOfAlcoholicBeverages:
-            if #available(iOS 15.0, *) {
-                return HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)
-            }
+            return HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)
         case .atrialFibrillationBurden:
             if #available(iOS 16.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .atrialFibrillationBurden)

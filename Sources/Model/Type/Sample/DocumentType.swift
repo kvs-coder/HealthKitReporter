@@ -20,11 +20,7 @@ public enum DocumentType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .cda:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.documentType(forIdentifier: .CDA)
-            } else {
-                return nil
-            }
+            return HKObjectType.documentType(forIdentifier: .CDA)
         }
     }
 }

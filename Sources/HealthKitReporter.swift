@@ -20,7 +20,6 @@ public typealias StatisticsQuery = HKStatisticsQuery
 /// **HKStatisticsCollectionQuery** typealias
 public typealias StatisticsCollectionQuery = HKStatisticsCollectionQuery
 /// **HKActivitySummaryQuery** typealias
-@available(iOS 9.3, *)
 public typealias ActivitySummaryQuery = HKActivitySummaryQuery
 /// **HKAnchoredObjectQuery** typealias
 public typealias AnchoredObjectQuery = HKAnchoredObjectQuery
@@ -98,7 +97,6 @@ public typealias AnchoredResultsHandler = (
     - series: heartbeat series.
     - error: error (optional)
  */
-@available(iOS 13.0, *)
 public typealias HeartbeatSeriesResultsDataHandler = (
     _ series: [HeartbeatSeries],
     _ error: Error?
@@ -108,7 +106,6 @@ public typealias HeartbeatSeriesResultsDataHandler = (
     - routes: workout routes.
     - error: error (optional)
  */
-@available(iOS 11.0, *)
 public typealias WorkoutRouteResultsDataHandler = (
     _ routes: [WorkoutRoute],
     _ error: Error?
@@ -118,7 +115,6 @@ public typealias WorkoutRouteResultsDataHandler = (
     - summaries: summary array. Empty by default
     - error: error (optional)
  */
-@available(iOS 9.3, *)
 public typealias ActivitySummaryCompletionHandler = (
     _ summaries: [ActivitySummary],
     _ error: Error?
@@ -200,7 +196,6 @@ public typealias PreferredUnitsCompeltion = (
     - ecgs: electrocardiogram sample array
     - error: error (optional)
  */
-@available(iOS 14.0, *)
 public typealias ElectrocardiogramResultsHandler = (
     _ ecgs: [Electrocardiogram],
     _ error: Error?

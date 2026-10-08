@@ -103,221 +103,113 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         case .cervicalMucusQuality:
             return HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality)
         case .audioExposureEvent:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .environmentalAudioExposureEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .environmentalAudioExposureEvent)
         case .mindfulSession:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .mindfulSession)
-            }
+            return HKObjectType.categoryType(forIdentifier: .mindfulSession)
         case .highHeartRateEvent:
-            if #available(iOS 12.2, *) {
-                return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
         case .lowHeartRateEvent:
-            if #available(iOS 12.2, *) {
-                return HKObjectType.categoryType(forIdentifier: .lowHeartRateEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lowHeartRateEvent)
         case .irregularHeartRhythmEvent:
-            if #available(iOS 12.2, *) {
-                return HKObjectType.categoryType(forIdentifier: .irregularHeartRhythmEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .irregularHeartRhythmEvent)
         case .toothbrushingEvent:
-            if #available(iOS 13.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .toothbrushingEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .toothbrushingEvent)
         case .pregnancy:
-            if #available(iOS 14.3, *) {
-                return HKObjectType.categoryType(forIdentifier: .pregnancy)
-            }
+            return HKObjectType.categoryType(forIdentifier: .pregnancy)
         case .lactation:
-            if #available(iOS 14.3, *) {
-                return HKObjectType.categoryType(forIdentifier: .lactation)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lactation)
         case .contraceptive:
-            if #available(iOS 14.3, *) {
-                return HKObjectType.categoryType(forIdentifier: .contraceptive)
-            }
+            return HKObjectType.categoryType(forIdentifier: .contraceptive)
         case .environmentalAudioExposureEvent:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .environmentalAudioExposureEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .environmentalAudioExposureEvent)
         case .headphoneAudioExposureEvent:
-            if #available(iOS 14.2, *) {
-                return HKObjectType.categoryType(forIdentifier: .headphoneAudioExposureEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .headphoneAudioExposureEvent)
         case .handwashingEvent:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .handwashingEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .handwashingEvent)
         case .lowCardioFitnessEvent:
-            if #available(iOS 14.3, *) {
-                return HKObjectType.categoryType(forIdentifier: .lowCardioFitnessEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lowCardioFitnessEvent)
         case .abdominalCramps:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .abdominalCramps)
-            }
+            return HKObjectType.categoryType(forIdentifier: .abdominalCramps)
         case .acne:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .acne)
-            }
+            return HKObjectType.categoryType(forIdentifier: .acne)
         case .appetiteChanges:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .appetiteChanges)
-            }
+            return HKObjectType.categoryType(forIdentifier: .appetiteChanges)
         case .bladderIncontinence:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .bladderIncontinence)
-            }
+            return HKObjectType.categoryType(forIdentifier: .bladderIncontinence)
         case .bloating:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .bloating)
-            }
+            return HKObjectType.categoryType(forIdentifier: .bloating)
         case .breastPain:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .breastPain)
-            }
+            return HKObjectType.categoryType(forIdentifier: .breastPain)
         case .chestTightnessOrPain:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .chestTightnessOrPain)
-            }
+            return HKObjectType.categoryType(forIdentifier: .chestTightnessOrPain)
         case .chills:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .chills)
-            }
+            return HKObjectType.categoryType(forIdentifier: .chills)
         case .constipation:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .constipation)
-            }
+            return HKObjectType.categoryType(forIdentifier: .constipation)
         case .coughing:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .coughing)
-            }
+            return HKObjectType.categoryType(forIdentifier: .coughing)
         case .diarrhea:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .diarrhea)
-            }
+            return HKObjectType.categoryType(forIdentifier: .diarrhea)
         case .dizziness:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .dizziness)
-            }
+            return HKObjectType.categoryType(forIdentifier: .dizziness)
         case .drySkin:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .drySkin)
-            }
+            return HKObjectType.categoryType(forIdentifier: .drySkin)
         case .fainting:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .fainting)
-            }
+            return HKObjectType.categoryType(forIdentifier: .fainting)
         case .fatigue:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .fatigue)
-            }
+            return HKObjectType.categoryType(forIdentifier: .fatigue)
         case .fever:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .fever)
-            }
+            return HKObjectType.categoryType(forIdentifier: .fever)
         case .generalizedBodyAche:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .generalizedBodyAche)
-            }
+            return HKObjectType.categoryType(forIdentifier: .generalizedBodyAche)
         case .hairLoss:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .hairLoss)
-            }
+            return HKObjectType.categoryType(forIdentifier: .hairLoss)
         case .headache:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .headache)
-            }
+            return HKObjectType.categoryType(forIdentifier: .headache)
         case .heartburn:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .heartburn)
-            }
+            return HKObjectType.categoryType(forIdentifier: .heartburn)
         case .hotFlashes:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .hotFlashes)
-            }
+            return HKObjectType.categoryType(forIdentifier: .hotFlashes)
         case .lossOfSmell:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .lossOfSmell)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lossOfSmell)
         case .lossOfTaste:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .lossOfTaste)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lossOfTaste)
         case .lowerBackPain:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .lowerBackPain)
-            }
+            return HKObjectType.categoryType(forIdentifier: .lowerBackPain)
         case .memoryLapse:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .memoryLapse)
-            }
+            return HKObjectType.categoryType(forIdentifier: .memoryLapse)
         case .moodChanges:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .moodChanges)
-            }
+            return HKObjectType.categoryType(forIdentifier: .moodChanges)
         case .nausea:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .nausea)
-            }
+            return HKObjectType.categoryType(forIdentifier: .nausea)
         case .nightSweats:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .nightSweats)
-            }
+            return HKObjectType.categoryType(forIdentifier: .nightSweats)
         case .pelvicPain:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .pelvicPain)
-            }
+            return HKObjectType.categoryType(forIdentifier: .pelvicPain)
         case .rapidPoundingOrFlutteringHeartbeat:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .rapidPoundingOrFlutteringHeartbeat)
-            }
+            return HKObjectType.categoryType(forIdentifier: .rapidPoundingOrFlutteringHeartbeat)
         case .runnyNose:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .runnyNose)
-            }
+            return HKObjectType.categoryType(forIdentifier: .runnyNose)
         case .shortnessOfBreath:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .shortnessOfBreath)
-            }
+            return HKObjectType.categoryType(forIdentifier: .shortnessOfBreath)
         case .sinusCongestion:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .sinusCongestion)
-            }
+            return HKObjectType.categoryType(forIdentifier: .sinusCongestion)
         case .skippedHeartbeat:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .skippedHeartbeat)
-            }
+            return HKObjectType.categoryType(forIdentifier: .skippedHeartbeat)
         case .sleepChanges:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .sleepChanges)
-            }
+            return HKObjectType.categoryType(forIdentifier: .sleepChanges)
         case .soreThroat:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .soreThroat)
-            }
+            return HKObjectType.categoryType(forIdentifier: .soreThroat)
         case .vaginalDryness:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .vaginalDryness)
-            }
+            return HKObjectType.categoryType(forIdentifier: .vaginalDryness)
         case .vomiting:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .vomiting)
-            }
+            return HKObjectType.categoryType(forIdentifier: .vomiting)
         case .wheezing:
-            if #available(iOS 13.6, *) {
-                return HKObjectType.categoryType(forIdentifier: .wheezing)
-            }
+            return HKObjectType.categoryType(forIdentifier: .wheezing)
         case .pregnancyTestResult:
-            if #available(iOS 15.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .pregnancyTestResult)
-            }
+            return HKObjectType.categoryType(forIdentifier: .pregnancyTestResult)
         case .progesteroneTestResult:
-            if #available(iOS 15.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .progesteroneTestResult)
-            }
+            return HKObjectType.categoryType(forIdentifier: .progesteroneTestResult)
         case .persistentIntermenstrualBleeding:
             if #available(iOS 16.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .persistentIntermenstrualBleeding)
@@ -335,9 +227,7 @@ public enum CategoryType: Int, CaseIterable, SampleType {
                 return HKObjectType.categoryType(forIdentifier: .infrequentMenstrualCycles)
             }
         case .appleWalkingSteadinessEvent:
-            if #available(iOS 15.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .appleWalkingSteadinessEvent)
-            }
+            return HKObjectType.categoryType(forIdentifier: .appleWalkingSteadinessEvent)
         case .bleedingAfterPregnancy:
             if #available(iOS 18.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .bleedingAfterPregnancy)

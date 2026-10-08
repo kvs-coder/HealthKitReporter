@@ -20,10 +20,7 @@ public enum ElectrocardiogramType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .electrocardiogramType:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.electrocardiogramType()
-            }
+            return HKObjectType.electrocardiogramType()
         }
-        return nil
     }
 }

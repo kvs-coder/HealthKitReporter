@@ -8,7 +8,6 @@
 import HealthKit
 import CoreLocation
 
-@available(iOS 11.0, *)
 public struct WorkoutRoute: Identifiable, Sample {
     public struct Route: Codable {
         public let locations: [Location]
@@ -41,13 +40,9 @@ public struct WorkoutRoute: Identifiable, Sample {
             self.longitude = location.coordinate.longitude
             self.altitude = location.altitude
             self.course = location.course
-            if #available(iOS 13.4, *) {
-                self.courseAccuracy = !location.courseAccuracy.isNaN
-                    ? location.courseAccuracy
-                    : nil
-            } else {
-                self.courseAccuracy = nil
-            }
+            self.courseAccuracy = !location.courseAccuracy.isNaN
+                ? location.courseAccuracy
+                : nil
             self.floor = location.floor?.level
             self.horizontalAccuracy = location.horizontalAccuracy
             self.speed = location.speed
@@ -149,7 +144,6 @@ public struct WorkoutRoute: Identifiable, Sample {
     }
 }
 // MARK: - Payload
-@available(iOS 11.0, *)
 extension WorkoutRoute.Location: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Location {
         guard
@@ -199,7 +193,6 @@ extension WorkoutRoute.Location: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 11.0, *)
 extension WorkoutRoute: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute {
         guard
@@ -225,7 +218,6 @@ extension WorkoutRoute: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 11.0, *)
 extension WorkoutRoute.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Harmonized {
         guard
@@ -243,7 +235,6 @@ extension WorkoutRoute.Harmonized: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 11.0, *)
 extension WorkoutRoute.Route: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Route {
         guard

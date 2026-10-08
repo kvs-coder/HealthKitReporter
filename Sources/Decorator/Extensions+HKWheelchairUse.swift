@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 10.0, *)
 extension HKWheelchairUse {
     var string: String {
         switch self {

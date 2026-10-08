@@ -16,11 +16,7 @@ public enum ActivitySummaryType: Int, CaseIterable, ObjectType {
     public var original: HKObjectType? {
         switch self {
         case .activitySummaryType:
-            if #available(iOS 9.3, *) {
-                return HKObjectType.activitySummaryType()
-            } else {
-                return nil
-            }
+            return HKObjectType.activitySummaryType()
         }
     }
 }

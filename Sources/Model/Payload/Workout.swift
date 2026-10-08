@@ -94,11 +94,6 @@ public struct Workout: Identifiable, Sample {
         self.device = Device(device: workout.device)
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.duration = workout.duration
-        guard #available(iOS 11.0, *) else {
-            throw HealthKitError.notAvailable(
-                "WorkoutEvents is not available for the current iOS"
-            )
-        }
         var workoutEvents = [WorkoutEvent]()
         if let events = workout.workoutEvents {
             for element in events {

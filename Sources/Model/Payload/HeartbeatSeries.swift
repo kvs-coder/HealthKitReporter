@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 13.0, *)
 public struct HeartbeatSeries: Identifiable, Sample {
     public struct Measurement: Codable {
         public let timeSinceSeriesStart: Double
@@ -89,7 +88,6 @@ public struct HeartbeatSeries: Identifiable, Sample {
     }
 }
 // MARK: - Payload
-@available(iOS 13.0, *)
 extension HeartbeatSeries: Payload {
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries {
         guard
@@ -115,7 +113,6 @@ extension HeartbeatSeries: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 13.0, *)
 extension HeartbeatSeries.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Harmonized {
         guard
@@ -133,7 +130,6 @@ extension HeartbeatSeries.Harmonized: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 13.0, *)
 extension HeartbeatSeries.Measurement: Payload {
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Measurement {
         guard

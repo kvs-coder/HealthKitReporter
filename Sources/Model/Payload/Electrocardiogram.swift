@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.0, *)
 public struct Electrocardiogram: Identifiable, Sample {
     public struct Harmonized: Codable {
         public let averageHeartRate: Double?
@@ -108,7 +107,6 @@ public struct Electrocardiogram: Identifiable, Sample {
     }
 }
 // MARK: - Payload
-@available(iOS 14.0, *)
 extension Electrocardiogram.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.Harmonized {
         guard
@@ -142,7 +140,6 @@ extension Electrocardiogram.Harmonized: Payload {
     }
 }
 // MARK: - Factory
-@available(iOS 14.0, *)
 extension Electrocardiogram {
     static func collect(results: [HKSample]) -> [Electrocardiogram] {
         var samples = [Electrocardiogram]()
@@ -163,7 +160,6 @@ extension Electrocardiogram {
     }
 }
 // MARK: - Payload
-@available(iOS 14.0, *)
 extension Electrocardiogram: Payload {
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram {
         guard
@@ -191,7 +187,6 @@ extension Electrocardiogram: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 14.0, *)
 extension Electrocardiogram.VoltageMeasurement: Payload {
     public static func make(from dictionary: [String: Any]) throws -> Electrocardiogram.VoltageMeasurement {
         guard
@@ -217,7 +212,6 @@ extension Electrocardiogram.VoltageMeasurement: Payload {
     }
 }
 // MARK: - Payload
-@available(iOS 14.0, *)
 extension Electrocardiogram.VoltageMeasurement.Harmonized: Payload {
     public static func make(
         from dictionary: [String: Any]

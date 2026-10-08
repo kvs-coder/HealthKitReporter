@@ -21,24 +21,21 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
     }
     
     public var original: HKObjectType? {
-        if #available(iOS 12.0, *) {
-            switch self {
-            case .allergyRecord:
-                return HKObjectType.clinicalType(forIdentifier: .allergyRecord)
-            case .conditionRecord:
-                return HKObjectType.clinicalType(forIdentifier: .conditionRecord)
-            case .immunizationRecord:
-                return HKObjectType.clinicalType(forIdentifier: .immunizationRecord)
-            case .labResultRecord:
-                return HKObjectType.clinicalType(forIdentifier: .labResultRecord)
-            case .medicationRecord:
-                return HKObjectType.clinicalType(forIdentifier: .medicationRecord)
-            case .procedureRecord:
-                return HKObjectType.clinicalType(forIdentifier: .procedureRecord)
-            case .vitalSignRecord:
-                return HKObjectType.clinicalType(forIdentifier: .vitalSignRecord)
-            }
+        switch self {
+        case .allergyRecord:
+            return HKObjectType.clinicalType(forIdentifier: .allergyRecord)
+        case .conditionRecord:
+            return HKObjectType.clinicalType(forIdentifier: .conditionRecord)
+        case .immunizationRecord:
+            return HKObjectType.clinicalType(forIdentifier: .immunizationRecord)
+        case .labResultRecord:
+            return HKObjectType.clinicalType(forIdentifier: .labResultRecord)
+        case .medicationRecord:
+            return HKObjectType.clinicalType(forIdentifier: .medicationRecord)
+        case .procedureRecord:
+            return HKObjectType.clinicalType(forIdentifier: .procedureRecord)
+        case .vitalSignRecord:
+            return HKObjectType.clinicalType(forIdentifier: .vitalSignRecord)
         }
-        return nil
     }
 }

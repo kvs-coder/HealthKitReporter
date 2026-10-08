@@ -28,7 +28,6 @@ public struct Characteristic: Codable {
         self.activityMoveMode = nil
     }
     
-    @available(iOS 10.0, *)
     init(
         biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,
@@ -44,7 +43,6 @@ public struct Characteristic: Codable {
         self.activityMoveMode = nil
     }
     
-    @available(iOS 14.0, *)
     init(
         biologicalSex: HKBiologicalSexObject?,
         birthday: DateComponents?,

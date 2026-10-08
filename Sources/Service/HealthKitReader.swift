@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 9.3, *)
 typealias ActivitySummaryUpdateHandler = (
     HKActivitySummaryQuery, [HKActivitySummary]?, Error?
 ) -> Void
@@ -30,41 +29,23 @@ public class HealthKitReader {
     }
     /**
      Gets user's characteristics.
-     - Throws: `HealthKitError.notAvailable``
+     A characteristic that is not authorized or not set is nil.
      - Returns: **Characteristics** characteristics
      */
     public func characteristics() -> Characteristic {
         let biologicalSex = try? healthStore.biologicalSex()
         let bloodType = try? healthStore.bloodType()
         let fitzpatrickSkinType = try? healthStore.fitzpatrickSkinType()
-        if #available(iOS 14.0, *) {
-            let birthday = try? healthStore.dateOfBirthComponents()
-            let wheelchairUse = try? healthStore.wheelchairUse()
-            let activityMoveMode = try? healthStore.activityMoveMode()
-            return Characteristic(
-                biologicalSex: biologicalSex,
-                birthday: birthday,
-                bloodType: bloodType,
-                fitzpatrickSkinType: fitzpatrickSkinType,
-                wheelchairUse: wheelchairUse,
-                activityMoveMode: activityMoveMode
-            )
-        }
-        if #available(iOS 10.0, *) {
-            let birthday = try? healthStore.dateOfBirthComponents()
-            let wheelchairUse = try? healthStore.wheelchairUse()
-            return Characteristic(
-                biologicalSex: biologicalSex,
-                birthday: birthday,
-                bloodType: bloodType,
-                fitzpatrickSkinType: fitzpatrickSkinType,
-                wheelchairUse: wheelchairUse
-            )
-        }
+        let birthday = try? healthStore.dateOfBirthComponents()
+        let wheelchairUse = try? healthStore.wheelchairUse()
+        let activityMoveMode = try? healthStore.activityMoveMode()
         return Characteristic(
             biologicalSex: biologicalSex,
+            birthday: birthday,
             bloodType: bloodType,
-            fitzpatrickSkinType: fitzpatrickSkinType
+            fitzpatrickSkinType: fitzpatrickSkinType,
+            wheelchairUse: wheelchairUse,
+            activityMoveMode: activityMoveMode
         )
     }
     /**

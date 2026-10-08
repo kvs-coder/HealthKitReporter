@@ -29,17 +29,9 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
         case .biologicalSex:
             return HKObjectType.characteristicType(forIdentifier: .biologicalSex)
         case .wheelchairUse:
-            if #available(iOS 10.0, *) {
-                return HKObjectType.characteristicType(forIdentifier: .wheelchairUse)
-            } else {
-                return nil
-            }
+            return HKObjectType.characteristicType(forIdentifier: .wheelchairUse)
         case .activityMoveMode:
-            if #available(iOS 14.0, *) {
-                return HKObjectType.characteristicType(forIdentifier: .activityMoveMode)
-            } else {
-                return nil
-            }
+            return HKObjectType.characteristicType(forIdentifier: .activityMoveMode)
         }
     }
 }

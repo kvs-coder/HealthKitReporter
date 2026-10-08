@@ -15,7 +15,6 @@ extension HealthKitReader {
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter completionHandler: returns a block with activity summary array
      */
-    @available(iOS 9.3, *)
     public func queryActivitySummary(
         predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,

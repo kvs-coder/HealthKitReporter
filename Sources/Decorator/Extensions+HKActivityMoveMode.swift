@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.0, *)
 extension HKActivityMoveMode: @retroactive CustomStringConvertible {
     public var description: String {
         switch self {

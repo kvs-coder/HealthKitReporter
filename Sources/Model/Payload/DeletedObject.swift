@@ -13,11 +13,7 @@ public struct DeletedObject: Codable {
     
     init(deletedObject: HKDeletedObject) {
         self.uuid = deletedObject.uuid.uuidString
-        if #available(iOS 11.0, *) {
-            self.metadata = deletedObject.metadata?.asMetadata
-        } else {
-            self.metadata = nil
-        }
+        self.metadata = deletedObject.metadata?.asMetadata
     }
 }
 // MARK: - Factory

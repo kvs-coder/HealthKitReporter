@@ -59,21 +59,11 @@ public struct SourceRevision: Codable {
     init(sourceRevision: HKSourceRevision) {
         self.source = Source(source: sourceRevision.source)
         self.version = sourceRevision.version
-        if #available(iOS 11.0, *) {
-            self.productType = sourceRevision.productType
-            self.systemVersion = sourceRevision.systemVersion
-            self.operatingSystem = OperatingSystem(
-                version: sourceRevision.operatingSystemVersion
-            )
-        } else {
-            self.productType = nil
-            self.systemVersion = "10.0.0"
-            self.operatingSystem = OperatingSystem(
-                majorVersion: 10,
-                minorVersion: 0,
-                patchVersion: 0
-            )
-        }
+        self.productType = sourceRevision.productType
+        self.systemVersion = sourceRevision.systemVersion
+        self.operatingSystem = OperatingSystem(
+            version: sourceRevision.operatingSystemVersion
+        )
     }
 
     public init(
@@ -109,18 +99,12 @@ public struct SourceRevision: Codable {
 // MARK: - Original
 extension SourceRevision: Original {
     func asOriginal() throws -> HKSourceRevision {
-        if #available(iOS 11.0, *) {
-            return HKSourceRevision(
-                source: try source.asOriginal(),
-                version: version,
-                productType: productType,
-                operatingSystemVersion: operatingSystem.original
-            )
-        } else {
-            throw HealthKitError.notAvailable(
-                "HKSourceRevision is not available for the current iOS"
-            )
-        }
+        return HKSourceRevision(
+            source: try source.asOriginal(),
+            version: version,
+            productType: productType,
+            operatingSystemVersion: operatingSystem.original
+        )
     }
 }
 // MARK: - Payload
