@@ -82,10 +82,10 @@ extension WorkoutConfiguration: Original {
             configuration.swimmingLocationType = swimmingLocationType
         }
         configuration.lapLength = HKQuantity(
-            unit: HKUnit.init(from: harmonized.unit),
+            unit: try HKQuantityType(.distanceSwimming).compatibleUnit(from: harmonized.unit),
             doubleValue: harmonized.value
         )
-        return HKWorkoutConfiguration()
+        return configuration
     }
 }
 // MARK: - Payload

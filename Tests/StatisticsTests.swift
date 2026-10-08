@@ -72,14 +72,38 @@ class StatisticsTests: XCTestCase {
         let sut = try decode(Statistics.self, from: dictionary)
         XCTAssertEqual(try json(sut.converted(to: "count")), try json(sut))
     }
-    func testConvertedToOtherUnitChangesUnitOnly() throws {
-        let sut = try decode(Statistics.self, from: dictionary)
+    func testConvertedToOtherUnitConvertsEveryValue() throws {
+        let sut = try decode(Statistics.self, from: dictionary).copyWith(
+            identifier: "HKQuantityTypeIdentifierDistanceWalkingRunning",
+            harmonized: Statistics.Harmonized(
+                summary: 1000,
+                average: 500,
+                recent: nil,
+                min: 10,
+                max: 900,
+                unit: "m"
+            )
+        )
         let converted = try sut.converted(to: "km")
         XCTAssertEqual(converted.harmonized.unit, "km")
+        XCTAssertEqual(try XCTUnwrap(converted.harmonized.summary), 1, accuracy: 0.000001)
+        XCTAssertEqual(try XCTUnwrap(converted.harmonized.average), 0.5, accuracy: 0.000001)
+        XCTAssertNil(converted.harmonized.recent)
+        XCTAssertEqual(try XCTUnwrap(converted.harmonized.min), 0.01, accuracy: 0.000001)
+        XCTAssertEqual(try XCTUnwrap(converted.harmonized.max), 0.9, accuracy: 0.000001)
         XCTAssertEqual(
-            try json(converted.harmonized, excluding: ["unit"]),
-            try json(sut.harmonized, excluding: ["unit"])
+            try json(converted, excluding: ["harmonized"]),
+            try json(sut, excluding: ["harmonized"])
         )
+    }
+    func testConvertedToMalformedOrIncompatibleUnitThrows() throws {
+        let sut = try decode(Statistics.self, from: dictionary)
+        assertInvalidValue(try sut.converted(to: "km"))
+        assertInvalidValue(try sut.converted(to: "notAUnit"))
+    }
+    func testConvertedWithInvalidIdentifierThrows() throws {
+        let sut = try decode(Statistics.self, from: dictionary).copyWith(identifier: "invalid")
+        assertInvalidType(try sut.converted(to: "km"))
     }
 
     private func assertStatistics(

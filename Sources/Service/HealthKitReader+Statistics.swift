@@ -12,10 +12,10 @@ extension HealthKitReader {
     /**
      Queries statistics.
      - Parameter type: **ObjectType** types
-     - Parameter unit: **String** unit
+     - Parameter unit: **String** unit compatible with the type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter completionHandler: returns a block with statistics
-     - Throws: HealthKitError.invalidType
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
     public func statisticsQuery(
         type: QuantityType,
@@ -28,6 +28,7 @@ extension HealthKitReader {
                 "\(type) can not be represented as HKQuantityType"
             )
         }
+        let hkUnit = try quantityType.compatibleUnit(from: unit)
         let query = HKStatisticsQuery(
             quantityType: quantityType,
             quantitySamplePredicate: predicate,
@@ -43,7 +44,7 @@ extension HealthKitReader {
             do {
                 let statistics = try Statistics(
                     statistics: result,
-                    unit: HKUnit.init(from: unit)
+                    unit: hkUnit
                 )
                 completionHandler(statistics, nil)
             } catch {
@@ -55,7 +56,7 @@ extension HealthKitReader {
     /**
      Queries statistics collection.
      - Parameter type: **QuantityType** types
-     - Parameter unit: **String** unit
+     - Parameter unit: **String** unit compatible with the type
      - Parameter quantitySamplePredicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter anchorDate: **Date** anchor date
      - Parameter enumerateFrom: **Date** start enumeration date
@@ -64,7 +65,7 @@ extension HealthKitReader {
      of a collection appearing
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      - Parameter enumerationBlock: returns a block with statistics on every iteration
-     - Throws: HealthKitError.invalidType
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
     public func statisticsCollectionQuery( // swiftlint:disable:this function_parameter_count
         type: QuantityType,
@@ -82,6 +83,7 @@ extension HealthKitReader {
                 "\(type) can not be represented as HKQuantityType"
             )
         }
+        let hkUnit = try quantityType.compatibleUnit(from: unit)
         let resultsHandler: StatisticsCollectionHandler = { (data, error) in
             guard
                 error == nil,
@@ -97,7 +99,7 @@ extension HealthKitReader {
                 do {
                     let statistics = try Statistics(
                         statistics: data,
-                        unit: HKUnit.init(from: unit)
+                        unit: hkUnit
                     )
                     enumerationBlock(statistics, nil)
                 } catch {

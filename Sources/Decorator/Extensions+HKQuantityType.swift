@@ -16,6 +16,16 @@ extension HKQuantityType {
         }
         throw HealthKitError.invalidType("Unknown HKObjectType")
     }
+    /// Parses the unit string and checks that it fits the type, so HealthKit never raises on it
+    func compatibleUnit(from unitString: String) throws -> HKUnit {
+        let unit = try HKUnit.parsed(from: unitString)
+        guard `is`(compatibleWith: unit) else {
+            throw HealthKitError.invalidValue(
+                "Unit \(unitString) is not compatible with \(identifier)"
+            )
+        }
+        return unit
+    }
 
     var statisticsOptions: HKStatisticsOptions {
         switch aggregationStyle {
@@ -24,9 +34,9 @@ extension HKQuantityType {
         case .discreteArithmetic,
              .discreteTemporallyWeighted,
              .discreteEquivalentContinuousLevel:
-            return .discreteAverage
+            return [.discreteAverage, .discreteMin, .discreteMax, .mostRecent]
         @unknown default:
-            fatalError()
+            return []
         }
     }
 }

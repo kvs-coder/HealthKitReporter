@@ -113,7 +113,7 @@ extension Quantity: Original {
         return HKQuantitySample(
             type: type,
             quantity: HKQuantity(
-                unit: HKUnit.init(from: harmonized.unit),
+                unit: try type.compatibleUnit(from: harmonized.unit),
                 doubleValue: harmonized.value
             ),
             start: startTimestamp.asDate,
@@ -201,9 +201,10 @@ extension Quantity: UnitConvertable {
         guard harmonized.unit != unit else {
             return self
         }
+        let quantitySample = try asOriginal()
         return try Quantity(
-            quantitySample: try asOriginal(),
-            unit: HKUnit.init(from: unit)
+            quantitySample: quantitySample,
+            unit: try quantitySample.quantityType.compatibleUnit(from: unit)
         )
     }
 }

@@ -185,9 +185,43 @@ class HealthKitReaderTests: XCTestCase {
             enumerateTo: anchorDate.addingTimeInterval(86400),
             intervalComponents: intervalComponents
         ) { _, _ in }
-        XCTAssertEqual(discrete.options, .discreteAverage)
+        XCTAssertEqual(discrete.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent])
         XCTAssertEqual(discrete.predicate, .allSamples)
         XCTAssertNil(discrete.statisticsUpdateHandler)
+    }
+    func testQueriesWithMalformedOrIncompatibleUnitThrow() throws {
+        let anchorDate = Date(timeIntervalSince1970: 1626884800)
+        for unit in ["kg", "notAUnit", "(m", "m//s", "m/s/s", "count^", ""] {
+            assertInvalidValue(try sut.quantityQuery(type: .stepCount, unit: unit) { _, _ in })
+            assertInvalidValue(try sut.statisticsQuery(type: .stepCount, unit: unit) { _, _ in })
+            assertInvalidValue(
+                try sut.statisticsCollectionQuery(
+                    type: .stepCount,
+                    unit: unit,
+                    anchorDate: anchorDate,
+                    enumerateFrom: anchorDate,
+                    enumerateTo: anchorDate,
+                    intervalComponents: DateComponents(day: 1)
+                ) { _, _ in }
+            )
+        }
+    }
+    func testQueriesAcceptEveryUnitGrammarForm() throws {
+        let units: [QuantityType: [String]] = [
+            .bloodGlucose: ["mg/dL", "mmol<180.1558>/L", "mg/dl"],
+            .vo2Max: ["ml/kg*min", "mL/(kg.min)", "mL/kg·min"],
+            .bloodPressureSystolic: ["mmHg", "kg/(m.s^2)", "kPa", "kg.m^-1.s^-2"],
+            .heartRate: ["count/min", "Hz"],
+            .bodyTemperature: ["degC", "degF", "K"],
+            .dietaryWater: ["fl_oz_us", "cup_imp", "mcL"],
+            .bodyMassIndex: ["count"],
+            .bodyFatPercentage: ["%"]
+        ]
+        for (type, typeUnits) in units {
+            for unit in typeUnits {
+                XCTAssertNoThrow(try sut.quantityQuery(type: type, unit: unit) { _, _ in }, unit)
+            }
+        }
     }
     func testQueryActivitySummary() throws {
         let defaults = sut.queryActivitySummary { _, _ in }

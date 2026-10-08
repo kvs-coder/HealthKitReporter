@@ -126,6 +126,25 @@ extension Statistics: UnitConvertable {
         guard harmonized.unit != unit else {
             return self
         }
-        return copyWith(harmonized: harmonized.copyWith(unit: unit))
+        guard let type = identifier.objectType?.original as? HKQuantityType else {
+            throw HealthKitError.invalidType(
+                "Statistics type identifier: \(identifier) could not be formatted"
+            )
+        }
+        let fromUnit = try type.compatibleUnit(from: harmonized.unit)
+        let toUnit = try type.compatibleUnit(from: unit)
+        let convert: (Double?) -> Double? = { value in
+            value.map { HKQuantity(unit: fromUnit, doubleValue: $0).doubleValue(for: toUnit) }
+        }
+        return copyWith(
+            harmonized: Harmonized(
+                summary: convert(harmonized.summary),
+                average: convert(harmonized.average),
+                recent: convert(harmonized.recent),
+                min: convert(harmonized.min),
+                max: convert(harmonized.max),
+                unit: unit
+            )
+        )
     }
 }

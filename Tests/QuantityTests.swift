@@ -218,6 +218,11 @@ class QuantityTests: XCTestCase {
         XCTAssertEqual(converted.harmonized.unit, "km")
         XCTAssertEqual(converted.harmonized.metadata, ["you": "saved it"])
     }
+    func testConvertedToMalformedOrIncompatibleUnitThrows() throws {
+        let sut = try Quantity.make(from: dictionary)
+        assertInvalidValue(try sut.converted(to: "kg"))
+        assertInvalidValue(try sut.converted(to: "notAUnit"))
+    }
     func testConvertedWithInvalidIdentifierThrows() throws {
         let sut = try Quantity.make(from: dictionary).copyWith(identifier: "invalid")
         assertInvalidType(try sut.converted(to: "km"))
@@ -272,6 +277,7 @@ extension QuantityTests {
         XCTAssertTrue(Quantity.collect(results: [sample], unit: .count()).isEmpty)
     }
     func testHarmonizeEveryQuantityTypeToItsSIUnit() throws {
+        let reader = HealthKitReporter().reader
         for type in QuantityType.allCases {
             let original = try XCTUnwrap(type.original as? HKQuantityType, "\(type)")
             let unit = try XCTUnwrap(
@@ -290,6 +296,10 @@ extension QuantityTests {
             XCTAssertEqual(sut.identifier, original.identifier, "\(type)")
             let harmonizedUnit = HKUnit(from: sut.harmonized.unit)
             XCTAssertTrue(original.is(compatibleWith: harmonizedUnit), "\(type): \(sut.harmonized.unit)")
+            XCTAssertNoThrow(
+                try reader.quantityQuery(type: type, unit: sut.harmonized.unit) { _, _ in },
+                "\(type): \(sut.harmonized.unit)"
+            )
             XCTAssertEqual(
                 sut.harmonized.value,
                 quantity.doubleValue(for: harmonizedUnit),

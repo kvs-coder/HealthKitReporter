@@ -18,9 +18,23 @@ class HealthKitWriterTests: XCTestCase {
             return nil
         }
     }
+    /// **Sample** without an **HKSample** representation
+    private struct UnsupportedSample: Sample {
+        let startTimestamp: Double
+        let endTimestamp: Double
+    }
 
     private var sut: HealthKitWriter!
 
+    /// The simulator's health daemon may drop the first request after a cold start, so one is sent up front
+    override class func setUp() {
+        super.setUp()
+        let warmedUp = DispatchSemaphore(value: 0)
+        HealthKitReporter().observer.disableAllBackgroundDelivery { _, _ in
+            warmedUp.signal()
+        }
+        _ = warmedUp.wait(timeout: .now() + 30)
+    }
     override func setUp() {
         super.setUp()
         sut = HealthKitReporter().writer
@@ -129,6 +143,55 @@ class HealthKitWriterTests: XCTestCase {
             assertInvalidType(try { throw try XCTUnwrap(error) }())
         }
     }
+    func testSaveAndDeleteUnsupportedSampleCallCompletion() throws {
+        let sample = UnsupportedSample(startTimestamp: startTimestamp, endTimestamp: endTimestamp)
+        let saveError = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+        assertInvalidType(try { throw try XCTUnwrap(saveError) }())
+        let deleteError = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
+        assertInvalidType(try { throw try XCTUnwrap(deleteError) }())
+    }
+    func testSaveWithMalformedOrIncompatibleUnit() throws {
+        let samples: [Sample] = [
+            quantity.copyWith(harmonized: quantity.harmonized.copyWith(unit: "kg")),
+            quantity.copyWith(harmonized: quantity.harmonized.copyWith(unit: "notAUnit")),
+            workout.copyWith(harmonized: workout.harmonized.copyWith(totalEnergyBurnedUnit: "m")),
+            workout.copyWith(harmonized: workout.harmonized.copyWith(totalDistanceUnit: "kg")),
+            workout.copyWith(harmonized: workout.harmonized.copyWith(totalSwimmingStrokeCountUnit: "m"))
+        ]
+        for sample in samples {
+            let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
+            assertInvalidValue(try { throw try XCTUnwrap(error) }())
+        }
+    }
+    func testSaveWorkoutWithFlightsClimbed() throws {
+        let harmonized = workout.harmonized
+        let flightsWorkout = workout.copyWith(
+            harmonized: Workout.Harmonized(
+                value: harmonized.value,
+                description: harmonized.description,
+                totalEnergyBurned: harmonized.totalEnergyBurned,
+                totalEnergyBurnedUnit: harmonized.totalEnergyBurnedUnit,
+                totalDistance: harmonized.totalDistance,
+                totalDistanceUnit: harmonized.totalDistanceUnit,
+                totalSwimmingStrokeCount: nil,
+                totalSwimmingStrokeCountUnit: harmonized.totalSwimmingStrokeCountUnit,
+                totalFlightsClimbed: 3,
+                totalFlightsClimbedUnit: "count",
+                metadata: nil
+            )
+        )
+        let error = try waitForStatus { self.sut.save(sample: flightsWorkout, completion: $0) }
+        assertReachedHealthKit(error, "flights climbed")
+        let invalidError = try waitForStatus {
+            self.sut.save(
+                sample: flightsWorkout.copyWith(
+                    harmonized: flightsWorkout.harmonized.copyWith(totalFlightsClimbedUnit: "m")
+                ),
+                completion: $0
+            )
+        }
+        assertInvalidValue(try { throw try XCTUnwrap(invalidError) }())
+    }
     func testDeleteConvertsEverySampleKindBeforeReachingHealthKit() throws {
         let samples: [Sample] = [quantity, category, workout]
         for sample in samples {
@@ -137,10 +200,14 @@ class HealthKitWriterTests: XCTestCase {
         }
     }
     func testDeleteWithInvalidIdentifier() throws {
-        let error = try waitForStatus {
-            self.sut.delete(sample: self.quantity.copyWith(identifier: "invalid"), completion: $0)
+        let samples: [Sample] = [
+            quantity.copyWith(identifier: "invalid"),
+            correlation.copyWith(identifier: "invalid")
+        ]
+        for sample in samples {
+            let error = try waitForStatus { self.sut.delete(sample: sample, completion: $0) }
+            assertInvalidType(try { throw try XCTUnwrap(error) }())
         }
-        assertInvalidType(try { throw try XCTUnwrap(error) }())
     }
     func testAddSamplesToWorkout() throws {
         let quantityError = try waitForStatus {
@@ -184,7 +251,7 @@ class HealthKitWriterTests: XCTestCase {
             status = (success, error)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 10)
+        wait(for: [expectation], timeout: 30)
         let result = try XCTUnwrap(status)
         XCTAssertFalse(result.success)
         return result.error

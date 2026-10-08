@@ -83,7 +83,9 @@ public class HealthKitWriter {
         }
     }
     /**
-     Deletes the previosly created sample
+     Deletes the previosly created sample.
+     Supports **Quantity**, **Category**, **Workout** and **Correlation**;
+     any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
@@ -92,15 +94,7 @@ public class HealthKitWriter {
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            if let quantity = sample as? Quantity {
-                healthStore.delete(try quantity.asOriginal(), withCompletion: completion)
-            }
-            if let category = sample as? Category {
-                healthStore.delete(try category.asOriginal(), withCompletion: completion)
-            }
-            if let workout = sample as? Workout {
-                healthStore.delete(try workout.asOriginal(), withCompletion: completion)
-            }
+            healthStore.delete(try original(of: sample), withCompletion: completion)
         } catch {
             completion(false, error)
         }
@@ -127,7 +121,9 @@ public class HealthKitWriter {
         healthStore.deleteObjects(of: type, predicate: predicate, withCompletion: completion)
     }
     /**
-     Saves the created sample
+     Saves the created sample.
+     Supports **Quantity**, **Category**, **Workout** and **Correlation**;
+     any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
      */
@@ -136,20 +132,26 @@ public class HealthKitWriter {
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            if let quantity = sample as? Quantity {
-                healthStore.save(try quantity.asOriginal(), withCompletion: completion)
-            }
-            if let category = sample as? Category {
-                healthStore.save(try category.asOriginal(), withCompletion: completion)
-            }
-            if let workout = sample as? Workout {
-                healthStore.save(try workout.asOriginal(), withCompletion: completion)
-            }
-            if let correlation = sample as? Correlation {
-                healthStore.save(try correlation.asOriginal(), withCompletion: completion)
-            }
+            healthStore.save(try original(of: sample), withCompletion: completion)
         } catch {
             completion(false, error)
+        }
+    }
+
+    private func original(of sample: Sample) throws -> HKSample {
+        switch sample {
+        case let quantity as Quantity:
+            return try quantity.asOriginal()
+        case let category as Category:
+            return try category.asOriginal()
+        case let workout as Workout:
+            return try workout.asOriginal()
+        case let correlation as Correlation:
+            return try correlation.asOriginal()
+        default:
+            throw HealthKitError.invalidType(
+                "\(type(of: sample)) can not be represented as HKSample"
+            )
         }
     }
 }

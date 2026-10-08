@@ -165,36 +165,62 @@ extension Workout: Original {
                 "Workout type: \(harmonized.value) could not be formatted"
             )
         }
-        guard #available(iOS 10.0, *) else {
-            throw HealthKitError.notAvailable(
-                "HKWorkout initializer is not available for the current iOS"
+        let workoutEvents = try workoutEvents.map { try $0.asOriginal() }
+        let totalEnergyBurned = try quantity(
+            harmonized.totalEnergyBurned,
+            unit: harmonized.totalEnergyBurnedUnit,
+            compatibleWith: .activeEnergyBurned
+        )
+        let totalDistance = try quantity(
+            harmonized.totalDistance,
+            unit: harmonized.totalDistanceUnit,
+            compatibleWith: .distanceWalkingRunning
+        )
+        if let totalFlightsClimbed = try quantity(
+            harmonized.totalFlightsClimbed,
+            unit: harmonized.totalFlightsClimbedUnit,
+            compatibleWith: .flightsClimbed
+        ), harmonized.totalSwimmingStrokeCount == nil {
+            return HKWorkout(
+                activityType: activityType,
+                start: startTimestamp.asDate,
+                end: endTimestamp.asDate,
+                workoutEvents: workoutEvents,
+                totalEnergyBurned: totalEnergyBurned,
+                totalDistance: totalDistance,
+                totalFlightsClimbed: totalFlightsClimbed,
+                device: device?.asOriginal(),
+                metadata: harmonized.metadata?.original
             )
         }
         return HKWorkout(
             activityType: activityType,
             start: startTimestamp.asDate,
             end: endTimestamp.asDate,
-            workoutEvents: try workoutEvents.map { try $0.asOriginal() },
-            totalEnergyBurned: harmonized.totalEnergyBurned != nil
-                ? HKQuantity(
-                    unit: HKUnit.init(from: harmonized.totalEnergyBurnedUnit),
-                    doubleValue: harmonized.totalEnergyBurned!
-                )
-                : nil,
-            totalDistance: harmonized.totalDistance != nil
-                ? HKQuantity(
-                    unit: HKUnit.init(from: harmonized.totalDistanceUnit),
-                    doubleValue: harmonized.totalDistance!
-                )
-                : nil,
-            totalSwimmingStrokeCount: harmonized.totalSwimmingStrokeCount != nil
-                ? HKQuantity(
-                    unit: HKUnit.init(from: harmonized.totalSwimmingStrokeCountUnit),
-                    doubleValue: harmonized.totalSwimmingStrokeCount!
-                )
-                : nil,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: try quantity(
+                harmonized.totalSwimmingStrokeCount,
+                unit: harmonized.totalSwimmingStrokeCountUnit,
+                compatibleWith: .swimmingStrokeCount
+            ),
             device: device?.asOriginal(),
             metadata: harmonized.metadata?.original
+        )
+    }
+
+    private func quantity(
+        _ value: Double?,
+        unit: String,
+        compatibleWith identifier: HKQuantityTypeIdentifier
+    ) throws -> HKQuantity? {
+        guard let value = value else {
+            return nil
+        }
+        return HKQuantity(
+            unit: try HKQuantityType(identifier).compatibleUnit(from: unit),
+            doubleValue: value
         )
     }
 }

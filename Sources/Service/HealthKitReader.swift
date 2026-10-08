@@ -70,12 +70,12 @@ public class HealthKitReader {
     /**
      Queries quantity types.
      - Parameter type: **QuantityType** types
-     - Parameter unit: **String** unit
+     - Parameter unit: **String** unit compatible with the type
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter resultsHandler: returns a block with samples
-     - Throws: HealthKitError.invalidType
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
     public func quantityQuery(
         type: QuantityType,
@@ -93,6 +93,7 @@ public class HealthKitReader {
         guard let quantityType = type.original as? HKQuantityType else {
             throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
         }
+        let hkUnit = try quantityType.compatibleUnit(from: unit)
         let query = HKSampleQuery(
             sampleType: quantityType,
             predicate: predicate,
@@ -108,7 +109,7 @@ public class HealthKitReader {
             }
             let samples = Quantity.collect(
                 results: results,
-                unit: HKUnit.init(from: unit)
+                unit: hkUnit
             )
             resultsHandler(samples, nil)
         }
