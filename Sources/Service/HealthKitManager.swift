@@ -142,4 +142,13 @@ public class HealthKitManager {
             completion: completion
         )
     }
+    #if os(iOS)
+    /**
+     Tells whether the device supports clinical health records.
+     - Returns: true if clinical records can be read
+     */
+    public func supportsHealthRecords() -> Bool {
+        return healthStore.supportsHealthRecords()
+    }
+    #endif
 }

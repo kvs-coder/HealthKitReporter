@@ -372,3 +372,40 @@ extension HealthKitReaderTests {
         )
     }
 }
+// MARK: - Health records
+extension HealthKitReaderTests {
+    func testClinicalRecordQuery() throws {
+        for type in ClinicalType.allCases {
+            let defaults = try sut.clinicalRecordQuery(type: type) { _, _ in }
+            XCTAssertEqual(defaults.objectType?.identifier, type.identifier)
+            assertDefaults(defaults)
+        }
+        let query = try sut.clinicalRecordQuery(
+            type: .coverageRecord,
+            predicate: predicate,
+            sortDescriptors: sortDescriptors,
+            limit: 10
+        ) { _, _ in }
+        assertCustom(query)
+    }
+    func testVerifiableClinicalRecordQuery() throws {
+        let all = sut.verifiableClinicalRecordQuery(
+            recordTypes: ["https://smarthealth.cards#immunization"]
+        ) { _, _ in }
+        XCTAssertEqual(all.recordTypes, ["https://smarthealth.cards#immunization"])
+        XCTAssertNil(all.predicate)
+        let smartHealthCards = sut.verifiableClinicalRecordQuery(
+            recordTypes: ["https://smarthealth.cards#immunization"],
+            sourceTypes: ["https://smarthealth.cards"],
+            predicate: predicate
+        ) { _, _ in }
+        if #available(iOS 15.4, *) {
+            XCTAssertEqual(smartHealthCards.sourceTypes.map(\.rawValue), ["https://smarthealth.cards"])
+        }
+        XCTAssertEqual(smartHealthCards.predicate, predicate)
+    }
+    func testSupportsHealthRecords() throws {
+        let manager = HealthKitReporter().manager
+        XCTAssertEqual(manager.supportsHealthRecords(), HKHealthStore().supportsHealthRecords())
+    }
+}

@@ -267,6 +267,30 @@ reporter.manager.preferredUnits(for: [.stepCount]) { (dictionary, error) in
 }
 ```
 
+### Clinical records
+
+Clinical health records need the Clinical Health Records entitlement. Check `supportsHealthRecords()` (iOS only) before reading:
+
+```swift
+if reporter.manager.supportsHealthRecords() {
+    let query = try reporter.reader.clinicalRecordQuery(type: .immunizationRecord) { records, error in
+        records.forEach { print($0.harmonized.displayName, $0.harmonized.fhirData ?? "") }
+    }
+    reporter.manager.executeQuery(query)
+}
+```
+
+Verifiable records (SMART Health Cards, iOS only) don't need prior authorization; the system asks the user which records to share each time:
+
+```swift
+let query = reporter.reader.verifiableClinicalRecordQuery(
+    recordTypes: ["https://smarthealth.cards#immunization"]
+) { records, error in
+    records.forEach { print($0.harmonized.itemNames) }
+}
+reporter.manager.executeQuery(query)
+```
+
 ### Vision prescriptions
 
 Vision prescriptions (iOS 16+) need per-object read authorization: the user picks which prescriptions the app may read.

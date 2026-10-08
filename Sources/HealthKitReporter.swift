@@ -15,6 +15,19 @@ public typealias Query = HKQuery
 public typealias ObserverQuery = HKObserverQuery
 /// **HKSampleQuery** typealias
 public typealias SampleQuery = HKSampleQuery
+#if os(iOS)
+/// **HKVerifiableClinicalRecordQuery** typealias
+public typealias VerifiableClinicalRecordQuery = HKVerifiableClinicalRecordQuery
+/**
+ - Parameters:
+    - records: verifiable clinical records
+    - error: error (optional)
+ */
+public typealias VerifiableClinicalRecordResultsHandler = (
+    _ records: [VerifiableClinicalRecord],
+    _ error: Error?
+) -> Void
+#endif
 /// **HKStatisticsQuery** typealias
 public typealias StatisticsQuery = HKStatisticsQuery
 /// **HKStatisticsCollectionQuery** typealias
@@ -211,6 +224,15 @@ public typealias PreferredUnitsCompeltion = PreferredUnitsCompletion
  */
 public typealias ElectrocardiogramResultsHandler = (
     _ ecgs: [Electrocardiogram],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - records: clinical record sample array
+    - error: error (optional)
+ */
+public typealias ClinicalRecordResultsHandler = (
+    _ records: [ClinicalRecord],
     _ error: Error?
 ) -> Void
 /**

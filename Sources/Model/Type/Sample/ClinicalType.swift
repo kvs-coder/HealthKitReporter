@@ -15,6 +15,8 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
     case medicationRecord
     case procedureRecord
     case vitalSignRecord
+    case coverageRecord
+    case clinicalNoteRecord
     
     public var identifier: String? {
         return original?.identifier
@@ -36,6 +38,13 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
             return HKObjectType.clinicalType(forIdentifier: .procedureRecord)
         case .vitalSignRecord:
             return HKObjectType.clinicalType(forIdentifier: .vitalSignRecord)
+        case .coverageRecord:
+            return HKObjectType.clinicalType(forIdentifier: .coverageRecord)
+        case .clinicalNoteRecord:
+            if #available(iOS 16.4, *) {
+                return HKObjectType.clinicalType(forIdentifier: .clinicalNoteRecord)
+            }
+            return nil
         }
     }
 }
