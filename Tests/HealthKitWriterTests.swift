@@ -219,9 +219,9 @@ class HealthKitWriterTests: XCTestCase {
     }
     func testAddSamplesToWorkout() throws {
         let quantityError = try waitForStatus {
-            self.sut.addQuantitiy([self.quantity], from: nil, to: self.workout, completion: $0)
+            self.sut.addQuantity([self.quantity], from: nil, to: self.workout, completion: $0)
         }
-        assertReachedHealthKit(quantityError, "addQuantitiy")
+        assertReachedHealthKit(quantityError, "addQuantity")
         let categoryError = try waitForStatus {
             self.sut.addCategory([self.category], from: nil, to: self.workout, completion: $0)
         }

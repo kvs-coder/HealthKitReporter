@@ -31,12 +31,15 @@ private let objectTypesByIdentifier: [String: ObjectType] = {
 }()
 
 public extension String {
+    @available(*, deprecated, message: "Not HealthKit specific; will be removed from the public API")
     var integer: Int? {
         return Int(self)
     }
+    @available(*, deprecated, message: "Not HealthKit specific; will be removed from the public API")
     var double: Double? {
         return Double(self)
     }
+    @available(*, deprecated, message: "Not HealthKit specific; will be removed from the public API")
     var boolean: Bool {
         return (self as NSString).boolValue
     }

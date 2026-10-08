@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// **HealthKitError** the only error the library throws; each case carries a descriptive message
 public enum HealthKitError: Error {
     case notAvailable(String = "HealthKit data is not available")
     case unknown(String = "Unknown")

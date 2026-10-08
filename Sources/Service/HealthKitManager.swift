@@ -42,8 +42,9 @@ public class HealthKitManager {
         for type in toWrite {
             guard let objectType = type.original as? HKSampleType else {
                 completion(
-                    false, HealthKitError.invalidType(
-                        "Type \(type) has not HKObjectType representation"
+                    false,
+                    HealthKitError.invalidType(
+                        "Type \(type) has not HKSampleType representation"
                     )
                 )
                 return
@@ -63,7 +64,7 @@ public class HealthKitManager {
      */
     public func preferredUnits(
         for quantityTypes: [QuantityType],
-        completion: @escaping PreferredUnitsCompeltion
+        completion: @escaping PreferredUnitsCompletion
     ) {
         var setOfTypes = Set<HKQuantityType>()
         for type in quantityTypes {

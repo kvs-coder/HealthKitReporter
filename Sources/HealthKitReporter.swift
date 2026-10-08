@@ -187,10 +187,13 @@ public typealias WorkoutResultsHandler = (
     - preferredUnits: an array of **PreferredUnit**
     - error: error (optional)
 */
-public typealias PreferredUnitsCompeltion = (
+public typealias PreferredUnitsCompletion = (
     _ preferredUnits: [PreferredUnit],
     _ error: Error?
 ) -> Void
+/// Misspelled **PreferredUnitsCompletion**
+@available(*, deprecated, renamed: "PreferredUnitsCompletion")
+public typealias PreferredUnitsCompeltion = PreferredUnitsCompletion
 /**
  - Parameters:
     - ecgs: electrocardiogram sample array

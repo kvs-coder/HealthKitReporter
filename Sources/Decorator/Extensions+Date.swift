@@ -26,13 +26,6 @@ public extension Date {
         let date = dateFormatter.string(from: self)
         return date
     }
-    func distance(to other: Date) -> TimeInterval {
-        return other.timeIntervalSinceReferenceDate - self.timeIntervalSinceReferenceDate
-    }
-    func advanced(by n: TimeInterval) -> Date {
-        return self + n
-    }
-
     static func make(from millisecondsSince1970: Double) -> Date {
         return Date(timeIntervalSince1970: millisecondsSince1970.secondsSince1970)
     }

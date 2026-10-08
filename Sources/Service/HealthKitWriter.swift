@@ -35,20 +35,23 @@ public class HealthKitWriter {
         }
     }
     /**
-     Adds category samples from device to a workout
+     Adds category samples to a saved workout
      - Parameter samples: **Category** samples
-     - Parameter from: **Device** device (optional)
+     - Parameter from: **Device** device the samples come from (optional).
+     Replaces each sample's device when set
      - Parameter workout: **Workout** workout
      - Parameter completion: block notifies about operation status
      */
     public func addCategory(
         _ samples: [Category],
-        from: Device?,
+        from device: Device?,
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            let categorySamples = try samples.map { try $0.asOriginal() }
+            let categorySamples = try samples.map {
+                try $0.copyWith(device: device).asOriginal()
+            }
             healthStore.add(
                 categorySamples,
                 to: try workout.asOriginal(),
@@ -59,20 +62,23 @@ public class HealthKitWriter {
         }
     }
     /**
-     Adds quantitiy samples from device to a workout
-     - Parameter samples: **Quantitiy** samples
-     - Parameter from: **Device** device (optional)
+     Adds quantity samples to a saved workout
+     - Parameter samples: **Quantity** samples
+     - Parameter from: **Device** device the samples come from (optional).
+     Replaces each sample's device when set
      - Parameter workout: **Workout** workout
      - Parameter completion: block notifies about operation status
      */
-    public func addQuantitiy(
+    public func addQuantity(
         _ samples: [Quantity],
-        from: Device?,
+        from device: Device?,
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            let quantitySamples = try samples.map { try $0.asOriginal() }
+            let quantitySamples = try samples.map {
+                try $0.copyWith(device: device).asOriginal()
+            }
             healthStore.add(
                 quantitySamples,
                 to: try workout.asOriginal(),
@@ -81,6 +87,22 @@ public class HealthKitWriter {
         } catch {
             completion(false, error)
         }
+    }
+    /**
+     Adds quantity samples to a saved workout
+     - Parameter samples: **Quantity** samples
+     - Parameter from: **Device** device the samples come from (optional)
+     - Parameter workout: **Workout** workout
+     - Parameter completion: block notifies about operation status
+     */
+    @available(*, deprecated, renamed: "addQuantity(_:from:to:completion:)")
+    public func addQuantitiy(
+        _ samples: [Quantity],
+        from device: Device?,
+        to workout: Workout,
+        completion: @escaping StatusCompletionBlock
+    ) {
+        addQuantity(samples, from: device, to: workout, completion: completion)
     }
     /**
      Deletes the previosly created sample.
