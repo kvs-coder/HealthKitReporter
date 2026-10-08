@@ -196,7 +196,7 @@ Activity summaries, ECGs, clinical and verifiable records and medications are re
 
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize desired types to write, like step count. Only types whose `isWritable` is true can be requested for writing; HealthKit computes the others itself (e.g. `QuantityType.appleExerciseTime`, ECGs). Correlations and per-object types (vision prescriptions, medications) can't go into `requestAuthorization` either. For all of these the completion reports `HealthKitError.invalidType` instead of HealthKit crashing the app:
+Authorize desired types to write, like step count. Only types whose `isWritable` is true can be requested for writing; HealthKit computes the others itself (e.g. `QuantityType.appleExerciseTime`, ECGs). Correlations and per-object types (vision prescriptions, medications) can't go into `requestAuthorization` either. For all of these the completion reports `HealthKitError.invalidType` instead of HealthKit crashing the app. Requesting heartbeat series or workout routes also requests the heart rate variability and workout types HealthKit requires with them. `HealthKitError` is a `LocalizedError`, so `localizedDescription` shows its message:
 
 ```swift
 let writable = QuantityType.allCases.filter(\.isWritable)

@@ -229,11 +229,32 @@ final class WriterDemos: DemoPerformer {
                     status($0, $1, "Effort 7 related", completion)
                 }
             } else {
-                writer.unrelateWorkoutEffort(effort, fromWorkout: workout.uuid) {
-                    status($0, $1, "Effort unrelated", completion)
+                do {
+                    try unrelateStoredEffort(of: workout, completion: completion)
+                } catch {
+                    completion(.failure(error))
                 }
             }
         }
+    }
+    /// Unrelating needs the stored effort sample, so it is read from the workout's relationships first
+    @available(iOS 18.0, *)
+    private func unrelateStoredEffort(of workout: Workout, completion: @escaping DemoCompletion) throws {
+        let reader = reporter.reader
+        let query = try reader.workoutEffortRelationshipQuery { [unowned self] relationships, _, error in
+            let stored = relationships
+                .first { $0.workout.uuid == workout.uuid }?
+                .samples.first
+            guard let effort = stored else {
+                let missing = HealthKitError.invalidValue("Relate effort to the workout first")
+                completion(.failure(error ?? missing))
+                return
+            }
+            reporter.writer.unrelateWorkoutEffort(effort, fromWorkout: workout.uuid) {
+                status($0, $1, "Effort \(effort.harmonized.value) unrelated", completion)
+            }
+        }
+        reporter.manager.executeQuery(query)
     }
     /// Saves two step samples at once, then deletes the stored ones by the uuids the save reported
     private func deleteAfterSaving(completion: @escaping DemoCompletion) {

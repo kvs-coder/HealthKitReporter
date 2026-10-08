@@ -51,6 +51,13 @@ class StoreOperationsTests: XCTestCase {
                 completion: $0
             )
         }
+        assertFails {
+            manager.requestAuthorization(
+                toRead: [SeriesType.heartbeatSeries, SeriesType.workoutRoute, DocumentType.cda],
+                toWrite: [SeriesType.heartbeatSeries, SeriesType.workoutRoute],
+                completion: $0
+            )
+        }
         assertFails(invalidType: true) {
             manager.requestAuthorization(toRead: [CorrelationType.bloodPressure], toWrite: [], completion: $0)
         }

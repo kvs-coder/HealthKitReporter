@@ -19,3 +19,21 @@ public enum HealthKitError: Error {
     case badEncoding(String)
     case notImplementable(String)
 }
+// MARK: - LocalizedError
+extension HealthKitError: LocalizedError {
+    /// The descriptive message of the case, so `localizedDescription` shows it
+    public var errorDescription: String? {
+        switch self {
+        case .notAvailable(let message),
+             .unknown(let message),
+             .invalidType(let message),
+             .invalidIdentifier(let message),
+             .invalidOption(let message),
+             .invalidValue(let message),
+             .parsingFailed(let message),
+             .badEncoding(let message),
+             .notImplementable(let message):
+            return message
+        }
+    }
+}

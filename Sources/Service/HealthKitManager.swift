@@ -18,7 +18,8 @@ public class HealthKitManager {
      Requests authorization for reading/writing Objects in HK.
      Types HealthKit refuses to authorize complete with HealthKitError.invalidType instead of raising:
      correlations, per-object types to read (use **requestPerObjectReadAuthorization**)
-     and types that aren't **isWritable** to write
+     and types that aren't **isWritable** to write. Heartbeat series and workout routes bring
+     the heart rate variability and workout types HealthKit requires with them
      - Parameter toRead: an array of **ObjectType** types to read
      - Parameter toWrite: an array of **SampleType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
@@ -211,7 +212,9 @@ public class HealthKitManager {
                     "\(objectType.identifier) can not be authorized; authorize the types it correlates"
                 )
             }
-            if #available(iOS 16.0, watchOS 9.0, *), objectType.requiresPerObjectAuthorization() {
+            if #available(iOS 16.0, watchOS 9.0, *),
+               objectType.requiresPerObjectAuthorization(),
+               !(objectType is HKDocumentType) {
                 throw HealthKitError.invalidType(
                     "\(objectType.identifier) is authorized with requestPerObjectReadAuthorization"
                 )
@@ -228,6 +231,21 @@ public class HealthKitManager {
             }
             writeTypes.insert(sampleType)
         }
+        for (series, companion) in companionTypes {
+            if readTypes.contains(series) {
+                readTypes.insert(companion)
+            }
+            if let series = series as? HKSampleType, writeTypes.contains(series) {
+                writeTypes.insert(companion)
+            }
+        }
         return (readTypes, writeTypes)
+    }
+    /// HealthKit raises unless a series type is requested together with the type it belongs to
+    private var companionTypes: [HKObjectType: HKSampleType] {
+        return [
+            HKSeriesType.heartbeat(): HKQuantityType(.heartRateVariabilitySDNN),
+            HKSeriesType.workoutRoute(): HKObjectType.workoutType()
+        ]
     }
 }
