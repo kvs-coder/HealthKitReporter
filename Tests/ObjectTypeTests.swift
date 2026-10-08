@@ -91,7 +91,30 @@ class ObjectTypeTests: XCTestCase {
         XCTAssertNotNil("HKWorkoutTypeIdentifier".objectType as? WorkoutType)
         XCTAssertNotNil("HKDataTypeIdentifierElectrocardiogram".objectType as? ElectrocardiogramType)
         XCTAssertNotNil("HKClinicalTypeIdentifierAllergyRecord".objectType as? ClinicalType)
+        XCTAssertNotNil("HKVisionPrescriptionTypeIdentifier".objectType as? VisionPrescriptionType)
         XCTAssertNil("invalid".objectType)
+    }
+    func testSampleTypePredicates() throws {
+        let predicate = NSPredicate.samplesPredicate(startDate: startDate, endDate: endDate)
+        let predicates: [String: NSPredicate] = [
+            "HKQuantityTypeIdentifierStepCount": predicate,
+            "HKCategoryTypeIdentifierSleepAnalysis": predicate,
+            "HKClinicalTypeIdentifierAllergyRecord": predicate,
+            "HKVisionPrescriptionTypeIdentifier": predicate,
+            "HKCharacteristicTypeIdentifierBloodType": predicate,
+            "invalid": predicate
+        ]
+        let sut = predicates.sampleTypePredicates
+        XCTAssertEqual(
+            Set(sut.keys.map(\.identifier)),
+            [
+                "HKQuantityTypeIdentifierStepCount",
+                "HKCategoryTypeIdentifierSleepAnalysis",
+                "HKClinicalTypeIdentifierAllergyRecord",
+                "HKVisionPrescriptionTypeIdentifier"
+            ]
+        )
+        XCTAssertTrue(sut.values.allSatisfy { $0 == predicate })
     }
 
     private func assertAllCases<T: ObjectType & CaseIterable & Equatable>(

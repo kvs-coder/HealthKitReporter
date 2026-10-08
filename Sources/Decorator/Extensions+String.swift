@@ -7,6 +7,29 @@
 
 import Foundation
 
+/// Every wrapped **ObjectType** available on the current OS, keyed by its HealthKit identifier
+private let objectTypesByIdentifier: [String: ObjectType] = {
+    let types: [[ObjectType]] = [
+        QuantityType.allCases,
+        CategoryType.allCases,
+        CharacteristicType.allCases,
+        SeriesType.allCases,
+        CorrelationType.allCases,
+        DocumentType.allCases,
+        ActivitySummaryType.allCases,
+        WorkoutType.allCases,
+        ElectrocardiogramType.allCases,
+        ClinicalType.allCases,
+        VisionPrescriptionType.allCases
+    ]
+    return Dictionary(
+        types.joined().compactMap { type in
+            type.original.map { ($0.identifier, type) }
+        },
+        uniquingKeysWith: { first, _ in first }
+    )
+}()
+
 public extension String {
     var integer: Int? {
         return Int(self)
@@ -17,42 +40,9 @@ public extension String {
     var boolean: Bool {
         return (self as NSString).boolValue
     }
+    /// The wrapped **ObjectType** with this HealthKit identifier, or nil
     var objectType: ObjectType? {
-        if let type = try? QuantityType.make(from: self) {
-            return type
-        }
-        if let type = try? CategoryType.make(from: self) {
-            return type
-        }
-        if let type = try? CharacteristicType.make(from: self) {
-            return type
-        }
-        if let type = try? SeriesType.make(from: self) {
-            return type
-        }
-        if let type = try? CorrelationType.make(from: self) {
-            return type
-        }
-        if let type = try? DocumentType.make(from: self) {
-            return type
-        }
-        if let type = try? ActivitySummaryType.make(from: self) {
-            return type
-        }
-        if let type = try? WorkoutType.make(from: self) {
-            return type
-        }
-        if #available(iOS 14.0, *) {
-            if let type = try? ElectrocardiogramType.make(from: self) {
-                return type
-            }
-        }
-        if #available(iOS 12.0, *) {
-            if let type = try? ClinicalType.make(from: self) {
-                return type
-            }
-        }
-        return nil
+        return objectTypesByIdentifier[self]
     }
 
     func asDate(

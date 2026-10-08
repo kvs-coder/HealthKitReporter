@@ -9,10 +9,8 @@ import HealthKit
 
 extension HKCategoryType {
     func parsed() throws -> CategoryType {
-        for type in CategoryType.allCases {
-            if type.identifier == identifier {
-                return type
-            }
+        if let type = identifier.objectType as? CategoryType {
+            return type
         }
         throw HealthKitError.invalidType(
             "Unknown HKCategoryType with identifier:\(identifier)"
