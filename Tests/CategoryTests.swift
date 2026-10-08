@@ -292,4 +292,31 @@ extension CategoryTests {
             XCTAssertNotEqual(sut.harmonized.detail, "Unknown", "\(type)")
         }
     }
+    func testHarmonizeVaginalBleedingValues() throws {
+        guard #available(iOS 18.0, *) else {
+            throw XCTSkip("HKCategoryValueVaginalBleeding requires iOS 18")
+        }
+        let details: [HKCategoryValueVaginalBleeding: String] = [
+            .unspecified: "Unspecified",
+            .light: "Light",
+            .medium: "Medium",
+            .heavy: "Heavy",
+            .none: "None"
+        ]
+        for type in [CategoryType.bleedingAfterPregnancy, .bleedingDuringPregnancy] {
+            let original = try XCTUnwrap(type.original as? HKCategoryType, "\(type)")
+            for (value, detail) in details {
+                let sample = HKCategorySample(
+                    type: original,
+                    value: value.rawValue,
+                    start: startDate,
+                    end: endDate
+                )
+                let sut = try XCTUnwrap(Category.collect(results: [sample]).first, "\(type): \(detail)")
+                XCTAssertEqual(sut.harmonized.value, value.rawValue, "\(type): \(detail)")
+                XCTAssertEqual(sut.harmonized.description, "HKCategoryValueVaginalBleeding", "\(type)")
+                XCTAssertEqual(sut.harmonized.detail, detail, "\(type)")
+            }
+        }
+    }
 }

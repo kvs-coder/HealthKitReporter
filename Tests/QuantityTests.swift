@@ -299,6 +299,46 @@ extension QuantityTests {
         }
     }
 
+    func testHarmonizeQuantityTypesAddedSinceIOS16ToTheirSIUnits() throws {
+        guard #available(iOS 18.0, *) else {
+            throw XCTSkip("Quantity types added in iOS 16-18 require iOS 18")
+        }
+        let units: [QuantityType: HKUnit] = [
+            .environmentalSoundReduction: .decibelAWeightedSoundPressureLevel(),
+            .cyclingCadence: .count().unitDivided(by: .minute()),
+            .cyclingFunctionalThresholdPower: .watt(),
+            .cyclingPower: .watt(),
+            .cyclingSpeed: .meter().unitDivided(by: .second()),
+            .physicalEffort: .kilocalorie().unitDivided(
+                by: .gramUnit(with: .kilo).unitMultiplied(by: .hour())
+            ),
+            .timeInDaylight: .second(),
+            .crossCountrySkiingSpeed: .meter().unitDivided(by: .second()),
+            .distanceCrossCountrySkiing: .meter(),
+            .distancePaddleSports: .meter(),
+            .paddleSportsSpeed: .meter().unitDivided(by: .second()),
+            .distanceRowing: .meter(),
+            .rowingSpeed: .meter().unitDivided(by: .second()),
+            .distanceSkatingSports: .meter(),
+            .workoutEffortScore: .appleEffortScore(),
+            .estimatedWorkoutEffortScore: .appleEffortScore(),
+            .appleSleepingBreathingDisturbances: .count()
+        ]
+        for (type, unit) in units {
+            let original = try XCTUnwrap(type.original as? HKQuantityType, "\(type)")
+            let sample = HKQuantitySample(
+                type: original,
+                quantity: HKQuantity(unit: unit, doubleValue: 2.5),
+                start: startDate,
+                end: endDate
+            )
+            let sut = try XCTUnwrap(parse([sample]).first as? Quantity, "\(type)")
+            XCTAssertEqual(sut.identifier, original.identifier, "\(type)")
+            XCTAssertEqual(sut.harmonized.unit, unit.unitString, "\(type)")
+            XCTAssertEqual(sut.harmonized.value, 2.5, accuracy: 0.000001, "\(type)")
+        }
+    }
+
     private func metadata(for type: QuantityType) -> [String: Any]? {
         switch type {
         case .insulinDelivery:
