@@ -165,14 +165,13 @@ extension Correlation: Original {
         }
         var set = Set<HKSample>()
         for element in harmonized.categorySamples {
-            if let category = try? element.asOriginal() {
-                set.insert(category)
-            }
+            set.insert(try element.asOriginal())
         }
         for element in harmonized.quantitySamples {
-            if let quantity = try? element.asOriginal() {
-                set.insert(quantity)
-            }
+            set.insert(try element.asOriginal())
+        }
+        guard !set.isEmpty else {
+            throw HealthKitError.invalidValue("Correlation \(identifier) has no samples")
         }
         return HKCorrelation(
             type: type,

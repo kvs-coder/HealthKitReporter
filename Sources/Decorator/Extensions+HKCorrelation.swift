@@ -11,23 +11,13 @@ extension HKCorrelation: Harmonizable {
     typealias Harmonized = Correlation.Harmonized
 
     func harmonize() throws -> Harmonized {
-        var quantityArray = [Quantity]()
-        if let quantitySamples = objects as? Set<HKQuantitySample> {
-            for element in quantitySamples {
-                let quantity = try Quantity(quantitySample: element)
-                quantityArray.append(quantity)
-            }
-        }
-        var categoryArray = [Category]()
-        if let categorySamples = objects as? Set<HKCategorySample> {
-            for element in categorySamples {
-                let category = try Category(categorySample: element)
-                categoryArray.append(category)
-            }
-        }
         return Harmonized(
-            quantitySamples: quantityArray,
-            categorySamples: categoryArray,
+            quantitySamples: try objects
+                .compactMap { $0 as? HKQuantitySample }
+                .map { try Quantity(quantitySample: $0) },
+            categorySamples: try objects
+                .compactMap { $0 as? HKCategorySample }
+                .map { try Category(categorySample: $0) },
             metadata: metadata?.asMetadata
         )
     }

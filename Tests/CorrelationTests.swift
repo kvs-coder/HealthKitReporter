@@ -434,6 +434,32 @@ extension CorrelationTests {
         let parsed = try XCTUnwrap(parse([correlation]).first as? Correlation)
         XCTAssertEqual(parsed.uuid, correlation.uuid.uuidString)
     }
+    func testCollectResultsKeepsMixedChildren() throws {
+        let energy = HKQuantitySample(
+            type: HKQuantityType(.dietaryEnergyConsumed),
+            quantity: HKQuantity(unit: .kilocalorie(), doubleValue: 250),
+            start: startDate,
+            end: endDate
+        )
+        let symptom = HKCategorySample(
+            type: HKCategoryType(.nausea),
+            value: HKCategoryValueSeverity.mild.rawValue,
+            start: startDate,
+            end: endDate
+        )
+        let correlation = HKCorrelation(
+            type: HKCorrelationType(.food),
+            start: startDate,
+            end: endDate,
+            objects: [energy, symptom]
+        )
+        let sut = try XCTUnwrap(Correlation.collect(results: [correlation]).first)
+        XCTAssertEqual(
+            sut.harmonized.quantitySamples.map(\.identifier),
+            ["HKQuantityTypeIdentifierDietaryEnergyConsumed"]
+        )
+        XCTAssertEqual(sut.harmonized.categorySamples.map(\.identifier), ["HKCategoryTypeIdentifierNausea"])
+    }
     func testCollectResultsIgnoresOtherSamples() throws {
         let sample = HKQuantitySample(
             type: HKQuantityType(.stepCount),

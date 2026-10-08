@@ -136,7 +136,12 @@ class HealthKitWriterTests: XCTestCase {
         let samples: [Sample] = [
             quantity.copyWith(identifier: "invalid"),
             category.copyWith(identifier: "invalid"),
-            correlation.copyWith(identifier: "invalid")
+            correlation.copyWith(identifier: "invalid"),
+            correlation.copyWith(
+                harmonized: correlation.harmonized.copyWith(
+                    quantitySamples: [quantity.copyWith(identifier: "invalid")]
+                )
+            )
         ]
         for sample in samples {
             let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
@@ -156,7 +161,10 @@ class HealthKitWriterTests: XCTestCase {
             quantity.copyWith(harmonized: quantity.harmonized.copyWith(unit: "notAUnit")),
             workout.copyWith(harmonized: workout.harmonized.copyWith(totalEnergyBurnedUnit: "m")),
             workout.copyWith(harmonized: workout.harmonized.copyWith(totalDistanceUnit: "kg")),
-            workout.copyWith(harmonized: workout.harmonized.copyWith(totalSwimmingStrokeCountUnit: "m"))
+            workout.copyWith(harmonized: workout.harmonized.copyWith(totalSwimmingStrokeCountUnit: "m")),
+            correlation.copyWith(
+                harmonized: Correlation.Harmonized(quantitySamples: [], categorySamples: [], metadata: nil)
+            )
         ]
         for sample in samples {
             let error = try waitForStatus { self.sut.save(sample: sample, completion: $0) }
