@@ -15,17 +15,6 @@ extension HKCategorySample: Harmonizable {
         var detail = String()
         let type = try categoryType.parsed()
         switch type {
-        case .audioExposureEvent:
-            if #available(iOS 13.0, *) {
-                if let value = HKCategoryValueAudioExposureEvent(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
         case .sleepAnalysis:
             if let value = HKCategoryValueSleepAnalysis(rawValue: value) {
                 description = value.description
@@ -81,7 +70,8 @@ extension HKCategorySample: Harmonizable {
                     "\(type) is not available for the current iOS"
                 )
             }
-        case .environmentalAudioExposureEvent:
+        case .audioExposureEvent,
+             .environmentalAudioExposureEvent:
             if #available(iOS 14.0, *) {
                 if let value = HKCategoryValueEnvironmentalAudioExposureEvent(rawValue: value) {
                     description = value.description

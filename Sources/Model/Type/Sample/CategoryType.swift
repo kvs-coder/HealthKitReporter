@@ -99,8 +99,8 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         case .cervicalMucusQuality:
             return HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality)
         case .audioExposureEvent:
-            if #available(iOS 13.0, *) {
-                return HKObjectType.categoryType(forIdentifier: .audioExposureEvent)
+            if #available(iOS 14.0, *) {
+                return HKObjectType.categoryType(forIdentifier: .environmentalAudioExposureEvent)
             }
         case .mindfulSession:
             if #available(iOS 10.0, *) {
