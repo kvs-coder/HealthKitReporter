@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class CategoryTests: XCTestCase {
@@ -206,5 +207,84 @@ class CategoryTests: XCTestCase {
     }
     func testCollectThrowsOnInvalidDictionary() throws {
         assertInvalidValue(try Category.collect(from: [dictionary, ["identifier": "invalid"]]))
+    }
+}
+// MARK: - Factory
+extension CategoryTests {
+    /// Valid sample values for types whose value enum has no case at 0
+    private var values: [CategoryType: Int] {
+        return [
+            .menstrualFlow: HKCategoryValueMenstrualFlow.unspecified.rawValue,
+            .ovulationTestResult: HKCategoryValueOvulationTestResult.negative.rawValue,
+            .cervicalMucusQuality: HKCategoryValueCervicalMucusQuality.dry.rawValue,
+            .contraceptive: HKCategoryValueContraceptive.unspecified.rawValue,
+            .audioExposureEvent: HKCategoryValueEnvironmentalAudioExposureEvent.momentaryLimit.rawValue,
+            .environmentalAudioExposureEvent:
+                HKCategoryValueEnvironmentalAudioExposureEvent.momentaryLimit.rawValue,
+            .headphoneAudioExposureEvent: HKCategoryValueHeadphoneAudioExposureEvent.sevenDayLimit.rawValue,
+            .lowCardioFitnessEvent: HKCategoryValueLowCardioFitnessEvent.lowFitness.rawValue,
+            .pregnancyTestResult: HKCategoryValuePregnancyTestResult.negative.rawValue,
+            .progesteroneTestResult: HKCategoryValueProgesteroneTestResult.negative.rawValue,
+            .appleWalkingSteadinessEvent: HKCategoryValueAppleWalkingSteadinessEvent.initialLow.rawValue
+        ]
+    }
+
+    func testCollectResults() throws {
+        let sample = HKCategorySample(
+            type: HKCategoryType(.sleepAnalysis),
+            value: HKCategoryValueSleepAnalysis.awake.rawValue,
+            start: startDate,
+            end: endDate,
+            device: HKDevice(
+                name: "Guy's iPhone",
+                manufacturer: "Guy",
+                model: "6.1.1",
+                hardwareVersion: "some_0",
+                firmwareVersion: "some_1",
+                softwareVersion: "some_2",
+                localIdentifier: "some_3",
+                udiDeviceIdentifier: "some_4"
+            ),
+            metadata: ["you": "saved it"]
+        )
+        let sut = Category.collect(results: [sample])
+        XCTAssertEqual(sut.count, 1)
+        XCTAssertEqual(sut[0].uuid, sample.uuid.uuidString)
+        XCTAssertEqual(sut[0].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
+        XCTAssertEqual(sut[0].startTimestamp, 1626884800, accuracy: 0.001)
+        XCTAssertEqual(sut[0].endTimestamp, 1626884860, accuracy: 0.001)
+        assertDevice(sut[0].device)
+        XCTAssertEqual(sut[0].harmonized.value, HKCategoryValueSleepAnalysis.awake.rawValue)
+        XCTAssertEqual(sut[0].harmonized.description, "HKCategoryValueSleepAnalysis")
+        XCTAssertEqual(sut[0].harmonized.detail, "Awake")
+        XCTAssertEqual(sut[0].harmonized.metadata, ["you": "saved it"])
+    }
+    func testCollectResultsIgnoresOtherSamples() throws {
+        let sample = HKQuantitySample(
+            type: HKQuantityType(.stepCount),
+            quantity: HKQuantity(unit: .count(), doubleValue: 1),
+            start: startDate,
+            end: endDate
+        )
+        XCTAssertTrue(Category.collect(results: [sample]).isEmpty)
+    }
+    func testHarmonizeEveryCategoryType() throws {
+        for type in CategoryType.allCases {
+            let original = try XCTUnwrap(type.original as? HKCategoryType, "\(type)")
+            let value = values[type] ?? 0
+            let sample = HKCategorySample(
+                type: original,
+                value: value,
+                start: startDate,
+                end: endDate,
+                metadata: type == .menstrualFlow ? [HKMetadataKeyMenstrualCycleStart: true] : nil
+            )
+            let sut = try XCTUnwrap(Category.collect(results: [sample]).first, "\(type)")
+            XCTAssertEqual(sut.identifier, original.identifier, "\(type)")
+            XCTAssertEqual(sut.harmonized.value, value, "\(type)")
+            XCTAssertTrue(sut.harmonized.description.hasPrefix("HKCategoryValue"), "\(type)")
+            XCTAssertFalse(sut.harmonized.detail.isEmpty, "\(type)")
+            XCTAssertNotEqual(sut.harmonized.detail, "Unknown", "\(type)")
+        }
     }
 }
