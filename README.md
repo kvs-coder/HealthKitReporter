@@ -500,7 +500,14 @@ func application(
 ## Example
 
 To run the example project, clone the repo and open `Example/HealthKitReporter.xcodeproj`.
-Xcode resolves the library from the repository root as a local Swift package.
+Xcode resolves the library from the repository root as a local Swift package. Select your development team, since HealthKit needs the signed entitlements, even on the simulator.
+
+The app lists every public method of the reader, writer, observer and manager, grouped by area. Tap a row to run it; its result, live updates or error appear in the row. Live queries (observers, anchored updates, statistics collections) keep updating until **Stop live queries**.
+
+- **Authorization** requests every type the library supports: read access for all sample types, characteristics, activity summaries and (where supported) clinical records; write access for every type HealthKit lets apps write. Vision prescriptions and medications use their own per-object authorization rows.
+- **Simulator data:** on the first launch in the simulator the app authorizes and then seeds 7 days of plausible samples for every writable type, through the library's own writer. Seeded samples carry an `HKMetadataKeyExternalUUID` starting with `hkr-seed-`; seeding runs once per day and type, and **Delete seeded data** removes only data this app wrote.
+- **Read-only data** (ECGs, heartbeat series, workout routes, characteristics, activity summaries, clinical records, medications) can't be written by apps. On the simulator, enter characteristics in the Health app's profile, add sample clinical records under Health › Browse › Health Records, and pair an Apple Watch simulator for watch-recorded data; on a device, record them with Apple Watch. Their rows show an empty result until then.
+- **Watch companion:** **Start a run on the watch** calls `startWatchApp`, which launches the embedded watch app (`HealthKitReporterWatch`) on a paired Apple Watch or watch simulator. It runs the workout live and saves it on End; the **Workouts** row then shows it.
 
 ## Requirements
 

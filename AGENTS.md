@@ -2,7 +2,7 @@
 
 > **Library Mission**: HealthKitReporter is a Swift wrapper around Apple's **HealthKit** framework, distributed via **Swift Package Manager** (iOS 15+, watchOS 8+). CocoaPods is frozen at `3.1.0` (trunk is read-only from 02.12.2026).
 > It turns `HK*` objects into plain, `Codable` payload structs (and back), so consumers — including the `health_kit_reporter` Flutter plugin — can read, write and observe Apple Health data without touching HealthKit types directly.
-> `Example/` hosts a UIKit demo app that exercises the public API end to end.
+> `Example/` hosts a UIKit demo app (MVVM with Combine) and a SwiftUI watch companion that exercise the public API end to end.
 
 Strict engineering invariants, architectural rules, and operational protocols for AI agents and human contributors.
 
@@ -73,7 +73,10 @@ Tests/
 └── <PayloadName>Tests.swift         (one XCTestCase per payload)
 
 Example/
-├── HealthKitReporter/               (UIKit demo app: AppDelegate, ViewController, HealthKitReporterService)
+├── HealthKitReporter/               (UIKit MVVM demo app)
+│   ├── Demo/                        (DemoViewModel, DemoViewController, DemoView, DemoCell, DemoRow…)
+│   └── Service/                     (HealthKitReporterService and one DemoPerformer per library area)
+├── HealthKitReporterWatch/          (SwiftUI watch companion for startWatchApp)
 ├── Tests/
 └── HealthKitReporter.xcodeproj  (consumes the repo root as a local Swift package)
 ```
@@ -177,10 +180,15 @@ A payload is a `public struct` that mirrors one `HK*` class. Follow `Quantity.sw
 * Multi-step queries (e.g. ECG + voltage, heartbeat series) live in `Service/Retriever/<Name>Retriever.swift`.
 
 ### G. Example App (`Example/`)
-* UIKit + storyboard. `ViewController` holds UI only (`@IBOutlet`, `@IBAction`) and delegates every HealthKit call to `HealthKitReporterService`.
-* `HealthKitReporterService` is a `final class` owning `private var reporter: HealthKitReporter?`, created only when `HealthKitReporter.isHealthDataAvailable`.
-* UI updates from HK callbacks hop to `DispatchQueue.main.async` and capture `[unowned self]` / `[weak self]` explicitly.
-* Every new public library feature gets a demo method in `HealthKitReporterService` wired to a button, and a usage snippet in `README.md`.
+* Programmatic UIKit, MVVM with Combine; no storyboards or XIBs except `LaunchScreen.xib`. `AppDelegate` creates the window and a `UINavigationController` with `DemoViewController`.
+* `DemoViewModel` exposes an `Input` struct (subjects for user intents: tapped rows, launch) and an `Output` struct (subjects holding state: sections, per-row results, progress); the pipelines from input to output are built in `init`.
+* `DemoViewController` installs `DemoView` in `loadView()` (`view = baseView`) and only binds the view model's output to the view and the view's events to the input. It never adds subviews itself.
+* Views (`DemoView`, `DemoHeaderView`, `DemoCell`) declare each subview as a closure-initialized property that carries its own styling, and their initializers call `addSubviews()` then `makeConstraints()`.
+* `HealthKitReporterService` exposes only `publisher(for:)`. It owns one `DemoPerformer` per library area (`ReaderDemos`, `WriterDemos`, …), each keeping its `HealthKitReporter` and any state (anchors, live queries) `private`.
+* UI updates from HealthKit callbacks reach the main queue through `receive(on: DispatchQueue.main)` or `DispatchQueue.main.async`, with explicit `[unowned self]` / `[weak self]` captures.
+* Authorization is built from the `allCases` of every type enum; the types HealthKit refuses to let apps write are listed once, in `Extensions+HealthKitReporter.swift`.
+* The watch companion (`Example/HealthKitReporterWatch`) uses SwiftUI, since watchOS has no UIKit; it handles `startWatchApp` and depends on the local package.
+* Every new public library method gets a `DemoRow` and a demo in the matching `DemoPerformer`, and a usage snippet in `README.md`. A new type case is covered automatically by the `allCases`-driven authorization.
 
 ---
 
@@ -356,7 +364,7 @@ Before outputting code or submitting PRs, explicitly verify:
 * [ ] Are singletons and static-only utility types absent, with `HKHealthStore` injected via `init`?
 * [ ] Does the change follow the `Sources/{Decorator,Model,Service}` layout, one extended type per `Extensions+<Type>.swift`?
 * [ ] Is new public API free of raw `HK*` types, with mapping in `Original` / `Harmonizable`?
-* [ ] Is every API newer than iOS 9.0 gated by `@available` / `#available`, with a `HealthKitError.notAvailable` fallback?
+* [ ] Is every API newer than iOS 15.0 / watchOS 8.0 gated by `@available` / `#available`, with a `HealthKitError.notAvailable` fallback?
 * [ ] Are errors thrown only as `HealthKitError` cases with descriptive messages, without `fatalError`, `try!` or force casts?
 * [ ] Does every new payload follow `Quantity.swift`: `Harmonized: Codable`, `public let` fields, memberwise `init`, `copyWith`, and `// MARK: -` extensions for `Original`, `Payload`, `Factory`?
 * [ ] Are new enum cases handled in every exhaustive `switch`, with no `default:` over library enums?
@@ -366,6 +374,7 @@ Before outputting code or submitting PRs, explicitly verify:
 * [ ] Are `testCreateThenEncodeThenDecode` and `testCreateFromDictionary` (or equivalents) written first and green?
 * [ ] Did `swiftlint` (against the baseline) and `xcodebuild test` pass, the watchOS build pass, and the Example app build if public API changed?
 * [ ] Were `README.md` and the Example app updated for user-visible changes, leaving `CHANGELOG.md` and versions to release-please?
+* [ ] Does every new public method or type case have a demo in the Example app (a `DemoRow` for methods, `allCases` authorization for types)?
 * [ ] Is the branch named strictly `<initials>/issue-<XXX>`?
 * [ ] Are git commits made without `--no-verify` and staged without blind `git add .`?
 * [ ] Was `gh pr create` used with structured title/body matching commit specs?
