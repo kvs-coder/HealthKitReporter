@@ -325,113 +325,113 @@ extension QuantityType {
         case .appleWalkingSteadiness:
             return HKObjectType.quantityType(forIdentifier: .appleWalkingSteadiness)
         case .appleSleepingWristTemperature:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .appleSleepingWristTemperature)
             }
         case .runningStrideLength:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .runningStrideLength)
             }
         case .runningVerticalOscillation:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .runningVerticalOscillation)
             }
         case .runningGroundContactTime:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .runningGroundContactTime)
             }
         case .runningPower:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .runningPower)
             }
         case .runningSpeed:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .runningSpeed)
             }
         case .heartRateRecoveryOneMinute:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .heartRateRecoveryOneMinute)
             }
         case .numberOfAlcoholicBeverages:
             return HKObjectType.quantityType(forIdentifier: .numberOfAlcoholicBeverages)
         case .atrialFibrillationBurden:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .atrialFibrillationBurden)
             }
         case .underwaterDepth:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .underwaterDepth)
             }
         case .waterTemperature:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .waterTemperature)
             }
         case .environmentalSoundReduction:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .environmentalSoundReduction)
             }
         case .cyclingCadence:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .cyclingCadence)
             }
         case .cyclingFunctionalThresholdPower:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)
             }
         case .cyclingPower:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .cyclingPower)
             }
         case .cyclingSpeed:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .cyclingSpeed)
             }
         case .physicalEffort:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .physicalEffort)
             }
         case .timeInDaylight:
-            if #available(iOS 17.0, *) {
+            if #available(iOS 17.0, watchOS 10.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .timeInDaylight)
             }
         case .crossCountrySkiingSpeed:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .crossCountrySkiingSpeed)
             }
         case .distanceCrossCountrySkiing:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .distanceCrossCountrySkiing)
             }
         case .distancePaddleSports:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .distancePaddleSports)
             }
         case .paddleSportsSpeed:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .paddleSportsSpeed)
             }
         case .distanceRowing:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .distanceRowing)
             }
         case .rowingSpeed:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .rowingSpeed)
             }
         case .distanceSkatingSports:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .distanceSkatingSports)
             }
         case .workoutEffortScore:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .workoutEffortScore)
             }
         case .estimatedWorkoutEffortScore:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .estimatedWorkoutEffortScore)
             }
         case .appleSleepingBreathingDisturbances:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .appleSleepingBreathingDisturbances)
             }
         }

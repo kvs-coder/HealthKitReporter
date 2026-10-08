@@ -280,6 +280,15 @@ if reporter.manager.supportsHealthRecords() {
 }
 ```
 
+CDA documents (iOS only) arrive in batches until `done`; the user authorizes each document the first time it matches:
+
+```swift
+let query = try reporter.reader.cdaDocumentQuery { documents, done, error in
+    documents.forEach { print($0.harmonized.title ?? "", $0.harmonized.custodianName ?? "") }
+}
+reporter.manager.executeQuery(query)
+```
+
 Verifiable records (SMART Health Cards, iOS only) don't need prior authorization; the system asks the user which records to share each time:
 
 ```swift

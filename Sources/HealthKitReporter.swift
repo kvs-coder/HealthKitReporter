@@ -27,6 +27,19 @@ public typealias VerifiableClinicalRecordResultsHandler = (
     _ records: [VerifiableClinicalRecord],
     _ error: Error?
 ) -> Void
+/// **HKDocumentQuery** typealias
+public typealias DocumentQuery = HKDocumentQuery
+/**
+ - Parameters:
+    - documents: CDA documents of this batch
+    - done: true with the last batch
+    - error: error (optional)
+ */
+public typealias CDADocumentResultsHandler = (
+    _ documents: [CDADocument],
+    _ done: Bool,
+    _ error: Error?
+) -> Void
 #endif
 /// **HKStatisticsQuery** typealias
 public typealias StatisticsQuery = HKStatisticsQuery
@@ -226,6 +239,7 @@ public typealias ElectrocardiogramResultsHandler = (
     _ ecgs: [Electrocardiogram],
     _ error: Error?
 ) -> Void
+#if os(iOS)
 /**
  - Parameters:
     - records: clinical record sample array
@@ -235,12 +249,13 @@ public typealias ClinicalRecordResultsHandler = (
     _ records: [ClinicalRecord],
     _ error: Error?
 ) -> Void
+#endif
 /**
  - Parameters:
     - prescriptions: vision prescription sample array
     - error: error (optional)
  */
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 public typealias VisionPrescriptionResultsHandler = (
     _ prescriptions: [VisionPrescription],
     _ error: Error?

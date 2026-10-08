@@ -5,6 +5,7 @@
 //  Created by Quentin on 01.08.24.
 //
 
+#if os(iOS)
 import HealthKit
 
 extension HKClinicalRecord: Harmonizable {
@@ -29,3 +30,4 @@ extension HKClinicalRecord: Harmonizable {
         )
     }
 }
+#endif

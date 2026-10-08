@@ -211,37 +211,37 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         case .progesteroneTestResult:
             return HKObjectType.categoryType(forIdentifier: .progesteroneTestResult)
         case .persistentIntermenstrualBleeding:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .persistentIntermenstrualBleeding)
             }
         case .prolongedMenstrualPeriods:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .prolongedMenstrualPeriods)
             }
         case .irregularMenstrualCycles:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .irregularMenstrualCycles)
             }
         case .infrequentMenstrualCycles:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .infrequentMenstrualCycles)
             }
         case .appleWalkingSteadinessEvent:
             return HKObjectType.categoryType(forIdentifier: .appleWalkingSteadinessEvent)
         case .bleedingAfterPregnancy:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .bleedingAfterPregnancy)
             }
         case .bleedingDuringPregnancy:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .bleedingDuringPregnancy)
             }
         case .sleepApneaEvent:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, watchOS 11.0, *) {
                 return HKObjectType.categoryType(forIdentifier: .sleepApneaEvent)
             }
         case .hypertensionEvent:
-            if #available(iOS 26.2, *) {
+            if #available(iOS 26.2, watchOS 26.2, *) {
                 return HKObjectType.categoryType(forIdentifier: .hypertensionEvent)
             }
         }

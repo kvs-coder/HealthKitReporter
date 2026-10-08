@@ -5,6 +5,7 @@
 //  Created by Quentin on 01.08.24.
 //
 
+#if os(iOS)
 import HealthKit
 
 public struct ClinicalRecord: Identifiable, Sample {
@@ -189,3 +190,4 @@ extension ClinicalRecord.Harmonized: Payload {
         )
     }
 }
+#endif

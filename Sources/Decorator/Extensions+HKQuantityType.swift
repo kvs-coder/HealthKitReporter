@@ -157,7 +157,7 @@ extension HKQuantityType {
             case .runningPower,
                  .cyclingPower,
                  .cyclingFunctionalThresholdPower:
-                if #available(iOS 16.0, *) {
+                if #available(iOS 16.0, watchOS 9.0, *) {
                     return HKUnit.watt()
                 } else {
                     throw HealthKitError.notAvailable(
@@ -170,7 +170,7 @@ extension HKQuantityType {
                 )
             case .workoutEffortScore,
                  .estimatedWorkoutEffortScore:
-                if #available(iOS 18.0, *) {
+                if #available(iOS 18.0, watchOS 11.0, *) {
                     return HKUnit.appleEffortScore()
                 } else {
                     throw HealthKitError.notAvailable(

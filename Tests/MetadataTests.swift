@@ -10,6 +10,11 @@ import HealthKit
 import HealthKitReporter
 
 class MetadataTests: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        warmUpHealthStore()
+    }
+
     /// Mixed metadata as the Flutter plugin sends it over the channel
     private var dictionary: [String: Any] {
         return [

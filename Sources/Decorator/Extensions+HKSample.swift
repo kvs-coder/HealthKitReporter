@@ -24,10 +24,15 @@ extension HKSample {
         if let electrocardiogram = self as? HKElectrocardiogram {
             return try Electrocardiogram(electrocardiogram: electrocardiogram, voltageMeasurements: [])
         }
+        #if os(iOS)
         if let clinicalRecord = self as? HKClinicalRecord {
             return try ClinicalRecord(clinicalRecord: clinicalRecord)
         }
-        if #available(iOS 16.0, *), let visionPrescription = self as? HKVisionPrescription {
+        if let document = self as? HKCDADocumentSample {
+            return CDADocument(documentSample: document)
+        }
+        #endif
+        if #available(iOS 16.0, watchOS 9.0, *), let visionPrescription = self as? HKVisionPrescription {
             return try VisionPrescription(visionPrescription: visionPrescription)
         }
         throw HealthKitError.parsingFailed("HKSample could not be parsed")

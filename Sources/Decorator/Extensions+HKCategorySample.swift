@@ -109,7 +109,7 @@ extension HKCategorySample: Harmonizable {
             return HKCategoryValueAppleWalkingSteadinessEvent(rawValue: value)
         case .bleedingAfterPregnancy,
              .bleedingDuringPregnancy:
-            guard #available(iOS 18.0, *) else {
+            guard #available(iOS 18.0, watchOS 11.0, *) else {
                 throw HealthKitError.notAvailable(
                     "\(type) is not available for the current iOS"
                 )

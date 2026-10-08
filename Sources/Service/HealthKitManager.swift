@@ -102,6 +102,7 @@ public class HealthKitManager {
     public func executeQuery(_ query: Query) {
         healthStore.execute(query)
     }
+    #if os(iOS)
     /**
      Starts Watch App.
      - Parameter workoutConfiguration: **WorkoutConfiguration** workout configuration
@@ -120,13 +121,14 @@ public class HealthKitManager {
             completion(false, error)
         }
     }
+    #endif
     /**
      Asks the user which objects of a per-object authorization type (vision prescriptions) the app may read.
      - Parameter type: **SampleType** type, e.g. **VisionPrescriptionType.visionPrescription**
      - Parameter predicate: **NSPredicate** narrowing the objects offered (optional). nil by default
      - Parameter completion: block notifies about operation status
      */
-    @available(iOS 16.0, *)
+    @available(iOS 16.0, watchOS 9.0, *)
     public func requestPerObjectReadAuthorization(
         for type: SampleType,
         predicate: NSPredicate? = nil,

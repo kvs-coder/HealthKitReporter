@@ -26,14 +26,9 @@ class HealthKitWriterTests: XCTestCase {
 
     private var sut: HealthKitWriter!
 
-    /// The simulator's health daemon may drop the first request after a cold start, so one is sent up front
     override class func setUp() {
         super.setUp()
-        let warmedUp = DispatchSemaphore(value: 0)
-        HealthKitReporter().observer.disableAllBackgroundDelivery { _, _ in
-            warmedUp.signal()
-        }
-        _ = warmedUp.wait(timeout: .now() + 30)
+        warmUpHealthStore()
     }
     override func setUp() {
         super.setUp()

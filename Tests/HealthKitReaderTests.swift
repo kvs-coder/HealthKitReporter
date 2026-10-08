@@ -124,7 +124,7 @@ class HealthKitReaderTests: XCTestCase {
         assertCustom(query)
     }
     func testVisionPrescriptionQuery() throws {
-        guard #available(iOS 16.0, *) else {
+        guard #available(iOS 16.0, watchOS 9.0, *) else {
             throw XCTSkip("Vision prescriptions require iOS 16")
         }
         let defaults = try sut.visionPrescriptionQuery { _, _ in }
@@ -372,6 +372,7 @@ extension HealthKitReaderTests {
         )
     }
 }
+#if os(iOS)
 // MARK: - Health records
 extension HealthKitReaderTests {
     func testClinicalRecordQuery() throws {
@@ -399,7 +400,7 @@ extension HealthKitReaderTests {
             sourceTypes: ["https://smarthealth.cards"],
             predicate: predicate
         ) { _, _ in }
-        if #available(iOS 15.4, *) {
+        if #available(iOS 15.4, watchOS 8.5, *) {
             XCTAssertEqual(smartHealthCards.sourceTypes.map(\.rawValue), ["https://smarthealth.cards"])
         }
         XCTAssertEqual(smartHealthCards.predicate, predicate)
@@ -409,3 +410,4 @@ extension HealthKitReaderTests {
         XCTAssertEqual(manager.supportsHealthRecords(), HKHealthStore().supportsHealthRecords())
     }
 }
+#endif

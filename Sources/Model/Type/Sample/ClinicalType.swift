@@ -41,7 +41,7 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
         case .coverageRecord:
             return HKObjectType.clinicalType(forIdentifier: .coverageRecord)
         case .clinicalNoteRecord:
-            if #available(iOS 16.4, *) {
+            if #available(iOS 16.4, watchOS 9.4, *) {
                 return HKObjectType.clinicalType(forIdentifier: .clinicalNoteRecord)
             }
             return nil

@@ -10,6 +10,14 @@ import HealthKit
 import HealthKitReporter
 
 extension XCTestCase {
+    /// The simulator's health daemon may drop the first request after a cold start, so one is sent up front
+    static func warmUpHealthStore() {
+        let warmedUp = DispatchSemaphore(value: 0)
+        HealthKitReporter().observer.disableAllBackgroundDelivery { _, _ in
+            warmedUp.signal()
+        }
+        _ = warmedUp.wait(timeout: .now() + 30)
+    }
     var startTimestamp: Double {
         return 1626884800
     }

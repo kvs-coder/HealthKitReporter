@@ -5,6 +5,7 @@
 //  Created by Victor Kachalov on 08.10.26.
 //
 
+#if os(iOS)
 import XCTest
 import HealthKitReporter
 
@@ -139,3 +140,4 @@ class ClinicalRecordTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"], file: file, line: line)
     }
 }
+#endif

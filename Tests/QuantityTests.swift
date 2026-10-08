@@ -310,7 +310,7 @@ extension QuantityTests {
     }
 
     func testHarmonizeQuantityTypesAddedSinceIOS16ToTheirSIUnits() throws {
-        guard #available(iOS 18.0, *) else {
+        guard #available(iOS 18.0, watchOS 11.0, *) else {
             throw XCTSkip("Quantity types added in iOS 16-18 require iOS 18")
         }
         let units: [QuantityType: HKUnit] = [

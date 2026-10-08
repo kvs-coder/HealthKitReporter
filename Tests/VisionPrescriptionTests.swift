@@ -9,8 +9,13 @@ import XCTest
 import HealthKit
 import HealthKitReporter
 
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 class VisionPrescriptionTests: XCTestCase {
+    override class func setUp() {
+        super.setUp()
+        warmUpHealthStore()
+    }
+
     private var prescriptionTypeDictionary: [String: Any] {
         return [
             "id": 1,
@@ -140,7 +145,7 @@ class VisionPrescriptionTests: XCTestCase {
     }
 }
 // MARK: - Factory
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescriptionTests {
     func testCollectGlassesResults() throws {
         let glasses = HKGlassesPrescription(

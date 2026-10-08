@@ -7,7 +7,7 @@
 
 import HealthKit
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 extension HKCategoryValueVaginalBleeding: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueVaginalBleeding"
@@ -30,5 +30,5 @@ extension HKCategoryValueVaginalBleeding: @retroactive CustomStringConvertible {
     }
 }
 // MARK: - CategoryValueDescribable
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 extension HKCategoryValueVaginalBleeding: CategoryValueDescribable {}

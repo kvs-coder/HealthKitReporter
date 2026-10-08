@@ -50,6 +50,7 @@ class WorkoutConfigurationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.value, 1.5)
         XCTAssertEqual(sut.harmonized.unit, "m")
     }
+    #if os(iOS)
     func testStartWatchAppWithIncompatibleLapLengthUnit() throws {
         let sut = WorkoutConfiguration(
             activityValue: 46,
@@ -68,6 +69,7 @@ class WorkoutConfigurationTests: XCTestCase {
         XCTAssertFalse(result.success)
         assertInvalidValue(try { throw try XCTUnwrap(result.error) }())
     }
+    #endif
     func testCreateFromInvalidDictionary() throws {
         let harmonized: [String: Any] = ["value": 25, "unit": "m"]
         assertEachKeyIsRequired(

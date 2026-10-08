@@ -227,7 +227,7 @@ extension CategoryTests {
             .progesteroneTestResult: HKCategoryValueProgesteroneTestResult.negative.rawValue,
             .appleWalkingSteadinessEvent: HKCategoryValueAppleWalkingSteadinessEvent.initialLow.rawValue
         ]
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18.0, watchOS 11.0, *) {
             values[.bleedingAfterPregnancy] = HKCategoryValueVaginalBleeding.light.rawValue
             values[.bleedingDuringPregnancy] = HKCategoryValueVaginalBleeding.heavy.rawValue
         }
@@ -293,7 +293,7 @@ extension CategoryTests {
         }
     }
     func testHarmonizeVaginalBleedingValues() throws {
-        guard #available(iOS 18.0, *) else {
+        guard #available(iOS 18.0, watchOS 11.0, *) else {
             throw XCTSkip("HKCategoryValueVaginalBleeding requires iOS 18")
         }
         let details: [HKCategoryValueVaginalBleeding: String] = [

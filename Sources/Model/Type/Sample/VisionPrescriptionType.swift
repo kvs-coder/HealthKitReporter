@@ -20,7 +20,7 @@ public enum VisionPrescriptionType: Int, CaseIterable, SampleType {
     public var original: HKObjectType? {
         switch self {
         case .visionPrescription:
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, watchOS 9.0, *) {
                 return HKObjectType.visionPrescriptionType()
             }
         }

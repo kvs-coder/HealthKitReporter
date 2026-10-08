@@ -5,6 +5,7 @@
 //  Created by Victor Kachalov on 08.10.26.
 //
 
+#if os(iOS)
 import XCTest
 import HealthKitReporter
 
@@ -127,3 +128,4 @@ class VerifiableClinicalRecordTests: XCTestCase {
         )
     }
 }
+#endif

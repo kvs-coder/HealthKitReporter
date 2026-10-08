@@ -12,7 +12,7 @@ import HealthKit
  Lens powers are in diopters (D), angles in degrees (deg), distances in millimeters (mm)
  and prism amounts in prism diopters (pD).
  */
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 public struct VisionPrescription: Identifiable, Sample {
     public struct PrescriptionType: Codable {
         public let id: Int
@@ -134,7 +134,7 @@ public struct VisionPrescription: Identifiable, Sample {
     }
 }
 // MARK: - LensSpecification
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription {
     /// Lens of one eye.
     /// Glasses use the vertex distance, prism and pupillary distances; contacts the base curve and diameter
@@ -200,7 +200,7 @@ extension VisionPrescription {
     }
 }
 // MARK: - Original
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription: Original {
     func asOriginal() throws -> HKVisionPrescription {
         let metadata = try harmonized.metadata?.asOriginal()
@@ -233,7 +233,7 @@ extension VisionPrescription: Original {
     }
 }
 // MARK: - LensSpecification: Original
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.LensSpecification {
     init(lensSpecification: HKLensSpecification) {
         let glasses = lensSpecification as? HKGlassesLensSpecification
@@ -278,7 +278,7 @@ extension VisionPrescription.LensSpecification {
     }
 }
 // MARK: - Prism: Original
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.Prism {
     init(prism: HKVisionPrism) {
         self.init(
@@ -301,7 +301,7 @@ extension VisionPrescription.Prism {
     }
 }
 // MARK: - Payload
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription: Payload {
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription {
         guard
@@ -330,7 +330,7 @@ extension VisionPrescription: Payload {
     }
 }
 // MARK: - Factory
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription {
     public static func collect(results: [HKSample]) -> [VisionPrescription] {
         return results
@@ -339,7 +339,7 @@ extension VisionPrescription {
     }
 }
 // MARK: - Harmonized: Payload
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.Harmonized {
         guard
@@ -364,7 +364,7 @@ extension VisionPrescription.Harmonized: Payload {
     }
 }
 // MARK: - PrescriptionType: Payload
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.PrescriptionType: Payload {
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.PrescriptionType {
         guard
@@ -377,7 +377,7 @@ extension VisionPrescription.PrescriptionType: Payload {
     }
 }
 // MARK: - LensSpecification: Payload
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.LensSpecification: Payload {
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.LensSpecification {
         guard let sphere = dictionary["sphere"] as? NSNumber else {
@@ -402,7 +402,7 @@ extension VisionPrescription.LensSpecification: Payload {
     }
 }
 // MARK: - Prism: Payload
-@available(iOS 16.0, *)
+@available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription.Prism: Payload {
     public static func make(from dictionary: [String: Any]) throws -> VisionPrescription.Prism {
         guard
