@@ -184,8 +184,11 @@ extension HealthKitReader {
         }
         if monitorUpdates {
             query.statisticsUpdateHandler = { (_, statistics, _, error) in
-                guard error == nil, let statistics = statistics else {
+                guard error == nil else {
                     resultsHandler([], error)
+                    return
+                }
+                guard let statistics = statistics else {
                     return
                 }
                 resultsHandler([try? Statistics(statistics: statistics, unit: hkUnit)].compactMap { $0 }, nil)

@@ -285,7 +285,17 @@ reporter.writer.save(sample: steps) { _, uuid, _ in
 }
 ```
 
-`addQuantity` / `addCategory` add new samples to a stored workout, and `unrelateWorkoutEffort` needs the stored effort sample.
+`save(samples:)` and `delete(samples:)` do the same for several samples at once; either all of them are stored or deleted, or none:
+
+```swift
+let walks = [morningSteps, eveningSteps]
+reporter.writer.save(samples: walks) { success, uuids, error in
+    let stored = zip(walks, uuids).map { $0.copyWith(uuid: $1) }
+    reporter.writer.delete(samples: stored) { success, error in }
+}
+```
+
+`addQuantity` / `addCategory` add new samples to a stored workout, and `unrelateWorkoutEffort` needs the stored effort sample. Deleted objects in anchored queries carry only their `uuid`, so match it against the samples you keep.
 
 Hint: if you have trouble with choosing unit for an object you want to save, you can call a manager's function _preferredUnits_ which will return a dictionary with keys as identifiers of Quantitiy types and Units preferred for current localization.
 

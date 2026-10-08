@@ -79,6 +79,7 @@ extension HealthKitReader {
             }
             if done {
                 resultsHandler(medications, nil)
+                medications.removeAll()
             }
         })
     }

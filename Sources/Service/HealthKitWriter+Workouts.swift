@@ -211,7 +211,11 @@ extension HealthKitWriter {
                 completion(false, error)
                 return
             }
-            healthStore.storedSample(of: WorkoutType.workoutType, uuid: target.uuid) { workout, error in
+            StoredSampleRetriever().storedSample(
+                healthStore: healthStore,
+                of: WorkoutType.workoutType,
+                uuid: target.uuid
+            ) { workout, error in
                 guard let workout = workout as? HKWorkout else {
                     completion(false, error)
                     return
@@ -235,7 +239,11 @@ extension HealthKitWriter {
         storedOnly: Bool,
         completion: @escaping (HKSample?, Error?) -> Void
     ) {
-        healthStore.storedSample(of: type, uuid: sample.uuid) { stored, error in
+        StoredSampleRetriever().storedSample(
+            healthStore: healthStore,
+            of: type,
+            uuid: sample.uuid
+        ) { stored, error in
             guard stored == nil, !storedOnly else {
                 completion(stored, error)
                 return

@@ -110,13 +110,51 @@ public class HealthKitWriter {
         sample: Sample,
         completion: @escaping StatusCompletionBlock
     ) {
-        guard let type = sample.identifier.objectType else {
-            completion(false, HealthKitError.invalidType("Invalid sample type: \(sample.identifier)"))
-            return
+        delete(samples: [sample], completion: completion)
+    }
+    /**
+     Deletes stored samples at once, looked up by their uuids and sample types.
+     Nothing is deleted when one of them is not stored;
+     then the block carries HealthKitError.invalidIdentifier
+     - Parameter samples: **Sample** samples read from HealthKit or saved with **save(samples:completion:)**
+     - Parameter completion: block notifies about operation status
+     */
+    public func delete(
+        samples: [Sample],
+        completion: @escaping StatusCompletionBlock
+    ) {
+        var uuidsByType = [String: [String]]()
+        for sample in samples {
+            guard sample.identifier.objectType != nil else {
+                completion(false, HealthKitError.invalidType("Invalid sample type: \(sample.identifier)"))
+                return
+            }
+            uuidsByType[sample.identifier, default: []].append(sample.uuid)
         }
-        healthStore.storedSample(of: type, uuid: sample.uuid) { [healthStore] stored, error in
-            guard let stored = stored else {
-                completion(false, error)
+        let group = DispatchGroup()
+        let lock = NSLock()
+        var stored = [HKSample]()
+        var lookupError: Error?
+        for (identifier, uuids) in uuidsByType {
+            guard let type = identifier.objectType else {
+                continue
+            }
+            group.enter()
+            StoredSampleRetriever().storedSamples(
+                healthStore: healthStore,
+                of: type,
+                uuids: Array(Set(uuids))
+            ) { samples, error in
+                lock.lock()
+                stored += samples
+                lookupError = lookupError ?? error
+                lock.unlock()
+                group.leave()
+            }
+        }
+        group.notify(queue: .global()) { [healthStore] in
+            guard lookupError == nil, !stored.isEmpty else {
+                completion(lookupError == nil, lookupError)
                 return
             }
             healthStore.delete(stored, withCompletion: completion)
@@ -156,13 +194,28 @@ public class HealthKitWriter {
         sample: Sample,
         completion: @escaping SaveCompletionBlock
     ) {
+        save(samples: [sample]) { success, uuids, error in
+            completion(success, uuids.first, error)
+        }
+    }
+    /**
+     Saves samples at once; either all of them are stored or none.
+     Supports the samples **save(sample:completion:)** supports
+     - Parameter samples: **Sample** samples
+     - Parameter completion: block notifies about operation status
+     and the uuids of the stored samples, in order
+     */
+    public func save(
+        samples: [Sample],
+        completion: @escaping SamplesSaveCompletionBlock
+    ) {
         do {
-            let original = try original(of: sample)
-            healthStore.save(original) { success, error in
-                completion(success, success ? original.uuid.uuidString : nil, error)
+            let originals = try samples.map(original(of:))
+            healthStore.save(originals) { success, error in
+                completion(success, success ? originals.map(\.uuid.uuidString) : [], error)
             }
         } catch {
-            completion(false, nil, error)
+            completion(false, [], error)
         }
     }
 
@@ -171,7 +224,8 @@ public class HealthKitWriter {
         to workout: Workout,
         completion: @escaping StatusCompletionBlock
     ) {
-        healthStore.storedSample(
+        StoredSampleRetriever().storedSample(
+            healthStore: healthStore,
             of: WorkoutType.workoutType,
             uuid: workout.uuid
         ) { [healthStore] stored, error in

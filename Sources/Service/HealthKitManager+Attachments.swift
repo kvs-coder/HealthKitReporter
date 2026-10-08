@@ -82,7 +82,11 @@ extension HealthKitManager {
             completion(nil, error)
             return
         }
-        healthStore.storedSample(of: type, uuid: uuid) { sample, error in
+        StoredSampleRetriever().storedSample(
+            healthStore: healthStore,
+            of: type,
+            uuid: uuid
+        ) { sample, error in
             guard let sample = sample else {
                 completion(nil, error)
                 return
@@ -135,7 +139,11 @@ extension HealthKitManager {
         uuid: String,
         completion: @escaping (HKSample?, [HKAttachment], Error?) -> Void
     ) {
-        healthStore.storedSample(of: type, uuid: uuid) { sample, error in
+        StoredSampleRetriever().storedSample(
+            healthStore: healthStore,
+            of: type,
+            uuid: uuid
+        ) { sample, error in
             guard let sample = sample else {
                 completion(nil, [], error)
                 return

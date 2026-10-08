@@ -314,15 +314,18 @@ final class WriterDemos: DemoPerformer {
             }
         }
     }
-    /// Saves steps, then deletes the stored sample by the uuid the save reported
+    /// Saves two step samples at once, then deletes the stored ones by the uuids the save reported
     private func deleteAfterSaving(completion: @escaping DemoCompletion) {
-        let steps = samples.quantity(.stepCount, value: 10, unit: "count", start: Date().addingTimeInterval(-60), end: Date())
-        reporter.writer.save(sample: steps) { [unowned self] _, uuid, error in
-            guard let uuid = uuid else {
+        let steps = [10.0, 20.0].map { value in
+            samples.quantity(.stepCount, value: value, unit: "count", start: Date().addingTimeInterval(-60), end: Date())
+        }
+        reporter.writer.save(samples: steps) { [unowned self] success, uuids, error in
+            guard success else {
                 completion(.failure(error ?? HealthKitError.unknown()))
                 return
             }
-            reporter.writer.delete(sample: steps.copyWith(uuid: uuid)) { status($0, $1, "Saved \(uuid), then deleted it", completion) }
+            let stored = zip(steps, uuids).map { $0.copyWith(uuid: $1) }
+            reporter.writer.delete(samples: stored) { status($0, $1, "Saved \(uuids.count) samples, then deleted them", completion) }
         }
     }
     /// Only steps this app wrote, carrying the demo marker

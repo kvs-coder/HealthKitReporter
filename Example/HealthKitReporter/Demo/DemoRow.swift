@@ -289,7 +289,7 @@ extension DemoRow {
         case .unrelateWorkoutEffort:
             return "Unrelate effort"
         case .delete:
-            return "Save, then delete steps"
+            return "Save, then delete two steps"
         case .deleteObjects:
             return "Delete the demo's own steps"
         case .observerQuery:
@@ -437,7 +437,7 @@ extension DemoRow {
         case .unrelateWorkoutEffort:
             return "writer.unrelateWorkoutEffort(_:fromWorkout:)"
         case .delete:
-            return "writer.delete(sample:)"
+            return "writer.save(samples:) + delete(samples:)"
         case .deleteObjects:
             return "writer.deleteObjects(of:predicate:)"
         case .observerQuery:

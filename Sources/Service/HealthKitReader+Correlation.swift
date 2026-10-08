@@ -33,7 +33,7 @@ extension HealthKitReader {
     ) throws -> QueryHandle {
         guard let correlationType = type.hkObjectType as? HKCorrelationType else {
             throw HealthKitError.invalidType(
-                "\(type) can not be represented as HKWorkoutType"
+                "\(type) can not be represented as HKCorrelationType"
             )
         }
         let query = HKSampleQuery(

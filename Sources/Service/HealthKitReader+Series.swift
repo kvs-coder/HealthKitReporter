@@ -143,6 +143,7 @@ extension HealthKitReader {
             }
             if done {
                 resultsHandler(values, nil)
+                values.removeAll()
             }
         }
         query.includeSample = true

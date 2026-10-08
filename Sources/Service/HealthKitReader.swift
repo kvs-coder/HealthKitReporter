@@ -184,7 +184,8 @@ public class HealthKitReader {
         return QueryHandle(query)
     }
     /**
-     Queries samples. If samples are quantity types, the SI for units will be used.
+     Queries samples of any type. Quantities come in SI units; heartbeat series, workout routes and ECGs
+     come without their measurements, which their own queries deliver
      - Parameter type: **SampleType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors. By default sorting by startData without ascending
@@ -192,11 +193,6 @@ public class HealthKitReader {
      - Parameter resultsHandler: returns a block with samples
      - Throws: HealthKitError.invalidType
      */
-    @available(
-        iOS,
-        deprecated: 11,
-        message: "Use special functions for fetching Quantity/Category/Workout samples. For Quantity Samples will return with SI units"
-    )
     public func sampleQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,

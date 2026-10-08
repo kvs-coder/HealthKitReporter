@@ -329,3 +329,43 @@ extension HealthKitWriterTests {
         assertInvalidType(try { throw try XCTUnwrap(unknownEvent) }())
     }
 }
+// MARK: - Several samples
+extension HealthKitWriterTests {
+    func testSaveAndDeleteSeveralSamples() throws {
+        let expectation = expectation(description: "save")
+        var saved: (success: Bool, uuids: [String])?
+        sut.save(samples: [quantity, category]) { success, uuids, error in
+            saved = (success, uuids)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 30)
+        XCTAssertEqual(saved?.success, false)
+        XCTAssertEqual(saved?.uuids, [])
+        var invalid: Error?
+        sut.save(samples: [quantity, category.copyWith(identifier: "invalid")]) { _, _, error in
+            invalid = error
+        }
+        assertInvalidType(try { throw try XCTUnwrap(invalid) }())
+        let deleteError = try waitForStatus {
+            self.sut.delete(samples: [self.quantity, self.category], completion: $0)
+        }
+        assertReachedHealthKit(deleteError, "delete(samples:)")
+        let invalidDelete = try waitForStatus {
+            self.sut.delete(
+                samples: [self.quantity, self.category.copyWith(identifier: "invalid")],
+                completion: $0
+            )
+        }
+        assertInvalidType(try { throw try XCTUnwrap(invalidDelete) }())
+    }
+    func testDeleteNoSamples() throws {
+        let expectation = expectation(description: "delete")
+        sut.delete(samples: []) { success, error in
+            XCTAssertTrue(success)
+            XCTAssertNil(error)
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 30)
+    }
+}

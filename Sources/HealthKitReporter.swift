@@ -44,6 +44,13 @@ public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> V
 public typealias SaveCompletionBlock = (_ success: Bool, _ uuid: String?, _ error: Error?) -> Void
 /**
  - Parameters:
+    - success: the status
+    - uuids: uuids of the stored samples, in the order they were passed. Empty when saving failed
+    - error: error (optional)
+ */
+public typealias SamplesSaveCompletionBlock = (_ success: Bool, _ uuids: [String], _ error: Error?) -> Void
+/**
+ - Parameters:
     - workout: the saved workout
     - error: error (optional)
  */

@@ -30,11 +30,12 @@ class ElectrocardiogramRetriever {
             limit: limit,
             sortDescriptors: sortDescriptors
         ) { (_, data, error) in
-            guard
-                error == nil,
-                let results = data as? [HKElectrocardiogram]
-            else {
+            guard error == nil, let data = data else {
                 resultsHandler([], error)
+                return
+            }
+            guard let results = data as? [HKElectrocardiogram] else {
+                resultsHandler([], HealthKitError.invalidType("Samples \(data) are not HKElectrocardiogram"))
                 return
             }
             guard withVoltageMeasurements else {
