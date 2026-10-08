@@ -47,6 +47,31 @@ class ObjectTypeTests: XCTestCase {
         try assertAllCases(WorkoutType.self)
         try assertSampleTypeIdentifiers(WorkoutType.self)
     }
+    func testQuantityTypeMakeFromIdentifiersAddedSinceIOS16() throws {
+        let identifiers: [String: QuantityType] = [
+            "HKQuantityTypeIdentifierEnvironmentalSoundReduction": .environmentalSoundReduction,
+            "HKQuantityTypeIdentifierCyclingCadence": .cyclingCadence,
+            "HKQuantityTypeIdentifierCyclingFunctionalThresholdPower": .cyclingFunctionalThresholdPower,
+            "HKQuantityTypeIdentifierCyclingPower": .cyclingPower,
+            "HKQuantityTypeIdentifierCyclingSpeed": .cyclingSpeed,
+            "HKQuantityTypeIdentifierPhysicalEffort": .physicalEffort,
+            "HKQuantityTypeIdentifierTimeInDaylight": .timeInDaylight,
+            "HKQuantityTypeIdentifierCrossCountrySkiingSpeed": .crossCountrySkiingSpeed,
+            "HKQuantityTypeIdentifierDistanceCrossCountrySkiing": .distanceCrossCountrySkiing,
+            "HKQuantityTypeIdentifierDistancePaddleSports": .distancePaddleSports,
+            "HKQuantityTypeIdentifierPaddleSportsSpeed": .paddleSportsSpeed,
+            "HKQuantityTypeIdentifierDistanceRowing": .distanceRowing,
+            "HKQuantityTypeIdentifierRowingSpeed": .rowingSpeed,
+            "HKQuantityTypeIdentifierDistanceSkatingSports": .distanceSkatingSports,
+            "HKQuantityTypeIdentifierWorkoutEffortScore": .workoutEffortScore,
+            "HKQuantityTypeIdentifierEstimatedWorkoutEffortScore": .estimatedWorkoutEffortScore,
+            "HKQuantityTypeIdentifierAppleSleepingBreathingDisturbances": .appleSleepingBreathingDisturbances
+        ]
+        for (identifier, sut) in identifiers {
+            XCTAssertEqual(try QuantityType.make(from: identifier), sut, identifier)
+            XCTAssertEqual(sut.identifier, identifier)
+        }
+    }
     func testMakeFromInvalidIdentifier() throws {
         XCTAssertThrowsError(try QuantityType.make(from: "invalid")) { error in
             guard case HealthKitError.invalidIdentifier = error else {

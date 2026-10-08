@@ -114,7 +114,23 @@ public enum QuantityType: Int, CaseIterable, SampleType {
     case atrialFibrillationBurden
     case underwaterDepth
     case waterTemperature
-
+    case environmentalSoundReduction
+    case cyclingCadence
+    case cyclingFunctionalThresholdPower
+    case cyclingPower
+    case cyclingSpeed
+    case physicalEffort
+    case timeInDaylight
+    case crossCountrySkiingSpeed
+    case distanceCrossCountrySkiing
+    case distancePaddleSports
+    case paddleSportsSpeed
+    case distanceRowing
+    case rowingSpeed
+    case distanceSkatingSports
+    case workoutEffortScore
+    case estimatedWorkoutEffortScore
+    case appleSleepingBreathingDisturbances
 
     public var identifier: String? {
         return original?.identifier
@@ -397,6 +413,74 @@ public enum QuantityType: Int, CaseIterable, SampleType {
         case .waterTemperature:
             if #available(iOS 16.0, *) {
                 return HKObjectType.quantityType(forIdentifier: .waterTemperature)
+            }
+        case .environmentalSoundReduction:
+            if #available(iOS 16.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .environmentalSoundReduction)
+            }
+        case .cyclingCadence:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .cyclingCadence)
+            }
+        case .cyclingFunctionalThresholdPower:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .cyclingFunctionalThresholdPower)
+            }
+        case .cyclingPower:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .cyclingPower)
+            }
+        case .cyclingSpeed:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .cyclingSpeed)
+            }
+        case .physicalEffort:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .physicalEffort)
+            }
+        case .timeInDaylight:
+            if #available(iOS 17.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .timeInDaylight)
+            }
+        case .crossCountrySkiingSpeed:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .crossCountrySkiingSpeed)
+            }
+        case .distanceCrossCountrySkiing:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .distanceCrossCountrySkiing)
+            }
+        case .distancePaddleSports:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .distancePaddleSports)
+            }
+        case .paddleSportsSpeed:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .paddleSportsSpeed)
+            }
+        case .distanceRowing:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .distanceRowing)
+            }
+        case .rowingSpeed:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .rowingSpeed)
+            }
+        case .distanceSkatingSports:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .distanceSkatingSports)
+            }
+        case .workoutEffortScore:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .workoutEffortScore)
+            }
+        case .estimatedWorkoutEffortScore:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .estimatedWorkoutEffortScore)
+            }
+        case .appleSleepingBreathingDisturbances:
+            if #available(iOS 18.0, *) {
+                return HKObjectType.quantityType(forIdentifier: .appleSleepingBreathingDisturbances)
             }
         }
         return nil

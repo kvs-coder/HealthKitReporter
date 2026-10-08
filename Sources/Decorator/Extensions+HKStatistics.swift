@@ -23,7 +23,8 @@ extension HKStatistics: Harmonizable {
              .numberOfTimesFallen,
              .inhalerUsage,
              .uvExposure,
-             .numberOfAlcoholicBeverages:
+             .numberOfAlcoholicBeverages,
+             .appleSleepingBreathingDisturbances:
             return statistics(unit: HKUnit.count())
         case .distanceCycling,
              .distanceSwimming,
@@ -36,13 +37,18 @@ extension HKStatistics: Harmonizable {
              .sixMinuteWalkTestDistance,
              .runningStrideLength,
              .runningVerticalOscillation,
-             .underwaterDepth:
+             .underwaterDepth,
+             .distanceCrossCountrySkiing,
+             .distancePaddleSports,
+             .distanceRowing,
+             .distanceSkatingSports:
             return statistics(unit: HKUnit.meter())
         case .heartRate,
              .respiratoryRate,
              .restingHeartRate,
              .walkingHeartRateAverage,
-             .heartRateRecoveryOneMinute:
+             .heartRateRecoveryOneMinute,
+             .cyclingCadence:
             return statistics(unit: HKUnit.count().unitDivided(by: HKUnit.minute()))
         case .basalEnergyBurned,
              .activeEnergyBurned,
@@ -117,7 +123,8 @@ extension HKStatistics: Harmonizable {
         case .appleExerciseTime,
              .appleStandTime,
              .appleMoveTime,
-             .runningGroundContactTime:
+             .runningGroundContactTime,
+             .timeInDaylight:
             return statistics(unit: HKUnit.second())
         case .vo2Max:
             return statistics(
@@ -126,7 +133,11 @@ extension HKStatistics: Harmonizable {
         case .walkingSpeed,
              .stairAscentSpeed,
              .stairDescentSpeed,
-             .runningSpeed:
+             .runningSpeed,
+             .cyclingSpeed,
+             .crossCountrySkiingSpeed,
+             .paddleSportsSpeed,
+             .rowingSpeed:
             return statistics(unit: HKUnit.meter().unitDivided(by: HKUnit.second()))
         case .heartRateVariabilitySDNN:
             return statistics(unit: HKUnit.secondUnit(with: .milli))
@@ -145,11 +156,29 @@ extension HKStatistics: Harmonizable {
              .dietaryWater:
             return statistics(unit: HKUnit.literUnit(with: .milli))
         case .environmentalAudioExposure,
-             .headphoneAudioExposure:
+             .headphoneAudioExposure,
+             .environmentalSoundReduction:
             return statistics(unit: HKUnit.decibelAWeightedSoundPressureLevel())
-        case .runningPower:
+        case .runningPower,
+             .cyclingPower,
+             .cyclingFunctionalThresholdPower:
             if #available(iOS 16.0, *) {
                 return statistics(unit: HKUnit.watt())
+            } else {
+                throw HealthKitError.notAvailable(
+                    "\(type) is not available for the current iOS"
+                )
+            }
+        case .physicalEffort:
+            return statistics(
+                unit: HKUnit.kilocalorie().unitDivided(
+                    by: HKUnit.gramUnit(with: .kilo).unitMultiplied(by: HKUnit.hour())
+                )
+            )
+        case .workoutEffortScore,
+             .estimatedWorkoutEffortScore:
+            if #available(iOS 18.0, *) {
+                return statistics(unit: HKUnit.appleEffortScore())
             } else {
                 throw HealthKitError.notAvailable(
                     "\(type) is not available for the current iOS"
