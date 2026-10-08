@@ -155,6 +155,25 @@ Metadata encodes as a flat object. Strings, numbers and booleans are plain JSON 
 
 Timestamps are seconds since 1970. JSON has no infinity or NaN, so `encoded()` writes non-finite numbers as the strings `"Infinity"`, `"-Infinity"` and `"NaN"`, which Dart's `double.parse` and JavaScript's `Number` accept.
 
+### Statistics collections
+
+`statisticsCollectionQuery` with a `resultsHandler` delivers whole batches: every interval from `enumerateFrom` to `enumerateTo` (now by default) once, then, with `monitorUpdates`, only the intervals each update changed.
+
+```swift
+let query = try reporter.reader.statisticsCollectionQuery(
+    type: .stepCount,
+    unit: "count",
+    anchorDate: anchorDate,
+    enumerateFrom: weekAgo,
+    intervalComponents: DateComponents(day: 1),
+    monitorUpdates: true
+) { statistics, error in
+    // one call per batch; replace the days it contains
+    print(statistics.map { $0.harmonized.summary ?? 0 })
+}
+reporter.manager.executeQuery(query)
+```
+
 ### Writing Data
 
 ***NOTE:*** *Clinical Records are read only, Health Kit does not allow writing any data to Clinical Records.*

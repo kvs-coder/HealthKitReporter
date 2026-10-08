@@ -166,6 +166,16 @@ public typealias StatisticsCompletionHandler = (
 ) -> Void
 /**
  - Parameters:
+    - statistics: one complete batch: every interval of the initial results,
+    then only the intervals an update changed
+    - error: error (optional)
+ */
+public typealias StatisticsCollectionResultsHandler = (
+    _ statistics: [Statistics],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - samples: category sample array. Empty by default
     - error: error (optional)
  */

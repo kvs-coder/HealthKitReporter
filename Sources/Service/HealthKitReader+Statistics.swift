@@ -64,7 +64,9 @@ extension HealthKitReader {
      - Parameter intervalComponents: **DateComponents** components to set the frequency
      of a collection appearing
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
-     - Parameter enumerationBlock: returns a block with statistics on every iteration
+     Every update enumerates the whole range again.
+     - Parameter enumerationBlock: returns a block with statistics on every iteration, without an end signal.
+     Use the **StatisticsCollectionResultsHandler** variant to receive whole batches
      - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
      */
     public func statisticsCollectionQuery( // swiftlint:disable:this function_parameter_count
@@ -120,6 +122,67 @@ extension HealthKitReader {
         if monitorUpdates {
             query.statisticsUpdateHandler = { (_, _, result, error) in
                 resultsHandler(result, error)
+            }
+        }
+        return query
+    }
+    /**
+     Queries statistics collection, delivering whole batches.
+     The handler gets every interval from **enumerateFrom** to **enumerateTo** once,
+     then, with **monitorUpdates**, only the intervals each update changed, also after **enumerateTo**.
+     - Parameter type: **QuantityType** types
+     - Parameter unit: **String** unit compatible with the type
+     - Parameter quantitySamplePredicate: **NSPredicate** predicate (optional). allSamples by default
+     - Parameter anchorDate: **Date** anchor date
+     - Parameter enumerateFrom: **Date** start enumeration date
+     - Parameter enumerateTo: **Date** end enumeration date (optional). Now by default
+     - Parameter intervalComponents: **DateComponents** components to set the frequency
+     of a collection appearing
+     - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
+     - Parameter resultsHandler: returns one batch per initial result and per update
+     - Throws: HealthKitError.invalidType, HealthKitError.invalidValue on a malformed or incompatible unit
+     */
+    public func statisticsCollectionQuery( // swiftlint:disable:this function_parameter_count
+        type: QuantityType,
+        unit: String,
+        quantitySamplePredicate: NSPredicate? = .allSamples,
+        anchorDate: Date,
+        enumerateFrom: Date,
+        enumerateTo: Date? = nil,
+        intervalComponents: DateComponents,
+        monitorUpdates: Bool = false,
+        resultsHandler: @escaping StatisticsCollectionResultsHandler
+    ) throws -> StatisticsCollectionQuery {
+        guard let quantityType = type.original as? HKQuantityType else {
+            throw HealthKitError.invalidType(
+                "\(type) can not be represented as HKQuantityType"
+            )
+        }
+        let hkUnit = try quantityType.compatibleUnit(from: unit)
+        let query = HKStatisticsCollectionQuery(
+            quantityType: quantityType,
+            quantitySamplePredicate: quantitySamplePredicate,
+            options: quantityType.statisticsOptions,
+            anchorDate: anchorDate,
+            intervalComponents: intervalComponents
+        )
+        query.initialResultsHandler = { (_, collection, error) in
+            guard error == nil, let collection = collection else {
+                resultsHandler([], error)
+                return
+            }
+            let batch = collection.statistics().filter {
+                $0.endDate > enumerateFrom && $0.startDate < (enumerateTo ?? Date())
+            }
+            resultsHandler(batch.compactMap { try? Statistics(statistics: $0, unit: hkUnit) }, nil)
+        }
+        if monitorUpdates {
+            query.statisticsUpdateHandler = { (_, statistics, _, error) in
+                guard error == nil, let statistics = statistics else {
+                    resultsHandler([], error)
+                    return
+                }
+                resultsHandler([try? Statistics(statistics: statistics, unit: hkUnit)].compactMap { $0 }, nil)
             }
         }
         return query

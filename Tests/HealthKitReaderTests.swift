@@ -332,3 +332,43 @@ extension HealthKitReaderTests {
         }
     }
 }
+// MARK: - Statistics batches
+extension HealthKitReaderTests {
+    func testStatisticsCollectionBatchQuery() throws {
+        let anchorDate = Date(timeIntervalSince1970: 1626884800)
+        let monitoring = try sut.statisticsCollectionQuery(
+            type: .stepCount,
+            unit: "count",
+            quantitySamplePredicate: predicate,
+            anchorDate: anchorDate,
+            enumerateFrom: anchorDate,
+            intervalComponents: DateComponents(day: 1),
+            monitorUpdates: true
+        ) { (_: [Statistics], _) in }
+        XCTAssertEqual(monitoring.objectType?.identifier, "HKQuantityTypeIdentifierStepCount")
+        XCTAssertEqual(monitoring.predicate, predicate)
+        XCTAssertEqual(monitoring.anchorDate, anchorDate)
+        XCTAssertEqual(monitoring.options, .cumulativeSum)
+        XCTAssertNotNil(monitoring.initialResultsHandler)
+        XCTAssertNotNil(monitoring.statisticsUpdateHandler)
+        let once = try sut.statisticsCollectionQuery(
+            type: .heartRate,
+            unit: "count/min",
+            anchorDate: anchorDate,
+            enumerateFrom: anchorDate,
+            enumerateTo: anchorDate.addingTimeInterval(86400),
+            intervalComponents: DateComponents(hour: 1)
+        ) { (_: [Statistics], _) in }
+        XCTAssertEqual(once.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent])
+        XCTAssertNil(once.statisticsUpdateHandler)
+        assertInvalidValue(
+            try sut.statisticsCollectionQuery(
+                type: .stepCount,
+                unit: "kg",
+                anchorDate: anchorDate,
+                enumerateFrom: anchorDate,
+                intervalComponents: DateComponents(day: 1)
+            ) { (_: [Statistics], _) in }
+        )
+    }
+}
