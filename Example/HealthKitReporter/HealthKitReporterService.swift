@@ -6,6 +6,7 @@
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
+import Foundation
 import HealthKitReporter
 
 final class HealthKitReporterService {

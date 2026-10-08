@@ -1,6 +1,6 @@
 # AGENTS.md — System & AI Agent Directives
 
-> **Library Mission**: HealthKitReporter is a Swift wrapper around Apple's **HealthKit** framework, distributed via **CocoaPods** and **Swift Package Manager** (iOS 9+, watchOS 2+).
+> **Library Mission**: HealthKitReporter is a Swift wrapper around Apple's **HealthKit** framework, distributed via **Swift Package Manager** (iOS 15+, watchOS 8+). CocoaPods is frozen at `3.1.0` (trunk is read-only from 02.12.2026).
 > It turns `HK*` objects into plain, `Codable` payload structs (and back), so consumers — including the `health_kit_reporter` Flutter plugin — can read, write and observe Apple Health data without touching HealthKit types directly.
 > `Example/` hosts a UIKit demo app that exercises the public API end to end.
 
@@ -75,7 +75,7 @@ Tests/
 Example/
 ├── HealthKitReporter/               (UIKit demo app: AppDelegate, ViewController, HealthKitReporterService)
 ├── Tests/
-└── Podfile
+└── HealthKitReporter.xcodeproj  (consumes the repo root as a local Swift package)
 ```
 
 ### Layer Invariants
@@ -92,12 +92,12 @@ Example/
   * **Not covered** — stateless static queries of the platform (`HealthKitReporter.isHealthDataAvailable`) and static factories on payloads/types (`Quantity.make(from:)`, `ObjectType.make(from:)`, `Quantity.collect(...)`).
 * ❌ **Ban on Static-Only Utility Types**: No `enum`/`struct`/`class` that only namespaces `static` helper functions. Put behavior in an extension of the type it belongs to (`Extensions+Double.swift` → `Double.asDate`).
 * ❌ **Ban on Exposing `HK*` Types in New Public API**: New public methods and payload fields use library types; mapping happens in `Original.asOriginal()` and `Harmonizable.harmonize()`.
-* ❌ **Ban on Unguarded Availability**: Every API newer than the deployment target (iOS 9.0) MUST be gated with `@available(iOS X, *)` on the declaration or `if #available(iOS X, *)` at the call site, with an `else` that throws `HealthKitError.notAvailable("\(type) is not available for the current iOS")` or degrades gracefully.
+* ❌ **Ban on Unguarded Availability**: Every API newer than the deployment target (iOS 15.0 / watchOS 8.0) MUST be gated with `@available(iOS X, *)` on the declaration or `if #available(iOS X, *)` at the call site, with an `else` that throws `HealthKitError.notAvailable("\(type) is not available for the current iOS")` or degrades gracefully.
 * ❌ **Ban on Ad-hoc Errors**: Throw only `HealthKitError` cases with a descriptive message (`HealthKitError.invalidType("Invalid HKQuantityType: \(type)")`). No new error types, no `NSError`.
 * ❌ **Ban on `fatalError` / `try!` / Force Casts in New Code**: Use `guard ... else { throw HealthKitError... }`. Existing `@unknown default: fatalError()` arms are legacy, not precedent.
 * ❌ **Ban on Catch-all Switches over Library Enums**: A `switch` over `QuantityType`, `CategoryType`, etc. lists every case; no `default:`. `@unknown default` is required only for Apple's non-frozen enums.
 * ❌ **Ban on Mutable Payloads**: Payload fields are `public let`. Changes go through `copyWith(...)`.
-* ❌ **Ban on Breaking the Dictionary Contract**: `Payload.make(from:)` keys and `Codable` property names are consumed by the Flutter plugin. Renaming one is a breaking change (major SemVer bump + `CHANGELOG.md` entry).
+* ❌ **Ban on Breaking the Dictionary Contract**: `Payload.make(from:)` keys and `Codable` property names are consumed by the Flutter plugin. Renaming one is a breaking change (`!` / `BREAKING CHANGE:` commit → major release).
 * ❌ **Ban on Hardcoded Units in Payloads**: Units are `String`s produced by `HKUnit.unitString` and parsed with `HKUnit(from:)`; SI defaults live only in `HKQuantitySample.harmonize()`.
 
 ### Git & VCS Bans
@@ -106,7 +106,7 @@ Example/
 * ❌ **Ban on Direct Force Pushing**: Force pushing to `master` is forbidden. Use `--force-with-lease` on isolated feature branches only when necessary.
 * ❌ **Ban on Single-Line Shortcut Commits**: Omitting the detailed description, `Changes:`, and `Tests:` sections in commit messages is strictly forbidden.
 * ❌ **Ban on AI Attribution Trailers**: A commit message MUST NEVER carry `Co-Authored-By: <Model Name> <noreply@anthropic.com>`, or any other trailer crediting an AI model or tool.
-* ❌ **Ban on Committing User or Build State**: Never commit `xcuserdata/`, `DerivedData`, `build/`, `.swiftpm/xcode/xcuserdata/` or a generated `HealthKitReporter.xcodeproj`. `Example/Pods/` is tracked on purpose — change it only via `pod install`.
+* ❌ **Ban on Committing User or Build State**: Never commit `xcuserdata/`, `DerivedData`, `build/`, `.swiftpm/xcode/xcuserdata/` or a generated `HealthKitReporter.xcodeproj`. Never re-add CocoaPods files (`*.podspec`, `Podfile`, `Pods/`, `Gemfile`).
 
 ---
 
@@ -207,20 +207,24 @@ The codebase enforces test-first **TDD**. Code without tests will be rejected.
 ```bash
 # 1. Run the library test suite on a simulator (SwiftPM package scheme)
 xcodebuild test -scheme HealthKitReporter \
-  -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" \
+  -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" \
   CODE_SIGNING_REQUIRED=NO
 
-# 2. Lint the Swift sources
-swiftlint lint Sources Tests
+# 2. Build for watchOS (needs the watchOS platform installed in Xcode)
+xcodebuild build -scheme HealthKitReporter \
+  -destination "generic/platform=watchOS Simulator" CODE_SIGNING_REQUIRED=NO
 
-# 3. Validate the CocoaPods spec (same as the Lint Pod CI job)
-bundle exec pod lib lint HealthKitReporter.podspec --allow-warnings
+# 3. Lint the Swift sources — only violations not in .swiftlint.baseline fail
+swiftlint lint --strict --baseline .swiftlint.baseline
 
 # 4. Build the example app after a public API change
-cd Example && bundle exec pod install && xcodebuild build \
-  -workspace HealthKitReporter.xcworkspace -scheme HealthKitReporter_Example \
-  -destination "platform=iOS Simulator,name=iPhone 15,OS=latest"
+xcodebuild build -project Example/HealthKitReporter.xcodeproj \
+  -scheme HealthKitReporter_Example \
+  -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" CODE_SIGNING_ALLOWED=NO
 ```
+
+`.github/workflows/ci.yml` runs all four on every PR and push to `master`, plus a version/changelog guard.
+Regenerate `.swiftlint.baseline` (`swiftlint lint --write-baseline .swiftlint.baseline`) only when fixing legacy violations, never to hide new ones.
 
 ### D. Test-First TDD Pipeline
 1. **Coverage**: every payload, type and `Payload.make(from:)` path is covered; target **100%** for `Model/`.
@@ -233,7 +237,7 @@ cd Example && bundle exec pod install && xcodebuild build \
 Before any commit or PR creation, the codebase must pass all gates:
 1. `swiftlint` — **zero new warnings or errors** in touched files.
 2. `xcodebuild test` — **all tests green**; quote the executed/failed counts it prints.
-3. `pod lib lint` — passes (mirrors `.github/workflows/lint_pod.yml`).
+3. watchOS build — passes (CI `Package` job; state "verified in CI only" when the watchOS platform isn't installed locally).
 4. Example app builds — **required whenever public API changes**. Otherwise state "not applicable — no public API change" in the evidence line rather than omitting it: an unstated gate reads as a skipped one.
 
 ---
@@ -241,7 +245,9 @@ Before any commit or PR creation, the codebase must pass all gates:
 ## 7. Release & Versioning
 
 * **SemVer**: breaking public API or dictionary-contract changes → major; new types/features → minor; fixes → patch.
-* A release bumps `s.version` in `HealthKitReporter.podspec`, adds a `## [X.Y.Z] - dd.MM.yyyy.` entry with `*` bullets on top of `CHANGELOG.md`, and updates version references in `README.md`.
+* Releases are automated by release-please (`.github/workflows/release.yml`, `release-please-config.json`). It derives the bump from Conventional Commits on `master` and keeps a `chore: release X.Y.Z` PR open that bumps `.release-please-manifest.json`, prepends the `## [X.Y.Z] - dd.MM.yyyy.` entry to `CHANGELOG.md` and updates the `x-release-please-version` line in `README.md`.
+* Merging the release PR creates the bare tag `X.Y.Z` (no `v` prefix) and the GitHub Release — that tag is the SwiftPM release. Never tag, bump versions or edit released `CHANGELOG.md` entries by hand.
+* Commit messages are the changelog: write the summary for consumers.
 * New public API is documented in `README.md` with a usage snippet.
 
 ---
@@ -270,7 +276,7 @@ git checkout -b <initials>/issue-<issue_number>
 
 # Create Pull Request using gh CLI
 gh pr create \
-  --title "<type> #<issue> (<scope>): <short summary>" \
+  --title "<type>(<scope>)[!]: <short summary>" \
   --body "## Summary
 <description>
 
@@ -278,7 +284,9 @@ gh pr create \
 - <file_path>: <details>
 
 ## Tests
-- Summary: XCTest suite green, swiftlint clean, pod lib lint passing."
+- Summary: XCTest suite green, swiftlint clean, watchOS + Example builds passing."
+
+Refs: #<issue>"
 
 # Check PR checks and review status
 gh pr status
@@ -290,33 +298,35 @@ Before committing or creating a PR, run this exact sequence:
 
 ```bash
 # 1. Lint
-swiftlint lint Sources Tests
+swiftlint lint --strict --baseline .swiftlint.baseline
 
 # 2. Execute test suite
 xcodebuild test -scheme HealthKitReporter \
-  -destination "platform=iOS Simulator,name=iPhone 15,OS=latest" CODE_SIGNING_REQUIRED=NO
+  -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" CODE_SIGNING_REQUIRED=NO
 
-# 3. Validate podspec
-bundle exec pod lib lint HealthKitReporter.podspec --allow-warnings
+# 3. Build the Example app (public API changes)
+xcodebuild build -project Example/HealthKitReporter.xcodeproj -scheme HealthKitReporter_Example \
+  -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" CODE_SIGNING_ALLOWED=NO
 
 # 4. Inspect file status before staging
 git status
 
 # 5. Stage specific changed files intentionally (NO blind `git add .`)
-git add Sources/Model/Payload/<Name>.swift Tests/<Name>Tests.swift CHANGELOG.md
+git add Sources/Model/Payload/<Name>.swift Tests/<Name>Tests.swift
 
 # 6. Commit using strict multi-paragraph format
-git commit -m "<type> #<issue> (<scope>): <short summary>" \
+git commit -m "<type>(<scope>)[!]: <short summary>" \
   -m "<longer description / context>" \
   -m "Changes:
 - <file_path>: <details>
 - <file_path>: <details>" \
-  -m "Tests: <summary>"
+  -m "Tests: <summary>" \
+  -m "Refs: #<issue>"
 ```
 
 ### Commit Format Specification
 ```text
-<type> #<issue> (<scope>): <short summary>
+<type>(<scope>)[!]: <short summary>
 
 <longer description / context>
 
@@ -325,7 +335,14 @@ Changes:
 - <file path>: <details>
 
 Tests: <summary>
+
+[BREAKING CHANGE: <what breaks and how to migrate>]
+Refs: #<issue>
 ```
+
+* The header is a [Conventional Commit](https://www.conventionalcommits.org) — release-please parses it to pick the version bump and changelog section; a header in any other shape is silently left out of the release.
+* `<type>`: `feat` (→ minor), `fix` (→ patch), or `docs`, `test`, `refactor`, `ci`, `build`, `chore` (no release). `!` after the scope or a `BREAKING CHANGE:` footer → major.
+* `Refs: #<issue>` is required whenever an issue exists.
 
 ---
 
@@ -344,9 +361,9 @@ Before outputting code or submitting PRs, explicitly verify:
 * [ ] Does every `public` declaration carry a doc comment in the `- Parameter` / `- Throws` / `- Returns` format?
 * [ ] Are wrapped calls/declarations one-argument-per-line, and lines ≤ 110?
 * [ ] Are `testCreateThenEncodeThenDecode` and `testCreateFromDictionary` (or equivalents) written first and green?
-* [ ] Did `swiftlint`, `xcodebuild test` and `pod lib lint` pass, and did the Example app build if public API changed?
-* [ ] Were `CHANGELOG.md`, `README.md` and the Example app updated for user-visible changes?
+* [ ] Did `swiftlint` (against the baseline) and `xcodebuild test` pass, the watchOS build pass, and the Example app build if public API changed?
+* [ ] Were `README.md` and the Example app updated for user-visible changes, leaving `CHANGELOG.md` and versions to release-please?
 * [ ] Is the branch named strictly `<initials>/issue-<XXX>`?
 * [ ] Are git commits made without `--no-verify` and staged without blind `git add .`?
 * [ ] Was `gh pr create` used with structured title/body matching commit specs?
-* [ ] Does the commit message carry the `<type> #<issue> (<scope>): <summary>` header, a description, `Changes:` and `Tests:` (§8), with no AI trailer?
+* [ ] Does the commit message carry the Conventional `<type>(<scope>)[!]: <summary>` header, a description, `Changes:`, `Tests:` and `Refs: #<issue>` (§8), with no AI trailer?

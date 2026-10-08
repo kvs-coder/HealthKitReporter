@@ -299,29 +299,14 @@ func application(
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the example project, clone the repo and open `Example/HealthKitReporter.xcodeproj`.
+Xcode resolves the library from the repository root as a local Swift package.
 
 ## Requirements
 
-The library supports iOS 9 & above. 
-Some features like HKHeartbeatSeries are available only starting with iOS 13.0 and like HKElectrocardiogramm starting with iOS 14.0
+The library supports iOS 15 / watchOS 8 & above.
 
 ## Installation
-
-### Cocoapods
-
-HealthKitReporter is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'HealthKitReporter'
-```
-
-or 
-
-```ruby
-pod 'HealthKitReporter', '~> 3.1.0'
-```
 
 ### Swift Package Manager
 
@@ -330,17 +315,26 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.1.0")
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.1.0") // x-release-please-version
 ]
 ```
 
-### Carthage
+### CocoaPods
 
-Add the line in your cartfile 
+CocoaPods is no longer supported: CocoaPods trunk becomes read-only on December 2, 2026.
+`3.1.0` is the last version published to CocoaPods and stays available there:
 
 ```ruby
-github "VictorKachalov/HealthKitReporter" "3.1.0"
+pod 'HealthKitReporter', '3.1.0'
 ```
+
+## Releasing
+
+Releases are automated with [release-please](https://github.com/googleapis/release-please).
+Commits on `master` follow [Conventional Commits](https://www.conventionalcommits.org):
+`fix` bumps the patch, `feat` the minor, and `!` / `BREAKING CHANGE:` the major version.
+release-please keeps a release PR open with the next version and its `CHANGELOG.md` entry;
+merging it tags the release (`X.Y.Z`) and publishes a GitHub Release, which is the Swift Package Manager release.
 
 ## Author
 

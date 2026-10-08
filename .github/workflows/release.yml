@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    name: release-please
+    runs-on: ubuntu-latest
+    steps:
+      # A PAT / GitHub App token lets the release PR and its pushes trigger CI;
+      # the default GITHUB_TOKEN works, but CI won't run on the release PR.
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Checkout release PR
+        if: ${{ steps.release.outputs.pr }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
+
+      # release-please writes '## [X.Y.Z](compare-url) (yyyy-MM-dd)';
+      # the project format is '## [X.Y.Z] - dd.MM.yyyy.'.
+      - name: Format CHANGELOG.md headers
+        if: ${{ steps.release.outputs.pr }}
+        run: |
+          sed -E -i 's/^## \[?([0-9]+\.[0-9]+\.[0-9]+)\]?(\([^)]*\))? \(([0-9]{4})-([0-9]{2})-([0-9]{2})\)$/## [\1] - \5.\4.\3./' CHANGELOG.md
+          if ! git diff --quiet CHANGELOG.md; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore: format changelog" CHANGELOG.md
+            git push
+          fi
