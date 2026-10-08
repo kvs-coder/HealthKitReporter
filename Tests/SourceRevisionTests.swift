@@ -103,3 +103,14 @@ class SourceRevisionTests: XCTestCase {
         XCTAssertEqual(operatingSystem.patchVersion, 3)
     }
 }
+// MARK: - Numbers
+extension SourceRevisionTests {
+    func testCreateFromDictionaryWithDoubleVersions() throws {
+        var dictionary = sourceRevisionDictionary
+        dictionary["operatingSystem"] = ["majorVersion": 1.0, "minorVersion": 2.0, "patchVersion": 3.0]
+        let sut = try SourceRevision.make(from: dictionary)
+        XCTAssertEqual(sut.operatingSystem.majorVersion, 1)
+        XCTAssertEqual(sut.operatingSystem.minorVersion, 2)
+        XCTAssertEqual(sut.operatingSystem.patchVersion, 3)
+    }
+}

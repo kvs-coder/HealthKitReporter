@@ -80,8 +80,8 @@ public struct UserAnnotatedMedication: Codable {
 extension UserAnnotatedMedication: Payload {
     public static func make(from dictionary: [String: Any]) throws -> UserAnnotatedMedication {
         guard
-            let isArchived = dictionary["isArchived"] as? Bool,
-            let hasSchedule = dictionary["hasSchedule"] as? Bool,
+            let isArchived = dictionary.bool("isArchived"),
+            let hasSchedule = dictionary.bool("hasSchedule"),
             let medication = dictionary["medication"] as? [String: Any],
             let identifier = medication["identifier"] as? String,
             let domain = medication["domain"] as? String,

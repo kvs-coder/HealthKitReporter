@@ -41,6 +41,36 @@ public struct WorkoutActivity: Codable {
         endTimestamp: Double?,
         metadata: Metadata?
     ) {
+        self.init(
+            uuid: uuid,
+            activityValue: activityValue,
+            activityDescription: activityDescription,
+            locationValue: locationValue,
+            swimmingLocationValue: swimmingLocationValue,
+            lapLength: lapLength,
+            startTimestamp: startTimestamp,
+            endTimestamp: endTimestamp,
+            duration: (endTimestamp ?? startTimestamp) - startTimestamp,
+            workoutEvents: [],
+            statistics: [],
+            metadata: metadata
+        )
+    }
+
+    private init(
+        uuid: String,
+        activityValue: Int,
+        activityDescription: String,
+        locationValue: Int,
+        swimmingLocationValue: Int,
+        lapLength: Double?,
+        startTimestamp: Double,
+        endTimestamp: Double?,
+        duration: Double,
+        workoutEvents: [WorkoutEvent],
+        statistics: [Statistics],
+        metadata: Metadata?
+    ) {
         self.uuid = uuid
         self.activityValue = activityValue
         self.activityDescription = activityDescription
@@ -49,10 +79,40 @@ public struct WorkoutActivity: Codable {
         self.lapLength = lapLength
         self.startTimestamp = startTimestamp
         self.endTimestamp = endTimestamp
-        self.duration = (endTimestamp ?? startTimestamp) - startTimestamp
-        self.workoutEvents = []
-        self.statistics = []
+        self.duration = duration
+        self.workoutEvents = workoutEvents
+        self.statistics = statistics
         self.metadata = metadata
+    }
+
+    /// A copy with the given fields replaced; the duration follows the timestamps
+    public func copyWith(
+        uuid: String? = nil,
+        activityValue: Int? = nil,
+        activityDescription: String? = nil,
+        locationValue: Int? = nil,
+        swimmingLocationValue: Int? = nil,
+        lapLength: Double? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        metadata: Metadata? = nil
+    ) -> WorkoutActivity {
+        let start = startTimestamp ?? self.startTimestamp
+        let end = endTimestamp ?? self.endTimestamp
+        return WorkoutActivity(
+            uuid: uuid ?? self.uuid,
+            activityValue: activityValue ?? self.activityValue,
+            activityDescription: activityDescription ?? self.activityDescription,
+            locationValue: locationValue ?? self.locationValue,
+            swimmingLocationValue: swimmingLocationValue ?? self.swimmingLocationValue,
+            lapLength: lapLength ?? self.lapLength,
+            startTimestamp: start,
+            endTimestamp: end,
+            duration: startTimestamp == nil && endTimestamp == nil ? duration : (end ?? start) - start,
+            workoutEvents: workoutEvents,
+            statistics: statistics,
+            metadata: metadata ?? self.metadata
+        )
     }
 
     @available(iOS 16.0, watchOS 9.0, *)

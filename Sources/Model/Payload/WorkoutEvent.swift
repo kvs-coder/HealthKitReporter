@@ -101,7 +101,7 @@ extension WorkoutEvent.Harmonized: Payload {
         from dictionary: [String: Any]
     ) throws ->  WorkoutEvent.Harmonized {
         guard
-            let value = dictionary["value"] as? Int,
+            let value = dictionary.int("value"),
             let description = dictionary["description"] as? String
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")

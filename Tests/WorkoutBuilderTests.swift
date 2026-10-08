@@ -156,3 +156,14 @@ class WorkoutBuilderTests: XCTestCase {
         return result?.error
     }
 }
+// MARK: - Copy
+extension WorkoutBuilderTests {
+    func testWorkoutActivityCopyWith() throws {
+        let sut = try WorkoutActivity.make(from: activityDictionary)
+        XCTAssertEqual(try json(sut.copyWith(), excluding: []), try json(sut))
+        XCTAssertEqual(sut.copyWith().uuid, sut.uuid)
+        let later = sut.copyWith(endTimestamp: sut.startTimestamp + 120)
+        XCTAssertEqual(later.duration, 120, accuracy: 0.001)
+        XCTAssertEqual(later.activityValue, sut.activityValue)
+    }
+}

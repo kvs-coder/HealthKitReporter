@@ -148,9 +148,6 @@ extension Statistics: Payload {
             sourceStatistics: try sourceStatistics?.map(SourceStatistics.make)
         )
     }
-    public static func collect(from array: [Any]) throws -> [Statistics] {
-        return try array.compactMap { $0 as? [String: Any] }.map(Statistics.make)
-    }
 }
 // MARK: - Payload
 extension Statistics.Harmonized: Payload {

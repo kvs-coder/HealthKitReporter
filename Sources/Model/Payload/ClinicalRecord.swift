@@ -143,16 +143,6 @@ extension ClinicalRecord: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
-    public static func collect(from array: [Any]) throws -> [ClinicalRecord] {
-        var results = [ClinicalRecord]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let harmonized = try ClinicalRecord.make(from: dictionary)
-                results.append(harmonized)
-            }
-        }
-        return results
-    }
 }
 // MARK: - Factory
 extension ClinicalRecord {

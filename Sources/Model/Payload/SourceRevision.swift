@@ -113,9 +113,9 @@ extension SourceRevision.OperatingSystem: Payload {
         from dictionary: [String: Any]
     ) throws -> SourceRevision.OperatingSystem {
         guard
-            let majorVersion = dictionary["majorVersion"] as? Int,
-            let minorVersion = dictionary["minorVersion"] as? Int,
-            let patchVersion = dictionary["patchVersion"] as? Int
+            let majorVersion = dictionary.int("majorVersion"),
+            let minorVersion = dictionary.int("minorVersion"),
+            let patchVersion = dictionary.int("patchVersion")
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }

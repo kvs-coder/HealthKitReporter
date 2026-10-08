@@ -373,3 +373,13 @@ extension HeartbeatSeriesTests {
         XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
     }
 }
+// MARK: - Numbers
+extension HeartbeatSeriesTests {
+    func testCreateMeasurementFromNumericBooleans() throws {
+        let sut = try HeartbeatSeries.Measurement.make(
+            from: ["timeSinceSeriesStart": 0.5, "precededByGap": 0, "done": 1]
+        )
+        XCTAssertFalse(sut.precededByGap)
+        XCTAssertTrue(sut.done)
+    }
+}

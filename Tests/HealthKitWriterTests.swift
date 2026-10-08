@@ -304,6 +304,19 @@ class HealthKitWriterTests: XCTestCase {
 }
 // MARK: - Validation
 extension HealthKitWriterTests {
+    func testSaveCategoryOfEveryTypeWithUnknownValue() throws {
+        for type in CategoryType.allCases {
+            guard let identifier = type.identifier else {
+                continue
+            }
+            let sample = category.copyWith(
+                identifier: identifier,
+                harmonized: category.harmonized.copyWith(value: 99)
+            )
+            let error = try waitForSave(sample)
+            XCTAssertTrue(error is HealthKitError, "\(type)")
+        }
+    }
     func testSaveWithEndBeforeStartOrUnknownValue() throws {
         let event = WorkoutEvent(
             startTimestamp: startTimestamp,

@@ -328,11 +328,6 @@ extension VisionPrescription: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
-    public static func collect(from array: [Any]) throws -> [VisionPrescription] {
-        return try array
-            .compactMap { $0 as? [String: Any] }
-            .map { try VisionPrescription.make(from: $0) }
-    }
 }
 // MARK: - Factory
 @available(iOS 16.0, watchOS 9.0, *)

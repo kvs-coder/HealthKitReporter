@@ -274,4 +274,10 @@ extension WorkoutRouteTests {
     func testCreateFromDictionaryKeepsUUID() throws {
         try assertMakeKeepsUUID(from: dictionary, make: WorkoutRoute.make)
     }
+    func testCopyWithKeepsUUID() throws {
+        let sut = try WorkoutRoute.make(from: dictionary)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).uuid, sut.uuid)
+        XCTAssertEqual(sut.copyWith(startTimestamp: 1).startTimestamp, 1)
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+    }
 }

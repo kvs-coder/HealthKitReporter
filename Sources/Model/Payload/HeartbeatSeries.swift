@@ -138,7 +138,7 @@ extension HeartbeatSeries: Payload {
 extension HeartbeatSeries.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Harmonized {
         guard
-            let count = dictionary["count"] as? Int,
+            let count = dictionary.int("count"),
             let measurements = dictionary["measurements"] as? [Any]
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -156,8 +156,8 @@ extension HeartbeatSeries.Measurement: Payload {
     public static func make(from dictionary: [String: Any]) throws -> HeartbeatSeries.Measurement {
         guard
             let timeSinceSeriesStart = dictionary["timeSinceSeriesStart"] as? NSNumber,
-            let precededByGap = dictionary["precededByGap"] as? Bool,
-            let done = dictionary["done"] as? Bool
+            let precededByGap = dictionary.bool("precededByGap"),
+            let done = dictionary.bool("done")
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
@@ -166,15 +166,5 @@ extension HeartbeatSeries.Measurement: Payload {
             precededByGap: precededByGap,
             done: done
         )
-    }
-    public static func collect(from array: [Any]) throws -> [HeartbeatSeries.Measurement] {
-        var measurements = [HeartbeatSeries.Measurement]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let measurement = try HeartbeatSeries.Measurement.make(from: dictionary)
-                measurements.append(measurement)
-            }
-        }
-        return measurements
     }
 }

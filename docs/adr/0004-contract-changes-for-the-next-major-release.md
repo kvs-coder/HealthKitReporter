@@ -60,6 +60,9 @@ Payloads keep the identity of the stored HealthKit sample:
 | `reader.workoutEffortRelationshipQuery` | non-throwing | `throws`; anchor data that doesn't hold a HealthKit anchor throws `invalidValue` (also in `anchoredObjectQuery`, which used to restart from the beginning) |
 | `correlationQuery(typePredicates:)` | unknown identifiers were ignored | throw `invalidType` |
 | `save(sample: Workout)` | dropped flights climbed when swimming strokes were set | completes with `invalidValue`; `saveWorkout` keeps both |
+| `[String: Any].asMetadata` | public | internal; build **Metadata** with `Metadata.make(from:)` or its literals |
+| `collect(from:)` | on some payloads only | on every **Payload**, through a protocol extension |
+| `make(from:)` numbers | some `Int` / `Bool` fields needed exactly that Swift type | any number; `Bool` fields also take `0` / `1` |
 
 In the Flutter plugin this means: keep `QueryHandle` instead of `ObserverQuery` / `SampleQuery` for running and stopping queries, persist `Anchor` as its encoded string, pass `SamplePredicateOptions` to `samplesPredicate`, send the `uuid` back in dictionaries for delete and unrelate, and read the `uuid` the save completion reports.
 

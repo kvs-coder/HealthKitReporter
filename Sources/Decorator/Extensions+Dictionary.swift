@@ -26,9 +26,14 @@ extension Dictionary where Key == String, Value == Any {
     var payloadUUID: String {
         return self["uuid"] as? String ?? UUID().uuidString
     }
-}
-
-public extension Dictionary where Key == String, Value == Any {
+    /// The number at the key as an **Int**, whichever numeric type the dictionary holds
+    func int(_ key: String) -> Int? {
+        return (self[key] as? NSNumber).map(Int.init(truncating:))
+    }
+    /// The number at the key as a **Bool**, whether the dictionary holds a Bool or 0 / 1
+    func bool(_ key: String) -> Bool? {
+        return (self[key] as? NSNumber)?.boolValue
+    }
     /// HealthKit metadata as **Metadata**; values of unsupported types are skipped
     var asMetadata: Metadata? {
         return Metadata(compactMapValues { Metadata.Value($0) })

@@ -135,6 +135,26 @@ public struct WorkoutRoute: Identifiable, Sample {
         self.harmonized = harmonized
     }
 
+    public func copyWith(
+        uuid: String? = nil,
+        identifier: String? = nil,
+        startTimestamp: Double? = nil,
+        endTimestamp: Double? = nil,
+        device: Device? = nil,
+        sourceRevision: SourceRevision? = nil,
+        harmonized: Harmonized? = nil
+    ) -> WorkoutRoute {
+        return WorkoutRoute(
+            uuid: uuid ?? self.uuid,
+            identifier: identifier ?? self.identifier,
+            startTimestamp: startTimestamp ?? self.startTimestamp,
+            endTimestamp: endTimestamp ?? self.endTimestamp,
+            device: device ?? self.device,
+            sourceRevision: sourceRevision ?? self.sourceRevision,
+            harmonized: harmonized ?? self.harmonized
+        )
+    }
+
     init(sample: HKWorkoutRoute, routes: [Route]) {
         self.uuid = sample.uuid.uuidString
         self.identifier = sample.sampleType.identifier
@@ -199,16 +219,6 @@ extension WorkoutRoute.Location: Payload {
             verticalAccuracy: Double(truncating: verticalAccuracy)
         )
     }
-    public static func collect(from array: [Any]) throws -> [WorkoutRoute.Location] {
-        var locations = [WorkoutRoute.Location]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let location = try WorkoutRoute.Location.make(from: dictionary)
-                locations.append(location)
-            }
-        }
-        return locations
-    }
 }
 // MARK: - Payload
 extension WorkoutRoute: Payload {
@@ -240,7 +250,7 @@ extension WorkoutRoute: Payload {
 extension WorkoutRoute.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Harmonized {
         guard
-            let count = dictionary["count"] as? Int,
+            let count = dictionary.int("count"),
             let routes = dictionary["routes"] as? [Any]
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -258,7 +268,7 @@ extension WorkoutRoute.Route: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Route {
         guard
             let locations = dictionary["locations"] as? [Any],
-            let done = dictionary["done"] as? Bool
+            let done = dictionary.bool("done")
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
@@ -266,15 +276,5 @@ extension WorkoutRoute.Route: Payload {
             locations: try WorkoutRoute.Location.collect(from: locations),
             done: done
         )
-    }
-    public static func collect(from array: [Any]) throws -> [WorkoutRoute.Route] {
-        var routes = [WorkoutRoute.Route]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let route = try WorkoutRoute.Route.make(from: dictionary)
-                routes.append(route)
-            }
-        }
-        return routes
     }
 }

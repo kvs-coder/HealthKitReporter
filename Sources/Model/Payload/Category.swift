@@ -147,16 +147,6 @@ extension Category: Payload {
             harmonized: try Harmonized.make(from: harmonized)
         )
     }
-    public static func collect(from array: [Any]) throws -> [Category] {
-        var results = [Category]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let harmonized = try Category.make(from: dictionary)
-                results.append(harmonized)
-            }
-        }
-        return results
-    }
 }
 // MARK: - Factory
 extension Category {
@@ -181,7 +171,7 @@ extension Category {
 extension Category.Harmonized: Payload {
     public static func make(from dictionary: [String: Any]) throws -> Category.Harmonized {
         guard
-            let value = dictionary["value"] as? Int,
+            let value = dictionary.int("value"),
             let description = dictionary["description"] as? String,
             let detail = dictionary["detail"] as? String
         else {

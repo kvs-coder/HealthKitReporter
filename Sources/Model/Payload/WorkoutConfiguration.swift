@@ -19,33 +19,22 @@ public struct WorkoutConfiguration: Codable {
             self.value = value
             self.unit = unit
         }
+
+        public func copyWith(
+            value: Double? = nil,
+            unit: String? = nil
+        ) -> Harmonized {
+            return Harmonized(
+                value: value ?? self.value,
+                unit: unit ?? self.unit
+            )
+        }
     }
 
     public let activityValue: Int
     public let locationValue: Int
     public let swimmingValue: Int
     public let harmonized: Harmonized
-
-    public static func make(
-        from dictionary: [String: Any]
-    ) throws -> WorkoutConfiguration {
-        guard
-            let activityValue = dictionary["activityValue"] as? Int,
-            let locationValue = dictionary["locationValue"] as? Int,
-            let swimmingValue = dictionary["swimmingValue"] as? Int,
-            let harmonized = dictionary["harmonized"] as? [String: Any]
-        else {
-            throw HealthKitError.invalidValue(
-                "Invalid dictionary: \(dictionary)"
-            )
-        }
-        return WorkoutConfiguration(
-            activityValue: activityValue,
-            locationValue: locationValue,
-            swimmingValue: swimmingValue,
-            harmonized: try Harmonized.make(from: harmonized)
-        )
-    }
 
     public init(
         activityValue: Int,
@@ -57,6 +46,20 @@ public struct WorkoutConfiguration: Codable {
         self.locationValue = locationValue
         self.swimmingValue = swimmingValue
         self.harmonized = harmonized
+    }
+
+    public func copyWith(
+        activityValue: Int? = nil,
+        locationValue: Int? = nil,
+        swimmingValue: Int? = nil,
+        harmonized: Harmonized? = nil
+    ) -> WorkoutConfiguration {
+        return WorkoutConfiguration(
+            activityValue: activityValue ?? self.activityValue,
+            locationValue: locationValue ?? self.locationValue,
+            swimmingValue: swimmingValue ?? self.swimmingValue,
+            harmonized: harmonized ?? self.harmonized
+        )
     }
 
     init(workoutConfiguration: HKWorkoutConfiguration) throws {
@@ -85,6 +88,29 @@ extension WorkoutConfiguration: Original {
             doubleValue: harmonized.value
         )
         return configuration
+    }
+}
+// MARK: - Payload
+extension WorkoutConfiguration: Payload {
+    public static func make(
+        from dictionary: [String: Any]
+    ) throws -> WorkoutConfiguration {
+        guard
+            let activityValue = dictionary.int("activityValue"),
+            let locationValue = dictionary.int("locationValue"),
+            let swimmingValue = dictionary.int("swimmingValue"),
+            let harmonized = dictionary["harmonized"] as? [String: Any]
+        else {
+            throw HealthKitError.invalidValue(
+                "Invalid dictionary: \(dictionary)"
+            )
+        }
+        return WorkoutConfiguration(
+            activityValue: activityValue,
+            locationValue: locationValue,
+            swimmingValue: swimmingValue,
+            harmonized: try Harmonized.make(from: harmonized)
+        )
     }
 }
 // MARK: - Payload

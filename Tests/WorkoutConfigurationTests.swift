@@ -103,3 +103,24 @@ class WorkoutConfigurationTests: XCTestCase {
         )
     }
 }
+// MARK: - Copy
+extension WorkoutConfigurationTests {
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = WorkoutConfiguration(
+            activityValue: 1,
+            locationValue: 1,
+            swimmingValue: 1,
+            harmonized: WorkoutConfiguration.Harmonized(value: 10, unit: "m")
+        )
+        let copy = sut.copyWith(locationValue: 2, harmonized: sut.harmonized.copyWith(value: 25))
+        XCTAssertEqual(copy.activityValue, 1)
+        XCTAssertEqual(copy.locationValue, 2)
+        XCTAssertEqual(copy.swimmingValue, 1)
+        XCTAssertEqual(copy.harmonized.value, 25, accuracy: 0.001)
+        XCTAssertEqual(copy.harmonized.unit, "m")
+        XCTAssertEqual(
+            try json(sut.copyWith()),
+            try json(sut)
+        )
+    }
+}

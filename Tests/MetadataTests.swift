@@ -66,21 +66,6 @@ class MetadataTests: XCTestCase {
         )
         XCTAssertEqual(try decode(Metadata.self, from: sut as? [String: Any] ?? [:]), expected)
     }
-    func testHealthKitQuantitiesKeepTheirUnit() throws {
-        let vo2Max = HKUnit.literUnit(with: .milli)
-            .unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute()))
-        let sut = try XCTUnwrap(
-            [
-                "HKLowCardioFitnessEventThreshold": HKQuantity(unit: vo2Max, doubleValue: 30),
-                "HKHeartRateEventThreshold": HKQuantity(
-                    unit: .count().unitDivided(by: .minute()),
-                    doubleValue: 120
-                )
-            ].asMetadata
-        )
-        XCTAssertEqual(sut["HKLowCardioFitnessEventThreshold"], .quantity(value: 30, unit: vo2Max.unitString))
-        XCTAssertEqual(sut["HKHeartRateEventThreshold"], .quantity(value: 120, unit: "count/min"))
-    }
     func testCreateFromDictionaryWithUnsupportedValueThrows() throws {
         assertInvalidValue(try Metadata.make(from: ["key": [1, 2]]))
         assertInvalidValue(try Metadata.make(from: ["key": ["value": 1]]))

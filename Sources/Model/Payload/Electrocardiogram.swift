@@ -19,7 +19,7 @@ public struct Electrocardiogram: Identifiable, Sample {
         public let voltageMeasurements: [VoltageMeasurement]
         public let metadata: Metadata?
 
-        init(
+        public init(
             averageHeartRate: Double?,
             averageHeartRateUnit: String,
             samplingFrequency: Double,
@@ -45,12 +45,17 @@ public struct Electrocardiogram: Identifiable, Sample {
         public struct Harmonized: Codable {
             public let value: Double
             public let unit: String
+
+            public init(value: Double, unit: String) {
+                self.value = value
+                self.unit = unit
+            }
         }
 
         public let harmonized: Harmonized
         public let timeSinceSampleStart: Double
 
-        init(harmonized: Harmonized, timeSinceSampleStart: Double) {
+        public init(harmonized: Harmonized, timeSinceSampleStart: Double) {
             self.harmonized = harmonized
             self.timeSinceSampleStart = timeSinceSampleStart
         }
@@ -70,7 +75,7 @@ public struct Electrocardiogram: Identifiable, Sample {
     public let numberOfMeasurements: Int
     public let harmonized: Harmonized
 
-    init(
+    public init(
         uuid: String = UUID().uuidString,
         identifier: String,
         startTimestamp: Double,
@@ -116,7 +121,7 @@ extension Electrocardiogram.Harmonized: Payload {
             let samplingFrequencyUnit = dictionary["samplingFrequencyUnit"] as? String,
             let classification = dictionary["classification"] as? String,
             let symptomsStatus = dictionary["symptomsStatus"] as? String,
-            let count = dictionary["count"] as? Int
+            let count = dictionary.int("count")
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
         }
@@ -168,7 +173,7 @@ extension Electrocardiogram: Payload {
             let startTimestamp = dictionary["startTimestamp"] as? NSNumber,
             let endTimestamp = dictionary["endTimestamp"] as? NSNumber,
             let sourceRevision = dictionary["sourceRevision"] as? [String: Any],
-            let numberOfMeasurements = dictionary["numberOfMeasurements"] as? Int,
+            let numberOfMeasurements = dictionary.int("numberOfMeasurements"),
             let harmonized = dictionary["harmonized"] as? [String: Any]
         else {
             throw HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")
@@ -201,16 +206,6 @@ extension Electrocardiogram.VoltageMeasurement: Payload {
             harmonized: try Electrocardiogram.VoltageMeasurement.Harmonized.make(from: harmonized),
             timeSinceSampleStart: Double(truncating: timeSinceSampleStart)
         )
-    }
-    static func collect(from array: [Any]) throws -> [Electrocardiogram.VoltageMeasurement] {
-        var measurements = [Electrocardiogram.VoltageMeasurement]()
-        for element in array {
-            if let dictionary = element as? [String: Any] {
-                let measurement = try Electrocardiogram.VoltageMeasurement.make(from: dictionary)
-                measurements.append(measurement)
-            }
-        }
-        return measurements
     }
 }
 // MARK: - Payload

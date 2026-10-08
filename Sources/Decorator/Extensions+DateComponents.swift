@@ -15,20 +15,20 @@ extension DateComponents: Payload {
         return DateComponents(
             calendar: Calendar.current,
             timeZone: TimeZone.current,
-            era: dictionary["era"] as? Int,
-            year: dictionary["year"] as? Int,
-            month: dictionary["month"] as? Int,
-            day: dictionary["day"] as? Int,
-            hour: dictionary["hour"] as? Int,
-            minute: dictionary["minute"] as? Int,
-            second: dictionary["second"] as? Int,
-            nanosecond: dictionary["nanosecond"] as? Int,
-            weekday: dictionary["weekday"] as? Int,
-            weekdayOrdinal: dictionary["weekdayOrdinal"] as? Int,
-            quarter: dictionary["quarter"] as? Int,
-            weekOfMonth: dictionary["weekOfMonth"] as? Int,
-            weekOfYear: dictionary["weekOfYear"] as? Int,
-            yearForWeekOfYear: dictionary["yearForWeekOfYear"] as? Int
+            era: dictionary.int("era"),
+            year: dictionary.int("year"),
+            month: dictionary.int("month"),
+            day: dictionary.int("day"),
+            hour: dictionary.int("hour"),
+            minute: dictionary.int("minute"),
+            second: dictionary.int("second"),
+            nanosecond: dictionary.int("nanosecond"),
+            weekday: dictionary.int("weekday"),
+            weekdayOrdinal: dictionary.int("weekdayOrdinal"),
+            quarter: dictionary.int("quarter"),
+            weekOfMonth: dictionary.int("weekOfMonth"),
+            weekOfYear: dictionary.int("weekOfYear"),
+            yearForWeekOfYear: dictionary.int("yearForWeekOfYear")
         )
     }
 }

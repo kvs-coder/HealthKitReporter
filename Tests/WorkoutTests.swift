@@ -267,6 +267,9 @@ extension WorkoutTests {
         XCTAssertEqual(statistics.harmonized.unit, "count/min")
         XCTAssertNil(try Workout.make(from: dictionary).statistics)
     }
+    func testCollectSkipsNonDictionaryElements() throws {
+        XCTAssertEqual(try Workout.collect(from: [dictionary, "invalid", dictionary]).count, 2)
+    }
     func testCreateFromInvalidDictionary() throws {
         assertEachKeyIsRequired(
             ["identifier", "startTimestamp", "endTimestamp", "duration", "sourceRevision", "harmonized"],

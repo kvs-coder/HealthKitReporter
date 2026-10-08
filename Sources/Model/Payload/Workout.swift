@@ -390,7 +390,7 @@ extension Workout.Harmonized: Payload {
         from dictionary: [String: Any]
     ) throws -> Workout.Harmonized {
         guard
-            let value = dictionary["value"] as? Int,
+            let value = dictionary.int("value"),
             let description = dictionary["description"] as? String,
             let totalEnergyBurnedUnit = dictionary["totalEnergyBurnedUnit"] as? String,
             let totalDistanceUnit = dictionary["totalDistanceUnit"] as? String,
