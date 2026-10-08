@@ -557,7 +557,7 @@ To install it, simply add the following lines to your Package.swift file
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "3.1.0") // x-release-please-version
+    .package(url: "https://github.com/VictorKachalov/HealthKitReporter.git", from: "4.0.0") // x-release-please-version
 ]
 ```
 
