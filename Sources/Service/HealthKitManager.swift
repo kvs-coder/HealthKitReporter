@@ -9,7 +9,7 @@ import HealthKit
 
 /// **HealthKitManager** class for HK managing operations
 public class HealthKitManager {
-    private let healthStore: HKHealthStore
+    let healthStore: HKHealthStore
 
     init(healthStore: HKHealthStore) {
         self.healthStore = healthStore

@@ -381,6 +381,24 @@ reporter.writer.saveQuantitySeries(
 reporter.writer.saveHeartbeatSeries(heartbeatSeries) { success, error in }
 ```
 
+### Attachments
+
+Files attached to a stored sample (iOS 16+), addressed by the sample's type and uuid:
+
+```swift
+reporter.manager.attachments(forSampleOf: VisionPrescriptionType.visionPrescription, uuid: prescription.uuid) { attachments, error in
+    for attachment in attachments {
+        reporter.manager.attachmentData(
+            forSampleOf: VisionPrescriptionType.visionPrescription,
+            uuid: prescription.uuid,
+            attachmentIdentifier: attachment.identifier
+        ) { data, error in print(attachment.name, data?.count ?? 0) }
+    }
+}
+```
+
+`addAttachment(toSampleOf:uuid:name:contentType:url:metadata:completion:)` attaches a local file and `removeAttachment(fromSampleOf:uuid:attachmentIdentifier:completion:)` removes one.
+
 ### Several types in one query
 
 `QueryDescriptor` pairs a type with a predicate; sample, anchored and observer queries accept several of them:

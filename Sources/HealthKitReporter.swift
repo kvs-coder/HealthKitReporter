@@ -61,6 +61,33 @@ public typealias CorrelationQuery = HKCorrelationQuery
 public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
 /**
  - Parameters:
+    - attachments: files attached to the sample
+    - error: error (optional)
+ */
+public typealias AttachmentsCompletion = (
+    _ attachments: [Attachment],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - attachment: the new attachment
+    - error: error (optional)
+ */
+public typealias AttachmentCompletion = (
+    _ attachment: Attachment?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
+    - data: the attachment's file content
+    - error: error (optional)
+ */
+public typealias AttachmentDataCompletion = (
+    _ data: Data?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - status: whether the permission sheet would be shown
     - error: error (optional)
  */
