@@ -50,4 +50,22 @@ class WorkoutConfigurationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.value, 1.5)
         XCTAssertEqual(sut.harmonized.unit, "m")
     }
+    func testCreateFromInvalidDictionary() throws {
+        let harmonized: [String: Any] = ["value": 25, "unit": "m"]
+        assertEachKeyIsRequired(
+            ["activityValue", "locationValue", "swimmingValue", "harmonized"],
+            in: [
+                "activityValue": 46,
+                "locationValue": 1,
+                "swimmingValue": 1,
+                "harmonized": harmonized
+            ],
+            make: WorkoutConfiguration.make
+        )
+        assertEachKeyIsRequired(
+            ["value", "unit"],
+            in: harmonized,
+            make: WorkoutConfiguration.Harmonized.make
+        )
+    }
 }

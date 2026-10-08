@@ -330,3 +330,66 @@ class CorrelationTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["you": "saved it"])
     }
 }
+// MARK: - Payload
+extension CorrelationTests {
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "quantitySamples": [],
+            "categorySamples": [],
+            "metadata": [
+                "HKWasUserEntered": "1"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKCorrelationTypeIdentifierBloodPressure",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: Correlation.make
+        )
+        assertEachKeyIsRequired(
+            ["quantitySamples", "categorySamples"],
+            in: harmonizedDictionary,
+            make: Correlation.Harmonized.make
+        )
+    }
+    func testCreateFromDictionaryWithoutDevice() throws {
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        let sut = try Correlation.make(from: dictionary)
+        XCTAssertNil(sut.device)
+        XCTAssertTrue(sut.harmonized.quantitySamples.isEmpty)
+        XCTAssertTrue(sut.harmonized.categorySamples.isEmpty)
+        XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"])
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try Correlation.make(from: dictionary)
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try Correlation.make(from: dictionary)
+        let copy = sut.copyWith(identifier: "HKCorrelationTypeIdentifierFood")
+        XCTAssertEqual(copy.identifier, "HKCorrelationTypeIdentifierFood")
+        XCTAssertEqual(
+            try json(copy, excluding: ["identifier"]),
+            try json(sut, excluding: ["identifier"])
+        )
+        let harmonized = sut.harmonized.copyWith(metadata: ["HKWasUserEntered": "0"])
+        XCTAssertEqual(harmonized.metadata, ["HKWasUserEntered": "0"])
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["metadata"]),
+            try json(sut.harmonized, excluding: ["metadata"])
+        )
+    }
+}

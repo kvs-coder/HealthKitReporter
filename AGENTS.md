@@ -205,10 +205,12 @@ The codebase enforces test-first **TDD**. Code without tests will be rejected.
 ### C. Official CLI Commands
 
 ```bash
-# 1. Run the library test suite on a simulator (SwiftPM package scheme)
+# 1. Run the library test suite on a simulator (SwiftPM package scheme) with coverage
 xcodebuild test -scheme HealthKitReporter \
   -destination "platform=iOS Simulator,name=iPhone 17,OS=latest" \
+  -enableCodeCoverage YES -resultBundlePath TestResults.xcresult \
   CODE_SIGNING_REQUIRED=NO
+xcrun xccov view --report --only-targets TestResults.xcresult
 
 # 2. Build for watchOS (needs the watchOS platform installed in Xcode)
 xcodebuild build -scheme HealthKitReporter \
@@ -239,6 +241,7 @@ Before any commit or PR creation, the codebase must pass all gates:
 2. `xcodebuild test` — **all tests green**; quote the executed/failed counts it prints.
 3. watchOS build — passes (CI `Package` job; state "verified in CI only" when the watchOS platform isn't installed locally).
 4. Example app builds — **required whenever public API changes**. Otherwise state "not applicable — no public API change" in the evidence line rather than omitting it: an unstated gate reads as a skipped one.
+5. Coverage — `HealthKitReporter` line coverage reported by `xccov` is **≥ `COVERAGE_THRESHOLD`** in `.github/workflows/ci.yml` (CI `Package` job fails below it); quote the measured percentage. A PR that adds tests raises the threshold to its new measured level (rounded down to one decimal); never lower it.
 
 ---
 

@@ -146,4 +146,125 @@ class WorkoutRouteTests: XCTestCase {
             ]
         )
     }
+    private var locationDictionary: [String: Any] {
+        return [
+            "latitude": 52.52,
+            "longitude": 13.405,
+            "altitude": 34,
+            "course": 90,
+            "courseAccuracy": 5,
+            "floor": 1,
+            "horizontalAccuracy": 4,
+            "speed": 2.5,
+            "speedAccuracy": 0.5,
+            "timestamp": startTimestamp,
+            "verticalAccuracy": 3
+        ]
+    }
+    private var routeDictionary: [String: Any] {
+        return [
+            "locations": [locationDictionary],
+            "done": true
+        ]
+    }
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "count": 1,
+            "routes": [routeDictionary],
+            "metadata": [
+                "HKWasUserEntered": "1"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKWorkoutRouteTypeIdentifier",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: WorkoutRoute.make
+        )
+        assertEachKeyIsRequired(
+            ["count", "routes"],
+            in: harmonizedDictionary,
+            make: WorkoutRoute.Harmonized.make
+        )
+        assertEachKeyIsRequired(
+            ["locations", "done"],
+            in: routeDictionary,
+            make: WorkoutRoute.Route.make
+        )
+        assertEachKeyIsRequired(
+            [
+                "latitude",
+                "longitude",
+                "altitude",
+                "course",
+                "horizontalAccuracy",
+                "speed",
+                "timestamp",
+                "verticalAccuracy"
+            ],
+            in: locationDictionary,
+            make: WorkoutRoute.Location.make
+        )
+    }
+    func testCreateLocationFromDictionaryWithoutOptionalFields() throws {
+        var dictionary = locationDictionary
+        for key in ["courseAccuracy", "floor", "speedAccuracy"] {
+            dictionary.removeValue(forKey: key)
+        }
+        let sut = try WorkoutRoute.Location.make(from: dictionary)
+        XCTAssertNil(sut.courseAccuracy)
+        XCTAssertNil(sut.floor)
+        XCTAssertNil(sut.speedAccuracy)
+    }
+    func testCollectSkipsNonDictionaryElements() throws {
+        let locations = try WorkoutRoute.Location.collect(
+            from: [locationDictionary, "invalid", 1, locationDictionary]
+        )
+        XCTAssertEqual(locations.count, 2)
+        XCTAssertEqual(locations[0].latitude, 52.52, accuracy: 0.001)
+        XCTAssertEqual(locations[0].longitude, 13.405, accuracy: 0.001)
+        XCTAssertEqual(locations[0].altitude, 34, accuracy: 0.001)
+        XCTAssertEqual(locations[0].course, 90, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(locations[0].courseAccuracy), 5, accuracy: 0.001)
+        XCTAssertEqual(locations[0].floor, 1)
+        XCTAssertEqual(locations[0].horizontalAccuracy, 4, accuracy: 0.001)
+        XCTAssertEqual(locations[0].speed, 2.5, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(locations[0].speedAccuracy), 0.5, accuracy: 0.001)
+        XCTAssertEqual(locations[0].timestamp, 1626884800, accuracy: 0.001)
+        XCTAssertEqual(locations[0].verticalAccuracy, 3, accuracy: 0.001)
+        let routes = try WorkoutRoute.Route.collect(
+            from: [routeDictionary, "invalid", 1, routeDictionary]
+        )
+        XCTAssertEqual(routes.count, 2)
+        XCTAssertEqual(routes[0].locations.count, 1)
+        XCTAssertTrue(routes[0].done)
+    }
+    func testCollectThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(try WorkoutRoute.Location.collect(from: [locationDictionary, ["latitude": 1]]))
+        assertInvalidValue(try WorkoutRoute.Route.collect(from: [routeDictionary, ["done": true]]))
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try WorkoutRoute.make(from: dictionary)
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try WorkoutRoute.make(from: dictionary)
+        let harmonized = sut.harmonized.copyWith(count: 2)
+        XCTAssertEqual(harmonized.count, 2)
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["count"]),
+            try json(sut.harmonized, excluding: ["count"])
+        )
+    }
 }

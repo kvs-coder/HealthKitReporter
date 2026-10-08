@@ -207,3 +207,114 @@ class WorkoutTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["harmonized": "value"])
     }
 }
+// MARK: - Payload
+extension WorkoutTests {
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "value": 37,
+            "description": "Running",
+            "totalEnergyBurned": 250.5,
+            "totalEnergyBurnedUnit": "kcal",
+            "totalDistance": 5000,
+            "totalDistanceUnit": "m",
+            "totalSwimmingStrokeCount": 0,
+            "totalSwimmingStrokeCountUnit": "count",
+            "totalFlightsClimbed": 3,
+            "totalFlightsClimbedUnit": "count",
+            "metadata": [
+                "HKWasUserEntered": "1"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKWorkoutTypeIdentifier",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "duration": 60,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "workoutEvents": [
+                [
+                    "startTimestamp": startTimestamp,
+                    "endTimestamp": endTimestamp,
+                    "duration": 60,
+                    "harmonized": [
+                        "value": 1,
+                        "description": "Pause"
+                    ]
+                ]
+            ],
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "duration", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: Workout.make
+        )
+        assertEachKeyIsRequired(
+            [
+                "value",
+                "description",
+                "totalEnergyBurnedUnit",
+                "totalDistanceUnit",
+                "totalSwimmingStrokeCountUnit",
+                "totalFlightsClimbedUnit"
+            ],
+            in: harmonizedDictionary,
+            make: Workout.Harmonized.make
+        )
+    }
+    func testCreateFromDictionaryWithoutOptionalFields() throws {
+        var harmonized = harmonizedDictionary
+        let optionalKeys = [
+            "totalEnergyBurned",
+            "totalDistance",
+            "totalSwimmingStrokeCount",
+            "totalFlightsClimbed",
+            "metadata"
+        ]
+        for key in optionalKeys {
+            harmonized.removeValue(forKey: key)
+        }
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        dictionary.removeValue(forKey: "workoutEvents")
+        dictionary["harmonized"] = harmonized
+        let sut = try Workout.make(from: dictionary)
+        XCTAssertNil(sut.device)
+        XCTAssertTrue(sut.workoutEvents.isEmpty)
+        XCTAssertNil(sut.harmonized.totalEnergyBurned)
+        XCTAssertNil(sut.harmonized.totalDistance)
+        XCTAssertNil(sut.harmonized.totalSwimmingStrokeCount)
+        XCTAssertNil(sut.harmonized.totalFlightsClimbed)
+        XCTAssertNil(sut.harmonized.metadata)
+    }
+    func testCreateFromDictionaryWithInvalidWorkoutEventThrows() throws {
+        var dictionary = dictionary
+        dictionary["workoutEvents"] = [["duration": 60]]
+        assertInvalidValue(try Workout.make(from: dictionary))
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try Workout.make(from: dictionary)
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try Workout.make(from: dictionary)
+        let copy = sut.copyWith(duration: 120)
+        XCTAssertEqual(copy.duration, 120, accuracy: 0.001)
+        XCTAssertEqual(
+            try json(copy, excluding: ["duration"]),
+            try json(sut, excluding: ["duration"])
+        )
+        let harmonized = sut.harmonized.copyWith(totalDistance: 10)
+        XCTAssertEqual(try XCTUnwrap(harmonized.totalDistance), 10, accuracy: 0.001)
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["totalDistance"]),
+            try json(sut.harmonized, excluding: ["totalDistance"])
+        )
+    }
+}

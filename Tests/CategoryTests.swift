@@ -140,4 +140,71 @@ class CategoryTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.detail, "Asleep")
         XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": "1"])
     }
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "value": 1,
+            "description": "HKCategoryValueSleepAnalysis",
+            "detail": "Asleep",
+            "metadata": [
+                "HKWasUserEntered": "1"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKCategoryTypeIdentifierSleepAnalysis",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: Category.make
+        )
+        assertEachKeyIsRequired(
+            ["value", "description", "detail"],
+            in: harmonizedDictionary,
+            make: Category.Harmonized.make
+        )
+    }
+    func testCreateFromDictionaryWithoutDevice() throws {
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        let sut = try Category.make(from: dictionary)
+        XCTAssertNil(sut.device)
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try Category.make(from: dictionary)
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try Category.make(from: dictionary)
+        let copy = sut.copyWith(endTimestamp: 1)
+        XCTAssertEqual(copy.endTimestamp, 1, accuracy: 0.001)
+        XCTAssertEqual(
+            try json(copy, excluding: ["endTimestamp"]),
+            try json(sut, excluding: ["endTimestamp"])
+        )
+        let harmonized = sut.harmonized.copyWith(detail: "InBed")
+        XCTAssertEqual(harmonized.detail, "InBed")
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["detail"]),
+            try json(sut.harmonized, excluding: ["detail"])
+        )
+    }
+    func testCollectSkipsNonDictionaryElements() throws {
+        let sut = try Category.collect(from: [dictionary, "invalid", 1, dictionary])
+        XCTAssertEqual(sut.count, 2)
+        XCTAssertEqual(sut[0].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
+        XCTAssertEqual(sut[1].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
+    }
+    func testCollectThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(try Category.collect(from: [dictionary, ["identifier": "invalid"]]))
+    }
 }

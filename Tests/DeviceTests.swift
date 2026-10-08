@@ -55,4 +55,29 @@ class DeviceTests: XCTestCase {
         XCTAssertEqual(sut.localIdentifier, "kvs.sample.app")
         XCTAssertEqual(sut.udiDeviceIdentifier, "444-888-555")
     }
+    func testCreateFromEmptyDictionary() throws {
+        let sut = try Device.make(from: [:])
+        XCTAssertNil(sut.name)
+        XCTAssertNil(sut.manufacturer)
+        XCTAssertNil(sut.model)
+        XCTAssertNil(sut.hardwareVersion)
+        XCTAssertNil(sut.firmwareVersion)
+        XCTAssertNil(sut.softwareVersion)
+        XCTAssertNil(sut.localIdentifier)
+        XCTAssertNil(sut.udiDeviceIdentifier)
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = device
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = device
+        let copy = sut.copyWith(model: "7.0.0")
+        XCTAssertEqual(copy.model, "7.0.0")
+        XCTAssertEqual(try json(copy, excluding: ["model"]), try json(sut, excluding: ["model"]))
+    }
+    func testLocal() throws {
+        let sut = Device.local()
+        XCTAssertNotNil(sut.model)
+    }
 }

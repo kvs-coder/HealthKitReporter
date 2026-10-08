@@ -283,3 +283,82 @@ class HeartbeatSeriesTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.metadata, ["HKAlgorithmVersion" : "1"])
     }
 }
+// MARK: - Payload
+extension HeartbeatSeriesTests {
+    private var measurementDictionary: [String: Any] {
+        return [
+            "timeSinceSeriesStart": 0.5,
+            "precededByGap": false,
+            "done": true
+        ]
+    }
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "count": 1,
+            "measurements": [measurementDictionary],
+            "metadata": [
+                "HKWasUserEntered": "1"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKDataTypeIdentifierHeartbeatSeries",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: HeartbeatSeries.make
+        )
+        assertEachKeyIsRequired(
+            ["count", "measurements"],
+            in: harmonizedDictionary,
+            make: HeartbeatSeries.Harmonized.make
+        )
+        assertEachKeyIsRequired(
+            ["timeSinceSeriesStart", "precededByGap", "done"],
+            in: measurementDictionary,
+            make: HeartbeatSeries.Measurement.make
+        )
+    }
+    func testCreateFromDictionaryWithoutDevice() throws {
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        let sut = try HeartbeatSeries.make(from: dictionary)
+        XCTAssertNil(sut.device)
+    }
+    func testCollectMeasurementsSkipsNonDictionaryElements() throws {
+        let sut = try HeartbeatSeries.Measurement.collect(
+            from: [measurementDictionary, "invalid", 1, measurementDictionary]
+        )
+        XCTAssertEqual(sut.count, 2)
+        XCTAssertEqual(sut[0].timeSinceSeriesStart, 0.5, accuracy: 0.001)
+        XCTAssertFalse(sut[0].precededByGap)
+        XCTAssertTrue(sut[0].done)
+    }
+    func testCollectMeasurementsThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(
+            try HeartbeatSeries.Measurement.collect(from: [measurementDictionary, ["done": true]])
+        )
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try HeartbeatSeries.make(from: dictionary)
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try HeartbeatSeries.make(from: dictionary)
+        let harmonized = sut.harmonized.copyWith(count: 2)
+        XCTAssertEqual(harmonized.count, 2)
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["count"]),
+            try json(sut.harmonized, excluding: ["count"])
+        )
+    }
+}

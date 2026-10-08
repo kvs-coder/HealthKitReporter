@@ -134,4 +134,91 @@ class QuantityTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.unit, "count")
         XCTAssertEqual(sut.harmonized.metadata, ["some": "meta"])
     }
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "value": 1000,
+            "unit": "m",
+            "metadata": [
+                "you": "saved it"
+            ]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKQuantityTypeIdentifierDistanceWalkingRunning",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["identifier", "startTimestamp", "endTimestamp", "sourceRevision", "harmonized"],
+            in: dictionary,
+            make: Quantity.make
+        )
+        assertEachKeyIsRequired(
+            ["value", "unit"],
+            in: harmonizedDictionary,
+            make: Quantity.Harmonized.make
+        )
+    }
+    func testCreateFromDictionaryWithoutDevice() throws {
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        let sut = try Quantity.make(from: dictionary)
+        XCTAssertNil(sut.device)
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = try Quantity.make(from: dictionary)
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+        XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = try Quantity.make(from: dictionary)
+        let copy = sut.copyWith(identifier: "HKQuantityTypeIdentifierDistanceCycling")
+        XCTAssertEqual(copy.identifier, "HKQuantityTypeIdentifierDistanceCycling")
+        XCTAssertEqual(
+            try json(copy, excluding: ["identifier"]),
+            try json(sut, excluding: ["identifier"])
+        )
+        let harmonized = sut.harmonized.copyWith(value: 5)
+        XCTAssertEqual(harmonized.value, 5, accuracy: 0.001)
+        XCTAssertEqual(
+            try json(harmonized, excluding: ["value"]),
+            try json(sut.harmonized, excluding: ["value"])
+        )
+    }
+    func testCollectSkipsNonDictionaryElements() throws {
+        let sut = try Quantity.collect(from: [dictionary, "invalid", 1, dictionary])
+        XCTAssertEqual(sut.count, 2)
+        XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
+        XCTAssertEqual(sut[1].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
+    }
+    func testCollectThrowsOnInvalidDictionary() throws {
+        assertInvalidValue(try Quantity.collect(from: [dictionary, ["identifier": "invalid"]]))
+    }
+    func testConvertedToSameUnitReturnsSelf() throws {
+        let sut = try Quantity.make(from: dictionary)
+        let converted = try sut.converted(to: "m")
+        XCTAssertEqual(converted.uuid, sut.uuid)
+        XCTAssertEqual(try json(converted), try json(sut))
+    }
+    func testConvertedToOtherUnit() throws {
+        let sut = try Quantity.make(from: dictionary)
+        let converted = try sut.converted(to: "km")
+        XCTAssertEqual(converted.identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
+        XCTAssertEqual(converted.startTimestamp, 1626884800, accuracy: 0.001)
+        XCTAssertEqual(converted.endTimestamp, 1626884860, accuracy: 0.001)
+        assertDevice(converted.device)
+        XCTAssertEqual(converted.harmonized.value, 1, accuracy: 0.001)
+        XCTAssertEqual(converted.harmonized.unit, "km")
+        XCTAssertEqual(converted.harmonized.metadata, ["you": "saved it"])
+    }
+    func testConvertedWithInvalidIdentifierThrows() throws {
+        let sut = try Quantity.make(from: dictionary).copyWith(identifier: "invalid")
+        assertInvalidType(try sut.converted(to: "km"))
+    }
 }

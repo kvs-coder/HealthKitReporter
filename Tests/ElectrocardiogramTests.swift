@@ -188,4 +188,94 @@ class ElectrocardiogramTests: XCTestCase {
             ]
         )
     }
+    private var voltageMeasurementDictionary: [String: Any] {
+        return [
+            "harmonized": [
+                "value": 0.0001,
+                "unit": "V"
+            ],
+            "timeSinceSampleStart": 0.5
+        ]
+    }
+    private var harmonizedDictionary: [String: Any] {
+        return [
+            "averageHeartRate": 61,
+            "averageHeartRateUnit": "count/min",
+            "samplingFrequency": 512,
+            "samplingFrequencyUnit": "Hz",
+            "classification": "sinusRhythm",
+            "symptomsStatus": "none",
+            "count": 1,
+            "voltageMeasurements": [voltageMeasurementDictionary]
+        ]
+    }
+    private var dictionary: [String: Any] {
+        return [
+            "identifier": "HKDataTypeIdentifierElectrocardiogram",
+            "startTimestamp": startTimestamp,
+            "endTimestamp": endTimestamp,
+            "device": deviceDictionary,
+            "sourceRevision": sourceRevisionDictionary,
+            "numberOfMeasurements": 1,
+            "harmonized": harmonizedDictionary
+        ]
+    }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            [
+                "identifier",
+                "startTimestamp",
+                "endTimestamp",
+                "sourceRevision",
+                "numberOfMeasurements",
+                "harmonized"
+            ],
+            in: dictionary,
+            make: Electrocardiogram.make
+        )
+        assertEachKeyIsRequired(
+            [
+                "averageHeartRateUnit",
+                "samplingFrequency",
+                "samplingFrequencyUnit",
+                "classification",
+                "symptomsStatus",
+                "count"
+            ],
+            in: harmonizedDictionary,
+            make: Electrocardiogram.Harmonized.make
+        )
+        assertEachKeyIsRequired(
+            ["harmonized", "timeSinceSampleStart"],
+            in: voltageMeasurementDictionary,
+            make: Electrocardiogram.VoltageMeasurement.make
+        )
+        assertEachKeyIsRequired(
+            ["value", "unit"],
+            in: ["value": 0.0001, "unit": "V"],
+            make: Electrocardiogram.VoltageMeasurement.Harmonized.make
+        )
+    }
+    func testCreateFromDictionarySkipsNonDictionaryVoltageMeasurements() throws {
+        var harmonized = harmonizedDictionary
+        harmonized["voltageMeasurements"] = [voltageMeasurementDictionary, "invalid", 1]
+        harmonized.removeValue(forKey: "averageHeartRate")
+        var dictionary = dictionary
+        dictionary.removeValue(forKey: "device")
+        dictionary["harmonized"] = harmonized
+        let sut = try Electrocardiogram.make(from: dictionary)
+        XCTAssertNil(sut.device)
+        XCTAssertNil(sut.harmonized.averageHeartRate)
+        XCTAssertEqual(sut.harmonized.voltageMeasurements.count, 1)
+        XCTAssertEqual(sut.harmonized.voltageMeasurements[0].harmonized.value, 0.0001, accuracy: 0.000001)
+        XCTAssertEqual(sut.harmonized.voltageMeasurements[0].harmonized.unit, "V")
+        XCTAssertEqual(sut.harmonized.voltageMeasurements[0].timeSinceSampleStart, 0.5, accuracy: 0.001)
+    }
+    func testCreateFromDictionaryWithInvalidVoltageMeasurementThrows() throws {
+        var harmonized = harmonizedDictionary
+        harmonized["voltageMeasurements"] = [["timeSinceSampleStart": 0.5]]
+        var dictionary = dictionary
+        dictionary["harmonized"] = harmonized
+        assertInvalidValue(try Electrocardiogram.make(from: dictionary))
+    }
 }

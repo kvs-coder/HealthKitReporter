@@ -28,4 +28,21 @@ class SourceTests: XCTestCase {
         XCTAssertEqual(sut.name, "myApp")
         XCTAssertEqual(sut.bundleIdentifier, "com.my.app")
     }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["name", "bundleIdentifier"],
+            in: ["name": "Health", "bundleIdentifier": "com.apple.Health"],
+            make: Source.make
+        )
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = Source(name: "Health", bundleIdentifier: "com.apple.Health")
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = Source(name: "Health", bundleIdentifier: "com.apple.Health")
+        let copy = sut.copyWith(name: "Fitness")
+        XCTAssertEqual(copy.name, "Fitness")
+        XCTAssertEqual(copy.bundleIdentifier, "com.apple.Health")
+    }
 }

@@ -63,4 +63,43 @@ class SourceRevisionTests: XCTestCase {
         XCTAssertEqual(sut.operatingSystem.minorVersion, 5)
         XCTAssertEqual(sut.operatingSystem.patchVersion, 0)
     }
+    func testCreateFromInvalidDictionary() throws {
+        assertEachKeyIsRequired(
+            ["systemVersion", "operatingSystem", "source"],
+            in: sourceRevisionDictionary,
+            make: SourceRevision.make
+        )
+        assertEachKeyIsRequired(
+            ["majorVersion", "minorVersion", "patchVersion"],
+            in: ["majorVersion": 1, "minorVersion": 2, "patchVersion": 3],
+            make: SourceRevision.OperatingSystem.make
+        )
+    }
+    func testCreateFromDictionaryWithoutOptionalFields() throws {
+        var dictionary = sourceRevisionDictionary
+        dictionary.removeValue(forKey: "version")
+        dictionary.removeValue(forKey: "productType")
+        let sut = try SourceRevision.make(from: dictionary)
+        XCTAssertNil(sut.version)
+        XCTAssertNil(sut.productType)
+        XCTAssertEqual(sut.systemVersion, "1.0.0.0")
+    }
+    func testCopyWithNoArgumentsKeepsAllFields() throws {
+        let sut = sourceRevision
+        XCTAssertEqual(try json(sut.copyWith()), try json(sut))
+        XCTAssertEqual(try json(sut.operatingSystem.copyWith()), try json(sut.operatingSystem))
+    }
+    func testCopyWithChangesOnlyGivenField() throws {
+        let sut = sourceRevision
+        let copy = sut.copyWith(systemVersion: "2.0.0")
+        XCTAssertEqual(copy.systemVersion, "2.0.0")
+        XCTAssertEqual(
+            try json(copy, excluding: ["systemVersion"]),
+            try json(sut, excluding: ["systemVersion"])
+        )
+        let operatingSystem = sut.operatingSystem.copyWith(minorVersion: 9)
+        XCTAssertEqual(operatingSystem.majorVersion, 1)
+        XCTAssertEqual(operatingSystem.minorVersion, 9)
+        XCTAssertEqual(operatingSystem.patchVersion, 3)
+    }
 }

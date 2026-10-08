@@ -15,6 +15,8 @@ permissions:
 
 env:
   IOS_DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=latest
+  # Minimum library line coverage in percent. Only ever raise it, to the level the latest test PR reaches.
+  COVERAGE_THRESHOLD: "49.0"
 
 jobs:
   lint:
@@ -55,7 +57,28 @@ jobs:
         run: |
           xcodebuild test -scheme HealthKitReporter \
             -destination "$IOS_DESTINATION" \
+            -enableCodeCoverage YES \
+            -resultBundlePath TestResults.xcresult \
             CODE_SIGNING_REQUIRED=NO
+      - name: Coverage gate
+        run: |
+          xcrun xccov view --report --only-targets TestResults.xcresult | tee coverage.txt
+          coverage=$(xcrun xccov view --report --json TestResults.xcresult \
+            | jq '.targets[] | select(.name == "HealthKitReporter") | .lineCoverage * 100')
+          echo "library coverage: $coverage%, threshold: $COVERAGE_THRESHOLD%"
+          awk -v c="$coverage" -v t="$COVERAGE_THRESHOLD" 'BEGIN { exit !(c >= t) }' || {
+            echo "::error::Library line coverage $coverage% is below the $COVERAGE_THRESHOLD% threshold"
+            exit 1
+          }
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            TestResults.xcresult
+            coverage.txt
+          if-no-files-found: ignore
       - name: Build (watchOS)
         run: |
           xcodebuild build -scheme HealthKitReporter \
