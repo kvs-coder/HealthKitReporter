@@ -176,6 +176,8 @@ reporter.manager.executeQuery(query)
 
 ### Writing Data
 
+Activity summaries, ECGs, heartbeat series, workout routes, clinical and verifiable records are read-only: HealthKit doesn't let apps write them, so `save` completes with `HealthKitError.invalidType` for them.
+
 ***NOTE:*** *Clinical Records are read only, Health Kit does not allow writing any data to Clinical Records.*
 
 Create a <i>HealthKitReporter</i> instance.

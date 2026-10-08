@@ -102,6 +102,40 @@ extension ActivitySummaryTests {
         XCTAssertEqual(sut.harmonized.appleStandHoursGoal, 12, accuracy: 0.001)
         XCTAssertEqual(sut.harmonized.appleStandHoursUnit, "count")
     }
+    func testCreateMoveTimeSummaryWithCurrentGoals() throws {
+        let summary = HKActivitySummary()
+        summary.activityMoveMode = .appleMoveTime
+        summary.appleMoveTime = HKQuantity(unit: .minute(), doubleValue: 40)
+        summary.appleMoveTimeGoal = HKQuantity(unit: .minute(), doubleValue: 60)
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            summary.exerciseTimeGoal = HKQuantity(unit: .minute(), doubleValue: 45)
+            summary.standHoursGoal = HKQuantity(unit: .count(), doubleValue: 8)
+        }
+        if #available(iOS 18.0, watchOS 11.0, *) {
+            summary.isPaused = true
+        }
+        var summaries = [ActivitySummary]()
+        let query = HealthKitReporter().reader.queryActivitySummary(monitorUpdates: true) { result, _ in
+            summaries = result
+        }
+        try XCTUnwrap(query.updateHandler)(query, [summary], nil)
+        let sut = try XCTUnwrap(summaries.first).harmonized
+        XCTAssertEqual(sut.activityMoveMode, "Apple move time")
+        XCTAssertEqual(try XCTUnwrap(sut.appleMoveTime), 40, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(sut.appleMoveTimeGoal), 60, accuracy: 0.001)
+        XCTAssertEqual(sut.appleMoveTimeUnit, "min")
+        XCTAssertEqual(sut.appleExerciseTimeGoal, 45, accuracy: 0.001)
+        XCTAssertEqual(sut.appleStandHoursGoal, 8, accuracy: 0.001)
+        if #available(iOS 18.0, watchOS 11.0, *) {
+            XCTAssertEqual(sut.paused, true)
+        }
+        let decoded = try JSONDecoder().decode(
+            ActivitySummary.Harmonized.self,
+            from: try XCTUnwrap(sut.encoded().data(using: .utf8))
+        )
+        XCTAssertEqual(decoded.activityMoveMode, "Apple move time")
+        XCTAssertEqual(decoded.appleMoveTimeUnit, "min")
+    }
     func testActivitySummaryQueryError() throws {
         var summaries: [ActivitySummary]?
         var error: Error?

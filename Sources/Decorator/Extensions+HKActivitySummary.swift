@@ -11,26 +11,34 @@ extension HKActivitySummary: Harmonizable {
     typealias Harmonized = ActivitySummary.Harmonized
 
     func harmonize() throws -> Harmonized {
-        let activeEnergyBurnedUnit: HKUnit
-        activeEnergyBurnedUnit = HKUnit.largeCalorie()
-        let activeEnergyBurned = self.activeEnergyBurned.doubleValue(for: activeEnergyBurnedUnit)
-        let activeEnergyBurnedGoal = self.activeEnergyBurnedGoal.doubleValue(for: activeEnergyBurnedUnit)
-        let appleExerciseTimeUnit = HKUnit.minute()
-        let appleExerciseTime = self.appleExerciseTime.doubleValue(for: appleExerciseTimeUnit)
-        let appleExerciseTimeGoal = self.appleExerciseTimeGoal.doubleValue(for: appleExerciseTimeUnit)
-        let appleStandHoursUnit = HKUnit.count()
-        let appleStandHours = self.appleStandHours.doubleValue(for: appleStandHoursUnit)
-        let appleStandHoursGoal = self.appleStandHoursGoal.doubleValue(for: appleStandHoursUnit)
+        let activeEnergyBurnedUnit = HKUnit.largeCalorie()
+        let minuteUnit = HKUnit.minute()
+        let countUnit = HKUnit.count()
+        var exerciseGoal = appleExerciseTimeGoal
+        var standGoal = appleStandHoursGoal
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            exerciseGoal = exerciseTimeGoal ?? exerciseGoal
+            standGoal = standHoursGoal ?? standGoal
+        }
+        var paused: Bool?
+        if #available(iOS 18.0, watchOS 11.0, *) {
+            paused = isPaused
+        }
         return Harmonized(
-            activeEnergyBurned: activeEnergyBurned,
-            activeEnergyBurnedGoal: activeEnergyBurnedGoal,
+            activeEnergyBurned: activeEnergyBurned.doubleValue(for: activeEnergyBurnedUnit),
+            activeEnergyBurnedGoal: activeEnergyBurnedGoal.doubleValue(for: activeEnergyBurnedUnit),
             activeEnergyBurnedUnit: activeEnergyBurnedUnit.unitString,
-            appleExerciseTime: appleExerciseTime,
-            appleExerciseTimeGoal: appleExerciseTimeGoal,
-            appleExerciseTimeUnit: appleExerciseTimeUnit.unitString,
-            appleStandHours: appleStandHours,
-            appleStandHoursGoal: appleStandHoursGoal,
-            appleStandHoursUnit: appleStandHoursUnit.unitString
+            appleExerciseTime: appleExerciseTime.doubleValue(for: minuteUnit),
+            appleExerciseTimeGoal: exerciseGoal.doubleValue(for: minuteUnit),
+            appleExerciseTimeUnit: minuteUnit.unitString,
+            appleStandHours: appleStandHours.doubleValue(for: countUnit),
+            appleStandHoursGoal: standGoal.doubleValue(for: countUnit),
+            appleStandHoursUnit: countUnit.unitString,
+            activityMoveMode: activityMoveMode.description,
+            appleMoveTime: appleMoveTime.doubleValue(for: minuteUnit),
+            appleMoveTimeGoal: appleMoveTimeGoal.doubleValue(for: minuteUnit),
+            appleMoveTimeUnit: minuteUnit.unitString,
+            paused: paused
         )
     }
 }
