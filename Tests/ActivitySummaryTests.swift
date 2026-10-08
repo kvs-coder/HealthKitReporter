@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class ActivitySummaryTests: XCTestCase {
@@ -70,5 +71,49 @@ class ActivitySummaryTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.appleStandHours, 10, accuracy: 0.001, file: file, line: line)
         XCTAssertEqual(sut.harmonized.appleStandHoursGoal, 12, accuracy: 0.001, file: file, line: line)
         XCTAssertEqual(sut.harmonized.appleStandHoursUnit, "count", file: file, line: line)
+    }
+}
+// MARK: - Factory
+extension ActivitySummaryTests {
+    func testCreateFromActivitySummaryQueryResults() throws {
+        let summary = HKActivitySummary()
+        summary.activeEnergyBurned = HKQuantity(unit: .largeCalorie(), doubleValue: 450.5)
+        summary.activeEnergyBurnedGoal = HKQuantity(unit: .largeCalorie(), doubleValue: 500)
+        summary.appleExerciseTime = HKQuantity(unit: .minute(), doubleValue: 25)
+        summary.appleExerciseTimeGoal = HKQuantity(unit: .minute(), doubleValue: 30)
+        summary.appleStandHours = HKQuantity(unit: .count(), doubleValue: 10)
+        summary.appleStandHoursGoal = HKQuantity(unit: .count(), doubleValue: 12)
+        var summaries = [ActivitySummary]()
+        let query = HealthKitReporter().reader.queryActivitySummary(monitorUpdates: true) { result, _ in
+            summaries = result
+        }
+        let updateHandler = try XCTUnwrap(query.updateHandler)
+        updateHandler(query, [summary], nil)
+        let sut = try XCTUnwrap(summaries.first)
+        XCTAssertEqual(summaries.count, 1)
+        XCTAssertEqual(sut.identifier, "HKActivitySummaryTypeIdentifier")
+        XCTAssertEqual(sut.harmonized.activeEnergyBurned, 450.5, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.activeEnergyBurnedGoal, 500, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.activeEnergyBurnedUnit, "Cal")
+        XCTAssertEqual(sut.harmonized.appleExerciseTime, 25, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.appleExerciseTimeGoal, 30, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.appleExerciseTimeUnit, "min")
+        XCTAssertEqual(sut.harmonized.appleStandHours, 10, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.appleStandHoursGoal, 12, accuracy: 0.001)
+        XCTAssertEqual(sut.harmonized.appleStandHoursUnit, "count")
+    }
+    func testActivitySummaryQueryError() throws {
+        var summaries: [ActivitySummary]?
+        var error: Error?
+        let query = HealthKitReporter().reader.queryActivitySummary(
+            monitorUpdates: true
+        ) { result, resultError in
+            summaries = result
+            error = resultError
+        }
+        let updateHandler = try XCTUnwrap(query.updateHandler)
+        updateHandler(query, nil, HealthKitError.unknown())
+        XCTAssertEqual(summaries?.count, 0)
+        XCTAssertNotNil(error)
     }
 }

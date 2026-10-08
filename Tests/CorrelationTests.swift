@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class CorrelationTests: XCTestCase {
@@ -391,5 +392,55 @@ extension CorrelationTests {
             try json(harmonized, excluding: ["metadata"]),
             try json(sut.harmonized, excluding: ["metadata"])
         )
+    }
+}
+// MARK: - Factory
+extension CorrelationTests {
+    func testCollectResults() throws {
+        let systolic = HKQuantitySample(
+            type: HKQuantityType(.bloodPressureSystolic),
+            quantity: HKQuantity(unit: .millimeterOfMercury(), doubleValue: 123),
+            start: startDate,
+            end: endDate
+        )
+        let diastolic = HKQuantitySample(
+            type: HKQuantityType(.bloodPressureDiastolic),
+            quantity: HKQuantity(unit: .millimeterOfMercury(), doubleValue: 83),
+            start: startDate,
+            end: endDate
+        )
+        let correlation = HKCorrelation(
+            type: HKCorrelationType(.bloodPressure),
+            start: startDate,
+            end: endDate,
+            objects: [systolic, diastolic],
+            metadata: ["you": "saved it"]
+        )
+        let sut = try XCTUnwrap(Correlation.collect(results: [correlation]).first)
+        XCTAssertEqual(sut.uuid, correlation.uuid.uuidString)
+        XCTAssertEqual(sut.identifier, "HKCorrelationTypeIdentifierBloodPressure")
+        XCTAssertEqual(sut.startTimestamp, 1626884800, accuracy: 0.001)
+        XCTAssertEqual(sut.endTimestamp, 1626884860, accuracy: 0.001)
+        XCTAssertTrue(sut.harmonized.categorySamples.isEmpty)
+        XCTAssertEqual(sut.harmonized.metadata, ["you": "saved it"])
+        let samples = sut.harmonized.quantitySamples.sorted { $0.identifier < $1.identifier }
+        XCTAssertEqual(samples.count, 2)
+        XCTAssertEqual(samples[0].identifier, "HKQuantityTypeIdentifierBloodPressureDiastolic")
+        XCTAssertEqual(samples[0].harmonized.value, 83, accuracy: 0.001)
+        XCTAssertEqual(samples[0].harmonized.unit, "mmHg")
+        XCTAssertEqual(samples[1].identifier, "HKQuantityTypeIdentifierBloodPressureSystolic")
+        XCTAssertEqual(samples[1].harmonized.value, 123, accuracy: 0.001)
+        XCTAssertEqual(samples[1].harmonized.unit, "mmHg")
+        let parsed = try XCTUnwrap(parse([correlation]).first as? Correlation)
+        XCTAssertEqual(parsed.uuid, correlation.uuid.uuidString)
+    }
+    func testCollectResultsIgnoresOtherSamples() throws {
+        let sample = HKQuantitySample(
+            type: HKQuantityType(.stepCount),
+            quantity: HKQuantity(unit: .count(), doubleValue: 1),
+            start: startDate,
+            end: endDate
+        )
+        XCTAssertTrue(Correlation.collect(results: [sample]).isEmpty)
     }
 }

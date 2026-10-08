@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import HealthKit
 import HealthKitReporter
 
 class WorkoutEventTests: XCTestCase {
@@ -101,5 +102,23 @@ class WorkoutEventTests: XCTestCase {
             try json(harmonized, excluding: ["value"]),
             try json(sut.harmonized, excluding: ["value"])
         )
+    }
+}
+// MARK: - Factory
+extension WorkoutEventTests {
+    func testWorkoutEventTypeDescriptions() throws {
+        let descriptions: [HKWorkoutEventType: String] = [
+            .pause: "Pause",
+            .resume: "Resume",
+            .lap: "Lap",
+            .marker: "Marker",
+            .motionPaused: "Motion paused",
+            .motionResumed: "Motion Resumed",
+            .segment: "Segment",
+            .pauseOrResumeRequest: "Pause on resume request"
+        ]
+        for (sut, description) in descriptions {
+            XCTAssertEqual(sut.description, description)
+        }
     }
 }
