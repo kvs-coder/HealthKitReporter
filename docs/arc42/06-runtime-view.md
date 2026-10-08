@@ -8,7 +8,7 @@ participant Consumer
 participant HealthKitManager as M
 participant HKHealthStore as S
 Consumer -> M : requestAuthorization(toRead:toWrite:completion:)
-M -> M : map ObjectType → HKObjectType (drop nil / unavailable)
+M -> M : map ObjectType → internal HKObjectType\n(unavailable → invalidType)
 M -> S : requestAuthorization(toShare:read:)
 S --> Consumer : completion(success, error)
 @enduml
@@ -27,9 +27,9 @@ participant HealthKitManager as M
 participant HKHealthStore as S
 participant "Quantity.collect" as F
 Consumer -> R : quantityQuery(type:unit:predicate:resultsHandler:)
-R -> R : type.original as? HKQuantityType\nelse throw invalidType
+R -> R : internal HKQuantityType of the type\nelse throw invalidType
 R -> R : compatibleUnit(from: unit)\nelse throw invalidValue
-R --> Consumer : SampleQuery (not running)
+R --> Consumer : QueryHandle (not running)
 Consumer -> M : executeQuery(query)
 M -> S : execute(query)
 S -> R : results / error (background queue)
@@ -44,7 +44,8 @@ end
 ```
 
 The same shape applies to category, workout, correlation, statistics, anchored and series queries. Input errors
-throw synchronously at build time; HealthKit errors arrive in the handler.
+throw synchronously at build time; HealthKit errors arrive in the handler. Anchored queries return an `Anchor`
+(a `Codable` wrapper of the archived `HKQueryAnchor`) that the consumer passes to the next run.
 
 ## 6.3 Write
 
@@ -66,7 +67,7 @@ participant HealthKitObserver as O
 participant HealthKitManager as M
 participant HKHealthStore as S
 Consumer -> O : observerQuery(type:updateHandler:)
-O --> Consumer : ObserverQuery
+O --> Consumer : QueryHandle
 Consumer -> M : executeQuery(query)
 Consumer -> O : enableBackgroundDelivery(type:frequency:)
 O -> S : enableBackgroundDelivery
@@ -90,7 +91,7 @@ participant Consumer
 participant ElectrocardiogramRetriever as E
 participant SampleResultsCollector as C
 participant HKHealthStore as S
-Consumer -> S : execute(HKSampleQuery for ECGs)
+Consumer -> S : executeQuery(electrocardiogramQuery handle)
 S -> E : [HKElectrocardiogram]
 E -> C : init(count: n)
 loop each sample i

@@ -32,12 +32,12 @@ Rel(payloads, core, "Conforms to")
 
 | Building block | Responsibility | Location |
 | :--- | :--- | :--- |
-| **HealthKitReporter** (facade) | Entry point; creates one `HKHealthStore` per instance and injects it into all services. Declares the public query/callback typealiases. | `Sources/HealthKitReporter.swift` |
+| **HealthKitReporter** (facade) | Entry point; creates one `HKHealthStore` per instance and injects it into all services. Declares the public callback typealiases; queries are returned as `QueryHandle`. | `Sources/HealthKitReporter.swift` |
 | **Services** | The only layer that touches `HKHealthStore` and builds/executes HealthKit queries. | `Sources/Service/` |
-| **Types** | Library enums naming HealthKit object types; map to `HKObjectType` and back. | `Sources/Model/Type/` |
+| **Types** | Library enums naming HealthKit object types by `identifier`; the `HKObjectType` mapping is internal (`HealthKitObjectTypeConvertible`). | `Sources/Model/Type/` |
 | **Payloads** | Value types mirroring HealthKit objects; `Codable`, dictionary-constructible, convertible back to `HK*`. | `Sources/Model/Payload/` |
-| **Decorators** | Extensions on `HK*` and Foundation types: harmonization, unit/identifier lookup, enum descriptions, encoding. | `Sources/Decorator/` |
-| **Model protocols & error** | `Original`, `Harmonizable`, `Payload`, `UnitConvertable`, `Metadata`, `HealthKitError`. | `Sources/Model/*.swift`, `Sources/HealthKitError.swift` |
+| **Decorators** | Internal extensions on `HK*` types (harmonization, unit/identifier lookup, enum labels) and public Foundation helpers (`encoded()`, predicates). | `Sources/Decorator/` |
+| **Model protocols & error** | `Original`, `Harmonizable`, `Payload`, `UnitConvertable`, `Metadata`, `QueryHandle`, `Anchor`, `SamplePredicateOptions`, `HealthKitError`. | `Sources/Model/*.swift`, `Sources/HealthKitError.swift` |
 
 **Dependency direction:** Facade → Services → (Types, Payloads) → Decorators → Model protocols / HealthKit.
 Payloads and types never reference services; decorators never run queries.
@@ -59,7 +59,7 @@ Each service is a `public class` holding a single `private let healthStore: HKHe
 
 | Block | Content |
 | :--- | :--- |
-| `ObjectType` / `SampleType` protocols | `original: HKObjectType?`, `identifier`, `make(from:)` lookup by identifier. |
+| `ObjectType` / `SampleType` protocols | public `identifier` and `make(from:)` lookup by identifier; the internal `HealthKitObjectTypeConvertible` adds `original: HKObjectType?`. |
 | Sample types (`Type/Sample/`) | `QuantityType` (~240 cases), `CategoryType` (~140), `CorrelationType`, `WorkoutType`, `SeriesType`, `ElectrocardiogramType`, `AudiogramType`, `ClinicalType`, `DocumentType`, `VisionPrescriptionType`, `StateOfMindType`, `ScoredAssessmentType`. |
 | Non-sample types | `CharacteristicType`, `ActivitySummaryType`, `MedicationType`. |
 | Identifier registry | One identifier → `ObjectType` dictionary built from every family's `allCases`, behind `String.objectType` (ADR 0001). |
@@ -72,7 +72,7 @@ Every payload follows the same shape (reference: `Quantity.swift`):
 2. `public let` fields — `uuid`, `identifier`, `startTimestamp`, `endTimestamp`, `device`, `sourceRevision`, `harmonized`;
 3. `internal init(<hk>:) throws` from the HealthKit object;
 4. public memberwise `init` and `copyWith(...)`;
-5. extensions `Original` (`asOriginal()`), `Payload` (`make(from:)`, `collect(from:)`) and `Factory` (`collect(results:)`).
+5. extensions `Original` (`asOriginal()`), `Payload` (`make(from:)`, `collect(from:)`) and the internal `Factory` (`collect(results:)`).
 
 Families: samples (`Quantity`, `Category`, `Correlation`, `Workout`, `WorkoutRoute`, `HeartbeatSeries`,
 `Electrocardiogram`, `Audiogram`, `StateOfMind`, `ScoredAssessment`, `VisionPrescription`, `MedicationDoseEvent`,
@@ -87,5 +87,5 @@ Families: samples (`Quantity`, `Category`, `Correlation`, `Workout`, `WorkoutRou
 | :--- | :--- |
 | Harmonization of HK samples | `Extensions+HKQuantitiySample`, `+HKCategorySample`, `+HKWorkout`, `+HKElectrocardiogram`, `+HKStatistics`, `+HKActivitySummary` |
 | Type and unit lookup | `+HKQuantityType` (`siUnit`, `compatibleUnit(from:)`), `+HKCategoryType`, `+HKUnit`, `+String` (`objectType`) |
-| Enum descriptions | `+HKCategoryValue*`, `+HKWorkoutActivityType`, `+HKBloodType`, `+HKBiologicalSex`, ... (unknown cases are described, not crashed on) |
+| Enum labels | `+HKCategoryValue*`, `+HKWorkoutActivityType`, `+HKBloodType`, `+HKBiologicalSex`, ... — internal `label` / `detail`, no `CustomStringConvertible` on Apple types; unknown cases are described, not crashed on |
 | Foundation helpers | `+Date`, `+Double` (`asDate`), `+Dictionary`, `+DateComponents`, `+Encodable` (`encoded()`) |

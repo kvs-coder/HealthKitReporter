@@ -31,7 +31,7 @@ Rel(user, health, "Grants / denies access", "System authorization sheet")
 
 | Channel | Technology | Notes |
 | :--- | :--- | :--- |
-| Library ⇄ consumer | Swift function calls, completion closures (typealiases in `HealthKitReporter.swift`) | Callbacks arrive on HealthKit's background queues; consumers hop to the main queue themselves. |
+| Library ⇄ consumer | Swift function calls returning `QueryHandle`s, completion closures (typealiases in `HealthKitReporter.swift`); only library and Foundation types cross this boundary (ADR 0005) | Callbacks arrive on HealthKit's background queues; consumers hop to the main queue themselves. |
 | Library ⇄ Flutter plugin | JSON strings and `[String: Any]` dictionaries | Non-finite numbers are encoded as `"Infinity"`, `"-Infinity"`, `"NaN"`. |
 | Library ⇄ HealthKit | `HKHealthStore`, `HKQuery` subclasses, `HKAttachmentStore`, builders | One `HKHealthStore` per `HealthKitReporter` instance. |
 

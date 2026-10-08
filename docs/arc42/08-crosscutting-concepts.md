@@ -10,7 +10,7 @@ Two internal protocols carry every conversion:
 | `Original` | payload → HK | `associatedtype Object: NSObject; func asOriginal() throws -> Object` — implemented by payloads |
 | `Payload` (public) | dictionary → payload | `static func make(from: [String: Any]) throws -> Self` |
 
-`Factory.collect(results:)` turns a HealthKit result array into payloads and *skips* samples that fail to convert,
+The internal `Factory.collect(results:)` turns a HealthKit result array into payloads and *skips* samples that fail to convert,
 so one malformed sample does not fail a whole query.
 
 ## 8.2 Units
@@ -49,8 +49,8 @@ HealthKit identifier strings resolve to library types through one dictionary bui
 
 ## 8.6 Platform availability
 
-- Type enums return `nil` from `original` for cases the running OS lacks; services treat `nil` as `invalidType` or
-  `notAvailable`.
+- Type enums return `nil` from the internal `original` (and so from `identifier`) for cases the running OS lacks;
+  services treat `nil` as `invalidType` or `notAvailable`.
 - Newer APIs carry `@available(iOS X, watchOS Y, *)` or `if #available` with a `HealthKitError.notAvailable` fallback.
 - iOS-only HealthKit APIs (health records, CDA documents) are compiled only under `#if os(iOS)`.
 
@@ -70,8 +70,13 @@ singletons; consumers decide whether to hold one reporter for the app's lifetime
 
 ## 8.9 Testing
 
-- `Tests/<Payload>Tests.swift` — one `XCTestCase` per payload against the public API only: create → `encoded()` →
-  decode round trip, and `make(from:)` with a Flutter-shaped dictionary; fixed timestamps, every field asserted.
-- Type tests check `identifier`, `original` and `make(from:)` for new cases.
-- The CI coverage floor (`COVERAGE_THRESHOLD`) only ever rises.
-- Store-dependent paths (query execution, builders, background delivery) are verified via the Example app.
+- Tests use the public API only (no `@testable`).
+- `Tests/<Payload>Tests.swift` — one `XCTestCase` per payload: create → `encoded()` → decode round trip, and
+  `make(from:)` with a Flutter-shaped dictionary; fixed timestamps, every field asserted.
+- Type tests check `identifier` and `make(from:)` for new cases.
+- Every query is built, run and stopped through `QueryHandle`; in the unentitled test host HealthKit answers each
+  result closure with an error, which covers the closures' error paths.
+- The CI coverage floor (`COVERAGE_THRESHOLD`) rises with every test PR. It was lowered once, in 4.0.0, when the
+  public API stopped exposing HealthKit types and the tests that reached the mapping through it went away.
+- Store-dependent paths (HK → payload mapping, builders, background delivery, attachments) are verified via the
+  Example app.

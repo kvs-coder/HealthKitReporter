@@ -46,6 +46,10 @@ release-please reads Conventional Commits on `master`, keeps a `chore: release X
 
 ## 7.4 Example app
 
-`Example/` is a UIKit demo that consumes the repo root as a local Swift package. `ViewController` holds UI only;
-`HealthKitReporterService` owns the `HealthKitReporter` instance and runs every demo. It is the verification path for
-store-dependent behavior that unit tests cannot reach.
+`Example/` is a programmatic UIKit demo (MVVM with Combine) that consumes the repo root as a local Swift package:
+`DemoViewController` binds `DemoView` to `DemoViewModel`, whose `Input`/`Output` subjects carry tapped rows and
+per-row results, and `HealthKitReporterService` runs each of the ~70 demo rows through one `DemoPerformer` per
+library area. A SwiftUI watch companion (`HealthKitReporterWatch`) handles `startWatchApp`. On a fresh simulator the
+app authorizes and seeds a week of data for every writable type; clinical records are authorized separately because
+Health's records flow needs an Apple Account. It is the verification path for store-dependent behavior and for the
+HK → payload mapping, which unit tests cannot reach.
