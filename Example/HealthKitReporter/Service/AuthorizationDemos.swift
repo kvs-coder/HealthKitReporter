@@ -51,6 +51,18 @@ final class AuthorizationDemos: DemoPerformer {
                 manager.requestPerObjectReadAuthorization(for: MedicationType.userAnnotatedMedication) {
                     completion($0 ? .success("Medications chosen") : .failure($1 ?? HealthKitError.unknown()))
                 }
+            case .healthRecordsAuthorization:
+                guard manager.supportsHealthRecords() else {
+                    throw HealthKitError.notAvailable("Health records are not supported on this device")
+                }
+                let clinicalTypes = reporter.demoClinicalTypes
+                manager.requestAuthorization(toRead: clinicalTypes, toWrite: []) { success, error in
+                    completion(
+                        success
+                            ? .success("Requested \(clinicalTypes.count) clinical record types")
+                            : .failure(error ?? HealthKitError.unknown())
+                    )
+                }
             default:
                 throw HealthKitError.invalidOption("\(row) is not an authorization demo")
             }

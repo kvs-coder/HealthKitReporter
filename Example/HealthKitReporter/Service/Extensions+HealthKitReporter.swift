@@ -57,22 +57,19 @@ extension HealthKitReporter {
         return types.joined().filter { $0.identifier != nil }
     }
 
-    /// Read access: every sample type, characteristics, activity summaries and,
-    /// where the device supports them, clinical records.
-    /// Vision prescriptions and medications use per-object authorization instead
+    /// Read access: every sample type, characteristics and activity summaries.
+    /// Clinical records start Health's records flow, which needs an Apple Account, so they have their own request;
+    /// vision prescriptions and medications use per-object authorization
     var demoReadTypes: [ObjectType] {
-        #if os(iOS)
-        let includingHealthRecords = manager.supportsHealthRecords()
-        #else
-        let includingHealthRecords = false
-        #endif
         var types: [ObjectType] = demoSampleTypes
         types += CharacteristicType.allCases.filter { $0.identifier != nil } as [ObjectType]
         types += ActivitySummaryType.allCases.filter { $0.identifier != nil } as [ObjectType]
-        if includingHealthRecords {
-            types += ClinicalType.allCases.filter { $0.identifier != nil } as [ObjectType]
-        }
         return types
+    }
+
+    /// Clinical record types, requested separately from everything else
+    var demoClinicalTypes: [ObjectType] {
+        return ClinicalType.allCases.filter { $0.identifier != nil }
     }
 
     /// Write access: every sample type HealthKit lets apps write

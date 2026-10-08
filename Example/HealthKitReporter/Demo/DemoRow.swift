@@ -14,6 +14,7 @@ enum DemoRow: String, CaseIterable {
     case isAuthorizedToWrite
     case visionPrescriptionAuthorization
     case medicationAuthorization
+    case healthRecordsAuthorization
     case characteristics
     case quantityQuery
     case categoryQuery
@@ -85,7 +86,8 @@ enum DemoRow: String, CaseIterable {
              .authorizationRequestStatus,
              .isAuthorizedToWrite,
              .visionPrescriptionAuthorization,
-             .medicationAuthorization:
+             .medicationAuthorization,
+             .healthRecordsAuthorization:
             return .authorization
         case .characteristics:
             return .characteristics
@@ -192,6 +194,8 @@ extension DemoRow {
             return "Vision prescription access"
         case .medicationAuthorization:
             return "Medication access"
+        case .healthRecordsAuthorization:
+            return "Health records access (needs an Apple Account)"
         case .characteristics:
             return "Characteristics"
         case .quantityQuery:
@@ -338,6 +342,8 @@ extension DemoRow {
             return "manager.requestPerObjectReadAuthorization(for:)"
         case .medicationAuthorization:
             return "manager.requestPerObjectReadAuthorization(for:)"
+        case .healthRecordsAuthorization:
+            return "manager.requestAuthorization(toRead: ClinicalType…)"
         case .characteristics:
             return "reader.characteristics()"
         case .quantityQuery:
