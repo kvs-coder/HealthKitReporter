@@ -17,10 +17,12 @@ public enum ElectrocardiogramType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .electrocardiogramType:
             return HKObjectType.electrocardiogramType()
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension ElectrocardiogramType: HealthKitObjectTypeConvertible {}

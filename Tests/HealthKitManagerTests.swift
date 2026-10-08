@@ -17,9 +17,6 @@ class HealthKitManagerTests: XCTestCase {
         var identifier: String? {
             return nil
         }
-        var original: HKObjectType? {
-            return nil
-        }
     }
 
     private var sut: HealthKitManager!

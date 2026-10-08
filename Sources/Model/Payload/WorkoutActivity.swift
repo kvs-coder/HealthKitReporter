@@ -59,7 +59,7 @@ public struct WorkoutActivity: Codable {
         let configuration = activity.workoutConfiguration
         self.uuid = activity.uuid.uuidString
         self.activityValue = Int(configuration.activityType.rawValue)
-        self.activityDescription = configuration.activityType.description
+        self.activityDescription = configuration.activityType.label
         self.locationValue = configuration.locationType.rawValue
         self.swimmingLocationValue = configuration.swimmingLocationType.rawValue
         self.lapLength = configuration.lapLength?.doubleValue(for: .meter())

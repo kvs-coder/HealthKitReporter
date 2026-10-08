@@ -28,6 +28,24 @@ Fix all of them in one major release instead of spreading breaking changes over 
 | Non-finite numbers | `"inf"` for both infinities, `"-500.0"` for NaN | `"Infinity"`, `"-Infinity"`, `"NaN"` |
 | Descriptions | "Pickerball", "Handy Cycling", "Prepare and Recovery", "Sinus rhytm", "Pause on resume request" | "Pickleball", "Hand Cycling", "Preparation and Recovery", "Sinus rhythm", "Pause or resume request" |
 
+HealthKit types also leave the public API in the same release (ADR 0005):
+
+| Change | Before | After |
+| :--- | :--- | :--- |
+| Query typealiases | `Query`, `SampleQuery`, `ObserverQuery`, `StatisticsQuery`, `StatisticsCollectionQuery`, `AnchoredObjectQuery`, `SourceQuery`, `CorrelationQuery`, `ActivitySummaryQuery`, `DocumentQuery`, `VerifiableClinicalRecordQuery`, `QuantitySeriesSampleQuery`, `WorkoutEffortRelationshipQuery`, `UserAnnotatedMedicationQuery` | `QueryHandle`, returned by every reader and observer method |
+| `executeQuery` / `stopQuery` | take `HKQuery` | take `QueryHandle` |
+| Handler `query` parameter | `Query?` | `QueryHandle?` (`SampleResultsHandler`, `AnchoredResultsHandler`, `ObserverUpdateHandler`, `ObserverCompletionUpdateHandler`, `ObserverDescriptorsUpdateHandler`) |
+| `Anchor` | `HKQueryAnchor`; default `HKQueryAnchor(fromValue: HKAnchoredObjectQueryNoAnchor)` | `Codable` struct, encodes as a base64 string; default `nil` |
+| `ObjectType.original` | public `HKObjectType?` on every type enum | removed; `ObjectType` requires `identifier` |
+| `SampleType.identifier` | declared on `SampleType` | declared on `ObjectType`, so characteristic, activity summary and medication types have it too |
+| Payload factories | public `collect(results:)` (`[HKSample]`), `Quantity.collect(results:unit:)`, `VerifiableClinicalRecord.collect(results:)`, `DeletedObject.collect(deletedObjects:)` | internal; use the reader queries |
+| `PreferredUnit.collect(from: [HKQuantityType: HKUnit])` | public | internal; `collect(from: [QuantityType: String])` stays |
+| `Dictionary.sampleTypePredicates` | public | internal |
+| `NSPredicate.samplesPredicate(options:)` | `HKQueryOptions` | `SamplePredicateOptions` (`.strictStartDate`, `.strictEndDate`) |
+| `CustomStringConvertible` on HealthKit enums | `description` / `detail` on `HKCategoryValue…`, `HKBiologicalSex`, `HKBloodType`, `HKFitzpatrickSkinType`, `HKActivityMoveMode`, `HKWorkoutActivityType`, `HKWorkoutEventType`, `HKVisionPrescriptionType`, `HKElectrocardiogram.Classification` / `SymptomsStatus` | removed; payload strings are unchanged |
+
+In the Flutter plugin this means: keep `QueryHandle` instead of `ObserverQuery` / `SampleQuery` for running and stopping queries, persist `Anchor` as its encoded string, and pass `SamplePredicateOptions` to `samplesPredicate`.
+
 Each change is committed as `feat!` / `fix!` with a `BREAKING CHANGE:` footer, so release-please bumps the major version.
 
 The decoding of symptom samples with the severity enum (W7) also changes `description` / `detail` strings. It is shipped as a fix, because the previous strings were wrong for every value but "not present".

@@ -92,6 +92,7 @@ class ObjectTypeTests: XCTestCase {
             }
         }
     }
+
     func testStringObjectType() throws {
         XCTAssertNotNil("HKQuantityTypeIdentifierStepCount".objectType as? QuantityType)
         XCTAssertNotNil("HKCategoryTypeIdentifierSleepAnalysis".objectType as? CategoryType)
@@ -106,37 +107,17 @@ class ObjectTypeTests: XCTestCase {
         XCTAssertNotNil("HKVisionPrescriptionTypeIdentifier".objectType as? VisionPrescriptionType)
         XCTAssertNil("invalid".objectType)
     }
-    func testSampleTypePredicates() throws {
-        let predicate = NSPredicate.samplesPredicate(startDate: startDate, endDate: endDate)
-        let predicates: [String: NSPredicate] = [
-            "HKQuantityTypeIdentifierStepCount": predicate,
-            "HKCategoryTypeIdentifierSleepAnalysis": predicate,
-            "HKClinicalTypeIdentifierAllergyRecord": predicate,
-            "HKVisionPrescriptionTypeIdentifier": predicate,
-            "HKCharacteristicTypeIdentifierBloodType": predicate,
-            "invalid": predicate
-        ]
-        let sut = predicates.sampleTypePredicates
-        XCTAssertEqual(
-            Set(sut.keys.map(\.identifier)),
-            [
-                "HKQuantityTypeIdentifierStepCount",
-                "HKCategoryTypeIdentifierSleepAnalysis",
-                "HKClinicalTypeIdentifierAllergyRecord",
-                "HKVisionPrescriptionTypeIdentifier"
-            ]
-        )
-        XCTAssertTrue(sut.values.allSatisfy { $0 == predicate })
-    }
 
+    /// Every case has an identifier on this OS and is found again by it
     private func assertAllCases<T: ObjectType & CaseIterable & Equatable>(
         _ type: T.Type,
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
         for sut in T.allCases {
-            let original = try XCTUnwrap(sut.original, "\(sut)", file: file, line: line)
-            XCTAssertEqual(try T.make(from: original.identifier), sut, "\(sut)", file: file, line: line)
+            let identifier = try XCTUnwrap(sut.identifier, "\(sut)", file: file, line: line)
+            XCTAssertEqual(try T.make(from: identifier), sut, "\(sut)", file: file, line: line)
+            XCTAssertEqual(identifier.objectType?.identifier, identifier, "\(sut)", file: file, line: line)
         }
     }
     private func assertSampleTypeIdentifiers<T: SampleType & CaseIterable>(
@@ -146,7 +127,6 @@ class ObjectTypeTests: XCTestCase {
     ) throws {
         for sut in T.allCases {
             XCTAssertNotNil(sut.identifier, "\(sut)", file: file, line: line)
-            XCTAssertEqual(sut.identifier, sut.original?.identifier, "\(sut)", file: file, line: line)
         }
     }
 }

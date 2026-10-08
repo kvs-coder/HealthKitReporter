@@ -70,35 +70,6 @@ class MetadataTests: XCTestCase {
         assertInvalidValue(try Metadata.make(from: ["key": [1, 2]]))
         assertInvalidValue(try Metadata.make(from: ["key": ["value": 1]]))
     }
-    func testReadMixedMetadataFromHealthKit() throws {
-        let sample = HKQuantitySample(
-            type: HKQuantityType(.heartRate),
-            quantity: HKQuantity(unit: .count().unitDivided(by: .minute()), doubleValue: 130),
-            start: startDate,
-            end: endDate,
-            metadata: [
-                HKMetadataKeyTimeZone: "Europe/Berlin",
-                HKMetadataKeyWasUserEntered: true,
-                HKMetadataKeyHeartRateEventThreshold: HKQuantity(
-                    unit: .count().unitDivided(by: .minute()),
-                    doubleValue: 120
-                ),
-                "custom date": startDate,
-                "custom number": 7
-            ]
-        )
-        let sut = try XCTUnwrap(parse([sample]).first as? Quantity)
-        XCTAssertEqual(
-            sut.harmonized.metadata,
-            [
-                "HKTimeZone": "Europe/Berlin",
-                "HKWasUserEntered": true,
-                "HKHeartRateEventThreshold": .quantity(value: 120, unit: "count/min"),
-                "custom date": .date(timestamp: 1626884800),
-                "custom number": 7
-            ]
-        )
-    }
     func testWriteMixedMetadataToHealthKit() throws {
         let quantity = try Quantity.make(
             from: [

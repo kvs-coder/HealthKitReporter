@@ -28,7 +28,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping AudiogramResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         return try typedSampleQuery(
             type: AudiogramType.audiogram,
             predicate: predicate,
@@ -58,7 +58,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping StateOfMindResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         return try typedSampleQuery(
             type: StateOfMindType.stateOfMind,
             predicate: predicate,
@@ -90,7 +90,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping ScoredAssessmentResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         return try typedSampleQuery(
             type: type,
             predicate: predicate,

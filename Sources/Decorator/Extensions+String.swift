@@ -28,7 +28,7 @@ private let objectTypesByIdentifier: [String: ObjectType] = {
     ]
     return Dictionary(
         types.joined().compactMap { type in
-            type.original.map { ($0.identifier, type) }
+            type.hkObjectType.map { ($0.identifier, type) }
         },
         uniquingKeysWith: { first, _ in first }
     )

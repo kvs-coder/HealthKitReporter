@@ -30,8 +30,8 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping CorrelationResultsHandler
-    ) throws -> SampleQuery {
-        guard let correlationType = type.original as? HKCorrelationType else {
+    ) throws -> QueryHandle {
+        guard let correlationType = type.hkObjectType as? HKCorrelationType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKWorkoutType"
             )
@@ -54,7 +54,7 @@ extension HealthKitReader {
             )
             resultsHandler(samples, nil)
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries correlation.
@@ -70,8 +70,8 @@ extension HealthKitReader {
         predicate: NSPredicate? = .allSamples,
         typePredicates: [String: NSPredicate]? = nil,
         completionHandler: @escaping CorrelationCompletionHandler
-    ) throws -> CorrelationQuery {
-        guard let correlationType = type.original as? HKCorrelationType else {
+    ) throws -> QueryHandle {
+        guard let correlationType = type.hkObjectType as? HKCorrelationType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKCorrelationType"
             )
@@ -99,6 +99,6 @@ extension HealthKitReader {
             }
             completionHandler(correlations, nil)
         }
-        return query
+        return QueryHandle(query)
     }
 }

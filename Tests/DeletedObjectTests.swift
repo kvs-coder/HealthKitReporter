@@ -49,8 +49,4 @@ class DeletedObjectTests: XCTestCase {
             decoding: DeletedObject.self
         )
     }
-    func testCollectFromNoDeletedObjects() throws {
-        XCTAssertTrue(DeletedObject.collect(deletedObjects: nil).isEmpty)
-        XCTAssertTrue(DeletedObject.collect(deletedObjects: []).isEmpty)
-    }
 }

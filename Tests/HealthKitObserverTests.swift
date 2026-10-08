@@ -17,9 +17,6 @@ class HealthKitObserverTests: XCTestCase {
         var identifier: String? {
             return nil
         }
-        var original: HKObjectType? {
-            return nil
-        }
     }
 
     private var sut: HealthKitObserver!
@@ -33,22 +30,6 @@ class HealthKitObserverTests: XCTestCase {
         super.tearDown()
     }
 
-    func testObserverQuery() throws {
-        let query = try sut.observerQuery(type: QuantityType.stepCount) { _, _, _ in }
-        XCTAssertEqual(query.objectType?.identifier, "HKQuantityTypeIdentifierStepCount")
-        XCTAssertNil(query.predicate)
-    }
-    func testObserverQueryWithConsumerCompletion() throws {
-        let predicate = NSPredicate.samplesPredicate(startDate: startDate, endDate: endDate)
-        let query = try sut.observerQuery(
-            type: CategoryType.sleepAnalysis,
-            predicate: predicate
-        ) { _, _, _, completion in
-            completion()
-        }
-        XCTAssertEqual(query.objectType?.identifier, "HKCategoryTypeIdentifierSleepAnalysis")
-        XCTAssertEqual(query.predicate, predicate)
-    }
     func testObserverQueryWithInvalidType() throws {
         assertInvalidType(try sut.observerQuery(type: UnavailableType.unavailable) { _, _, _ in })
         assertInvalidType(

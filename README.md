@@ -155,6 +155,17 @@ Metadata encodes as a flat object. Strings, numbers and booleans are plain JSON 
 
 Timestamps are seconds since 1970. JSON has no infinity or NaN, so `encoded()` writes non-finite numbers as the strings `"Infinity"`, `"-Infinity"` and `"NaN"`, which Dart's `double.parse` and JavaScript's `Number` accept.
 
+### Queries and anchors
+
+Reader and observer methods return a `QueryHandle`. Run it with `manager.executeQuery(_:)` and stop long-lived queries with `manager.stopQuery(_:)`. Anchored queries hand back an `Anchor`, which encodes as a base64 string, so it can be stored and passed to the next run to receive only the changes:
+
+```swift
+let query = try reporter.reader.anchoredObjectQuery(type: QuantityType.stepCount, anchor: savedAnchor) { _, samples, deleted, anchor, error in
+    savedAnchor = anchor // e.g. persist try anchor?.encoded()
+}
+reporter.manager.executeQuery(query)
+```
+
 ### Statistics collections
 
 `statisticsCollectionQuery` with a `resultsHandler` delivers whole batches: every interval from `enumerateFrom` to `enumerateTo` (now by default) once, then, with `monitorUpdates`, only the intervals each update changed.

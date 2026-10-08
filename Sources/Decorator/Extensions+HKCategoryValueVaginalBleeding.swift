@@ -8,11 +8,12 @@
 import HealthKit
 
 @available(iOS 18.0, watchOS 11.0, *)
-extension HKCategoryValueVaginalBleeding: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueVaginalBleeding {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueVaginalBleeding"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .unspecified:
             return "Unspecified"

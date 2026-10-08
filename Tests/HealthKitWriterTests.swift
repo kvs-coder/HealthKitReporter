@@ -14,7 +14,7 @@ class HealthKitWriterTests: XCTestCase {
     private enum UnavailableType: ObjectType {
         case unavailable
 
-        var original: HKObjectType? {
+        var identifier: String? {
             return nil
         }
     }

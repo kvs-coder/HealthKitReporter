@@ -18,7 +18,11 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
     case wheelchairUse
     case activityMoveMode
 
-    public var original: HKObjectType? {
+    public var identifier: String? {
+        return original?.identifier
+    }
+
+    var original: HKObjectType? {
         switch self {
         case .fitzpatrickSkinType:
             return  HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)
@@ -35,3 +39,5 @@ public enum CharacteristicType: Int, CaseIterable, ObjectType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension CharacteristicType: HealthKitObjectTypeConvertible {}

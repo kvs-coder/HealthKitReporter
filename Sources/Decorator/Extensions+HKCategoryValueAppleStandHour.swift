@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueAppleStandHour: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueAppleStandHour {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueAppleStandHour"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .stood:
             return "Stood"

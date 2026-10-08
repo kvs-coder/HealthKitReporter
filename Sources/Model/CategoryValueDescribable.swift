@@ -8,6 +8,7 @@
 import Foundation
 
 /// A HealthKit category value enum that names its type and its value for **Category.Harmonized**
-protocol CategoryValueDescribable: CustomStringConvertible {
+protocol CategoryValueDescribable {
+    var label: String { get }
     var detail: String { get }
 }

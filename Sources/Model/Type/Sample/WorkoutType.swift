@@ -17,10 +17,12 @@ public enum WorkoutType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .workoutType:
             return HKObjectType.workoutType()
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension WorkoutType: HealthKitObjectTypeConvertible {}

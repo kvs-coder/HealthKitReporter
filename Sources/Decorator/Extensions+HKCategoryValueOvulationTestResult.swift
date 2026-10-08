@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueOvulationTestResult: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueOvulationTestResult {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueOvulationTestResult"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .negative:
             return "Negative"

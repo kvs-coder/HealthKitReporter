@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueContraceptive: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueContraceptive {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueContraceptive"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .unspecified:
             return "Unspecified"

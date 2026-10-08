@@ -53,3 +53,15 @@ identifier_name:
     - URL
     - GlobalAPIKey
 reporter: "xcode" # reporter type (xcode, json, csv, checkstyle, junit, html, emoji, sonarqube, markdown)
+
+custom_rules:
+  no_public_healthkit_types:
+    name: "No public HealthKit types"
+    included: ".*/Sources/.*\\.swift"
+    regex: "\\bpublic\\b[^\\n{]*\\bHK[A-Z]\\w*"
+    excluded_match_kinds:
+      - comment
+      - doccomment
+      - string
+    message: "Public API takes and returns library types; keep HealthKit types internal"
+    severity: error

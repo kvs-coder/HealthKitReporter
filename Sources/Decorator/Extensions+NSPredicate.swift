@@ -15,15 +15,23 @@ public extension NSPredicate {
             options: []
         )
     }
+    /**
+     Samples between two dates.
+     - Parameter startDate: **Date** start
+     - Parameter endDate: **Date** end
+     - Parameter options: **SamplePredicateOptions** whether samples must start and end inside the range.
+     Both by default
+     - Returns: **NSPredicate** predicate
+     */
     static func samplesPredicate(
         startDate: Date,
         endDate: Date,
-        options: HKQueryOptions = [.strictStartDate, .strictEndDate]
+        options: SamplePredicateOptions = [.strictStartDate, .strictEndDate]
     ) -> NSPredicate {
         return HKQuery.predicateForSamples(
             withStart: startDate,
             end: endDate,
-            options: options
+            options: options.original
         )
     }
     static func activitySummaryPredicate(

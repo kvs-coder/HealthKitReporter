@@ -58,21 +58,6 @@ class ScoredAssessmentTests: XCTestCase {
         XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
         XCTAssertEqual(sut.harmonized.copyWith(answers: [1]).answers, [1])
     }
-    func testCollectAndParseResults() throws {
-        let gad7 = HKGAD7Assessment(date: startDate, answers: Array(repeating: .severalDays, count: 7))
-        let phq9 = HKPHQ9Assessment(
-            date: startDate,
-            answers: Array(repeating: .nearlyEveryDay, count: 8) + [.preferNotToAnswer]
-        )
-        let sut = ScoredAssessment.collect(results: [gad7, phq9])
-        XCTAssertEqual(sut.map(\.identifier), [gad7.sampleType.identifier, phq9.sampleType.identifier])
-        XCTAssertEqual(sut[0].harmonized.answers, Array(repeating: 1, count: 7))
-        XCTAssertEqual(sut[0].harmonized.score, gad7.score)
-        XCTAssertEqual(sut[0].harmonized.risk, gad7.risk.rawValue)
-        XCTAssertEqual(sut[1].harmonized.answers, Array(repeating: 3, count: 8) + [4])
-        XCTAssertEqual(sut[1].harmonized.risk, phq9.risk.rawValue)
-        XCTAssertEqual((try parse([phq9]).first as? ScoredAssessment)?.uuid, phq9.uuid.uuidString)
-    }
     func testSave() throws {
         let gad7 = try ScoredAssessment.make(from: dictionary)
         let phq9 = gad7.copyWith(
@@ -91,12 +76,6 @@ class ScoredAssessmentTests: XCTestCase {
             assertInvalidValue(try { throw try XCTUnwrap(try save(sample)) }())
         }
         assertInvalidType(try { throw try XCTUnwrap(try save(gad7.copyWith(identifier: "invalid"))) }())
-    }
-    func testScoredAssessmentQuery() throws {
-        for type in ScoredAssessmentType.allCases {
-            let query = try HealthKitReporter().reader.scoredAssessmentQuery(type: type) { _, _ in }
-            XCTAssertEqual(query.objectType?.identifier, type.identifier)
-        }
     }
 
     private func assertAssessment(

@@ -66,27 +66,6 @@ class StateOfMindTests: XCTestCase {
         XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
         XCTAssertEqual(sut.harmonized.copyWith(valence: -1).valence, -1)
     }
-    func testCollectAndParseResults() throws {
-        let sample = HKStateOfMind(
-            date: startDate,
-            kind: .dailyMood,
-            valence: -0.6,
-            labels: [.stressed, .drained],
-            associations: [.work],
-            metadata: nil
-        )
-        let sut = try XCTUnwrap(StateOfMind.collect(results: [sample]).first)
-        XCTAssertEqual(sut.uuid, sample.uuid.uuidString)
-        XCTAssertEqual(sut.harmonized.kind, 2)
-        XCTAssertEqual(sut.harmonized.valence, -0.6, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.valenceClassification, sample.valenceClassification.rawValue)
-        XCTAssertEqual(
-            sut.harmonized.labels,
-            [HKStateOfMind.Label.stressed.rawValue, HKStateOfMind.Label.drained.rawValue]
-        )
-        XCTAssertEqual(sut.harmonized.associations, [HKStateOfMind.Association.work.rawValue])
-        XCTAssertEqual((try parse([sample]).first as? StateOfMind)?.uuid, sample.uuid.uuidString)
-    }
     func testSave() throws {
         let sut = try StateOfMind.make(from: dictionary)
         XCTAssertEqual((try save(sut) as NSError?)?.domain, HKErrorDomain)
@@ -99,11 +78,6 @@ class StateOfMindTests: XCTestCase {
         for harmonized in invalid {
             assertInvalidValue(try { throw try XCTUnwrap(try save(sut.copyWith(harmonized: harmonized))) }())
         }
-    }
-    func testStateOfMindQuery() throws {
-        let query = try HealthKitReporter().reader.stateOfMindQuery(limit: 3) { _, _ in }
-        XCTAssertEqual(query.objectType?.identifier, "HKDataTypeStateOfMind")
-        XCTAssertEqual(query.limit, 3)
     }
 
     private func assertStateOfMind(

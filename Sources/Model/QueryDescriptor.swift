@@ -20,7 +20,7 @@ public struct QueryDescriptor {
 // MARK: - Original
 extension QueryDescriptor: Original {
     func asOriginal() throws -> HKQueryDescriptor {
-        guard let sampleType = type.original as? HKSampleType else {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
         }
         return HKQueryDescriptor(sampleType: sampleType, predicate: predicate)

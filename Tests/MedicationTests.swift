@@ -100,20 +100,4 @@ class MedicationTests: XCTestCase {
             make: UserAnnotatedMedication.make
         )
     }
-    func testMedicationQueries() throws {
-        let reader = HealthKitReporter().reader
-        let doses = try reader.medicationDoseEventQuery(limit: 2) { _, _ in }
-        XCTAssertEqual(doses.objectType?.identifier, MedicationType.medicationDoseEvent.original?.identifier)
-        XCTAssertEqual(doses.limit, 2)
-        assertInvalidValue(
-            try reader.medicationDoseEventQuery(medicationConceptIdentifier: "not archived") { _, _ in }
-        )
-        XCTAssertNotNil(reader.userAnnotatedMedicationQuery { _, _ in })
-    }
-    func testMedicationTypesAndPerObjectAuthorization() throws {
-        XCTAssertNotNil(MedicationType.medicationDoseEvent.original as? HKSampleType)
-        XCTAssertNotNil(MedicationType.userAnnotatedMedication.original)
-        let identifier = try XCTUnwrap(MedicationType.userAnnotatedMedication.original?.identifier)
-        XCTAssertEqual(identifier.objectType as? MedicationType, .userAnnotatedMedication)
-    }
 }

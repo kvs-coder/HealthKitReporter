@@ -101,18 +101,6 @@ extension XCTestCase {
         return Date(timeIntervalSince1970: endTimestamp)
     }
     /// Runs HK samples through the anchored query update handler: the public HK → payload path of the reader
-    func parse(_ samples: [HKSample]) throws -> [Sample] {
-        var parsed = [Sample]()
-        let query = try HealthKitReporter().reader.anchoredObjectQuery(
-            type: QuantityType.stepCount,
-            monitorUpdates: true
-        ) { _, samples, _, _, _ in
-            parsed = samples
-        }
-        let updateHandler = try XCTUnwrap(query.updateHandler)
-        updateHandler(query, samples, nil, nil, nil)
-        return parsed
-    }
     /// Decodes the payload from a dictionary the way the Flutter plugin sends it over the channel
     func decode<T: Decodable>(
         _ type: T.Type,

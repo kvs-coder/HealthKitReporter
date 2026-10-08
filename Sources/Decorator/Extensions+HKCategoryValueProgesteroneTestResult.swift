@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueProgesteroneTestResult: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueProgesteroneTestResult {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueProgesteroneTestResult"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .negative:
             return "Negative"

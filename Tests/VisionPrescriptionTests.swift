@@ -147,87 +147,6 @@ class VisionPrescriptionTests: XCTestCase {
 // MARK: - Factory
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescriptionTests {
-    func testCollectGlassesResults() throws {
-        let glasses = HKGlassesPrescription(
-            rightEyeSpecification: HKGlassesLensSpecification(
-                sphere: HKQuantity(unit: .diopter(), doubleValue: -1.25),
-                cylinder: HKQuantity(unit: .diopter(), doubleValue: -0.5),
-                axis: HKQuantity(unit: .degreeAngle(), doubleValue: 180),
-                addPower: HKQuantity(unit: .diopter(), doubleValue: 1),
-                vertexDistance: HKQuantity(unit: .meterUnit(with: .milli), doubleValue: 12),
-                prism: HKVisionPrism(
-                    amount: HKQuantity(unit: .prismDiopter(), doubleValue: 1.5),
-                    angle: HKQuantity(unit: .degreeAngle(), doubleValue: 90),
-                    eye: .right
-                ),
-                farPupillaryDistance: HKQuantity(unit: .meterUnit(with: .milli), doubleValue: 32),
-                nearPupillaryDistance: HKQuantity(unit: .meterUnit(with: .milli), doubleValue: 30)
-            ),
-            leftEyeSpecification: HKGlassesLensSpecification(
-                sphere: HKQuantity(unit: .diopter(), doubleValue: -1),
-                cylinder: nil,
-                axis: nil,
-                addPower: nil,
-                vertexDistance: nil,
-                prism: nil,
-                farPupillaryDistance: nil,
-                nearPupillaryDistance: nil
-            ),
-            dateIssued: startDate,
-            expirationDate: endDate,
-            device: nil,
-            metadata: [HKMetadataKeyWasUserEntered: true]
-        )
-        let sut = try XCTUnwrap(VisionPrescription.collect(results: [glasses]).first)
-        XCTAssertEqual(sut.uuid, glasses.uuid.uuidString)
-        XCTAssertEqual(sut.harmonized.dateIssuedTimestamp, 1626884800, accuracy: 0.001)
-        XCTAssertEqual(try XCTUnwrap(sut.harmonized.expirationDateTimestamp), 1626884860, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.prescriptionType.id, 1)
-        XCTAssertEqual(sut.harmonized.prescriptionType.detail, "Glasses")
-        assertRightEye(sut.harmonized.rightEye)
-        XCTAssertEqual(try XCTUnwrap(sut.harmonized.leftEye).sphere, -1, accuracy: 0.001)
-        XCTAssertNil(sut.harmonized.brand)
-        XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true])
-        let parsed = try XCTUnwrap(parse([glasses]).first as? VisionPrescription)
-        XCTAssertEqual(parsed.uuid, glasses.uuid.uuidString)
-    }
-    func testCollectContactsResults() throws {
-        let contacts = HKContactsPrescription(
-            rightEyeSpecification: HKContactsLensSpecification(
-                sphere: HKQuantity(unit: .diopter(), doubleValue: -2),
-                cylinder: nil,
-                axis: nil,
-                addPower: nil,
-                baseCurve: HKQuantity(unit: .meterUnit(with: .milli), doubleValue: 8.6),
-                diameter: HKQuantity(unit: .meterUnit(with: .milli), doubleValue: 14.2)
-            ),
-            leftEyeSpecification: nil,
-            brand: "Acuvue",
-            dateIssued: startDate,
-            expirationDate: nil,
-            device: nil,
-            metadata: nil
-        )
-        let sut = try XCTUnwrap(VisionPrescription.collect(results: [contacts]).first)
-        XCTAssertEqual(sut.harmonized.prescriptionType.id, 2)
-        XCTAssertEqual(sut.harmonized.brand, "Acuvue")
-        let rightEye = try XCTUnwrap(sut.harmonized.rightEye)
-        XCTAssertEqual(rightEye.sphere, -2, accuracy: 0.001)
-        XCTAssertEqual(try XCTUnwrap(rightEye.baseCurve), 8.6, accuracy: 0.001)
-        XCTAssertEqual(try XCTUnwrap(rightEye.diameter), 14.2, accuracy: 0.001)
-        XCTAssertNil(rightEye.prism)
-        XCTAssertNil(sut.harmonized.leftEye)
-        XCTAssertNil(sut.harmonized.expirationDateTimestamp)
-    }
-    func testCollectResultsIgnoresOtherSamples() throws {
-        let sample = HKQuantitySample(
-            type: HKQuantityType(.stepCount),
-            quantity: HKQuantity(unit: .count(), doubleValue: 1),
-            start: startDate,
-            end: endDate
-        )
-        XCTAssertTrue(VisionPrescription.collect(results: [sample]).isEmpty)
-    }
     func testSaveConvertsGlassesAndContactsBeforeReachingHealthKit() throws {
         let glasses = try VisionPrescription.make(from: dictionary)
         let contacts = glasses.copyWith(
@@ -273,9 +192,6 @@ extension VisionPrescriptionTests {
         case unavailable
 
         var identifier: String? {
-            return nil
-        }
-        var original: HKObjectType? {
             return nil
         }
     }

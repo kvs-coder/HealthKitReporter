@@ -33,7 +33,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping MedicationDoseEventResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         var predicates = [predicate].compactMap { $0 }
         if let medicationConceptIdentifier = medicationConceptIdentifier {
             predicates.append(
@@ -64,9 +64,9 @@ extension HealthKitReader {
         predicate: NSPredicate? = nil,
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping UserAnnotatedMedicationResultsHandler
-    ) -> UserAnnotatedMedicationQuery {
+    ) -> QueryHandle {
         var medications = [UserAnnotatedMedication]()
-        return HKUserAnnotatedMedicationQuery(
+        return QueryHandle(HKUserAnnotatedMedicationQuery(
             predicate: predicate,
             limit: limit
         ) { (_, medication, done, error) in
@@ -80,6 +80,6 @@ extension HealthKitReader {
             if done {
                 resultsHandler(medications, nil)
             }
-        }
+        })
     }
 }

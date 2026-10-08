@@ -28,7 +28,7 @@ public class HealthKitObserver {
         type: SampleType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverUpdateHandler
-    ) throws -> ObserverQuery {
+    ) throws -> QueryHandle {
         return try observerQuery(
             type: type,
             predicate: predicate
@@ -49,29 +49,29 @@ public class HealthKitObserver {
         type: SampleType,
         predicate: NSPredicate? = nil,
         updateHandler: @escaping ObserverCompletionUpdateHandler
-    ) throws -> ObserverQuery {
-        guard let sampleType = type.original as? HKSampleType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType("Invalid HKSampleType: \(type)")
         }
-        return HKObserverQuery(
+        return QueryHandle(HKObserverQuery(
             sampleType: sampleType,
             predicate: predicate
         ) { (query, completion, error) in
             if let error = error {
-                updateHandler(query, nil, error, completion)
+                updateHandler(QueryHandle(query), nil, error, completion)
                 return
             }
             guard let identifier = query.objectType?.identifier else {
                 updateHandler(
-                    query,
+                    QueryHandle(query),
                     nil,
                     HealthKitError.unknown("Unknown object type for query: \(query)"),
                     completion
                 )
                 return
             }
-            updateHandler(query, identifier, nil, completion)
-        }
+            updateHandler(QueryHandle(query), identifier, nil, completion)
+        })
     }
     /**
      Sets one observer query for several types.
@@ -83,18 +83,18 @@ public class HealthKitObserver {
     public func observerQuery(
         descriptors: [QueryDescriptor],
         updateHandler: @escaping ObserverDescriptorsUpdateHandler
-    ) throws -> ObserverQuery {
-        return HKObserverQuery(
+    ) throws -> QueryHandle {
+        return QueryHandle(HKObserverQuery(
             queryDescriptors: try descriptors.map { try $0.asOriginal() }
         ) { (query, sampleTypes, completion, error) in
             let identifiers = (sampleTypes ?? []).map(\.identifier).sorted()
-            updateHandler(query, identifiers, error, completion)
-        }
+            updateHandler(QueryHandle(query), identifiers, error, completion)
+        })
     }
     /**
      Enables background notifications about changes in AppleHealth
      - Parameter type: **ObjectType** type
-     - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default
+     - Parameter frequency: **UpdateFrequency** frequency. Hourly by default
      - Parameter completionHandler: is called as soon any change happened in AppleHealth App
      */
     public func enableBackgroundDelivery(
@@ -102,7 +102,7 @@ public class HealthKitObserver {
         frequency: UpdateFrequency = .hourly,
         completionHandler: @escaping StatusCompletionBlock
     ) {
-        guard let objectType = type.original else {
+        guard let objectType = type.hkObjectType else {
             completionHandler(
                 false,
                 HealthKitError.invalidType("Unknown type: \(type)")
@@ -133,7 +133,7 @@ public class HealthKitObserver {
         type: ObjectType,
         completionHandler: @escaping StatusCompletionBlock
     ) {
-        guard let objectType = type.original else {
+        guard let objectType = type.hkObjectType else {
             completionHandler(
                 false,
                 HealthKitError.invalidType("Unknown type: \(type)")

@@ -132,7 +132,7 @@ extension Statistics: UnitConvertable {
         guard harmonized.unit != unit else {
             return self
         }
-        guard let type = identifier.objectType?.original as? HKQuantityType else {
+        guard let type = identifier.objectType?.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "Statistics type identifier: \(identifier) could not be formatted"
             )

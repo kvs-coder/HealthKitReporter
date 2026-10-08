@@ -70,8 +70,8 @@ public class HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping QuantityResultsHandler
-    ) throws -> SampleQuery {
-        guard let quantityType = type.original as? HKQuantityType else {
+    ) throws -> QueryHandle {
+        guard let quantityType = type.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType("Invalid HKQuantityType: \(type)")
         }
         let hkUnit = try quantityType.compatibleUnit(from: unit)
@@ -94,7 +94,7 @@ public class HealthKitReader {
             )
             resultsHandler(samples, nil)
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries category types.
@@ -116,8 +116,8 @@ public class HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping CategoryResultsHandler
-    ) throws -> SampleQuery {
-        guard let sampleType = type.original as? HKCategoryType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKCategoryType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKCategoryType")
         }
         let query = HKSampleQuery(
@@ -136,7 +136,7 @@ public class HealthKitReader {
             let samples = Category.collect(results: results)
             resultsHandler(samples, nil)
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries workouts.
@@ -156,9 +156,9 @@ public class HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping WorkoutResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         let workoutType = WorkoutType.workoutType
-        guard let type = workoutType.original as? HKWorkoutType else {
+        guard let type = workoutType.hkObjectType as? HKWorkoutType else {
             throw HealthKitError.invalidType(
                 "\(workoutType) can not be represented as HKWorkoutType"
             )
@@ -181,7 +181,7 @@ public class HealthKitReader {
             )
             resultsHandler(samples, nil)
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries samples. If samples are quantity types, the SI for units will be used.
@@ -208,8 +208,8 @@ public class HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping SampleResultsHandler
-    ) throws -> SampleQuery {
-        guard let sampleType = type.original as? HKSampleType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKSampleType"
             )
@@ -225,7 +225,7 @@ public class HealthKitReader {
                 let result = data
             else {
                 resultsHandler(
-                    query,
+                    QueryHandle(query),
                     [],
                     error
                 )
@@ -241,12 +241,12 @@ public class HealthKitReader {
                 }
             }
             resultsHandler(
-                query,
+                QueryHandle(query),
                 samples,
                 nil
             )
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries samples of several types at once.
@@ -267,8 +267,8 @@ public class HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping SampleResultsHandler
-    ) throws -> SampleQuery {
-        return HKSampleQuery(
+    ) throws -> QueryHandle {
+        return QueryHandle(HKSampleQuery(
             queryDescriptors: try descriptors.map { try $0.asOriginal() },
             limit: limit,
             sortDescriptors: sortDescriptors
@@ -277,11 +277,11 @@ public class HealthKitReader {
                 error == nil,
                 let results = data
             else {
-                resultsHandler(query, [], error)
+                resultsHandler(QueryHandle(query), [], error)
                 return
             }
-            resultsHandler(query, results.compactMap { try? $0.parsed() }, nil)
-        }
+            resultsHandler(QueryHandle(query), results.compactMap { try? $0.parsed() }, nil)
+        })
     }
     /// Sample query whose results are converted with **collect**; the shared body of the typed queries
     func typedSampleQuery<Result>( // swiftlint:disable:this function_parameter_count
@@ -291,11 +291,11 @@ public class HealthKitReader {
         limit: Int,
         collect: @escaping ([HKSample]) -> [Result],
         resultsHandler: @escaping ([Result], Error?) -> Void
-    ) throws -> SampleQuery {
-        guard let sampleType = type.original as? HKSampleType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKSampleType")
         }
-        return HKSampleQuery(
+        return QueryHandle(HKSampleQuery(
             sampleType: sampleType,
             predicate: predicate,
             limit: limit,
@@ -309,6 +309,6 @@ public class HealthKitReader {
                 return
             }
             resultsHandler(collect(results), nil)
-        }
+        })
     }
 }

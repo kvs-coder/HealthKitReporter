@@ -21,7 +21,7 @@ public class HealthKitWriter {
      - Returns: true if allowed to write and false if  not
      */
     public func isAuthorizedToWrite(type: ObjectType) throws -> Bool {
-        guard let objectType = type.original else {
+        guard let objectType = type.hkObjectType else {
             throw HealthKitError.invalidType("Invalid type: \(type)")
         }
         let status = healthStore.authorizationStatus(for: objectType)
@@ -133,7 +133,7 @@ public class HealthKitWriter {
         predicate: NSPredicate,
         completion: @escaping DeletionCompletionBlock
     ) {
-        guard let type = objectType.original else {
+        guard let type = objectType.hkObjectType else {
             completion(
                 false,
                 -1,

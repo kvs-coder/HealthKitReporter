@@ -20,7 +20,7 @@ public enum ScoredAssessmentType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         guard #available(iOS 18.0, watchOS 11.0, *) else {
             return nil
         }
@@ -32,3 +32,5 @@ public enum ScoredAssessmentType: Int, CaseIterable, SampleType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension ScoredAssessmentType: HealthKitObjectTypeConvertible {}

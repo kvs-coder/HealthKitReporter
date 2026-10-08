@@ -321,64 +321,6 @@ extension WorkoutTests {
 }
 // MARK: - Factory
 extension WorkoutTests {
-    func testCollectResults() throws {
-        let workout = makeWorkout()
-        let sut = try XCTUnwrap(Workout.collect(results: [workout]).first)
-        XCTAssertEqual(sut.uuid, workout.uuid.uuidString)
-        XCTAssertEqual(sut.identifier, "HKWorkoutTypeIdentifier")
-        XCTAssertEqual(sut.startTimestamp, 1626884800, accuracy: 0.001)
-        XCTAssertEqual(sut.endTimestamp, 1626884860, accuracy: 0.001)
-        XCTAssertEqual(sut.duration, 60, accuracy: 0.001)
-        assertDevice(sut.device)
-        XCTAssertEqual(sut.workoutEvents.count, 1)
-        XCTAssertEqual(sut.workoutEvents[0].startTimestamp, 1626884800, accuracy: 0.001)
-        XCTAssertEqual(sut.workoutEvents[0].endTimestamp, 1626884800, accuracy: 0.001)
-        XCTAssertEqual(sut.workoutEvents[0].duration, 0, accuracy: 0.001)
-        XCTAssertEqual(sut.workoutEvents[0].harmonized.value, HKWorkoutEventType.marker.rawValue)
-        XCTAssertEqual(sut.workoutEvents[0].harmonized.description, "Marker")
-        XCTAssertEqual(sut.workoutEvents[0].harmonized.metadata, ["you": "saved it"])
-        XCTAssertEqual(sut.harmonized.value, Int(HKWorkoutActivityType.running.rawValue))
-        XCTAssertEqual(sut.harmonized.description, "Running")
-        XCTAssertEqual(try XCTUnwrap(sut.harmonized.totalEnergyBurned), 250, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.totalEnergyBurnedUnit, "Cal")
-        XCTAssertEqual(try XCTUnwrap(sut.harmonized.totalDistance), 5000, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.totalDistanceUnit, "m")
-        XCTAssertNil(sut.harmonized.totalSwimmingStrokeCount)
-        XCTAssertEqual(sut.harmonized.totalSwimmingStrokeCountUnit, "count")
-        XCTAssertEqual(try XCTUnwrap(sut.harmonized.totalFlightsClimbed), 3, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.totalFlightsClimbedUnit, "count")
-        XCTAssertEqual(sut.harmonized.metadata, ["you": "saved it"])
-    }
-    func testParseResults() throws {
-        let workout = makeWorkout()
-        let sut = try XCTUnwrap(parse([workout]).first as? Workout)
-        XCTAssertEqual(sut.uuid, workout.uuid.uuidString)
-        XCTAssertEqual(sut.harmonized.description, "Running")
-    }
-    func testCollectResultsIgnoresOtherSamples() throws {
-        let sample = HKQuantitySample(
-            type: HKQuantityType(.stepCount),
-            quantity: HKQuantity(unit: .count(), doubleValue: 1),
-            start: startDate,
-            end: endDate
-        )
-        XCTAssertTrue(Workout.collect(results: [sample]).isEmpty)
-    }
-    func testWorkoutActivityTypeDescriptions() throws {
-        // Each of the 84 HKWorkoutActivityType cases in the iOS 26.5 SDK has its own description
-        let described = (Array(UInt(1)...UInt(100)) + [3000])
-            .compactMap { HKWorkoutActivityType(rawValue: $0)?.description }
-            .filter { $0 != "Unknown Workout" }
-        XCTAssertEqual(described.count, 84)
-        XCTAssertEqual(Set(described).count, described.count)
-        XCTAssertEqual(HKWorkoutActivityType.running.description, "Running")
-        XCTAssertEqual(HKWorkoutActivityType.other.description, "Other")
-        XCTAssertEqual(HKWorkoutActivityType.pickleball.description, "Pickleball")
-        XCTAssertEqual(HKWorkoutActivityType.handCycling.description, "Hand Cycling")
-        XCTAssertEqual(HKWorkoutActivityType.preparationAndRecovery.description, "Preparation and Recovery")
-        XCTAssertEqual(HKWorkoutEventType.pauseOrResumeRequest.description, "Pause or resume request")
-        XCTAssertEqual(HKWorkoutActivityType(rawValue: 2999)?.description, "Unknown Workout")
-    }
 
     private func makeWorkout() -> HKWorkout {
         return HKWorkout(

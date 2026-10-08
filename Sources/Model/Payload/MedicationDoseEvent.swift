@@ -118,7 +118,7 @@ extension MedicationDoseEvent: Payload {
 // MARK: - Factory
 @available(iOS 26.0, watchOS 26.0, *)
 extension MedicationDoseEvent {
-    public static func collect(results: [HKSample]) -> [MedicationDoseEvent] {
+    static func collect(results: [HKSample]) -> [MedicationDoseEvent] {
         return results
             .compactMap { $0 as? HKMedicationDoseEvent }
             .map { MedicationDoseEvent(doseEvent: $0) }

@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueCervicalMucusQuality: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueCervicalMucusQuality {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueCervicalMucusQuality"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .dry:
             return "Dry"

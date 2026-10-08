@@ -22,7 +22,7 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
     
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .allergyRecord:
             return HKObjectType.clinicalType(forIdentifier: .allergyRecord)
@@ -48,3 +48,5 @@ public enum ClinicalType: Int, CaseIterable, SampleType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension ClinicalType: HealthKitObjectTypeConvertible {}

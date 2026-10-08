@@ -7,11 +7,11 @@
 
 import HealthKit
 
-public extension Dictionary where Key == String, Value == NSPredicate {
+extension Dictionary where Key == String, Value == NSPredicate {
     var sampleTypePredicates: [HKSampleType: NSPredicate] {
         var samplePredicates = [HKSampleType: NSPredicate]()
         for (key, value) in self {
-            if let type = key.objectType?.original as? HKSampleType {
+            if let type = key.objectType?.hkObjectType as? HKSampleType {
                 samplePredicates[type] = value
             }
         }

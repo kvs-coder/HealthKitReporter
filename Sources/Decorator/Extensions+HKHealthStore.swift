@@ -15,7 +15,7 @@ extension HKHealthStore {
         completion: @escaping (HKSample?, Error?) -> Void
     ) {
         guard
-            let sampleType = type.original as? HKSampleType,
+            let sampleType = type.hkObjectType as? HKSampleType,
             let identifier = UUID(uuidString: uuid)
         else {
             completion(nil, HealthKitError.invalidValue("Invalid sample \(type) \(uuid)"))

@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValue: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValue {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValue"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .notApplicable:
             return "Not Applicable"

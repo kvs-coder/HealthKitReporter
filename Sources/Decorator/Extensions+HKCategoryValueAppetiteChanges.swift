@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueAppetiteChanges: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueAppetiteChanges {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueAppetiteChanges"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .unspecified:
             return "Unspecified"

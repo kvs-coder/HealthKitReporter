@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueLowCardioFitnessEvent: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueLowCardioFitnessEvent {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueLowCardioFitnessEvent"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .lowFitness:
             return "Low Fitness"

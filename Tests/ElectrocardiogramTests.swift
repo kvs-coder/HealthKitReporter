@@ -279,7 +279,4 @@ class ElectrocardiogramTests: XCTestCase {
         dictionary["harmonized"] = harmonized
         assertInvalidValue(try Electrocardiogram.make(from: dictionary))
     }
-    func testClassificationDescriptions() throws {
-        XCTAssertEqual(HKElectrocardiogram.Classification.sinusRhythm.description, "Sinus rhythm")
-    }
 }

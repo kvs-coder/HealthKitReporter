@@ -139,7 +139,7 @@ extension VerifiableClinicalRecord: Payload {
 }
 // MARK: - Factory
 extension VerifiableClinicalRecord {
-    public static func collect(results: [HKVerifiableClinicalRecord]) -> [VerifiableClinicalRecord] {
+    static func collect(results: [HKVerifiableClinicalRecord]) -> [VerifiableClinicalRecord] {
         return results.map { VerifiableClinicalRecord(verifiableClinicalRecord: $0) }
     }
 }

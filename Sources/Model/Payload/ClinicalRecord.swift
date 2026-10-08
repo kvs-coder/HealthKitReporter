@@ -152,7 +152,7 @@ extension ClinicalRecord: Payload {
 }
 // MARK: - Factory
 extension ClinicalRecord {
-    public static func collect(results: [HKSample]) -> [ClinicalRecord] {
+    static func collect(results: [HKSample]) -> [ClinicalRecord] {
         var samples = [ClinicalRecord]()
         if let clinicalRecords = results as? [HKClinicalRecord] {
             for clinicalRecord in clinicalRecords {

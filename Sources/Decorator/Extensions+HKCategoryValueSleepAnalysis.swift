@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueSleepAnalysis: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueSleepAnalysis {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueSleepAnalysis"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .inBed:
             return "In Bed"

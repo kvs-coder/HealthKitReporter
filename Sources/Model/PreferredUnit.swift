@@ -21,21 +21,16 @@ public struct PreferredUnit: Codable {
         self.unit = unit
     }
 }
+// MARK: - Factory
+extension PreferredUnit {
+    static func collect(
+        from dictionary: [HKQuantityType: HKUnit]
+    ) -> [PreferredUnit] {
+        return dictionary.map { PreferredUnit(type: $0.key, unit: $0.value) }
+    }
+}
 // MARK: - Payload
 public extension PreferredUnit {
-    static func collect(
-        from dictionary: [HKQuantityType : HKUnit]
-    ) -> [PreferredUnit] {
-        var preferredUnits: [PreferredUnit] = []
-        for (key, value) in dictionary {
-            let preferredUnit = PreferredUnit(
-                type: key,
-                unit: value
-            )
-            preferredUnits.append(preferredUnit)
-        }
-        return preferredUnits
-    }
     static func collect(
         from dictionary: [QuantityType: String]
     ) -> [PreferredUnit] {

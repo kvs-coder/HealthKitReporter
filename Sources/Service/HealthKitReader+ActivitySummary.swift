@@ -19,7 +19,7 @@ extension HealthKitReader {
         predicate: NSPredicate? = nil,
         monitorUpdates: Bool = false,
         completionHandler: @escaping ActivitySummaryCompletionHandler
-    ) -> ActivitySummaryQuery {
+    ) -> QueryHandle {
         let resultsHandler: ActivitySummaryUpdateHandler = { (_, data, error) in
             guard
                 error == nil,
@@ -43,6 +43,6 @@ extension HealthKitReader {
         if monitorUpdates {
             query.updateHandler = resultsHandler
         }
-        return query
+        return QueryHandle(query)
     }
 }

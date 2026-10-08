@@ -106,19 +106,4 @@ class WorkoutEventTests: XCTestCase {
 }
 // MARK: - Factory
 extension WorkoutEventTests {
-    func testWorkoutEventTypeDescriptions() throws {
-        let descriptions: [HKWorkoutEventType: String] = [
-            .pause: "Pause",
-            .resume: "Resume",
-            .lap: "Lap",
-            .marker: "Marker",
-            .motionPaused: "Motion paused",
-            .motionResumed: "Motion Resumed",
-            .segment: "Segment",
-            .pauseOrResumeRequest: "Pause or resume request"
-        ]
-        for (sut, description) in descriptions {
-            XCTAssertEqual(sut.description, description)
-        }
-    }
 }

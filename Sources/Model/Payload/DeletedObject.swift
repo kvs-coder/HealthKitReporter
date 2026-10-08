@@ -18,7 +18,7 @@ public struct DeletedObject: Codable {
 }
 // MARK: - Factory
 extension DeletedObject {
-    public static func collect(
+    static func collect(
         deletedObjects: [HKDeletedObject]?
     ) -> [DeletedObject] {
         return deletedObjects?.compactMap {

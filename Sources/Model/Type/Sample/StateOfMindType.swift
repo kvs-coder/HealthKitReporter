@@ -17,7 +17,7 @@ public enum StateOfMindType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .stateOfMind:
             if #available(iOS 18.0, watchOS 11.0, *) {
@@ -27,3 +27,5 @@ public enum StateOfMindType: Int, CaseIterable, SampleType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension StateOfMindType: HealthKitObjectTypeConvertible {}

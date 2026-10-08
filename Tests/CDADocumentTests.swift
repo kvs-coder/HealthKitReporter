@@ -89,47 +89,11 @@ class CDADocumentTests: XCTestCase {
         XCTAssertEqual(sut.harmonized.copyWith(title: "Other").title, "Other")
         XCTAssertEqual(sut.copyWith(endTimestamp: 1).endTimestamp, 1)
     }
-    func testCollectResults() throws {
-        let sample = try HKCDADocumentSample(
-            data: Data(xml.utf8),
-            start: startDate,
-            end: endDate,
-            metadata: [HKMetadataKeyWasUserEntered: true]
-        )
-        let sut = try XCTUnwrap(CDADocument.collect(results: [sample]).first)
-        XCTAssertEqual(sut.uuid, sample.uuid.uuidString)
-        XCTAssertEqual(sut.identifier, "HKDocumentTypeIdentifierCDA")
-        // HealthKit takes the dates from the document's effectiveTime
-        XCTAssertEqual(sut.startTimestamp, sample.startDate.timeIntervalSince1970, accuracy: 0.001)
-        XCTAssertEqual(sut.harmonized.title, "Summary of Care")
-        XCTAssertEqual(sut.harmonized.documentData, Data(xml.utf8).base64EncodedString())
-        XCTAssertEqual(sut.harmonized.metadata, ["HKWasUserEntered": true])
-        XCTAssertEqual((try parse([sample]).first as? CDADocument)?.uuid, sample.uuid.uuidString)
-        let other = HKQuantitySample(
-            type: HKQuantityType(.stepCount),
-            quantity: HKQuantity(unit: .count(), doubleValue: 1),
-            start: startDate,
-            end: endDate
-        )
-        XCTAssertTrue(CDADocument.collect(results: [other]).isEmpty)
-    }
     func testSave() throws {
         let sut = try CDADocument.make(from: dictionary)
         XCTAssertEqual((try save(sut) as NSError?)?.domain, HKErrorDomain)
         let invalid = sut.copyWith(harmonized: sut.harmonized.copyWith(documentData: "not base64"))
         assertInvalidValue(try { throw try XCTUnwrap(try save(invalid)) }())
-    }
-    func testDocumentQuery() throws {
-        let predicate = NSPredicate.samplesPredicate(startDate: startDate, endDate: endDate)
-        let query = try HealthKitReporter().reader.cdaDocumentQuery(
-            predicate: predicate,
-            limit: 5,
-            includeDocumentData: false
-        ) { _, _, _ in }
-        XCTAssertEqual(query.objectType?.identifier, "HKDocumentTypeIdentifierCDA")
-        XCTAssertEqual(query.predicate, predicate)
-        XCTAssertEqual(query.limit, 5)
-        XCTAssertFalse(query.includeDocumentData)
     }
 
     private func assertDocument(

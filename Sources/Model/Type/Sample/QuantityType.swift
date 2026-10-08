@@ -138,7 +138,7 @@ extension QuantityType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .heartRateVariabilitySDNN:
             return HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
@@ -438,3 +438,5 @@ extension QuantityType {
         return nil
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension QuantityType: HealthKitObjectTypeConvertible {}

@@ -5,11 +5,7 @@
 //  Created by Victor on 18.11.20.
 //
 
-import HealthKit
+import Foundation
 
-public protocol SampleType: ObjectType {
-    /**
-     Extracts an original identifier
-     */
-    var identifier: String? { get }
-}
+/// An **ObjectType** whose objects are samples
+public protocol SampleType: ObjectType {}

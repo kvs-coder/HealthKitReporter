@@ -13,7 +13,7 @@ extension HKWorkoutEvent: Harmonizable {
     func harmonize() throws -> Harmonized {
         return Harmonized(
             value: type.rawValue,
-            description: type.description,
+            description: type.label,
             metadata: metadata?.asMetadata
         )
     }

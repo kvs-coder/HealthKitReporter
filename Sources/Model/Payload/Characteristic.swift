@@ -20,9 +20,9 @@ public struct Characteristic: Codable {
         bloodType: HKBloodTypeObject?,
         fitzpatrickSkinType: HKFitzpatrickSkinTypeObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.description
-        self.bloodType = bloodType?.bloodType.description
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
+        self.biologicalSex = biologicalSex?.biologicalSex.label
+        self.bloodType = bloodType?.bloodType.label
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.label
         self.birthday = nil
         self.wheelchairUse = nil
         self.activityMoveMode = nil
@@ -35,10 +35,10 @@ public struct Characteristic: Codable {
         fitzpatrickSkinType: HKFitzpatrickSkinTypeObject?,
         wheelchairUse: HKWheelchairUseObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.description
+        self.biologicalSex = biologicalSex?.biologicalSex.label
         self.birthday = birthday?.date?.formatted(with: Date.iso8601)
-        self.bloodType = bloodType?.bloodType.description
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
+        self.bloodType = bloodType?.bloodType.label
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.label
         self.wheelchairUse = wheelchairUse?.wheelchairUse.string
         self.activityMoveMode = nil
     }
@@ -51,11 +51,11 @@ public struct Characteristic: Codable {
         wheelchairUse: HKWheelchairUseObject?,
         activityMoveMode: HKActivityMoveModeObject?
     ) {
-        self.biologicalSex = biologicalSex?.biologicalSex.description
+        self.biologicalSex = biologicalSex?.biologicalSex.label
         self.birthday = birthday?.date?.formatted(with: Date.iso8601)
-        self.bloodType = bloodType?.bloodType.description
-        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.description
+        self.bloodType = bloodType?.bloodType.label
+        self.fitzpatrickSkinType = fitzpatrickSkinType?.skinType.label
         self.wheelchairUse = wheelchairUse?.wheelchairUse.string
-        self.activityMoveMode = activityMoveMode?.activityMoveMode.description
+        self.activityMoveMode = activityMoveMode?.activityMoveMode.label
     }
 }

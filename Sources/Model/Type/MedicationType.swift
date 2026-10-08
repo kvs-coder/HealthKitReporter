@@ -16,7 +16,11 @@ public enum MedicationType: Int, CaseIterable, ObjectType {
     /// medications the user tracks, not samples
     case userAnnotatedMedication
 
-    public var original: HKObjectType? {
+    public var identifier: String? {
+        return original?.identifier
+    }
+
+    var original: HKObjectType? {
         guard #available(iOS 26.0, watchOS 26.0, *) else {
             return nil
         }
@@ -28,3 +32,5 @@ public enum MedicationType: Int, CaseIterable, ObjectType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension MedicationType: HealthKitObjectTypeConvertible {}

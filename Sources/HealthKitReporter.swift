@@ -7,17 +7,7 @@
 
 import HealthKit
 
-/// ***HKQueryAnchor** typealias
-public typealias Anchor = HKQueryAnchor
-/// **HKQuery** typealias
-public typealias Query = HKQuery
-/// **HKObserverQuery** typealias
-public typealias ObserverQuery = HKObserverQuery
-/// **HKSampleQuery** typealias
-public typealias SampleQuery = HKSampleQuery
 #if os(iOS)
-/// **HKVerifiableClinicalRecordQuery** typealias
-public typealias VerifiableClinicalRecordQuery = HKVerifiableClinicalRecordQuery
 /**
  - Parameters:
     - records: verifiable clinical records
@@ -27,8 +17,6 @@ public typealias VerifiableClinicalRecordResultsHandler = (
     _ records: [VerifiableClinicalRecord],
     _ error: Error?
 ) -> Void
-/// **HKDocumentQuery** typealias
-public typealias DocumentQuery = HKDocumentQuery
 /**
  - Parameters:
     - documents: CDA documents of this batch
@@ -41,18 +29,6 @@ public typealias CDADocumentResultsHandler = (
     _ error: Error?
 ) -> Void
 #endif
-/// **HKStatisticsQuery** typealias
-public typealias StatisticsQuery = HKStatisticsQuery
-/// **HKStatisticsCollectionQuery** typealias
-public typealias StatisticsCollectionQuery = HKStatisticsCollectionQuery
-/// **HKActivitySummaryQuery** typealias
-public typealias ActivitySummaryQuery = HKActivitySummaryQuery
-/// **HKAnchoredObjectQuery** typealias
-public typealias AnchoredObjectQuery = HKAnchoredObjectQuery
-/// **HKSourceQuery** typealias
-public typealias SourceQuery = HKSourceQuery
-/// **HKCorrelationQuery** typealias
-public typealias CorrelationQuery = HKCorrelationQuery
 /**
  - Parameters:
     - success: the status
@@ -68,9 +44,6 @@ public typealias WorkoutSaveCompletion = (
     _ workout: Workout?,
     _ error: Error?
 ) -> Void
-/// **HKWorkoutEffortRelationshipQuery** typealias
-@available(iOS 18.0, watchOS 11.0, *)
-public typealias WorkoutEffortRelationshipQuery = HKWorkoutEffortRelationshipQuery
 /**
  - Parameters:
     - relationships: workouts with their effort samples
@@ -124,7 +97,7 @@ public typealias AuthorizationRequestStatusCompletion = (
     - error: error (optional)
  */
 public typealias ObserverUpdateHandler = (
-    _ query: Query?,
+    _ query: QueryHandle?,
     _ identifier: String?,
     _ error: Error?
 ) -> Void
@@ -137,7 +110,7 @@ public typealias ObserverUpdateHandler = (
     HealthKit throttles background delivery if it isn't
  */
 public typealias ObserverDescriptorsUpdateHandler = (
-    _ query: Query?,
+    _ query: QueryHandle?,
     _ identifiers: [String],
     _ error: Error?,
     _ completion: @escaping () -> Void
@@ -151,7 +124,7 @@ public typealias ObserverDescriptorsUpdateHandler = (
     HealthKit throttles background delivery if it isn't
  */
 public typealias ObserverCompletionUpdateHandler = (
-    _ query: Query?,
+    _ query: QueryHandle?,
     _ identifier: String?,
     _ error: Error?,
     _ completion: @escaping () -> Void
@@ -173,7 +146,7 @@ public typealias DeletionCompletionBlock = (
     - error: error (optional)
  */
 public typealias SampleResultsHandler = (
-    _ query: Query?,
+    _ query: QueryHandle?,
     _ samples: [Sample],
     _ error: Error?
 ) -> Void
@@ -181,11 +154,11 @@ public typealias SampleResultsHandler = (
  - Parameters:
     - samples: sample array. Empty by default
     - deletedObjects: samples array that has been deleted
-    - anchor: The anchor which was returned by a previous HKAnchoredObjectQuery result or update
+    - anchor: anchor to pass to the next anchored object query, so it only delivers changes
     - error: error (optional)
  */
 public typealias AnchoredResultsHandler = (
-    _ query: Query?,
+    _ query: QueryHandle?,
     _ samples: [Sample],
     _ deletedObjects: [DeletedObject],
     _ anchor: Anchor?,
@@ -323,8 +296,6 @@ public typealias ClinicalRecordResultsHandler = (
     _ error: Error?
 ) -> Void
 #endif
-/// **HKQuantitySeriesSampleQuery** typealias
-public typealias QuantitySeriesSampleQuery = HKQuantitySeriesSampleQuery
 /**
  - Parameters:
     - values: every quantity of the matching series samples, delivered once
@@ -373,9 +344,6 @@ public typealias MedicationDoseEventResultsHandler = (
     _ doseEvents: [MedicationDoseEvent],
     _ error: Error?
 ) -> Void
-/// **HKUserAnnotatedMedicationQuery** typealias
-@available(iOS 26.0, watchOS 26.0, *)
-public typealias UserAnnotatedMedicationQuery = HKUserAnnotatedMedicationQuery
 /**
  - Parameters:
     - medications: every matching medication, delivered once

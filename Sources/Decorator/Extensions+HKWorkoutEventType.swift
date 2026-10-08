@@ -7,8 +7,9 @@
 
 import HealthKit
 
-extension HKWorkoutEventType: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKWorkoutEventType {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .pause:
             return "Pause"

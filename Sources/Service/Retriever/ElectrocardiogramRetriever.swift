@@ -18,7 +18,7 @@ class ElectrocardiogramRetriever {
     ) throws -> HKSampleQuery {
         let electrocardiogramType = ElectrocardiogramType.electrocardiogramType
         guard
-            let type = electrocardiogramType.original as? HKElectrocardiogramType
+            let type = electrocardiogramType.hkObjectType as? HKElectrocardiogramType
         else {
             throw HealthKitError.invalidType(
                 "\(electrocardiogramType) can not be represented as HKElectrocardiogramType"

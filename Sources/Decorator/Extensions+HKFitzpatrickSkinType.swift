@@ -7,8 +7,9 @@
 
 import HealthKit
 
-extension HKFitzpatrickSkinType: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKFitzpatrickSkinType {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .notSet:
             return "na"

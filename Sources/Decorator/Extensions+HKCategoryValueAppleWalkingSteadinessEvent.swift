@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueAppleWalkingSteadinessEvent: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueAppleWalkingSteadinessEvent {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueAppleWalkingSteadinessEvent"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .initialLow:
             return "Initial low"

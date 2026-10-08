@@ -34,7 +34,7 @@ extension HKActivitySummary: Harmonizable {
             appleStandHours: appleStandHours.doubleValue(for: countUnit),
             appleStandHoursGoal: standGoal.doubleValue(for: countUnit),
             appleStandHoursUnit: countUnit.unitString,
-            activityMoveMode: activityMoveMode.description,
+            activityMoveMode: activityMoveMode.label,
             appleMoveTime: appleMoveTime.doubleValue(for: minuteUnit),
             appleMoveTimeGoal: appleMoveTimeGoal.doubleValue(for: minuteUnit),
             appleMoveTimeUnit: minuteUnit.unitString,

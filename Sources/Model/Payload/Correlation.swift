@@ -93,7 +93,7 @@ public struct Correlation: Identifiable, Sample {
 }
 // MARK: - Factory
 extension Correlation {
-    public static func collect(
+    static func collect(
         results: [HKSample]
     ) -> [Correlation] {
         var samples = [Correlation]()
@@ -158,7 +158,7 @@ extension Correlation.Harmonized: Payload {
 // MARK: - Original
 extension Correlation: Original {
     func asOriginal() throws -> HKCorrelation {
-        guard let type = identifier.objectType?.original as? HKCorrelationType else {
+        guard let type = identifier.objectType?.hkObjectType as? HKCorrelationType else {
             throw HealthKitError.invalidType(
                 "Correlation type identifier: \(identifier) could not be formatted"
             )

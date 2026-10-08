@@ -18,7 +18,7 @@ public enum SeriesType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
     
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .heartbeatSeries:
             let heartbeatSeries = HKObjectType.seriesType(
@@ -33,3 +33,5 @@ public enum SeriesType: Int, CaseIterable, SampleType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension SeriesType: HealthKitObjectTypeConvertible {}

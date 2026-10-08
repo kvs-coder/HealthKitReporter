@@ -158,7 +158,7 @@ extension CDADocument: Payload {
 }
 // MARK: - Factory
 extension CDADocument {
-    public static func collect(results: [HKSample]) -> [CDADocument] {
+    static func collect(results: [HKSample]) -> [CDADocument] {
         return results
             .compactMap { $0 as? HKCDADocumentSample }
             .map { CDADocument(documentSample: $0) }

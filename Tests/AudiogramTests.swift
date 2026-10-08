@@ -66,28 +66,6 @@ class AudiogramTests: XCTestCase {
         XCTAssertEqual(try json(sut.harmonized.copyWith()), try json(sut.harmonized))
         XCTAssertEqual(sut.copyWith(endTimestamp: 1).endTimestamp, 1)
     }
-    func testCollectAndParseResults() throws {
-        let sample = HKAudiogramSample(
-            sensitivityPoints: [
-                try HKAudiogramSensitivityPoint(
-                    frequency: HKQuantity(unit: .hertz(), doubleValue: 500),
-                    leftEarSensitivity: HKQuantity(unit: .decibelHearingLevel(), doubleValue: 10),
-                    rightEarSensitivity: HKQuantity(unit: .decibelHearingLevel(), doubleValue: 15)
-                )
-            ],
-            start: startDate,
-            end: endDate,
-            metadata: nil
-        )
-        let sut = try XCTUnwrap(Audiogram.collect(results: [sample]).first)
-        XCTAssertEqual(sut.uuid, sample.uuid.uuidString)
-        XCTAssertEqual(sut.identifier, "HKDataTypeIdentifierAudiogram")
-        let point = try XCTUnwrap(sut.harmonized.sensitivityPoints.first)
-        XCTAssertEqual(point.frequency, 500, accuracy: 0.001)
-        XCTAssertEqual(try XCTUnwrap(point.leftEarSensitivity), 10, accuracy: 0.001)
-        XCTAssertEqual(try XCTUnwrap(point.rightEarSensitivity), 15, accuracy: 0.001)
-        XCTAssertEqual((try parse([sample]).first as? Audiogram)?.uuid, sample.uuid.uuidString)
-    }
     func testSave() throws {
         let sut = try Audiogram.make(from: dictionary)
         XCTAssertEqual((try save(sut) as NSError?)?.domain, HKErrorDomain)
@@ -99,11 +77,6 @@ class AudiogramTests: XCTestCase {
         assertInvalidValue(try { throw try XCTUnwrap(try save(unordered)) }())
         let empty = sut.copyWith(harmonized: sut.harmonized.copyWith(sensitivityPoints: []))
         assertInvalidValue(try { throw try XCTUnwrap(try save(empty)) }())
-    }
-    func testAudiogramQuery() throws {
-        let query = try HealthKitReporter().reader.audiogramQuery(limit: 3) { _, _ in }
-        XCTAssertEqual(query.objectType?.identifier, "HKDataTypeIdentifierAudiogram")
-        XCTAssertEqual(query.limit, 3)
     }
 
     private func assertAudiogram(

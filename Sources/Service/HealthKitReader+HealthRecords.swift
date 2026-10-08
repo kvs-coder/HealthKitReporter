@@ -30,7 +30,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping VisionPrescriptionResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         return try typedSampleQuery(
             type: VisionPrescriptionType.visionPrescription,
             predicate: predicate,
@@ -63,7 +63,7 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping ClinicalRecordResultsHandler
-    ) throws -> SampleQuery {
+    ) throws -> QueryHandle {
         return try typedSampleQuery(
             type: type,
             predicate: predicate,
@@ -87,7 +87,7 @@ extension HealthKitReader {
         sourceTypes: [String] = [],
         predicate: NSPredicate? = nil,
         resultsHandler: @escaping VerifiableClinicalRecordResultsHandler
-    ) -> VerifiableClinicalRecordQuery {
+    ) -> QueryHandle {
         func handler(
             _: HKVerifiableClinicalRecordQuery,
             records: [HKVerifiableClinicalRecord]?,
@@ -100,18 +100,20 @@ extension HealthKitReader {
             resultsHandler(VerifiableClinicalRecord.collect(results: records), nil)
         }
         guard !sourceTypes.isEmpty, #available(iOS 15.4, *) else {
-            return HKVerifiableClinicalRecordQuery(
-                recordTypes: recordTypes,
-                predicate: predicate,
-                resultsHandler: handler
+            return QueryHandle(
+                HKVerifiableClinicalRecordQuery(
+                    recordTypes: recordTypes,
+                    predicate: predicate,
+                    resultsHandler: handler
+                )
             )
         }
-        return HKVerifiableClinicalRecordQuery(
+        return QueryHandle(HKVerifiableClinicalRecordQuery(
             recordTypes: recordTypes,
             sourceTypes: sourceTypes.map { HKVerifiableClinicalRecordSourceType(rawValue: $0) },
             predicate: predicate,
             resultsHandler: handler
-        )
+        ))
     }
     /**
      Queries CDA documents. The handler is called once per batch until **done** is true.
@@ -135,12 +137,12 @@ extension HealthKitReader {
         limit: Int = HKObjectQueryNoLimit,
         includeDocumentData: Bool = true,
         resultsHandler: @escaping CDADocumentResultsHandler
-    ) throws -> DocumentQuery {
+    ) throws -> QueryHandle {
         let type = DocumentType.cda
-        guard let documentType = type.original as? HKDocumentType else {
+        guard let documentType = type.hkObjectType as? HKDocumentType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKDocumentType")
         }
-        return HKDocumentQuery(
+        return QueryHandle(HKDocumentQuery(
             documentType: documentType,
             predicate: predicate,
             limit: limit,
@@ -152,7 +154,7 @@ extension HealthKitReader {
                 return
             }
             resultsHandler(CDADocument.collect(results: samples), done, nil)
-        }
+        })
     }
     #endif
 }

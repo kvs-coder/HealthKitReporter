@@ -13,10 +13,16 @@ import HealthKit
 public enum ActivitySummaryType: Int, CaseIterable, ObjectType {
     case activitySummaryType
 
-    public var original: HKObjectType? {
+    public var identifier: String? {
+        return original?.identifier
+    }
+
+    var original: HKObjectType? {
         switch self {
         case .activitySummaryType:
             return HKObjectType.activitySummaryType()
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension ActivitySummaryType: HealthKitObjectTypeConvertible {}

@@ -33,15 +33,15 @@ extension HealthKitReader {
         limit: Int = HKObjectQueryNoLimit,
         withVoltageMeasurements: Bool = false,
         resultsHandler: @escaping ElectrocardiogramResultsHandler
-    ) throws -> SampleQuery {
-        return try ElectrocardiogramRetriever().makeElectrocardiogramQuery(
+    ) throws -> QueryHandle {
+        return QueryHandle(try ElectrocardiogramRetriever().makeElectrocardiogramQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
             withVoltageMeasurements: withVoltageMeasurements,
             resultsHandler: resultsHandler
-        )
+        ))
     }
     /**
      Queries heartbeat series.
@@ -63,14 +63,14 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping HeartbeatSeriesResultsDataHandler
-    ) throws -> SampleQuery {
-        return try SeriesSampleRetriever().makeHeartbeatSeriesQuery(
+    ) throws -> QueryHandle {
+        return QueryHandle(try SeriesSampleRetriever().makeHeartbeatSeriesQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
             resultsHandler: resultsHandler
-        )
+        ))
     }
     /**
      Queries workout route.
@@ -94,14 +94,14 @@ extension HealthKitReader {
         ],
         limit: Int = HKObjectQueryNoLimit,
         resultsHandler: @escaping WorkoutRouteResultsDataHandler
-    ) throws -> SampleQuery {
-        return try SeriesSampleRetriever().makeWorkoutRouteQuery(
+    ) throws -> QueryHandle {
+        return QueryHandle(try SeriesSampleRetriever().makeWorkoutRouteQuery(
             healthStore: healthStore,
             predicate: predicate,
             sortDescriptors: sortDescriptors,
             limit: limit,
             resultsHandler: resultsHandler
-        )
+        ))
     }
     /**
      Queries the individual quantities inside quantity series samples, e.g. step counts recorded as a series.
@@ -116,8 +116,8 @@ extension HealthKitReader {
         unit: String,
         predicate: NSPredicate? = .allSamples,
         resultsHandler: @escaping QuantitySeriesResultsHandler
-    ) throws -> QuantitySeriesSampleQuery {
-        guard let quantityType = type.original as? HKQuantityType else {
+    ) throws -> QueryHandle {
+        guard let quantityType = type.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
         }
         let hkUnit = try quantityType.compatibleUnit(from: unit)
@@ -147,6 +147,6 @@ extension HealthKitReader {
         }
         query.includeSample = true
         query.orderByQuantitySampleStartDate = true
-        return query
+        return QueryHandle(query)
     }
 }

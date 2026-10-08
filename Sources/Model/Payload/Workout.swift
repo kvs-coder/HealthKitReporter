@@ -329,7 +329,7 @@ extension Workout: Payload {
             activities: try activities?.map(WorkoutActivity.make)
         )
     }
-    public static func collect(
+    static func collect(
         results: [HKSample]
     ) -> [Workout] {
         var samples = [Workout]()

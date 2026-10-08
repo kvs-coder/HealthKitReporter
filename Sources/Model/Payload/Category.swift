@@ -97,7 +97,7 @@ public struct Category: Identifiable, Sample {
 // MARK: - Original
 extension Category: Original {
     func asOriginal() throws -> HKCategorySample {
-        guard let type = identifier.objectType?.original as? HKCategoryType else {
+        guard let type = identifier.objectType?.hkObjectType as? HKCategoryType else {
             throw HealthKitError.invalidType(
                 "Category type identifier: \(identifier) could not be formatted"
             )
@@ -149,7 +149,7 @@ extension Category: Payload {
 }
 // MARK: - Factory
 extension Category {
-    public static func collect(results: [HKSample]) -> [Category] {
+    static func collect(results: [HKSample]) -> [Category] {
         var samples = [Category]()
         if let categorySamples = results as? [HKCategorySample] {
             for categorySample in categorySamples {

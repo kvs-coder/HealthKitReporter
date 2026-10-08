@@ -16,7 +16,7 @@ extension HKWorkout: Harmonizable {
         let countUnit = HKUnit.count()
         return Harmonized(
             value: Int(workoutActivityType.rawValue),
-            description: workoutActivityType.description,
+            description: workoutActivityType.label,
             totalEnergyBurned: total(totalEnergyBurned, of: [.activeEnergyBurned], in: energyUnit),
             totalEnergyBurnedUnit: energyUnit.unitString,
             totalDistance: total(totalDistance, of: distanceTypes, in: distanceUnit),

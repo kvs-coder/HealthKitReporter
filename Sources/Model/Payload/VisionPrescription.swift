@@ -332,7 +332,7 @@ extension VisionPrescription: Payload {
 // MARK: - Factory
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription {
-    public static func collect(results: [HKSample]) -> [VisionPrescription] {
+    static func collect(results: [HKSample]) -> [VisionPrescription] {
         return results
             .compactMap { $0 as? HKVisionPrescription }
             .compactMap { try? VisionPrescription(visionPrescription: $0) }

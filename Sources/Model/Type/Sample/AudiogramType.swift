@@ -17,10 +17,12 @@ public enum AudiogramType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .audiogram:
             return HKObjectType.audiogramSampleType()
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension AudiogramType: HealthKitObjectTypeConvertible {}

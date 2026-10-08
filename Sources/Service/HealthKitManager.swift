@@ -27,7 +27,7 @@ public class HealthKitManager {
     ) {
         var setOfReadTypes = Set<HKObjectType>()
         for type in toRead {
-            guard let objectType = type.original else {
+            guard let objectType = type.hkObjectType else {
                 completion(
                     false,
                     HealthKitError.invalidType(
@@ -40,7 +40,7 @@ public class HealthKitManager {
         }
         var setOfWriteTypes = Set<HKSampleType>()
         for type in toWrite {
-            guard let objectType = type.original as? HKSampleType else {
+            guard let objectType = type.hkObjectType as? HKSampleType else {
                 completion(
                     false,
                     HealthKitError.invalidType(
@@ -68,8 +68,8 @@ public class HealthKitManager {
         toWrite: [SampleType],
         completion: @escaping AuthorizationRequestStatusCompletion
     ) {
-        let readTypes = toRead.compactMap(\.original)
-        let writeTypes = toWrite.compactMap { $0.original as? HKSampleType }
+        let readTypes = toRead.compactMap(\.hkObjectType)
+        let writeTypes = toWrite.compactMap { $0.hkObjectType as? HKSampleType }
         guard readTypes.count == toRead.count, writeTypes.count == toWrite.count else {
             completion(
                 .unknown,
@@ -103,7 +103,7 @@ public class HealthKitManager {
         completion: @escaping StatusCompletionBlock
     ) {
         guard
-            let sampleType = type.original as? HKSampleType,
+            let sampleType = type.hkObjectType as? HKSampleType,
             sampleType.allowsRecalibrationForEstimates
         else {
             completion(false, HealthKitError.invalidType("\(type) does not allow recalibrating estimates"))
@@ -122,7 +122,7 @@ public class HealthKitManager {
     ) {
         var setOfTypes = Set<HKQuantityType>()
         for type in quantityTypes {
-            guard let objectType = type.original as? HKQuantityType else {
+            guard let objectType = type.hkObjectType as? HKQuantityType else {
                 completion(
                     [],
                     HealthKitError.invalidType(
@@ -144,17 +144,17 @@ public class HealthKitManager {
     }
     /**
      Stops executing the query.
-     - Parameter query: **Query**
+     - Parameter query: **QueryHandle** query returned by the reader or observer
      */
-    public func stopQuery(_ query: Query) {
-        healthStore.stop(query)
+    public func stopQuery(_ query: QueryHandle) {
+        healthStore.stop(query.query)
     }
     /**
-     Executs query
-     - Parameter query: **Query**
+     Executes the query.
+     - Parameter query: **QueryHandle** query returned by the reader or observer
      */
-    public func executeQuery(_ query: Query) {
-        healthStore.execute(query)
+    public func executeQuery(_ query: QueryHandle) {
+        healthStore.execute(query.query)
     }
     #if os(iOS)
     /**
@@ -190,7 +190,7 @@ public class HealthKitManager {
         predicate: NSPredicate? = nil,
         completion: @escaping StatusCompletionBlock
     ) {
-        guard let objectType = type.original else {
+        guard let objectType = type.hkObjectType else {
             completion(false, HealthKitError.invalidType("Type \(type) has not HKObjectType representation"))
             return
         }

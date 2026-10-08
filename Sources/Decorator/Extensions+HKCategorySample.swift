@@ -14,7 +14,7 @@ extension HKCategorySample: Harmonizable {
         let categoryValue = try describedValue(of: try categoryType.parsed())
         return Harmonized(
             value: value,
-            description: categoryValue?.description ?? String(),
+            description: categoryValue?.label ?? String(),
             detail: categoryValue?.detail ?? String(),
             metadata: metadata?.asMetadata
         )

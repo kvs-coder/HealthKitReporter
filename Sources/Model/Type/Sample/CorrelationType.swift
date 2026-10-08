@@ -18,7 +18,7 @@ public enum CorrelationType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .food:
             return HKObjectType.correlationType(forIdentifier: .food)
@@ -27,3 +27,5 @@ public enum CorrelationType: Int, CaseIterable, SampleType {
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension CorrelationType: HealthKitObjectTypeConvertible {}

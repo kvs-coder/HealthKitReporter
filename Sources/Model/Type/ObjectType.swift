@@ -5,13 +5,14 @@
 //  Created by Victor on 05.10.20.
 //
 
-import HealthKit
+import Foundation
 
 public protocol ObjectType {
     /**
-     Represents type as an original **HKObjectType**
+     The HealthKit identifier of the type, e.g. "HKQuantityTypeIdentifierStepCount".
+     nil when the type is not available on the running OS
      */
-    var original: HKObjectType? { get }
+    var identifier: String? { get }
 }
 
 public extension ObjectType {
@@ -22,7 +23,7 @@ public extension ObjectType {
     static func make(
         from identifier: String
     ) throws -> Self where Self: CaseIterable {
-        let first = Self.allCases.first { identifier == $0.original?.identifier }
+        let first = Self.allCases.first { identifier == $0.identifier }
         guard let result = first else {
             throw HealthKitError.invalidIdentifier("Invalid identifier: \(identifier)")
         }

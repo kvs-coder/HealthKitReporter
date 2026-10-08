@@ -7,8 +7,9 @@
 
 import HealthKit
 
-extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKWorkoutActivityType {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .americanFootball:
             return "American Football"
@@ -190,7 +191,7 @@ extension HKWorkoutActivityType {
         guard
             rawValue >= 0,
             let type = HKWorkoutActivityType(rawValue: UInt(rawValue)),
-            type.description != "Unknown Workout"
+            type.label != "Unknown Workout"
         else {
             return nil
         }

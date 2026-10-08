@@ -7,8 +7,9 @@
 
 import HealthKit
 
-extension HKActivityMoveMode: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKActivityMoveMode {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .activeEnergy:
             return "Active energy"

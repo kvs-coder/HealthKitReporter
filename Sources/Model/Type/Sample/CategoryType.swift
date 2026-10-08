@@ -86,7 +86,7 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
 
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .sleepAnalysis:
             return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)
@@ -248,3 +248,5 @@ public enum CategoryType: Int, CaseIterable, SampleType {
         return nil
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension CategoryType: HealthKitObjectTypeConvertible {}

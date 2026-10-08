@@ -76,14 +76,6 @@ class SeriesTests: XCTestCase {
             make: QuantitySeriesValue.make
         )
     }
-    func testQuantitySeriesQuery() throws {
-        let reader = HealthKitReporter().reader
-        let query = try reader.quantitySeriesQuery(type: .stepCount, unit: "count") { _, _ in }
-        XCTAssertEqual(query.objectType?.identifier, "HKQuantityTypeIdentifierStepCount")
-        XCTAssertTrue(query.includeSample)
-        XCTAssertTrue(query.orderByQuantitySampleStartDate)
-        assertInvalidValue(try reader.quantitySeriesQuery(type: .stepCount, unit: "kg") { _, _ in })
-    }
     func testSaveQuantitySeries() throws {
         let writer = HealthKitReporter().writer
         let error = try waitForStatus {

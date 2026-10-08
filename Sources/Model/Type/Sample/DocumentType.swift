@@ -17,10 +17,12 @@ public enum DocumentType: Int, CaseIterable, SampleType {
         return original?.identifier
     }
     
-    public var original: HKObjectType? {
+    var original: HKObjectType? {
         switch self {
         case .cda:
             return HKObjectType.documentType(forIdentifier: .CDA)
         }
     }
 }
+// MARK: - HealthKitObjectTypeConvertible
+extension DocumentType: HealthKitObjectTypeConvertible {}

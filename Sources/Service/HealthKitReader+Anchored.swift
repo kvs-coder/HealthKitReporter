@@ -13,7 +13,7 @@ extension HealthKitReader {
      Queries objects (with anchors).
      - Parameter type: **SampleType** types
      - Parameter predicate: **NSPredicate** predicate (optional). allSamples by default
-     - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
+     - Parameter anchor: **Anchor** anchor of a previous run (optional). From the beginning by default
      - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
@@ -23,14 +23,12 @@ extension HealthKitReader {
     public func anchoredObjectQuery(
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
-        anchor: Anchor? = HKQueryAnchor(
-            fromValue: Int(HKAnchoredObjectQueryNoAnchor)
-        ),
+        anchor: Anchor? = nil,
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
         completionHandler: @escaping AnchoredResultsHandler
-    ) throws -> AnchoredObjectQuery {
-        guard let sampleType = type.original as? HKSampleType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKSampleType"
             )
@@ -42,14 +40,14 @@ extension HealthKitReader {
         let query = HKAnchoredObjectQuery(
             type: sampleType,
             predicate: predicate,
-            anchor: anchor,
+            anchor: anchor?.original,
             limit: limit,
             resultsHandler: resultsHandler
         )
         if monitorUpdates {
             query.updateHandler = resultsHandler
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries sources.
@@ -62,8 +60,8 @@ extension HealthKitReader {
         type: SampleType,
         predicate: NSPredicate? = .allSamples,
         completionHandler: @escaping SourceCompletionHandler
-    ) throws -> SourceQuery {
-        guard let sampleType = type.original as? HKSampleType else {
+    ) throws -> QueryHandle {
+        guard let sampleType = type.hkObjectType as? HKSampleType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKSampleType"
             )
@@ -82,12 +80,12 @@ extension HealthKitReader {
             let sources = result.map { Source(source: $0) }
             completionHandler(sources, nil)
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries objects of several types (with anchors).
      - Parameter descriptors: **QueryDescriptor** types and predicates
-     - Parameter anchor: **HKQueryAnchor** anchor. HKAnchoredObjectQueryNoAnchor by default
+     - Parameter anchor: **Anchor** anchor of a previous run (optional). From the beginning by default
      - Parameter limit: **Int** anchor. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
@@ -96,27 +94,25 @@ extension HealthKitReader {
      */
     public func anchoredObjectQuery(
         descriptors: [QueryDescriptor],
-        anchor: Anchor? = HKQueryAnchor(
-            fromValue: Int(HKAnchoredObjectQueryNoAnchor)
-        ),
+        anchor: Anchor? = nil,
         limit: Int = HKObjectQueryNoLimit,
         monitorUpdates: Bool = false,
         completionHandler: @escaping AnchoredResultsHandler
-    ) throws -> AnchoredObjectQuery {
+    ) throws -> QueryHandle {
         guard !monitorUpdates || limit == HKObjectQueryNoLimit else {
             throw HealthKitError.invalidOption("monitorUpdates requires limit HKObjectQueryNoLimit: \(limit)")
         }
         let resultsHandler = anchoredResultsHandler(completionHandler)
         let query = HKAnchoredObjectQuery(
             queryDescriptors: try descriptors.map { try $0.asOriginal() },
-            anchor: anchor,
+            anchor: anchor?.original,
             limit: limit,
             resultsHandler: resultsHandler
         )
         if monitorUpdates {
             query.updateHandler = resultsHandler
         }
-        return query
+        return QueryHandle(query)
     }
 
     private func anchoredResultsHandler(
@@ -127,14 +123,14 @@ extension HealthKitReader {
                 error == nil,
                 let result = data
             else {
-                completionHandler(query, [], [], anchor, error)
+                completionHandler(QueryHandle(query), [], [], Anchor(anchor), error)
                 return
             }
             completionHandler(
-                query,
+                QueryHandle(query),
                 result.compactMap { try? $0.parsed() },
                 DeletedObject.collect(deletedObjects: deletedData),
-                anchor,
+                Anchor(anchor),
                 nil
             )
         }

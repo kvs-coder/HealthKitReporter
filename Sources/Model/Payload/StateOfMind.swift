@@ -170,7 +170,7 @@ extension StateOfMind: Payload {
 // MARK: - Factory
 @available(iOS 18.0, watchOS 11.0, *)
 extension StateOfMind {
-    public static func collect(results: [HKSample]) -> [StateOfMind] {
+    static func collect(results: [HKSample]) -> [StateOfMind] {
         return results
             .compactMap { $0 as? HKStateOfMind }
             .map { StateOfMind(stateOfMind: $0) }

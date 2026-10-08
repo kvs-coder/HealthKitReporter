@@ -22,21 +22,21 @@ extension HealthKitReader {
         anchor: Anchor? = nil,
         mostRelevant: Bool = false,
         resultsHandler: @escaping WorkoutEffortRelationshipResultsHandler
-    ) -> WorkoutEffortRelationshipQuery {
-        return HKWorkoutEffortRelationshipQuery(
+    ) -> QueryHandle {
+        return QueryHandle(HKWorkoutEffortRelationshipQuery(
             predicate: predicate,
-            anchor: anchor,
+            anchor: anchor?.original,
             options: mostRelevant ? .mostRelevant : .default
         ) { (_, relationships, anchor, error) in
             guard error == nil, let relationships = relationships else {
-                resultsHandler([], anchor, error)
+                resultsHandler([], Anchor(anchor), error)
                 return
             }
             resultsHandler(
                 relationships.compactMap { try? WorkoutEffortRelationship(relationship: $0) },
-                anchor,
+                Anchor(anchor),
                 nil
             )
-        }
+        })
     }
 }

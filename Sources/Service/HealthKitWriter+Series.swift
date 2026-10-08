@@ -25,7 +25,7 @@ extension HealthKitWriter {
         completion: @escaping StatusCompletionBlock
     ) {
         do {
-            guard let quantityType = type.original as? HKQuantityType else {
+            guard let quantityType = type.hkObjectType as? HKQuantityType else {
                 throw HealthKitError.invalidType("\(type) can not be represented as HKQuantityType")
             }
             guard

@@ -24,8 +24,8 @@ extension HealthKitReader {
         predicate: NSPredicate? = .allSamples,
         separateBySource: Bool = false,
         completionHandler: @escaping StatisticsCompletionHandler
-    ) throws -> StatisticsQuery {
-        guard let quantityType = type.original as? HKQuantityType else {
+    ) throws -> QueryHandle {
+        guard let quantityType = type.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -53,7 +53,7 @@ extension HealthKitReader {
                 completionHandler(nil, error)
             }
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries statistics collection.
@@ -83,8 +83,8 @@ extension HealthKitReader {
         monitorUpdates: Bool = false,
         separateBySource: Bool = false,
         enumerationBlock: @escaping StatisticsCompletionHandler
-    ) throws -> StatisticsCollectionQuery {
-        guard let quantityType = type.original as? HKQuantityType else {
+    ) throws -> QueryHandle {
+        guard let quantityType = type.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -128,7 +128,7 @@ extension HealthKitReader {
                 resultsHandler(result, error)
             }
         }
-        return query
+        return QueryHandle(query)
     }
     /**
      Queries statistics collection, delivering whole batches.
@@ -158,8 +158,8 @@ extension HealthKitReader {
         monitorUpdates: Bool = false,
         separateBySource: Bool = false,
         resultsHandler: @escaping StatisticsCollectionResultsHandler
-    ) throws -> StatisticsCollectionQuery {
-        guard let quantityType = type.original as? HKQuantityType else {
+    ) throws -> QueryHandle {
+        guard let quantityType = type.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "\(type) can not be represented as HKQuantityType"
             )
@@ -191,6 +191,6 @@ extension HealthKitReader {
                 resultsHandler([try? Statistics(statistics: statistics, unit: hkUnit)].compactMap { $0 }, nil)
             }
         }
-        return query
+        return QueryHandle(query)
     }
 }

@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValueHeadphoneAudioExposureEvent: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValueHeadphoneAudioExposureEvent {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValueHeadphoneAudioExposureEvent"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .sevenDayLimit:
             return "Seven Day Limit"

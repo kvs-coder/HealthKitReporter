@@ -18,7 +18,7 @@ class SeriesSampleRetriever {
     ) throws -> HKSampleQuery {
         let heartbeatSeries = SeriesType.heartbeatSeries
         guard
-            let seriesType = heartbeatSeries.original as? HKSeriesType
+            let seriesType = heartbeatSeries.hkObjectType as? HKSeriesType
         else {
             throw HealthKitError.invalidType(
                 "Invalid HKSeriesType: \(heartbeatSeries)"
@@ -66,7 +66,7 @@ class SeriesSampleRetriever {
     ) throws -> HKSampleQuery {
         let workoutRoute = SeriesType.workoutRoute
         guard
-            let seriesType = workoutRoute.original as? HKSeriesType
+            let seriesType = workoutRoute.hkObjectType as? HKSeriesType
         else {
             throw HealthKitError.invalidType(
                 "Invalid HKSeriesType: \(workoutRoute)"

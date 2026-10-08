@@ -105,7 +105,7 @@ public struct Quantity: Identifiable, Sample {
 // MARK: - Original
 extension Quantity: Original {
     func asOriginal() throws -> HKQuantitySample {
-        guard let type = identifier.objectType?.original as? HKQuantityType else {
+        guard let type = identifier.objectType?.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "Quantitiy type identifier: \(identifier) could not be formatted"
             )
@@ -160,7 +160,7 @@ extension Quantity: Payload {
 }
 // MARK: - Factory
 extension Quantity {
-    public static func collect(results: [HKSample], unit: HKUnit) -> [Quantity] {
+    static func collect(results: [HKSample], unit: HKUnit) -> [Quantity] {
         var samples = [Quantity]()
         if let quantitySamples = results as? [HKQuantitySample] {
             for quantitySample in quantitySamples {

@@ -7,11 +7,12 @@
 
 import HealthKit
 
-extension HKCategoryValuePresence: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKCategoryValuePresence {
+    /// Name of the value in payload strings
+    var label: String {
         "HKCategoryValuePresence"
     }
-    public var detail: String {
+    var detail: String {
         switch self {
         case .present:
             return "Present"

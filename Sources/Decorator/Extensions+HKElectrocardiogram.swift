@@ -26,8 +26,8 @@ extension HKElectrocardiogram {
             averageHeartRateUnit: averageHeartRateUnit.unitString,
             samplingFrequency: samplingFrequency,
             samplingFrequencyUnit: samplingFrequencyUnit.unitString,
-            classification: classification.description,
-            symptomsStatus: symptomsStatus.description,
+            classification: classification.label,
+            symptomsStatus: symptomsStatus.label,
             count: numberOfVoltageMeasurements,
             voltageMeasurements: voltageMeasurements,
             metadata: metadata?.asMetadata
@@ -52,8 +52,9 @@ extension HKElectrocardiogram.VoltageMeasurement: Harmonizable {
     }
 }
 // MARK: - CustomStringConvertible
-extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKElectrocardiogram.Classification {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .notSet:
             return "na"
@@ -77,8 +78,9 @@ extension HKElectrocardiogram.Classification: @retroactive CustomStringConvertib
     }
 }
 // MARK: - CustomStringConvertible
-extension HKElectrocardiogram.SymptomsStatus: @retroactive CustomStringConvertible {
-    public var description: String {
+extension HKElectrocardiogram.SymptomsStatus {
+    /// Name of the value in payload strings
+    var label: String {
         switch self {
         case .notSet:
             return "na"

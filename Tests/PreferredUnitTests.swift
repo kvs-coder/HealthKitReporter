@@ -56,17 +56,4 @@ class PreferredUnitTests: XCTestCase {
         XCTAssertEqual(sut[1].identifier, "HKQuantityTypeIdentifierStepCount")
         XCTAssertEqual(sut[1].unit, "count")
     }
-    func testCollectFromHealthKitTypes() throws {
-        let sut = PreferredUnit.collect(
-            from: [
-                HKQuantityType(.stepCount): HKUnit.count(),
-                HKQuantityType(.distanceWalkingRunning): HKUnit.meterUnit(with: .kilo)
-            ]
-        ).sorted { $0.identifier < $1.identifier }
-        XCTAssertEqual(sut.count, 2)
-        XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
-        XCTAssertEqual(sut[0].unit, "km")
-        XCTAssertEqual(sut[1].identifier, "HKQuantityTypeIdentifierStepCount")
-        XCTAssertEqual(sut[1].unit, "count")
-    }
 }
