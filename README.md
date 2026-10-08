@@ -364,6 +364,21 @@ reporter.manager.requestPerObjectReadAuthorization(
 
 Save a glasses or contacts prescription with `reporter.writer.save(sample:completion:)`; a prism must sit on the lens of the eye it names.
 
+### Several types in one query
+
+`QueryDescriptor` pairs a type with a predicate; sample, anchored and observer queries accept several of them:
+
+```swift
+let descriptors = [
+    QueryDescriptor(type: QuantityType.stepCount),
+    QueryDescriptor(type: CategoryType.sleepAnalysis, predicate: lastWeek)
+]
+let query = try reporter.reader.anchoredObjectQuery(descriptors: descriptors) { _, samples, deleted, anchor, error in
+    print(samples.count, deleted.count)
+}
+reporter.manager.executeQuery(query)
+```
+
 ## Observing Data
 
 Create a <i>HealthKitReporter</i> instance.

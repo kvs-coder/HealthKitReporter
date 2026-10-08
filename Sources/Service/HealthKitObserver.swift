@@ -74,6 +74,24 @@ public class HealthKitObserver {
         }
     }
     /**
+     Sets one observer query for several types.
+     - Parameter descriptors: **QueryDescriptor** types and predicates
+     - Parameter updateHandler: is called with the identifiers of the types that changed.
+     Call its **completion** once the update is processed, also on the error path
+     - Throws: HealthKitError.invalidType
+     */
+    public func observerQuery(
+        descriptors: [QueryDescriptor],
+        updateHandler: @escaping ObserverDescriptorsUpdateHandler
+    ) throws -> ObserverQuery {
+        return HKObserverQuery(
+            queryDescriptors: try descriptors.map { try $0.asOriginal() }
+        ) { (query, sampleTypes, completion, error) in
+            let identifiers = (sampleTypes ?? []).map(\.identifier).sorted()
+            updateHandler(query, identifiers, error, completion)
+        }
+    }
+    /**
      Enables background notifications about changes in AppleHealth
      - Parameter type: **ObjectType** type
      - Parameter frequency: **HKUpdateFrequency** frequency. Hourly by default

@@ -248,6 +248,41 @@ public class HealthKitReader {
         }
         return query
     }
+    /**
+     Queries samples of several types at once.
+     - Parameter descriptors: **QueryDescriptor** types and predicates
+     - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
+     By default sorting by startData without ascending
+     - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with samples of every type
+     - Throws: HealthKitError.invalidType
+     */
+    public func sampleQuery(
+        descriptors: [QueryDescriptor],
+        sortDescriptors: [NSSortDescriptor] = [
+            NSSortDescriptor(
+                key: HKSampleSortIdentifierStartDate,
+                ascending: false
+            )
+        ],
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping SampleResultsHandler
+    ) throws -> SampleQuery {
+        return HKSampleQuery(
+            queryDescriptors: try descriptors.map { try $0.asOriginal() },
+            limit: limit,
+            sortDescriptors: sortDescriptors
+        ) { (query, data, error) in
+            guard
+                error == nil,
+                let results = data
+            else {
+                resultsHandler(query, [], error)
+                return
+            }
+            resultsHandler(query, results.compactMap { try? $0.parsed() }, nil)
+        }
+    }
     /// Sample query whose results are converted with **collect**; the shared body of the typed queries
     func typedSampleQuery<Result>( // swiftlint:disable:this function_parameter_count
         type: ObjectType,

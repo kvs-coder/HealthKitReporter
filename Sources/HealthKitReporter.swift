@@ -81,6 +81,20 @@ public typealias ObserverUpdateHandler = (
 /**
  - Parameters:
     - query: the observer query
+    - identifiers: identifiers of the types with new samples
+    - error: error (optional)
+    - completion: must be called once the update is processed, on every path.
+    HealthKit throttles background delivery if it isn't
+ */
+public typealias ObserverDescriptorsUpdateHandler = (
+    _ query: Query?,
+    _ identifiers: [String],
+    _ error: Error?,
+    _ completion: @escaping () -> Void
+) -> Void
+/**
+ - Parameters:
+    - query: the observer query
     - identifier: the object type identifier
     - error: error (optional)
     - completion: must be called once the update is processed, on every path.
