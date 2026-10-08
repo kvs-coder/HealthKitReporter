@@ -123,6 +123,20 @@ class HealthKitReaderTests: XCTestCase {
         ) { _, _ in }
         assertCustom(query)
     }
+    func testVisionPrescriptionQuery() throws {
+        guard #available(iOS 16.0, *) else {
+            throw XCTSkip("Vision prescriptions require iOS 16")
+        }
+        let defaults = try sut.visionPrescriptionQuery { _, _ in }
+        XCTAssertEqual(defaults.objectType?.identifier, "HKVisionPrescriptionTypeIdentifier")
+        assertDefaults(defaults)
+        let query = try sut.visionPrescriptionQuery(
+            predicate: predicate,
+            sortDescriptors: sortDescriptors,
+            limit: 10
+        ) { _, _ in }
+        assertCustom(query)
+    }
     func testHeartbeatSeriesQuery() throws {
         let defaults = try sut.heartbeatSeriesQuery { _, _ in }
         XCTAssertEqual(defaults.objectType?.identifier, "HKDataTypeIdentifierHeartbeatSeries")
@@ -188,40 +202,6 @@ class HealthKitReaderTests: XCTestCase {
         XCTAssertEqual(discrete.options, [.discreteAverage, .discreteMin, .discreteMax, .mostRecent])
         XCTAssertEqual(discrete.predicate, .allSamples)
         XCTAssertNil(discrete.statisticsUpdateHandler)
-    }
-    func testQueriesWithMalformedOrIncompatibleUnitThrow() throws {
-        let anchorDate = Date(timeIntervalSince1970: 1626884800)
-        for unit in ["kg", "notAUnit", "(m", "m//s", "m/s/s", "count^", ""] {
-            assertInvalidValue(try sut.quantityQuery(type: .stepCount, unit: unit) { _, _ in })
-            assertInvalidValue(try sut.statisticsQuery(type: .stepCount, unit: unit) { _, _ in })
-            assertInvalidValue(
-                try sut.statisticsCollectionQuery(
-                    type: .stepCount,
-                    unit: unit,
-                    anchorDate: anchorDate,
-                    enumerateFrom: anchorDate,
-                    enumerateTo: anchorDate,
-                    intervalComponents: DateComponents(day: 1)
-                ) { _, _ in }
-            )
-        }
-    }
-    func testQueriesAcceptEveryUnitGrammarForm() throws {
-        let units: [QuantityType: [String]] = [
-            .bloodGlucose: ["mg/dL", "mmol<180.1558>/L", "mg/dl"],
-            .vo2Max: ["ml/kg*min", "mL/(kg.min)", "mL/kg·min"],
-            .bloodPressureSystolic: ["mmHg", "kg/(m.s^2)", "kPa", "kg.m^-1.s^-2"],
-            .heartRate: ["count/min", "Hz"],
-            .bodyTemperature: ["degC", "degF", "K"],
-            .dietaryWater: ["fl_oz_us", "cup_imp", "mcL"],
-            .bodyMassIndex: ["count"],
-            .bodyFatPercentage: ["%"]
-        ]
-        for (type, typeUnits) in units {
-            for unit in typeUnits {
-                XCTAssertNoThrow(try sut.quantityQuery(type: type, unit: unit) { _, _ in }, unit)
-            }
-        }
     }
     func testQueryActivitySummary() throws {
         let defaults = sut.queryActivitySummary { _, _ in }
@@ -313,5 +293,42 @@ class HealthKitReaderTests: XCTestCase {
         XCTAssertEqual(query.predicate, predicate, file: file, line: line)
         XCTAssertEqual(query.limit, 10, file: file, line: line)
         XCTAssertEqual(query.sortDescriptors, sortDescriptors, file: file, line: line)
+    }
+}
+// MARK: - Units
+extension HealthKitReaderTests {
+    func testQueriesWithMalformedOrIncompatibleUnitThrow() throws {
+        let anchorDate = Date(timeIntervalSince1970: 1626884800)
+        for unit in ["kg", "notAUnit", "(m", "m//s", "m/s/s", "count^", ""] {
+            assertInvalidValue(try sut.quantityQuery(type: .stepCount, unit: unit) { _, _ in })
+            assertInvalidValue(try sut.statisticsQuery(type: .stepCount, unit: unit) { _, _ in })
+            assertInvalidValue(
+                try sut.statisticsCollectionQuery(
+                    type: .stepCount,
+                    unit: unit,
+                    anchorDate: anchorDate,
+                    enumerateFrom: anchorDate,
+                    enumerateTo: anchorDate,
+                    intervalComponents: DateComponents(day: 1)
+                ) { _, _ in }
+            )
+        }
+    }
+    func testQueriesAcceptEveryUnitGrammarForm() throws {
+        let units: [QuantityType: [String]] = [
+            .bloodGlucose: ["mg/dL", "mmol<180.1558>/L", "mg/dl"],
+            .vo2Max: ["ml/kg*min", "mL/(kg.min)", "mL/kg·min"],
+            .bloodPressureSystolic: ["mmHg", "kg/(m.s^2)", "kPa", "kg.m^-1.s^-2"],
+            .heartRate: ["count/min", "Hz"],
+            .bodyTemperature: ["degC", "degF", "K"],
+            .dietaryWater: ["fl_oz_us", "cup_imp", "mcL"],
+            .bodyMassIndex: ["count"],
+            .bodyFatPercentage: ["%"]
+        ]
+        for (type, typeUnits) in units {
+            for unit in typeUnits {
+                XCTAssertNoThrow(try sut.quantityQuery(type: type, unit: unit) { _, _ in }, unit)
+            }
+        }
     }
 }

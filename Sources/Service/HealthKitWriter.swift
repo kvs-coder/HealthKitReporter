@@ -84,7 +84,7 @@ public class HealthKitWriter {
     }
     /**
      Deletes the previosly created sample.
-     Supports **Quantity**, **Category**, **Workout** and **Correlation**;
+     Supports **Quantity**, **Category**, **Workout**, **Correlation** and **VisionPrescription**;
      any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
@@ -122,7 +122,7 @@ public class HealthKitWriter {
     }
     /**
      Saves the created sample.
-     Supports **Quantity**, **Category**, **Workout** and **Correlation**;
+     Supports **Quantity**, **Category**, **Workout**, **Correlation** and **VisionPrescription**;
      any other sample completes with HealthKitError.invalidType
      - Parameter sample: **Sample** sample
      - Parameter completion: block notifies about operation status
@@ -139,6 +139,9 @@ public class HealthKitWriter {
     }
 
     private func original(of sample: Sample) throws -> HKSample {
+        if #available(iOS 16.0, *), let prescription = sample as? VisionPrescription {
+            return try prescription.asOriginal()
+        }
         switch sample {
         case let quantity as Quantity:
             return try quantity.asOriginal()

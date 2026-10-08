@@ -202,6 +202,16 @@ public typealias ElectrocardiogramResultsHandler = (
 ) -> Void
 /**
  - Parameters:
+    - prescriptions: vision prescription sample array
+    - error: error (optional)
+ */
+@available(iOS 16.0, *)
+public typealias VisionPrescriptionResultsHandler = (
+    _ prescriptions: [VisionPrescription],
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - samples: electrocardiogram voltage measurements sample array. Empty by default
     - error: error (optional)
  */

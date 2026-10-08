@@ -27,6 +27,9 @@ extension HKSample {
         if let clinicalRecord = self as? HKClinicalRecord {
             return try ClinicalRecord(clinicalRecord: clinicalRecord)
         }
+        if #available(iOS 16.0, *), let visionPrescription = self as? HKVisionPrescription {
+            return try VisionPrescription(visionPrescription: visionPrescription)
+        }
         throw HealthKitError.parsingFailed("HKSample could not be parsed")
     }
 }

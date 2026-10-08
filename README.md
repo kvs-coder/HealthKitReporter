@@ -248,6 +248,34 @@ reporter.manager.preferredUnits(for: [.stepCount]) { (dictionary, error) in
 }
 ```
 
+### Vision prescriptions
+
+Vision prescriptions (iOS 16+) need per-object read authorization: the user picks which prescriptions the app may read.
+Lens powers are in diopters, angles in degrees, distances in millimeters and prism amounts in prism diopters. `dateIssuedTimestamp` and `expirationDateTimestamp` are seconds since 1970.
+
+```swift
+let reporter = HealthKitReporter()
+reporter.manager.requestPerObjectReadAuthorization(
+    for: VisionPrescriptionType.visionPrescription
+) { success, error in
+    guard success, error == nil else {
+        return
+    }
+    do {
+        let query = try reporter.reader.visionPrescriptionQuery { prescriptions, error in
+            for prescription in prescriptions {
+                print(prescription.harmonized.prescriptionType.detail, prescription.harmonized.rightEye?.sphere ?? 0)
+            }
+        }
+        reporter.manager.executeQuery(query)
+    } catch {
+        print(error)
+    }
+}
+```
+
+Save a glasses or contacts prescription with `reporter.writer.save(sample:completion:)`; a prism must sit on the lens of the eye it names.
+
 ## Observing Data
 
 Create a <i>HealthKitReporter</i> instance.

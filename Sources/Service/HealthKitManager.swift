@@ -119,4 +119,26 @@ public class HealthKitManager {
             completion(false, error)
         }
     }
+    /**
+     Asks the user which objects of a per-object authorization type (vision prescriptions) the app may read.
+     - Parameter type: **SampleType** type, e.g. **VisionPrescriptionType.visionPrescription**
+     - Parameter predicate: **NSPredicate** narrowing the objects offered (optional). nil by default
+     - Parameter completion: block notifies about operation status
+     */
+    @available(iOS 16.0, *)
+    public func requestPerObjectReadAuthorization(
+        for type: SampleType,
+        predicate: NSPredicate? = nil,
+        completion: @escaping StatusCompletionBlock
+    ) {
+        guard let objectType = type.original else {
+            completion(false, HealthKitError.invalidType("Type \(type) has not HKObjectType representation"))
+            return
+        }
+        healthStore.requestPerObjectReadAuthorization(
+            for: objectType,
+            predicate: predicate,
+            completion: completion
+        )
+    }
 }
