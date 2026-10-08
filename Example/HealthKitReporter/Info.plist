@@ -24,6 +24,8 @@
 	<true/>
 	<key>NSHealthShareUsageDescription</key>
 	<string>This app needs permission to share your health data</string>
+	<key>NSHealthClinicalHealthRecordsShareUsageDescription</key>
+	<string>This app reads your clinical health records to demo the HealthKitReporter health records API</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>This app needs permission to update your health data</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -36,11 +38,9 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>healthkit</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

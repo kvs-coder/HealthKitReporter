@@ -7,78 +7,34 @@
 //
 
 import UIKit
-import HealthKitReporter
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
-    var observerUpdateHandler: ((Query?, String?, Error?) -> Void)?
-
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        let localNotificationManager = LocalNotificationManager()
-        localNotificationManager.requestPermission { (_, _) in }
-        let reporter = HealthKitReporter()
-        let types: [SampleType] = [
-            QuantityType.stepCount,
-            QuantityType.heartRate,
-            QuantityType.distanceCycling,
-            CategoryType.sleepAnalysis
-        ]
-        reporter.manager.requestAuthorization(
-            toRead: types,
-            toWrite: types
-        ) { (success, error) in
-            if success && error == nil {
-                for type in types {
-                    do {
-                        let query = try reporter.observer.observerQuery(
-                            type: type
-                        ) { (_, identifier, _, completion) in
-                            if let identifier = identifier {
-                                let notification = LocalNotification(
-                                    title: "Observed",
-                                    subtitle: identifier
-                                )
-                                localNotificationManager.scheduleNotification(notification)
-                            }
-                            completion()
-                        }
-                        reporter.observer.enableBackgroundDelivery(
-                            type: type,
-                            frequency: .immediate
-                        ) { (_, error) in
-                            if error == nil {
-                                print("enabled")
-                            }
-                        }
-                        reporter.manager.executeQuery(query)
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
-        }
+        UNUserNotificationCenter.current().delegate = self
+        LocalNotificationManager().requestPermission { _, _ in }
+        let navigationController = UINavigationController(rootViewController: DemoViewController())
+        navigationController.navigationBar.tintColor = .systemPink
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.tintColor = .systemPink
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
         return true
     }
 }
-
+// MARK: - UNUserNotificationCenterDelegate
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler(
-            [
-                .banner,
-                .list,
-                .badge,
-                .sound
-            ]
-        )
+        completionHandler([.banner, .list, .badge, .sound])
     }
 }
