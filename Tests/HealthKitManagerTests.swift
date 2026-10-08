@@ -52,6 +52,15 @@ class HealthKitManagerTests: XCTestCase {
         }
         XCTAssertEqual(invalid?.status, .unknown)
         assertInvalidType(try { throw try XCTUnwrap(invalid?.error) }())
+        var disallowed: (status: AuthorizationRequestStatus, error: Error?)?
+        sut.authorizationRequestStatus(
+            toRead: [],
+            toWrite: [QuantityType.appleExerciseTime]
+        ) { status, error in
+            disallowed = (status, error)
+        }
+        XCTAssertEqual(disallowed?.status, .unknown)
+        assertInvalidType(try { throw try XCTUnwrap(disallowed?.error) }())
     }
     func testAuthorizationRequestStatusRawValues() throws {
         XCTAssertEqual(AuthorizationRequestStatus.unknown.rawValue, 0)

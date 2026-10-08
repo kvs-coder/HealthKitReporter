@@ -206,6 +206,7 @@ extension VisionPrescription {
 @available(iOS 16.0, watchOS 9.0, *)
 extension VisionPrescription: Original {
     func asOriginal() throws -> HKVisionPrescription {
+        try startTimestamp.checkInterval(to: endTimestamp)
         let metadata = try harmonized.metadata?.asOriginal()
         let expirationDate = harmonized.expirationDateTimestamp?.asDate
         switch HKVisionPrescriptionType(rawValue: UInt(harmonized.prescriptionType.id)) {

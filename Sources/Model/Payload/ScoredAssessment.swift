@@ -124,6 +124,7 @@ public struct ScoredAssessment: Identifiable, Sample {
 extension ScoredAssessment: Original {
     /// HealthKit needs exactly 7 (GAD-7) or 9 (PHQ-9) answers within the questionnaire's scale
     func asOriginal() throws -> HKScoredAssessment {
+        try startTimestamp.checkInterval(to: endTimestamp)
         let answers = harmonized.answers
         let metadata = try harmonized.metadata?.asOriginal()
         switch identifier.objectType as? ScoredAssessmentType {

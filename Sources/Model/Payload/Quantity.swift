@@ -108,6 +108,7 @@ public struct Quantity: Identifiable, Sample {
 // MARK: - Original
 extension Quantity: Original {
     func asOriginal() throws -> HKQuantitySample {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard let type = identifier.objectType?.hkObjectType as? HKQuantityType else {
             throw HealthKitError.invalidType(
                 "Quantitiy type identifier: \(identifier) could not be formatted"

@@ -51,9 +51,32 @@ class StoreOperationsTests: XCTestCase {
                 completion: $0
             )
         }
+        assertFails(invalidType: true) {
+            manager.requestAuthorization(toRead: [CorrelationType.bloodPressure], toWrite: [], completion: $0)
+        }
+        assertFails(invalidType: true) {
+            manager.requestAuthorization(toRead: [], toWrite: [CorrelationType.bloodPressure], completion: $0)
+        }
+        assertFails(invalidType: true) {
+            manager.requestAuthorization(
+                toRead: [],
+                toWrite: [QuantityType.appleExerciseTime],
+                completion: $0
+            )
+        }
         if #available(iOS 16.0, watchOS 9.0, *) {
             assertFails(invalidType: true) {
+                manager.requestAuthorization(
+                    toRead: [VisionPrescriptionType.visionPrescription],
+                    toWrite: [],
+                    completion: $0
+                )
+            }
+            assertFails(invalidType: true) {
                 manager.requestPerObjectReadAuthorization(for: UnavailableType.unavailable, completion: $0)
+            }
+            assertFails(invalidType: true) {
+                manager.requestPerObjectReadAuthorization(for: QuantityType.stepCount, completion: $0)
             }
             assertFails {
                 manager.requestPerObjectReadAuthorization(

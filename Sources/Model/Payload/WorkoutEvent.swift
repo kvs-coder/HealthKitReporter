@@ -79,7 +79,8 @@ public struct WorkoutEvent: Codable {
 // MARK: - Original
 extension WorkoutEvent: Original {
     func asOriginal() throws -> HKWorkoutEvent {
-        guard let type = HKWorkoutEventType(rawValue: harmonized.value) else {
+        try startTimestamp.checkInterval(to: endTimestamp)
+        guard let type = HKWorkoutEventType(knownRawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
                 "WorkoutEvent type: \(harmonized.value) could not be formatted"
             )

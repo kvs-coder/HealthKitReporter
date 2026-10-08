@@ -100,10 +100,17 @@ public struct Category: Identifiable, Sample {
 // MARK: - Original
 extension Category: Original {
     func asOriginal() throws -> HKCategorySample {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard let type = identifier.objectType?.hkObjectType as? HKCategoryType else {
             throw HealthKitError.invalidType(
                 "Category type identifier: \(identifier) could not be formatted"
             )
+        }
+        guard
+            let value = try CategoryType.make(from: identifier).describedValue(harmonized.value),
+            value.detail != "Unknown"
+        else {
+            throw HealthKitError.invalidValue("Value \(harmonized.value) is not valid for \(identifier)")
         }
         return HKCategorySample(
             type: type,

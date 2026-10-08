@@ -8,36 +8,6 @@
 import Foundation
 import HealthKitReporter
 
-/// Types HealthKit only computes or records itself; requesting write access to them raises.
-/// The single place that lists them
-private let readOnlyIdentifiers: Set<String> = [
-        "HKQuantityTypeIdentifierAppleExerciseTime",
-        "HKQuantityTypeIdentifierAppleMoveTime",
-        "HKQuantityTypeIdentifierAppleStandTime",
-        "HKQuantityTypeIdentifierAppleWalkingSteadiness",
-        "HKQuantityTypeIdentifierAppleSleepingWristTemperature",
-        "HKQuantityTypeIdentifierAppleSleepingBreathingDisturbances",
-        "HKQuantityTypeIdentifierAtrialFibrillationBurden",
-        "HKQuantityTypeIdentifierNikeFuel",
-        "HKQuantityTypeIdentifierWalkingAsymmetryPercentage",
-        "HKQuantityTypeIdentifierWalkingHeartRateAverage",
-        "HKCategoryTypeIdentifierAppleStandHour",
-        "HKCategoryTypeIdentifierAppleWalkingSteadinessEvent",
-        "HKCategoryTypeIdentifierAudioExposureEvent",
-        "HKCategoryTypeIdentifierHeadphoneAudioExposureEvent",
-        "HKCategoryTypeIdentifierHighHeartRateEvent",
-        "HKCategoryTypeIdentifierHypertensionEvent",
-        "HKCategoryTypeIdentifierInfrequentMenstrualCycles",
-        "HKCategoryTypeIdentifierIrregularHeartRhythmEvent",
-        "HKCategoryTypeIdentifierIrregularMenstrualCycles",
-        "HKCategoryTypeIdentifierLowCardioFitnessEvent",
-        "HKCategoryTypeIdentifierLowHeartRateEvent",
-        "HKCategoryTypeIdentifierPersistentIntermenstrualBleeding",
-        "HKCategoryTypeIdentifierProlongedMenstrualPeriods",
-        "HKCategoryTypeIdentifierSleepApneaEvent",
-        "HKDataTypeIdentifierElectrocardiogram"
-]
-
 /// Every type the library supports, split into what HealthKit lets an app read and write
 extension HealthKitReporter {
     /// Every sample type available on this OS. Correlations are left out:
@@ -74,7 +44,7 @@ extension HealthKitReporter {
 
     /// Write access: every sample type HealthKit lets apps write
     var demoWriteTypes: [SampleType] {
-        return demoSampleTypes.filter { !readOnlyIdentifiers.contains($0.identifier ?? "") }
+        return demoSampleTypes.filter(\.isWritable)
     }
 
     var demoQuantityTypes: [QuantityType] {

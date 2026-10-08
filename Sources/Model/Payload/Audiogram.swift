@@ -130,6 +130,7 @@ public struct Audiogram: Identifiable, Sample {
 extension Audiogram: Original {
     /// HealthKit accepts at most 30 points with unique, ascending frequencies
     func asOriginal() throws -> HKAudiogramSample {
+        try startTimestamp.checkInterval(to: endTimestamp)
         let frequencies = harmonized.sensitivityPoints.map(\.frequency)
         guard
             !frequencies.isEmpty,

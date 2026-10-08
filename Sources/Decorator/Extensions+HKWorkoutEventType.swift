@@ -32,3 +32,13 @@ extension HKWorkoutEventType {
         }
     }
 }
+// MARK: - Validation
+extension HKWorkoutEventType {
+    /// The event type with this raw value; nil for values HealthKit doesn't know, which it raises for
+    init?(knownRawValue rawValue: Int) {
+        guard let type = HKWorkoutEventType(rawValue: rawValue), type.label != "Unknown" else {
+            return nil
+        }
+        self = type
+    }
+}

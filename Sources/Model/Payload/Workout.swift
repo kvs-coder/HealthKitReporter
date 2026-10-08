@@ -179,6 +179,7 @@ public struct Workout: Identifiable, Sample {
 // MARK: - Original
 extension Workout: Original {
     func asOriginal() throws -> HKWorkout {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard let activityType = HKWorkoutActivityType(knownRawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
                 "Workout type: \(harmonized.value) could not be formatted"

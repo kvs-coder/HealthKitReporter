@@ -122,6 +122,7 @@ public struct CDADocument: Identifiable, Sample {
 extension CDADocument: Original {
     /// Title, patient, author and custodian are extracted by HealthKit from the CDA XML
     func asOriginal() throws -> HKCDADocumentSample {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard
             let documentData = harmonized.documentData,
             let data = Data(base64Encoded: documentData)

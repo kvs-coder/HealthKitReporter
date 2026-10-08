@@ -9,6 +9,16 @@ import XCTest
 import HealthKitReporter
 
 class ObjectTypeTests: XCTestCase {
+    func testIsWritable() throws {
+        XCTAssertTrue(QuantityType.stepCount.isWritable)
+        XCTAssertTrue(CategoryType.sleepAnalysis.isWritable)
+        XCTAssertTrue(WorkoutType.workoutType.isWritable)
+        XCTAssertFalse(QuantityType.appleExerciseTime.isWritable)
+        XCTAssertFalse(CategoryType.highHeartRateEvent.isWritable)
+        XCTAssertFalse(ElectrocardiogramType.electrocardiogramType.isWritable)
+        XCTAssertFalse(CorrelationType.bloodPressure.isWritable)
+        XCTAssertFalse(ClinicalType.labResultRecord.isWritable)
+    }
     func testQuantityTypeAllCases() throws {
         try assertAllCases(QuantityType.self)
         try assertSampleTypeIdentifiers(QuantityType.self)

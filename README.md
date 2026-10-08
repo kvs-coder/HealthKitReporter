@@ -193,7 +193,13 @@ Activity summaries, ECGs, heartbeat series, workout routes, clinical and verifia
 
 Create a <i>HealthKitReporter</i> instance.
 
-Authorize desired types to write, like step count.
+Authorize desired types to write, like step count. Only types whose `isWritable` is true can be requested for writing; HealthKit computes the others itself (e.g. `QuantityType.appleExerciseTime`, ECGs). Correlations and per-object types (vision prescriptions, medications) can't go into `requestAuthorization` either. For all of these the completion reports `HealthKitError.invalidType` instead of HealthKit crashing the app:
+
+```swift
+let writable = QuantityType.allCases.filter(\.isWritable)
+```
+
+Saving checks the payload first, too: a sample that ends before it starts, a category value its type doesn't know, or an unknown workout event type completes with `HealthKitError.invalidValue` / `invalidType`.
 
 You may call manager's <i>preferredUnits(for: )</i> function to pass units (for <b>Quantity Types</b>).
 

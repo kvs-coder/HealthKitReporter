@@ -127,6 +127,7 @@ public struct StateOfMind: Identifiable, Sample {
 extension StateOfMind: Original {
     /// HealthKit rejects a valence outside -1...1 and unknown kinds, labels or associations
     func asOriginal() throws -> HKStateOfMind {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard
             (1...2).contains(harmonized.kind),
             (-1...1).contains(harmonized.valence),

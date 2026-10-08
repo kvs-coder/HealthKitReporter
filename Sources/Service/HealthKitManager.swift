@@ -16,8 +16,11 @@ public class HealthKitManager {
     }
     /**
      Requests authorization for reading/writing Objects in HK.
+     Types HealthKit refuses to authorize complete with HealthKitError.invalidType instead of raising:
+     correlations, per-object types to read (use **requestPerObjectReadAuthorization**)
+     and types that aren't **isWritable** to write
      - Parameter toRead: an array of **ObjectType** types to read
-     - Parameter toWrite: an array of **ObjectType** types to write
+     - Parameter toWrite: an array of **SampleType** types to write
      - Parameter completion: returns a block with information about authorization window being displayed
      */
     public func requestAuthorization(
@@ -25,40 +28,21 @@ public class HealthKitManager {
         toWrite: [SampleType],
         completion: @escaping StatusCompletionBlock
     ) {
-        var setOfReadTypes = Set<HKObjectType>()
-        for type in toRead {
-            guard let objectType = type.hkObjectType else {
-                completion(
-                    false,
-                    HealthKitError.invalidType(
-                        "Type \(type) has not HKObjectType representation"
-                    )
-                )
-                return
-            }
-            setOfReadTypes.insert(objectType)
+        do {
+            let types = try authorizationTypes(toRead: toRead, toWrite: toWrite)
+            healthStore.requestAuthorization(
+                toShare: types.write,
+                read: types.read,
+                completion: completion
+            )
+        } catch {
+            completion(false, error)
         }
-        var setOfWriteTypes = Set<HKSampleType>()
-        for type in toWrite {
-            guard let objectType = type.hkObjectType as? HKSampleType else {
-                completion(
-                    false,
-                    HealthKitError.invalidType(
-                        "Type \(type) has not HKSampleType representation"
-                    )
-                )
-                return
-            }
-            setOfWriteTypes.insert(objectType)
-        }
-        healthStore.requestAuthorization(
-            toShare: setOfWriteTypes,
-            read: setOfReadTypes,
-            completion: completion
-        )
     }
     /**
      Tells whether requesting authorization for these types would show the permission sheet.
+     Types HealthKit refuses to authorize complete with HealthKitError.invalidType,
+     as in **requestAuthorization**
      - Parameter toRead: an array of **ObjectType** types to read
      - Parameter toWrite: an array of **SampleType** types to write
      - Parameter completion: returns a block with the request status
@@ -68,20 +52,16 @@ public class HealthKitManager {
         toWrite: [SampleType],
         completion: @escaping AuthorizationRequestStatusCompletion
     ) {
-        let readTypes = toRead.compactMap(\.hkObjectType)
-        let writeTypes = toWrite.compactMap { $0.hkObjectType as? HKSampleType }
-        guard readTypes.count == toRead.count, writeTypes.count == toWrite.count else {
-            completion(
-                .unknown,
-                HealthKitError.invalidType("Types \(toRead) \(toWrite) are not all available")
-            )
-            return
-        }
-        healthStore.getRequestStatusForAuthorization(
-            toShare: Set(writeTypes),
-            read: Set(readTypes)
-        ) { status, error in
-            completion(AuthorizationRequestStatus(requestStatus: status), error)
+        do {
+            let types = try authorizationTypes(toRead: toRead, toWrite: toWrite)
+            healthStore.getRequestStatusForAuthorization(
+                toShare: types.write,
+                read: types.read
+            ) { status, error in
+                completion(AuthorizationRequestStatus(requestStatus: status), error)
+            }
+        } catch {
+            completion(.unknown, error)
         }
     }
     /**
@@ -194,6 +174,13 @@ public class HealthKitManager {
             completion(false, HealthKitError.invalidType("Type \(type) has not HKObjectType representation"))
             return
         }
+        guard objectType.requiresPerObjectAuthorization() else {
+            completion(
+                false,
+                HealthKitError.invalidType("\(objectType.identifier) is authorized with requestAuthorization")
+            )
+            return
+        }
         healthStore.requestPerObjectReadAuthorization(
             for: objectType,
             predicate: predicate,
@@ -209,4 +196,38 @@ public class HealthKitManager {
         return healthStore.supportsHealthRecords()
     }
     #endif
+
+    private func authorizationTypes(
+        toRead: [ObjectType],
+        toWrite: [SampleType]
+    ) throws -> (read: Set<HKObjectType>, write: Set<HKSampleType>) {
+        var readTypes = Set<HKObjectType>()
+        for type in toRead {
+            guard let objectType = type.hkObjectType else {
+                throw HealthKitError.invalidType("Type \(type) has not HKObjectType representation")
+            }
+            guard !(objectType is HKCorrelationType) else {
+                throw HealthKitError.invalidType(
+                    "\(objectType.identifier) can not be authorized; authorize the types it correlates"
+                )
+            }
+            if #available(iOS 16.0, watchOS 9.0, *), objectType.requiresPerObjectAuthorization() {
+                throw HealthKitError.invalidType(
+                    "\(objectType.identifier) is authorized with requestPerObjectReadAuthorization"
+                )
+            }
+            readTypes.insert(objectType)
+        }
+        var writeTypes = Set<HKSampleType>()
+        for type in toWrite {
+            guard let sampleType = type.hkObjectType as? HKSampleType else {
+                throw HealthKitError.invalidType("Type \(type) has not HKSampleType representation")
+            }
+            guard type.isWritable else {
+                throw HealthKitError.invalidType("HealthKit doesn't let apps write \(sampleType.identifier)")
+            }
+            writeTypes.insert(sampleType)
+        }
+        return (readTypes, writeTypes)
+    }
 }

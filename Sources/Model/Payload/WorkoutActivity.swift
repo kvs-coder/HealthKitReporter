@@ -78,6 +78,7 @@ public struct WorkoutActivity: Codable {
 @available(iOS 16.0, watchOS 9.0, *)
 extension WorkoutActivity: Original {
     func asOriginal() throws -> HKWorkoutActivity {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard let activityType = HKWorkoutActivityType(knownRawValue: activityValue) else {
             throw HealthKitError.invalidType("Workout activity type: \(activityValue) could not be formatted")
         }

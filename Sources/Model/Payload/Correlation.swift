@@ -162,6 +162,7 @@ extension Correlation.Harmonized: Payload {
 // MARK: - Original
 extension Correlation: Original {
     func asOriginal() throws -> HKCorrelation {
+        try startTimestamp.checkInterval(to: endTimestamp)
         guard let type = identifier.objectType?.hkObjectType as? HKCorrelationType else {
             throw HealthKitError.invalidType(
                 "Correlation type identifier: \(identifier) could not be formatted"
