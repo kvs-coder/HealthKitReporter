@@ -182,3 +182,18 @@ extension HKWorkoutActivityType: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - Known raw values
+extension HKWorkoutActivityType {
+    /// The activity type for a raw value this library describes.
+    /// Swift accepts any raw value, but HealthKit raises an NSException on unknown ones
+    init?(knownRawValue rawValue: Int) {
+        guard
+            rawValue >= 0,
+            let type = HKWorkoutActivityType(rawValue: UInt(rawValue)),
+            type.description != "Unknown Workout"
+        else {
+            return nil
+        }
+        self = type
+    }
+}

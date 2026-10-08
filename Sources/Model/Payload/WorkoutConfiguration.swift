@@ -69,14 +69,15 @@ public struct WorkoutConfiguration: Codable {
 // MARK: - Original
 extension WorkoutConfiguration: Original {
     func asOriginal() throws -> HKWorkoutConfiguration {
-        let configuration = HKWorkoutConfiguration()
-        if let activityType = HKWorkoutActivityType(rawValue: UInt(activityValue)) {
-            configuration.activityType = activityType
+        guard let activityType = HKWorkoutActivityType(knownRawValue: activityValue) else {
+            throw HealthKitError.invalidType("Workout activity type: \(activityValue) could not be formatted")
         }
-        if let locationType = HKWorkoutSessionLocationType(rawValue: locationValue) {
+        let configuration = HKWorkoutConfiguration()
+        configuration.activityType = activityType
+        if let locationType = HKWorkoutSessionLocationType(knownRawValue: locationValue) {
             configuration.locationType = locationType
         }
-        if let swimmingLocationType = HKWorkoutSwimmingLocationType(rawValue: swimmingValue) {
+        if let swimmingLocationType = HKWorkoutSwimmingLocationType(knownRawValue: swimmingValue) {
             configuration.swimmingLocationType = swimmingLocationType
         }
         configuration.lapLength = HKQuantity(

@@ -85,6 +85,10 @@ public struct Workout: Identifiable, Sample {
     public let duration: Double
     public let workoutEvents: [WorkoutEvent]
     public let harmonized: Harmonized
+    /// statistics of every quantity type recorded during the workout, in SI units (iOS 16+)
+    public let statistics: [Statistics]?
+    /// activities of a multi-sport workout (iOS 16+)
+    public let activities: [WorkoutActivity]?
 
     init(workout: HKWorkout) throws {
         self.uuid = workout.uuid.uuidString
@@ -107,6 +111,15 @@ public struct Workout: Identifiable, Sample {
         }
         self.workoutEvents = workoutEvents
         self.harmonized = try workout.harmonize()
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            self.statistics = workout.allStatistics.values
+                .compactMap { try? Statistics(statistics: $0) }
+                .sorted { $0.identifier < $1.identifier }
+            self.activities = workout.workoutActivities.map(WorkoutActivity.init(activity:))
+        } else {
+            self.statistics = nil
+            self.activities = nil
+        }
     }
 
     public init(
@@ -117,7 +130,9 @@ public struct Workout: Identifiable, Sample {
         sourceRevision: SourceRevision,
         duration: Double,
         workoutEvents: [WorkoutEvent],
-        harmonized: Harmonized
+        harmonized: Harmonized,
+        statistics: [Statistics]? = nil,
+        activities: [WorkoutActivity]? = nil
     ) {
         self.uuid = UUID().uuidString
         self.identifier = identifier
@@ -128,6 +143,8 @@ public struct Workout: Identifiable, Sample {
         self.duration = duration
         self.workoutEvents = workoutEvents
         self.harmonized = harmonized
+        self.statistics = statistics
+        self.activities = activities
     }
 
     public func copyWith(
@@ -138,7 +155,9 @@ public struct Workout: Identifiable, Sample {
         sourceRevision: SourceRevision? = nil,
         duration: Double? = nil,
         workoutEvents: [WorkoutEvent]? = nil,
-        harmonized: Harmonized? = nil
+        harmonized: Harmonized? = nil,
+        statistics: [Statistics]? = nil,
+        activities: [WorkoutActivity]? = nil
     ) -> Workout {
         return Workout(
             identifier: identifier ?? self.identifier,
@@ -148,14 +167,16 @@ public struct Workout: Identifiable, Sample {
             sourceRevision: sourceRevision ?? self.sourceRevision,
             duration: duration ?? self.duration,
             workoutEvents: workoutEvents ?? self.workoutEvents,
-            harmonized: harmonized ?? self.harmonized
+            harmonized: harmonized ?? self.harmonized,
+            statistics: statistics ?? self.statistics,
+            activities: activities ?? self.activities
         )
     }
 }
 // MARK: - Original
 extension Workout: Original {
     func asOriginal() throws -> HKWorkout {
-        guard let activityType = HKWorkoutActivityType(rawValue: UInt(harmonized.value)) else {
+        guard let activityType = HKWorkoutActivityType(knownRawValue: harmonized.value) else {
             throw HealthKitError.invalidType(
                 "Workout type: \(harmonized.value) could not be formatted"
             )
@@ -205,6 +226,59 @@ extension Workout: Original {
         )
     }
 
+    /// The harmonized totals as samples spanning the workout, for **HKWorkoutBuilder**
+    func totalSamples() throws -> [HKQuantitySample] {
+        return try [
+            totalSample(
+                harmonized.totalEnergyBurned,
+                unit: harmonized.totalEnergyBurnedUnit,
+                of: .activeEnergyBurned
+            ),
+            totalSample(harmonized.totalDistance, unit: harmonized.totalDistanceUnit, of: distanceType),
+            totalSample(
+                harmonized.totalSwimmingStrokeCount,
+                unit: harmonized.totalSwimmingStrokeCountUnit,
+                of: .swimmingStrokeCount
+            ),
+            totalSample(
+                harmonized.totalFlightsClimbed,
+                unit: harmonized.totalFlightsClimbedUnit,
+                of: .flightsClimbed
+            )
+        ].compactMap { $0 }
+    }
+
+    private func totalSample(
+        _ value: Double?,
+        unit: String,
+        of identifier: HKQuantityTypeIdentifier
+    ) throws -> HKQuantitySample? {
+        return try quantity(value, unit: unit, compatibleWith: identifier).map {
+            HKQuantitySample(
+                type: HKQuantityType(identifier),
+                quantity: $0,
+                start: startTimestamp.asDate,
+                end: endTimestamp.asDate
+            )
+        }
+    }
+
+    /// The distance type a workout of this activity records
+    private var distanceType: HKQuantityTypeIdentifier {
+        switch HKWorkoutActivityType(knownRawValue: harmonized.value) {
+        case .cycling, .handCycling:
+            return .distanceCycling
+        case .swimming:
+            return .distanceSwimming
+        case .wheelchairWalkPace, .wheelchairRunPace:
+            return .distanceWheelchair
+        case .downhillSkiing, .snowboarding:
+            return .distanceDownhillSnowSports
+        default:
+            return .distanceWalkingRunning
+        }
+    }
+
     private func quantity(
         _ value: Double?,
         unit: String,
@@ -236,6 +310,7 @@ extension Workout: Payload {
         }
         let device = dictionary["device"] as? [String: Any]
         let workoutEvents = dictionary["workoutEvents"] as? [[String: Any]]
+        let activities = dictionary["activities"] as? [[String: Any]]
         return Workout(
             identifier: identifier,
             startTimestamp: Double(truncating: startTimestamp),
@@ -250,7 +325,8 @@ extension Workout: Payload {
                     try WorkoutEvent.make(from: $0)
                 }
                 : [],
-            harmonized: try Harmonized.make(from: harmonized)
+            harmonized: try Harmonized.make(from: harmonized),
+            activities: try activities?.map(WorkoutActivity.make)
         )
     }
     public static func collect(

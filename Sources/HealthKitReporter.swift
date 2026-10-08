@@ -61,6 +61,29 @@ public typealias CorrelationQuery = HKCorrelationQuery
 public typealias StatusCompletionBlock = (_ success: Bool, _ error: Error?) -> Void
 /**
  - Parameters:
+    - workout: the saved workout
+    - error: error (optional)
+ */
+public typealias WorkoutSaveCompletion = (
+    _ workout: Workout?,
+    _ error: Error?
+) -> Void
+/// **HKWorkoutEffortRelationshipQuery** typealias
+@available(iOS 18.0, watchOS 11.0, *)
+public typealias WorkoutEffortRelationshipQuery = HKWorkoutEffortRelationshipQuery
+/**
+ - Parameters:
+    - relationships: workouts with their effort samples
+    - anchor: anchor to continue from (optional)
+    - error: error (optional)
+ */
+public typealias WorkoutEffortRelationshipResultsHandler = (
+    _ relationships: [WorkoutEffortRelationship],
+    _ anchor: Anchor?,
+    _ error: Error?
+) -> Void
+/**
+ - Parameters:
     - attachments: files attached to the sample
     - error: error (optional)
  */

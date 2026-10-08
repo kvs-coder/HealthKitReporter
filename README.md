@@ -399,6 +399,22 @@ reporter.manager.attachments(forSampleOf: VisionPrescriptionType.visionPrescript
 
 `addAttachment(toSampleOf:uuid:name:contentType:url:metadata:completion:)` attaches a local file and `removeAttachment(fromSampleOf:uuid:attachmentIdentifier:completion:)` removes one.
 
+### Workouts
+
+On iOS 16+ a `Workout` carries `statistics` for every recorded quantity type and the `activities` of a multi-sport workout; the totals fall back to the statistics when HealthKit leaves the deprecated totals empty.
+
+Save new workouts through `HKWorkoutBuilder`, optionally with samples and a route; the harmonized totals become samples for the types you don't pass:
+
+```swift
+reporter.writer.saveWorkout(workout, samples: heartRates, route: locations) { savedWorkout, error in
+    print(savedWorkout?.uuid ?? "", error ?? "")
+}
+```
+
+Workout effort (iOS 18): read the effort samples related to workouts with `reader.workoutEffortRelationshipQuery`, and relate one with `writer.relateWorkoutEffort(_:toWorkout:activity:completion:)`.
+
+Live workout sessions and Swift async/await variants are out of scope; see `docs/adr/0003-workout-and-query-scope.md`.
+
 ### Several types in one query
 
 `QueryDescriptor` pairs a type with a predicate; sample, anchored and observer queries accept several of them:

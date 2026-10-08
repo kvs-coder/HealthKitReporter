@@ -82,7 +82,7 @@ extension HealthKitManager {
             completion(nil, error)
             return
         }
-        sample(of: type, uuid: uuid) { sample, error in
+        healthStore.storedSample(of: type, uuid: uuid) { sample, error in
             guard let sample = sample else {
                 completion(nil, error)
                 return
@@ -135,7 +135,7 @@ extension HealthKitManager {
         uuid: String,
         completion: @escaping (HKSample?, [HKAttachment], Error?) -> Void
     ) {
-        sample(of: type, uuid: uuid) { sample, error in
+        healthStore.storedSample(of: type, uuid: uuid) { sample, error in
             guard let sample = sample else {
                 completion(nil, [], error)
                 return
@@ -145,32 +145,5 @@ extension HealthKitManager {
                 completion(sample, attachments ?? [], error)
             }
         }
-    }
-    /// The stored sample with this uuid; attachments belong to persisted objects
-    private func sample(
-        of type: SampleType,
-        uuid: String,
-        completion: @escaping (HKSample?, Error?) -> Void
-    ) {
-        guard
-            let sampleType = type.original as? HKSampleType,
-            let identifier = UUID(uuidString: uuid)
-        else {
-            completion(nil, HealthKitError.invalidValue("Invalid sample \(type) \(uuid)"))
-            return
-        }
-        let query = HKSampleQuery(
-            sampleType: sampleType,
-            predicate: HKQuery.predicateForObject(with: identifier),
-            limit: 1,
-            sortDescriptors: nil
-        ) { _, samples, error in
-            guard let sample = samples?.first else {
-                completion(nil, error ?? HealthKitError.invalidIdentifier("No \(type) sample \(uuid)"))
-                return
-            }
-            completion(sample, nil)
-        }
-        healthStore.execute(query)
     }
 }

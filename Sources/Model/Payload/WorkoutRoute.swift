@@ -143,6 +143,22 @@ public struct WorkoutRoute: Identifiable, Sample {
         self.harmonized = sample.harmonize(routes: routes)
     }
 }
+// MARK: - Original
+extension WorkoutRoute.Location {
+    var asOriginal: CLLocation {
+        return CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
+            altitude: altitude,
+            horizontalAccuracy: horizontalAccuracy,
+            verticalAccuracy: verticalAccuracy,
+            course: course,
+            courseAccuracy: courseAccuracy ?? -1,
+            speed: speed,
+            speedAccuracy: speedAccuracy ?? -1,
+            timestamp: timestamp.asDate
+        )
+    }
+}
 // MARK: - Payload
 extension WorkoutRoute.Location: Payload {
     public static func make(from dictionary: [String: Any]) throws -> WorkoutRoute.Location {

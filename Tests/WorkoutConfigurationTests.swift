@@ -69,6 +69,20 @@ class WorkoutConfigurationTests: XCTestCase {
         XCTAssertFalse(result.success)
         assertInvalidValue(try { throw try XCTUnwrap(result.error) }())
     }
+    func testStartWatchAppWithUnknownActivityType() throws {
+        let sut = WorkoutConfiguration(
+            activityValue: 99_999,
+            locationValue: 1,
+            swimmingValue: 1,
+            harmonized: WorkoutConfiguration.Harmonized(value: 25, unit: "m")
+        )
+        var status: (success: Bool, error: Error?)?
+        HealthKitReporter().manager.startWatchApp(with: sut) { success, error in
+            status = (success, error)
+        }
+        XCTAssertEqual(status?.success, false)
+        assertInvalidType(try { throw try XCTUnwrap(status?.error) }())
+    }
     #endif
     func testCreateFromInvalidDictionary() throws {
         let harmonized: [String: Any] = ["value": 25, "unit": "m"]
