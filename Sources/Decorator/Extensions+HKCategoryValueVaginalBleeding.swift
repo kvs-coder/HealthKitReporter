@@ -29,3 +29,6 @@ extension HKCategoryValueVaginalBleeding: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+@available(iOS 18.0, *)
+extension HKCategoryValueVaginalBleeding: CategoryValueDescribable {}

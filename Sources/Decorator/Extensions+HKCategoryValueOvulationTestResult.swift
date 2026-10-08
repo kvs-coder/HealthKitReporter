@@ -26,3 +26,5 @@ extension HKCategoryValueOvulationTestResult: @retroactive CustomStringConvertib
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueOvulationTestResult: CategoryValueDescribable {}

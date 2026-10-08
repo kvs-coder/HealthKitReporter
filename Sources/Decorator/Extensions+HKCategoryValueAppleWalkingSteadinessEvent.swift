@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 15.0, *)
 extension HKCategoryValueAppleWalkingSteadinessEvent: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueAppleWalkingSteadinessEvent"
@@ -27,3 +26,5 @@ extension HKCategoryValueAppleWalkingSteadinessEvent: @retroactive CustomStringC
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueAppleWalkingSteadinessEvent: CategoryValueDescribable {}

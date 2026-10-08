@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 15.0, *)
 extension HKCategoryValueProgesteroneTestResult: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueProgesteroneTestResult"
@@ -25,3 +24,5 @@ extension HKCategoryValueProgesteroneTestResult: @retroactive CustomStringConver
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueProgesteroneTestResult: CategoryValueDescribable {}

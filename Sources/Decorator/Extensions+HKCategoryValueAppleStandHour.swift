@@ -22,3 +22,5 @@ extension HKCategoryValueAppleStandHour: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueAppleStandHour: CategoryValueDescribable {}

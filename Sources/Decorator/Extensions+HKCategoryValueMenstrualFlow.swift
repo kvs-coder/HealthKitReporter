@@ -28,3 +28,5 @@ extension HKCategoryValueMenstrualFlow: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueMenstrualFlow: CategoryValueDescribable {}

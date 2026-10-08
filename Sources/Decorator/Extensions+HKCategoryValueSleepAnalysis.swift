@@ -30,3 +30,5 @@ extension HKCategoryValueSleepAnalysis: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueSleepAnalysis: CategoryValueDescribable {}

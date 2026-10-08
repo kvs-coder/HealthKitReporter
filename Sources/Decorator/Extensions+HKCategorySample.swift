@@ -9,17 +9,22 @@ import HealthKit
 
 extension HKCategorySample: Harmonizable {
     typealias Harmonized = Category.Harmonized
-    
+
     func harmonize() throws -> Harmonized {
-        var description = String()
-        var detail = String()
-        let type = try categoryType.parsed()
+        let categoryValue = try describedValue(of: try categoryType.parsed())
+        return Harmonized(
+            value: value,
+            description: categoryValue?.description ?? String(),
+            detail: categoryValue?.detail ?? String(),
+            metadata: metadata?.asMetadata
+        )
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func describedValue(of type: CategoryType) throws -> CategoryValueDescribable? {
         switch type {
         case .sleepAnalysis:
-            if let value = HKCategoryValueSleepAnalysis(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
+            return HKCategoryValueSleepAnalysis(rawValue: value)
         case .intermenstrualBleeding,
              .mindfulSession,
              .highHeartRateEvent,
@@ -36,87 +41,26 @@ extension HKCategorySample: Harmonizable {
              .infrequentMenstrualCycles,
              .sleepApneaEvent,
              .hypertensionEvent:
-            if let value = HKCategoryValue(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
+            return HKCategoryValue(rawValue: value)
         case .menstrualFlow:
-            if let value = HKCategoryValueMenstrualFlow(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
+            return HKCategoryValueMenstrualFlow(rawValue: value)
         case .ovulationTestResult:
-            if let value = HKCategoryValueOvulationTestResult(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
+            return HKCategoryValueOvulationTestResult(rawValue: value)
         case .cervicalMucusQuality:
-            if let value = HKCategoryValueCervicalMucusQuality(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
+            return HKCategoryValueCervicalMucusQuality(rawValue: value)
         case .appleStandHour:
-            if let value = HKCategoryValueAppleStandHour(rawValue: value) {
-                description = value.description
-                detail = value.detail
-            }
-
+            return HKCategoryValueAppleStandHour(rawValue: value)
         case .contraceptive:
-            if #available(iOS 14.3, *) {
-                if let value = HKCategoryValueContraceptive(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueContraceptive(rawValue: value)
         case .audioExposureEvent,
              .environmentalAudioExposureEvent:
-            if #available(iOS 14.0, *) {
-                if let value = HKCategoryValueEnvironmentalAudioExposureEvent(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueEnvironmentalAudioExposureEvent(rawValue: value)
         case .headphoneAudioExposureEvent:
-            if #available(iOS 14.2, *) {
-                if let value = HKCategoryValueHeadphoneAudioExposureEvent(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueHeadphoneAudioExposureEvent(rawValue: value)
         case .lowCardioFitnessEvent:
-            if #available(iOS 14.3, *) {
-                if let value = HKCategoryValueLowCardioFitnessEvent(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueLowCardioFitnessEvent(rawValue: value)
         case .appetiteChanges:
-            if #available(iOS 13.6, *) {
-                if let value = HKCategoryValueAppetiteChanges(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueAppetiteChanges(rawValue: value)
         case .abdominalCramps,
              .acne,
              .bladderIncontinence,
@@ -141,7 +85,6 @@ extension HKCategorySample: Harmonizable {
              .lossOfTaste,
              .lowerBackPain,
              .memoryLapse,
-             .moodChanges,
              .nausea,
              .nightSweats,
              .pelvicPain,
@@ -150,76 +93,28 @@ extension HKCategorySample: Harmonizable {
              .shortnessOfBreath,
              .sinusCongestion,
              .skippedHeartbeat,
-             .sleepChanges,
              .soreThroat,
              .vaginalDryness,
              .vomiting,
              .wheezing:
-            if #available(iOS 13.6, *) {
-                if let value = HKCategoryValuePresence(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueSeverity(rawValue: value)
+        case .moodChanges,
+             .sleepChanges:
+            return HKCategoryValuePresence(rawValue: value)
         case .pregnancyTestResult:
-            if #available(iOS 15.0, *) {
-                if let value = HKCategoryValuePregnancyTestResult(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValuePregnancyTestResult(rawValue: value)
         case .progesteroneTestResult:
-            if #available(iOS 15.0, *) {
-                if let value = HKCategoryValueProgesteroneTestResult(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueProgesteroneTestResult(rawValue: value)
         case .appleWalkingSteadinessEvent:
-            if #available(iOS 15.0, *) {
-                if let value = HKCategoryValueAppleWalkingSteadinessEvent(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
-                throw HealthKitError.notAvailable(
-                    "\(type) is not available for the current iOS"
-                )
-            }
+            return HKCategoryValueAppleWalkingSteadinessEvent(rawValue: value)
         case .bleedingAfterPregnancy,
              .bleedingDuringPregnancy:
-            if #available(iOS 18.0, *) {
-                if let value = HKCategoryValueVaginalBleeding(rawValue: value) {
-                    description = value.description
-                    detail = value.detail
-                }
-            } else {
+            guard #available(iOS 18.0, *) else {
                 throw HealthKitError.notAvailable(
                     "\(type) is not available for the current iOS"
                 )
             }
+            return HKCategoryValueVaginalBleeding(rawValue: value)
         }
-        return category(description: description, detail: detail)
-    }
-    
-    private func category(description: String, detail: String) -> Harmonized {
-        return Harmonized(
-            value: value,
-            description: description,
-            detail: detail,
-            metadata: metadata?.asMetadata
-        )
     }
 }

@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.0, *)
 extension HKCategoryValueEnvironmentalAudioExposureEvent: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueEnvironmentalAudioExposureEvent"
@@ -21,3 +20,5 @@ extension HKCategoryValueEnvironmentalAudioExposureEvent: @retroactive CustomStr
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueEnvironmentalAudioExposureEvent: CategoryValueDescribable {}

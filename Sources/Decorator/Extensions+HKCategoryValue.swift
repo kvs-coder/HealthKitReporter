@@ -20,3 +20,5 @@ extension HKCategoryValue: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValue: CategoryValueDescribable {}

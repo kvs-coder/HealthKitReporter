@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.3, *)
 extension HKCategoryValueContraceptive: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueContraceptive"
@@ -33,3 +32,5 @@ extension HKCategoryValueContraceptive: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueContraceptive: CategoryValueDescribable {}

@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 14.3, *)
 extension HKCategoryValueLowCardioFitnessEvent: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValueLowCardioFitnessEvent"
@@ -21,3 +20,5 @@ extension HKCategoryValueLowCardioFitnessEvent: @retroactive CustomStringConvert
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueLowCardioFitnessEvent: CategoryValueDescribable {}

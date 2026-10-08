@@ -28,3 +28,5 @@ extension HKCategoryValueCervicalMucusQuality: @retroactive CustomStringConverti
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValueCervicalMucusQuality: CategoryValueDescribable {}

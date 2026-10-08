@@ -319,4 +319,57 @@ extension CategoryTests {
             }
         }
     }
+    func testHarmonizeSymptomSeverityValues() throws {
+        let details: [HKCategoryValueSeverity: String] = [
+            .unspecified: "Unspecified",
+            .notPresent: "Not Present",
+            .mild: "Mild",
+            .moderate: "Moderate",
+            .severe: "Severe"
+        ]
+        let severityTypes: [CategoryType] = [
+            .abdominalCramps, .acne, .bladderIncontinence, .bloating, .breastPain,
+            .chestTightnessOrPain, .chills, .constipation, .coughing, .diarrhea,
+            .dizziness, .drySkin, .fainting, .fatigue, .fever, .generalizedBodyAche,
+            .hairLoss, .headache, .heartburn, .hotFlashes, .lossOfSmell, .lossOfTaste,
+            .lowerBackPain, .memoryLapse, .nausea, .nightSweats, .pelvicPain,
+            .rapidPoundingOrFlutteringHeartbeat, .runnyNose, .shortnessOfBreath,
+            .sinusCongestion, .skippedHeartbeat, .soreThroat, .vaginalDryness, .vomiting, .wheezing
+        ]
+        XCTAssertEqual(severityTypes.count, 36)
+        for type in severityTypes {
+            let original = try XCTUnwrap(type.original as? HKCategoryType, "\(type)")
+            for (value, detail) in details {
+                let sample = HKCategorySample(
+                    type: original,
+                    value: value.rawValue,
+                    start: startDate,
+                    end: endDate
+                )
+                let sut = try XCTUnwrap(Category.collect(results: [sample]).first, "\(type): \(detail)")
+                XCTAssertEqual(sut.harmonized.description, "HKCategoryValueSeverity", "\(type)")
+                XCTAssertEqual(sut.harmonized.detail, detail, "\(type)")
+            }
+        }
+    }
+    func testHarmonizeSymptomPresenceValues() throws {
+        let details: [HKCategoryValuePresence: String] = [
+            .present: "Present",
+            .notPresent: "Not Present"
+        ]
+        for type in [CategoryType.moodChanges, .sleepChanges] {
+            let original = try XCTUnwrap(type.original as? HKCategoryType, "\(type)")
+            for (value, detail) in details {
+                let sample = HKCategorySample(
+                    type: original,
+                    value: value.rawValue,
+                    start: startDate,
+                    end: endDate
+                )
+                let sut = try XCTUnwrap(Category.collect(results: [sample]).first, "\(type): \(detail)")
+                XCTAssertEqual(sut.harmonized.description, "HKCategoryValuePresence", "\(type)")
+                XCTAssertEqual(sut.harmonized.detail, detail, "\(type)")
+            }
+        }
+    }
 }

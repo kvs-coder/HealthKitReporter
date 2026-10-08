@@ -7,7 +7,6 @@
 
 import HealthKit
 
-@available(iOS 13.6, *)
 extension HKCategoryValuePresence: @retroactive CustomStringConvertible {
     public var description: String {
         "HKCategoryValuePresence"
@@ -23,3 +22,5 @@ extension HKCategoryValuePresence: @retroactive CustomStringConvertible {
         }
     }
 }
+// MARK: - CategoryValueDescribable
+extension HKCategoryValuePresence: CategoryValueDescribable {}
