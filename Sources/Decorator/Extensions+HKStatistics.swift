@@ -40,3 +40,10 @@ extension HKStatistics: Harmonizable {
         )
     }
 }
+// MARK: - Parsing
+extension HKStatistics {
+    /// Names the statistics in errors: their quantity type and interval
+    var parsingName: String {
+        return "\(quantityType.identifier) statistics from \(startDate) to \(endDate)"
+    }
+}

@@ -16,7 +16,7 @@ permissions:
 env:
   IOS_DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=latest
   # Minimum library line coverage in percent. Only ever raise it, to the level the latest test PR reaches.
-  COVERAGE_THRESHOLD: "70.2"
+  COVERAGE_THRESHOLD: "71.6"
 
 jobs:
   lint:

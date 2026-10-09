@@ -8,6 +8,10 @@
 import HealthKit
 
 extension HKSample {
+    /// Names the sample in errors: its type identifier and uuid
+    var parsingName: String {
+        return "\(sampleType.identifier) sample \(uuid.uuidString)"
+    }
     /// The payload of the sample. Series samples come without their measurements, voltages or locations,
     /// which need a query of their own (heartbeat series, workout route, electrocardiogram)
     func parsed() throws -> Sample {

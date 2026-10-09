@@ -117,7 +117,7 @@ public struct WorkoutActivity: Codable {
     }
 
     @available(iOS 16.0, watchOS 9.0, *)
-    init(activity: HKWorkoutActivity) {
+    init(activity: HKWorkoutActivity) throws {
         let configuration = activity.workoutConfiguration
         self.uuid = activity.uuid.uuidString
         self.activityValue = Int(configuration.activityType.rawValue)
@@ -128,9 +128,11 @@ public struct WorkoutActivity: Codable {
         self.startTimestamp = activity.startDate.timeIntervalSince1970
         self.endTimestamp = activity.endDate?.timeIntervalSince1970
         self.duration = activity.duration
-        self.workoutEvents = activity.workoutEvents.compactMap { try? WorkoutEvent(workoutEvent: $0) }
-        self.statistics = activity.allStatistics.values
-            .compactMap { try? Statistics(statistics: $0) }
+        self.workoutEvents = try activity.workoutEvents.converted(name: \.parsingName) {
+            try WorkoutEvent(workoutEvent: $0)
+        }
+        self.statistics = try activity.allStatistics.values
+            .converted(name: \.parsingName) { try Statistics(statistics: $0) }
             .sorted { $0.identifier < $1.identifier }
         self.metadata = activity.metadata?.asMetadata
     }

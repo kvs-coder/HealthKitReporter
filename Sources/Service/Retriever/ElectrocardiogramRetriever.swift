@@ -44,7 +44,11 @@ class ElectrocardiogramRetriever {
                 return
             }
             guard withVoltageMeasurements else {
-                resultsHandler(Electrocardiogram.collect(results: results), nil)
+                do {
+                    resultsHandler(try Electrocardiogram.collect(results: results), nil)
+                } catch {
+                    resultsHandler([], error)
+                }
                 return
             }
             let collector = SampleResultsCollector<Electrocardiogram>(
@@ -67,22 +71,43 @@ class ElectrocardiogramRetriever {
         collector: SampleResultsCollector<Electrocardiogram>
     ) -> HKElectrocardiogramQuery {
         var measurements = [Electrocardiogram.VoltageMeasurement]()
+        var conversionError: Error?
         return HKElectrocardiogramQuery(sample) { (_, result) in
             switch result {
             case .measurement(let voltageMeasurement):
-                if let measurement = try? Electrocardiogram.VoltageMeasurement(
-                    voltageMeasurement: voltageMeasurement
-                ) {
-                    measurements.append(measurement)
+                guard conversionError == nil else {
+                    return
+                }
+                do {
+                    measurements.append(
+                        try Electrocardiogram.VoltageMeasurement(voltageMeasurement: voltageMeasurement)
+                    )
+                } catch {
+                    conversionError = HealthKitError.parsingFailed(
+                        "Voltage measurement of \(sample.parsingName) could not be parsed: \(error)"
+                    )
                 }
             case .done:
-                collector.finish(
-                    index,
-                    with: try? Electrocardiogram(
-                        electrocardiogram: sample,
-                        voltageMeasurements: measurements
+                if let conversionError = conversionError {
+                    collector.fail(index, with: conversionError)
+                    return
+                }
+                do {
+                    collector.finish(
+                        index,
+                        with: try Electrocardiogram(
+                            electrocardiogram: sample,
+                            voltageMeasurements: measurements
+                        )
                     )
-                )
+                } catch {
+                    collector.fail(
+                        index,
+                        with: HealthKitError.parsingFailed(
+                            "\(sample.parsingName) could not be parsed: \(error)"
+                        )
+                    )
+                }
             case .error(let error):
                 collector.fail(index, with: error)
             @unknown default:

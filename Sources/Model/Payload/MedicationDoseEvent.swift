@@ -131,10 +131,10 @@ extension MedicationDoseEvent: Payload {
 // MARK: - Factory
 @available(iOS 26.0, watchOS 26.0, *)
 extension MedicationDoseEvent {
-    static func collect(results: [HKSample]) -> [MedicationDoseEvent] {
-        return results
-            .compactMap { $0 as? HKMedicationDoseEvent }
-            .map { MedicationDoseEvent(doseEvent: $0) }
+    static func collect(results: [HKSample]) throws -> [MedicationDoseEvent] {
+        return try results.converted { (sample: HKMedicationDoseEvent) in
+            MedicationDoseEvent(doseEvent: sample)
+        }
     }
 }
 // MARK: - Payload

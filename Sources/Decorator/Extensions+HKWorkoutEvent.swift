@@ -19,3 +19,10 @@ extension HKWorkoutEvent: Harmonizable {
         )
     }
 }
+// MARK: - Parsing
+extension HKWorkoutEvent {
+    /// Names the event in errors: its type and start date
+    var parsingName: String {
+        return "\(type.label) workout event at \(dateInterval.start)"
+    }
+}

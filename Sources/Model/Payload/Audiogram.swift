@@ -203,10 +203,10 @@ extension Audiogram: Payload {
 }
 // MARK: - Factory
 extension Audiogram {
-    static func collect(results: [HKSample]) -> [Audiogram] {
-        return results
-            .compactMap { $0 as? HKAudiogramSample }
-            .compactMap { try? Audiogram(audiogramSample: $0) }
+    static func collect(results: [HKSample]) throws -> [Audiogram] {
+        return try results.converted { (sample: HKAudiogramSample) in
+            try Audiogram(audiogramSample: sample)
+        }
     }
 }
 // MARK: - Harmonized: Payload

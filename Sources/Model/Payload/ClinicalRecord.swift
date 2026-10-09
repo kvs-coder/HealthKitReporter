@@ -160,21 +160,10 @@ extension ClinicalRecord: Payload {
 }
 // MARK: - Factory
 extension ClinicalRecord {
-    static func collect(results: [HKSample]) -> [ClinicalRecord] {
-        var samples = [ClinicalRecord]()
-        if let clinicalRecords = results as? [HKClinicalRecord] {
-            for clinicalRecord in clinicalRecords {
-                do {
-                    let sample = try ClinicalRecord(
-                        clinicalRecord: clinicalRecord
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample]) throws -> [ClinicalRecord] {
+        return try results.converted { (sample: HKClinicalRecord) in
+            try ClinicalRecord(clinicalRecord: sample)
         }
-        return samples
     }
 }
 // MARK: - Payload

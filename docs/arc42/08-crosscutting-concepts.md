@@ -10,8 +10,10 @@ Two internal protocols carry every conversion:
 | `Original` | payload → HK | `associatedtype Object: NSObject; func asOriginal() throws -> Object` — implemented by payloads |
 | `Payload` (public) | dictionary → payload | `static func make(from: [String: Any]) throws -> Self` |
 
-The internal `Factory.collect(results:)` turns a HealthKit result array into payloads and *skips* samples that fail to convert,
-so one malformed sample does not fail a whole query.
+The internal `Factory.collect(results:)` turns a HealthKit result array into payloads. A sample that fails to convert,
+or a nested member of it (correlation members, workout events, statistics and activities, effort samples, ECG
+voltages), fails the whole result: the query reports `HealthKitError.parsingFailed` naming the entry and no partial
+results, so no data disappears silently. Anchored queries then hand back the anchor they started from.
 
 ## 8.2 Units
 

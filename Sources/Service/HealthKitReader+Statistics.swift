@@ -180,7 +180,7 @@ extension HealthKitReader {
             let batch = collection.statistics().filter {
                 $0.endDate > enumerateFrom && $0.startDate < (enumerateTo ?? Date())
             }
-            resultsHandler(batch.compactMap { try? Statistics(statistics: $0, unit: hkUnit) }, nil)
+            self.report(batch, in: hkUnit, to: resultsHandler)
         }
         if monitorUpdates {
             query.statisticsUpdateHandler = { (_, statistics, _, error) in
@@ -191,9 +191,25 @@ extension HealthKitReader {
                 guard let statistics = statistics else {
                     return
                 }
-                resultsHandler([try? Statistics(statistics: statistics, unit: hkUnit)].compactMap { $0 }, nil)
+                self.report([statistics], in: hkUnit, to: resultsHandler)
             }
         }
         return QueryHandle(query)
+    }
+
+    /// Reports the statistics, or HealthKitError.parsingFailed with none when one fails to convert
+    private func report(
+        _ statistics: [HKStatistics],
+        in unit: HKUnit,
+        to resultsHandler: StatisticsCollectionResultsHandler
+    ) {
+        do {
+            resultsHandler(
+                try statistics.converted(name: \.parsingName) { try Statistics(statistics: $0, unit: unit) },
+                nil
+            )
+        } catch {
+            resultsHandler([], error)
+        }
     }
 }

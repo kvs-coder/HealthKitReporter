@@ -153,7 +153,11 @@ extension HealthKitReader {
                 resultsHandler([], true, error)
                 return
             }
-            resultsHandler(CDADocument.collect(results: samples), done, nil)
+            do {
+                resultsHandler(try CDADocument.collect(results: samples), done, nil)
+            } catch {
+                resultsHandler([], true, error)
+            }
         })
     }
     #endif

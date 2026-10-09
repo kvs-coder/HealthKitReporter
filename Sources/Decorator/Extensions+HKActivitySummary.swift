@@ -43,3 +43,10 @@ extension HKActivitySummary: Harmonizable {
         )
     }
 }
+// MARK: - Parsing
+extension HKActivitySummary {
+    /// Names the summary in errors: its day
+    var parsingName: String {
+        return "activity summary of \(dateComponents(for: Calendar.current))"
+    }
+}

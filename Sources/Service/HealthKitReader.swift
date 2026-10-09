@@ -86,11 +86,11 @@ public class HealthKitReader {
                 resultsHandler([], error)
                 return
             }
-            let samples = Quantity.collect(
-                results: results,
-                unit: hkUnit
-            )
-            resultsHandler(samples, nil)
+            do {
+                resultsHandler(try Quantity.collect(results: results, unit: hkUnit), nil)
+            } catch {
+                resultsHandler([], error)
+            }
         }
         return QueryHandle(query)
     }
@@ -132,8 +132,11 @@ public class HealthKitReader {
                 resultsHandler([], error)
                 return
             }
-            let samples = Category.collect(results: results)
-            resultsHandler(samples, nil)
+            do {
+                resultsHandler(try Category.collect(results: results), nil)
+            } catch {
+                resultsHandler([], error)
+            }
         }
         return QueryHandle(query)
     }
@@ -176,10 +179,11 @@ public class HealthKitReader {
                 resultsHandler([], error)
                 return
             }
-            let samples = Workout.collect(
-                results: results
-            )
-            resultsHandler(samples, nil)
+            do {
+                resultsHandler(try Workout.collect(results: results), nil)
+            } catch {
+                resultsHandler([], error)
+            }
         }
         return QueryHandle(query)
     }
@@ -283,7 +287,7 @@ public class HealthKitReader {
         predicate: NSPredicate?,
         sortDescriptors: [NSSortDescriptor],
         limit: Int,
-        collect: @escaping ([HKSample]) -> [Result],
+        collect: @escaping ([HKSample]) throws -> [Result],
         resultsHandler: @escaping ([Result], Error?) -> Void
     ) throws -> QueryHandle {
         guard let sampleType = type.hkObjectType as? HKSampleType else {
@@ -302,7 +306,11 @@ public class HealthKitReader {
                 resultsHandler([], error)
                 return
             }
-            resultsHandler(collect(results), nil)
+            do {
+                resultsHandler(try collect(results), nil)
+            } catch {
+                resultsHandler([], error)
+            }
         })
     }
 }

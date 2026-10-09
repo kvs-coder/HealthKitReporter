@@ -169,22 +169,10 @@ extension Quantity: Payload {
 }
 // MARK: - Factory
 extension Quantity {
-    static func collect(results: [HKSample], unit: HKUnit) -> [Quantity] {
-        var samples = [Quantity]()
-        if let quantitySamples = results as? [HKQuantitySample] {
-            for quantitySample in quantitySamples {
-                do {
-                    let sample = try Quantity(
-                        quantitySample: quantitySample,
-                        unit: unit
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample], unit: HKUnit) throws -> [Quantity] {
+        return try results.converted { (sample: HKQuantitySample) in
+            try Quantity(quantitySample: sample, unit: unit)
         }
-        return samples
     }
 }
 // MARK: - Payload

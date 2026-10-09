@@ -103,24 +103,17 @@ public struct Workout: Identifiable, Sample {
         self.device = Device(device: workout.device)
         self.sourceRevision = SourceRevision(sourceRevision: workout.sourceRevision)
         self.duration = workout.duration
-        var workoutEvents = [WorkoutEvent]()
-        if let events = workout.workoutEvents {
-            for element in events {
-                do {
-                    let workoutEvent = try WorkoutEvent(workoutEvent: element)
-                    workoutEvents.append(workoutEvent)
-                } catch {
-                    continue
-                }
-            }
+        self.workoutEvents = try (workout.workoutEvents ?? []).converted(name: \.parsingName) {
+            try WorkoutEvent(workoutEvent: $0)
         }
-        self.workoutEvents = workoutEvents
         self.harmonized = try workout.harmonize()
         if #available(iOS 16.0, watchOS 9.0, *) {
-            self.statistics = workout.allStatistics.values
-                .compactMap { try? Statistics(statistics: $0) }
+            self.statistics = try workout.allStatistics.values
+                .converted(name: \.parsingName) { try Statistics(statistics: $0) }
                 .sorted { $0.identifier < $1.identifier }
-            self.activities = workout.workoutActivities.map(WorkoutActivity.init(activity:))
+            self.activities = try workout.workoutActivities.converted(name: \.parsingName) {
+                try WorkoutActivity(activity: $0)
+            }
         } else {
             self.statistics = nil
             self.activities = nil
@@ -380,23 +373,10 @@ extension Workout: Payload {
             activities: try activities?.map(WorkoutActivity.make)
         )
     }
-    static func collect(
-        results: [HKSample]
-    ) -> [Workout] {
-        var samples = [Workout]()
-        if let workouts = results as? [HKWorkout] {
-            for workout in workouts {
-                do {
-                    let sample = try Workout(
-                        workout: workout
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample]) throws -> [Workout] {
+        return try results.converted { (sample: HKWorkout) in
+            try Workout(workout: sample)
         }
-        return samples
     }
 }
 // MARK: - Payload

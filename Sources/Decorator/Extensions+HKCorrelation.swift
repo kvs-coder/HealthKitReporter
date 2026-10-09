@@ -11,15 +11,15 @@ import HealthKit
 extension HKCorrelation: Harmonizable {
     typealias Harmonized = Correlation.Harmonized
 
-    /// Member samples that fail to convert are skipped, as the factories skip samples
+    /// A member sample that fails to convert fails the correlation
     func harmonize() throws -> Harmonized {
         return Harmonized(
-            quantitySamples: objects
+            quantitySamples: try objects
                 .compactMap { $0 as? HKQuantitySample }
-                .compactMap { try? Quantity(quantitySample: $0) },
-            categorySamples: objects
+                .converted(name: \.parsingName) { try Quantity(quantitySample: $0) },
+            categorySamples: try objects
                 .compactMap { $0 as? HKCategorySample }
-                .compactMap { try? Category(categorySample: $0) },
+                .converted(name: \.parsingName) { try Category(categorySample: $0) },
             metadata: metadata?.asMetadata
         )
     }

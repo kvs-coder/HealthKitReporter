@@ -49,10 +49,11 @@ extension HealthKitReader {
                 resultsHandler([], error)
                 return
             }
-            let samples = Correlation.collect(
-                results: results
-            )
-            resultsHandler(samples, nil)
+            do {
+                resultsHandler(try Correlation.collect(results: results), nil)
+            } catch {
+                resultsHandler([], error)
+            }
         }
         return QueryHandle(query)
     }
@@ -88,16 +89,14 @@ extension HealthKitReader {
                 completionHandler([], error)
                 return
             }
-            var correlations = [Correlation]()
-            for element in result {
-                do {
-                    let correlation = try Correlation(correlation: element)
-                    correlations.append(correlation)
-                } catch {
-                    continue
-                }
+            do {
+                completionHandler(
+                    try result.converted(name: \.parsingName) { try Correlation(correlation: $0) },
+                    nil
+                )
+            } catch {
+                completionHandler([], error)
             }
-            completionHandler(correlations, nil)
         }
         return QueryHandle(query)
     }

@@ -166,22 +166,10 @@ extension Electrocardiogram.Harmonized: Payload {
 }
 // MARK: - Factory
 extension Electrocardiogram {
-    static func collect(results: [HKSample]) -> [Electrocardiogram] {
-        var samples = [Electrocardiogram]()
-        if let electrocardiograms = results as? [HKElectrocardiogram] {
-            for electrocardiogram in electrocardiograms {
-                do {
-                    let sample = try Electrocardiogram(
-                        electrocardiogram: electrocardiogram,
-                        voltageMeasurements: []
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample]) throws -> [Electrocardiogram] {
+        return try results.converted { (sample: HKElectrocardiogram) in
+            try Electrocardiogram(electrocardiogram: sample, voltageMeasurements: [])
         }
-        return samples
     }
 }
 // MARK: - Payload

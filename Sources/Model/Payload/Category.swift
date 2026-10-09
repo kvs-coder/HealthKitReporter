@@ -164,21 +164,10 @@ extension Category: Payload {
 }
 // MARK: - Factory
 extension Category {
-    static func collect(results: [HKSample]) -> [Category] {
-        var samples = [Category]()
-        if let categorySamples = results as? [HKCategorySample] {
-            for categorySample in categorySamples {
-                do {
-                    let sample = try Category(
-                        categorySample: categorySample
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample]) throws -> [Category] {
+        return try results.converted { (sample: HKCategorySample) in
+            try Category(categorySample: sample)
         }
-        return samples
     }
 }
 // MARK: - Payload

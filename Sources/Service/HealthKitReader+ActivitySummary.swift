@@ -28,16 +28,14 @@ extension HealthKitReader {
                 completionHandler([], error)
                 return
             }
-            var summaries = [ActivitySummary]()
-            for element in result {
-                do {
-                    let summary = try ActivitySummary(activitySummary: element)
-                    summaries.append(summary)
-                } catch {
-                    continue
-                }
+            do {
+                completionHandler(
+                    try result.converted(name: \.parsingName) { try ActivitySummary(activitySummary: $0) },
+                    nil
+                )
+            } catch {
+                completionHandler([], error)
             }
-            completionHandler(summaries, nil)
         }
         let query = HKActivitySummaryQuery(predicate: predicate, resultsHandler: resultsHandler)
         if monitorUpdates {

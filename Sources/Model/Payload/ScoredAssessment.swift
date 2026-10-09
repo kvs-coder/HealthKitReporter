@@ -200,10 +200,10 @@ extension ScoredAssessment: Payload {
 // MARK: - Factory
 @available(iOS 18.0, watchOS 11.0, *)
 extension ScoredAssessment {
-    static func collect(results: [HKSample]) -> [ScoredAssessment] {
-        return results
-            .compactMap { $0 as? HKScoredAssessment }
-            .compactMap { try? ScoredAssessment(assessment: $0) }
+    static func collect(results: [HKSample]) throws -> [ScoredAssessment] {
+        return try results.converted { (sample: HKScoredAssessment) in
+            try ScoredAssessment(assessment: sample)
+        }
     }
 }
 // MARK: - Harmonized: Payload

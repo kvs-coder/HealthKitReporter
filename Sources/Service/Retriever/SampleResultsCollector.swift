@@ -8,8 +8,8 @@
 import Foundation
 
 /// **SampleResultsCollector** gathers one result per sample from concurrent HealthKit callbacks.
-/// Writes are serialized on a private queue; results keep the sample order
-/// and the error of the first failed sample is reported.
+/// Writes are serialized on a private queue; results keep the sample order.
+/// When a sample fails, the error of the first failed sample is reported without partial results.
 final class SampleResultsCollector<Element> {
     private let queue: DispatchQueue
     private let group = DispatchGroup()
@@ -25,7 +25,7 @@ final class SampleResultsCollector<Element> {
     func enter() {
         group.enter()
     }
-    func finish(_ index: Int, with result: Element?) {
+    func finish(_ index: Int, with result: Element) {
         queue.async {
             self.results[index] = result
             self.group.leave()
@@ -39,10 +39,11 @@ final class SampleResultsCollector<Element> {
     }
     func notify(_ handler: @escaping ([Element], Error?) -> Void) {
         group.notify(queue: queue) {
-            handler(
-                self.results.compactMap { $0 },
-                self.errors.compactMap { $0 }.first
-            )
+            if let error = self.errors.compactMap({ $0 }).first {
+                handler([], error)
+            } else {
+                handler(self.results.compactMap { $0 }, nil)
+            }
         }
     }
 }

@@ -105,23 +105,10 @@ public struct Correlation: Identifiable, Sample {
 }
 // MARK: - Factory
 extension Correlation {
-    static func collect(
-        results: [HKSample]
-    ) -> [Correlation] {
-        var samples = [Correlation]()
-        if let correlations = results as? [HKCorrelation] {
-            for correlation in correlations {
-                do {
-                    let sample = try Correlation(
-                        correlation: correlation
-                    )
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
-            }
+    static func collect(results: [HKSample]) throws -> [Correlation] {
+        return try results.converted { (sample: HKCorrelation) in
+            try Correlation(correlation: sample)
         }
-        return samples
     }
 }
 // MARK: - Payload

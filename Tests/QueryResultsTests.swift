@@ -89,6 +89,17 @@ class QueryResultsTests: XCTestCase {
             }
         }
     }
+    func testWorkoutEffortKeepsTheCallerAnchorOnError() throws {
+        guard #available(iOS 18.0, watchOS 11.0, *) else {
+            throw XCTSkip("Workout effort needs iOS 18")
+        }
+        let anchor = try storedAnchor()
+        try assertReports { done in
+            try sut.reader.workoutEffortRelationshipQuery(anchor: anchor) { relationships, newAnchor, error in
+                done(relationships.isEmpty && newAnchor == anchor, error)
+            }
+        }
+    }
     func testCorruptAnchorThrows() throws {
         let reader = sut.reader
         let corrupt = Anchor(data: Data("not an anchor".utf8))

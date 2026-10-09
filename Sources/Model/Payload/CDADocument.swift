@@ -176,10 +176,10 @@ extension CDADocument: Payload {
 }
 // MARK: - Factory
 extension CDADocument {
-    static func collect(results: [HKSample]) -> [CDADocument] {
-        return results
-            .compactMap { $0 as? HKCDADocumentSample }
-            .map { CDADocument(documentSample: $0) }
+    static func collect(results: [HKSample]) throws -> [CDADocument] {
+        return try results.converted { (sample: HKCDADocumentSample) in
+            CDADocument(documentSample: sample)
+        }
     }
 }
 // MARK: - Harmonized: Payload

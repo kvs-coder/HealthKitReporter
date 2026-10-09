@@ -61,7 +61,7 @@ public typealias WorkoutSaveCompletion = (
 /**
  - Parameters:
     - relationships: workouts with their effort samples
-    - anchor: anchor to continue from (optional)
+    - anchor: anchor to continue from (optional). On an error, the anchor the query started from
     - error: error (optional)
  */
 public typealias WorkoutEffortRelationshipResultsHandler = (

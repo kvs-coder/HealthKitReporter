@@ -26,9 +26,9 @@ public struct WorkoutEffortRelationship: Codable {
     init(relationship: HKWorkoutEffortRelationship) throws {
         self.workout = try Workout(workout: relationship.workout)
         self.activityUUID = relationship.activity?.uuid.uuidString
-        self.samples = (relationship.samples ?? [])
-            .compactMap { $0 as? HKQuantitySample }
-            .compactMap { try? Quantity(quantitySample: $0) }
+        self.samples = try (relationship.samples ?? []).converted { (sample: HKQuantitySample) in
+            try Quantity(quantitySample: sample)
+        }
     }
 }
 // MARK: - Payload

@@ -36,8 +36,12 @@ sequenceDiagram
         R-->>Consumer: resultsHandler([], error)
     else results
         R->>F: collect(results:unit:)
-        F->>F: per sample: harmonize()<br/>skip samples that fail
-        R-->>Consumer: resultsHandler([Quantity], nil)
+        F->>F: per sample: harmonize()
+        alt a sample fails to convert
+            R-->>Consumer: resultsHandler([], parsingFailed)
+        else all convert
+            R-->>Consumer: resultsHandler([Quantity], nil)
+        end
     end
 ```
 
@@ -101,7 +105,7 @@ sequenceDiagram
 ```
 
 `SampleResultsCollector` serializes writes from concurrent HealthKit callbacks on a private queue, keeps results in
-sample order and reports the first failure. Heartbeat series and workout routes use the same collector via
+sample order, and on a failure reports the first error with no partial results. Heartbeat series and workout routes use the same collector via
 `SeriesSampleRetriever`.
 
 ## 6.6 Chained lookup (routes of one workout)
