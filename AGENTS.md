@@ -105,6 +105,7 @@ Example/
 * ❌ **Ban on Ad-hoc Errors**: Throw only `HealthKitError` cases with a descriptive message (`HealthKitError.invalidType("Invalid HKQuantityType: \(type)")`). No new error types, no `NSError`.
 * ❌ **Ban on `fatalError` / `try!` / Force Casts**: Use `guard ... else { throw HealthKitError... }`; `@unknown default` arms throw or return a fallback.
 * ❌ **Ban on Inputs HealthKit Raises For**: HealthKit raises Objective-C exceptions, which Swift can't catch, for invalid input (unknown raw values, end before start, disallowed authorization types). Validate in Swift before calling it and throw `HealthKitError`; never add Objective-C to catch them.
+* ❌ **Ban on Silently Dropping Data**: Never skip an entry that fails to convert (`try?`, `compactMap { try? … }`, `catch { continue }`). Convert collections with `Sequence.converted(name:_:)` (or `[HKSample].converted(_:)`), so the first failure throws `HealthKitError.parsingFailed` naming the entry; a nested member that fails fails its parent.
 * ❌ **Ban on Catch-all Switches over Library Enums**: A `switch` over `QuantityType`, `CategoryType`, etc. lists every case; no `default:`. `@unknown default` is required only for Apple's non-frozen enums.
 * ❌ **Ban on Mutable Payloads**: Payload fields are `public let`. Changes go through `copyWith(...)`.
 * ❌ **Ban on Breaking the Dictionary Contract**: `Payload.make(from:)` keys and `Codable` property names are consumed by the Flutter plugin. Renaming one is a breaking change (`!` / `BREAKING CHANGE:` commit → major release).
@@ -172,7 +173,7 @@ A payload is a `public struct` that mirrors one `HK*` class. Writable payloads f
 5. Extensions, each behind a `// MARK: -`:
    * `Original` — `asOriginal() throws -> HK...`, `guard` + `HealthKitError.invalidType` on bad identifiers; validates what HealthKit raises for (`startTimestamp.checkInterval(to:)`, known raw values).
    * `Payload` — `static func make(from dictionary: [String: Any]) throws -> Self`; reads `"uuid"` with `dictionary.payloadUUID`, `Double`s as `NSNumber` with `Double(truncating:)`, `Int` / `Bool` with `dictionary.int(_:)` / `dictionary.bool(_:)`; missing required keys throw `HealthKitError.invalidValue("Invalid dictionary: \(dictionary)")`. `collect(from:)` comes from the `Payload` protocol extension; don't reimplement it.
-   * `Factory` — `static func collect(results: [HKSample]...) -> [Self]` that skips (`continue`) samples failing to convert.
+   * `Factory` — `static func collect(results: [HKSample]...) throws -> [Self]` built on `results.converted { (sample: HK...) in try Self(...) }`; a sample that fails to convert, or one of another class, throws `HealthKitError.parsingFailed`.
 
 Read-only payloads (HealthKit doesn't let apps write them: `Electrocardiogram`, `ClinicalRecord`, `VerifiableClinicalRecord`, `ActivitySummary`, `Statistics`, `MedicationDoseEvent`, `UserAnnotatedMedication`, `Attachment`, `DeletedObject`, `Characteristic`) keep steps 1–3, the public `init` and the `Payload` extension, and leave out `Original`; `copyWith` is optional for them.
 
@@ -187,7 +188,8 @@ Doc comments are required on every public type, initializer, function and protoc
 * `public class HealthKit<Role>` with a single `let healthStore: HKHealthStore` injected via `internal init(healthStore:)`. It is `internal` rather than `private` when the role is split over `HealthKit<Role>+<Area>.swift` files, which share it; a role in one file keeps it `private`.
 * **Query builders** (`HealthKitReader`, `HealthKitObserver`) validate input, build and **return** a `QueryHandle` — they never execute it. The consumer runs it with `manager.executeQuery(_:)` and stops it with `manager.stopQuery(_:)`. Anchored queries take and hand back an `Anchor`; several types go in one query through `QueryDescriptor`.
 * Callbacks use the public typealiases declared in `HealthKitReporter.swift` (`QuantityResultsHandler`, `StatusCompletionBlock`, `SaveCompletionBlock`). A new callback shape gets a new documented typealias there, with labeled parameters.
-* A callback reports either results or an error; empty results with no error mean "no data", never a failed cast or conversion (report `HealthKitError.invalidType` instead).
+* A callback reports either results or an error, never partial results with an error; empty results with no error mean "no data", never a failed cast or conversion (report `HealthKitError.invalidType` or `HealthKitError.parsingFailed` instead).
+* Anchored queries hand back the anchor they started from on any error, so the next run delivers the same changes again.
 * Error path in a result handler: `guard error == nil, let results = data else { handler([], error); return }`.
 * Defaults mirror existing methods: `predicate: NSPredicate? = .allSamples`, `limit: Int = HKObjectQueryNoLimit`, sort by `HKSampleSortIdentifierStartDate` descending.
 * Multi-step queries (e.g. ECG + voltage, heartbeat series) live in `Service/Retriever/<Name>Retriever.swift`.
@@ -384,6 +386,7 @@ Before outputting code or submitting PRs, explicitly verify:
 * [ ] Do writes that act on stored samples look them up by `uuid`, and does every input HealthKit raises for get validated in Swift first?
 * [ ] Is every API newer than iOS 15.0 / watchOS 8.0 gated by `@available` / `#available`, with a `HealthKitError.notAvailable` fallback?
 * [ ] Are errors thrown only as `HealthKitError` cases with descriptive messages, without `fatalError`, `try!` or force casts?
+* [ ] Does every conversion of HealthKit results report a failure (`converted`, `parsingFailed`) instead of skipping it with `try?` or `continue`, and do anchored queries keep the caller's anchor on errors?
 * [ ] Does every new payload follow `Quantity.swift`: `Harmonized: Codable`, `public let` fields, memberwise `init`, `copyWith`, and `// MARK: -` extensions for `Original`, `Payload`, `Factory`?
 * [ ] Are new enum cases handled in every exhaustive `switch`, with no `default:` over library enums?
 * [ ] Are `Payload.make(from:)` keys and `Codable` names unchanged, or is the break versioned as major?
