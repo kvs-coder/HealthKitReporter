@@ -39,6 +39,9 @@ class QueryResultsTests: XCTestCase {
             try reader.correlationQuery(type: .bloodPressure) { done($0.isEmpty, $1) }
         }
         try assertReports { done in
+            try reader.correlationQuery(type: .bloodPressure, limit: 1) { done($0.isEmpty, $1) }
+        }
+        try assertReports { done in
             try reader.correlationQuery(
                 type: .food,
                 typePredicates: ["HKQuantityTypeIdentifierDietaryEnergyConsumed": .allSamples]

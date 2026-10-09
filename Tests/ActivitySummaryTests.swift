@@ -47,6 +47,38 @@ class ActivitySummaryTests: XCTestCase {
         let sut = try decode(ActivitySummary.self, from: dictionary)
         XCTAssertNil(sut.date)
     }
+    func testCreateHarmonized() throws {
+        let sut = ActivitySummary.Harmonized(
+            activeEnergyBurned: 450.5,
+            activeEnergyBurnedGoal: 500,
+            activeEnergyBurnedUnit: "kcal",
+            appleExerciseTime: 25,
+            appleExerciseTimeGoal: 30,
+            appleExerciseTimeUnit: "min",
+            appleStandHours: 10,
+            appleStandHoursGoal: 12,
+            appleStandHoursUnit: "count",
+            activityMoveMode: "Apple move time",
+            appleMoveTime: 20,
+            appleMoveTimeGoal: 30,
+            appleMoveTimeUnit: "min",
+            paused: true
+        )
+        XCTAssertEqual(sut.activeEnergyBurned, 450.5, accuracy: 0.001)
+        XCTAssertEqual(sut.activeEnergyBurnedGoal, 500, accuracy: 0.001)
+        XCTAssertEqual(sut.activeEnergyBurnedUnit, "kcal")
+        XCTAssertEqual(sut.appleExerciseTime, 25, accuracy: 0.001)
+        XCTAssertEqual(sut.appleExerciseTimeGoal, 30, accuracy: 0.001)
+        XCTAssertEqual(sut.appleExerciseTimeUnit, "min")
+        XCTAssertEqual(sut.appleStandHours, 10, accuracy: 0.001)
+        XCTAssertEqual(sut.appleStandHoursGoal, 12, accuracy: 0.001)
+        XCTAssertEqual(sut.appleStandHoursUnit, "count")
+        XCTAssertEqual(sut.activityMoveMode, "Apple move time")
+        XCTAssertEqual(try XCTUnwrap(sut.appleMoveTime), 20, accuracy: 0.001)
+        XCTAssertEqual(try XCTUnwrap(sut.appleMoveTimeGoal), 30, accuracy: 0.001)
+        XCTAssertEqual(sut.appleMoveTimeUnit, "min")
+        XCTAssertEqual(sut.paused, true)
+    }
     func testCreateFromInvalidDictionary() throws {
         assertEachKeyIsRequired(
             ["identifier", "harmonized"],

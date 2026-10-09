@@ -14,6 +14,18 @@ class FoundationExtensionsTests: XCTestCase {
         XCTAssertEqual(sut.secondsSince1970, 1626884800, accuracy: 0.001)
         XCTAssertEqual(sut.secondsSince1970.asDate, Date(timeIntervalSince1970: 1626884800))
     }
+    func testDateComponentsFromDictionary() throws {
+        let sut = DateComponents.make(from: ["year": 2021, "month": 7, "day": 21, "hour": 16, "minute": 26])
+        XCTAssertEqual(sut.year, 2021)
+        XCTAssertEqual(sut.month, 7)
+        XCTAssertEqual(sut.day, 21)
+        XCTAssertEqual(sut.hour, 16)
+        XCTAssertEqual(sut.minute, 26)
+        XCTAssertNil(sut.second)
+        XCTAssertNil(sut.weekday)
+        XCTAssertEqual(sut.calendar, Calendar.current)
+        XCTAssertEqual(sut.timeZone, TimeZone.current)
+    }
     func testStringAsDateWithFormat() throws {
         let utc = try XCTUnwrap(TimeZone(identifier: "UTC"))
         let sut = "2021-07-21 16:26:40"
