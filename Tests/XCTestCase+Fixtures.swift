@@ -9,14 +9,49 @@ import XCTest
 import HealthKit
 import HealthKitReporter
 
+/// Set once a save got an answer, so later test classes skip the warm-up
+private var healthStoreAnswersWrites = false
+
 extension XCTestCase {
-    /// The simulator's health daemon may drop the first request after a cold start, so one is sent up front
+    /**
+     Waits until the simulator's health daemon answers a save. After a cold boot on a slow machine
+     (CI) it answers reads at once but drops writes for a minute or two, so a write is retried
+     every 10 seconds, for up to 5 minutes, once per test run. Without the HealthKit entitlement
+     the save fails, so nothing is written.
+     */
     static func warmUpHealthStore() {
-        let warmedUp = DispatchSemaphore(value: 0)
-        HealthKitReporter().observer.disableAllBackgroundDelivery { _, _ in
-            warmedUp.signal()
+        guard !healthStoreAnswersWrites else {
+            return
         }
-        _ = warmedUp.wait(timeout: .now() + 30)
+        let probe = Quantity(
+            identifier: "HKQuantityTypeIdentifierStepCount",
+            startTimestamp: 1626884800,
+            endTimestamp: 1626884860,
+            device: nil,
+            sourceRevision: SourceRevision(
+                source: Source(name: "warm-up", bundleIdentifier: "com.kvs.hkreporter"),
+                version: nil,
+                productType: nil,
+                systemVersion: "1.0.0",
+                operatingSystem: SourceRevision.OperatingSystem(
+                    majorVersion: 1,
+                    minorVersion: 0,
+                    patchVersion: 0
+                )
+            ),
+            harmonized: Quantity.Harmonized(value: 1, unit: "count", metadata: nil)
+        )
+        let deadline = Date().addingTimeInterval(300)
+        while Date() < deadline {
+            let answered = DispatchSemaphore(value: 0)
+            HealthKitReporter().writer.save(sample: probe) { _, _, _ in
+                answered.signal()
+            }
+            if answered.wait(timeout: .now() + 10) == .success {
+                healthStoreAnswersWrites = true
+                return
+            }
+        }
     }
     var startTimestamp: Double {
         return 1626884800
