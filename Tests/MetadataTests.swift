@@ -35,6 +35,34 @@ class MetadataTests: XCTestCase {
         ]
     }
 
+    /// HealthKit metadata quantities don't expose their unit; the first compatible unit expresses them
+    func testCreateFromHealthKitQuantities() throws {
+        let sut = try Metadata.make(from: [
+            "HKHeartRateEventThreshold": HKQuantity(
+                unit: .count().unitDivided(by: .minute()),
+                doubleValue: 120
+            ),
+            "HKWeatherTemperature": HKQuantity(unit: .degreeCelsius(), doubleValue: 21),
+            "HKLapLength": HKQuantity(unit: .meter(), doubleValue: 25),
+            "HKElevationAscended": HKQuantity(unit: .meterUnit(with: .centi), doubleValue: 300),
+            "HKWeatherHumidity": HKQuantity(unit: .percent(), doubleValue: 0.4)
+        ])
+        let expected: Metadata = [
+            "HKHeartRateEventThreshold": .quantity(value: 120, unit: "count/min"),
+            "HKWeatherTemperature": .quantity(value: 21, unit: "degC"),
+            "HKLapLength": .quantity(value: 25, unit: "m"),
+            "HKElevationAscended": .quantity(value: 3, unit: "m"),
+            "HKWeatherHumidity": .quantity(value: 0.4, unit: "%")
+        ]
+        XCTAssertEqual(sut, expected)
+        let glucose = HKQuantity(
+            unit: HKUnit
+                .moleUnit(with: .milli, molarMass: HKUnitMolarMassBloodGlucose)
+                .unitDivided(by: .liter()),
+            doubleValue: 5.5
+        )
+        assertInvalidValue(try Metadata.make(from: ["HKBloodGlucoseMealTime": glucose]))
+    }
     func testCreateFromDictionary() throws {
         let sut = try Metadata.make(from: dictionary)
         XCTAssertEqual(sut, expected)

@@ -92,6 +92,32 @@ class AttachmentTests: XCTestCase {
         }
         XCTAssertNil(added?.attachment)
         assertInvalidValue(try { throw try XCTUnwrap(added?.error) }())
+        var invalidMetadata: Error?
+        manager.addAttachment(
+            toSampleOf: type,
+            uuid: missing,
+            name: "scan",
+            contentType: "public.jpeg",
+            url: URL(fileURLWithPath: "/tmp/scan.jpg"),
+            metadata: ["HKLapLength": .quantity(value: 25, unit: "notAUnit")]
+        ) { _, error in
+            invalidMetadata = error
+        }
+        assertInvalidValue(try { throw try XCTUnwrap(invalidMetadata) }())
+        let notStored = expectation(description: "not stored")
+        manager.addAttachment(
+            toSampleOf: type,
+            uuid: missing,
+            name: "scan",
+            contentType: "public.jpeg",
+            url: URL(fileURLWithPath: "/tmp/scan.jpg"),
+            metadata: ["HKWasUserEntered": true]
+        ) { attachment, error in
+            XCTAssertNil(attachment)
+            XCTAssertNotNil(error)
+            notStored.fulfill()
+        }
+        wait(for: [notStored], timeout: 30)
         var invalidUUID: Error?
         manager.attachments(forSampleOf: type, uuid: "not a uuid") { _, error in
             invalidUUID = error

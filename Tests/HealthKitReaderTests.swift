@@ -71,6 +71,16 @@ class HealthKitReaderTests: XCTestCase {
             assertInvalidType(try sut.sourceQuery(type: type) { _, _ in })
         }
     }
+    func testMedicationDoseEventQueryWithInvalidMedication() throws {
+        guard #available(iOS 26.0, watchOS 26.0, *) else {
+            throw XCTSkip("Medications require iOS 26")
+        }
+        for identifier in ["not base64", Data("not an archive".utf8).base64EncodedString()] {
+            assertInvalidValue(
+                try sut.medicationDoseEventQuery(medicationConceptIdentifier: identifier) { _, _ in }
+            )
+        }
+    }
     func testWorkoutRouteQueryWithInvalidWorkoutUUID() throws {
         for uuid in ["", "not-a-uuid", "8B1F9C1E-4E0A-4C38-9D57"] {
             assertInvalidValue(try sut.workoutRouteQuery(workoutUUID: uuid) { _, _ in })

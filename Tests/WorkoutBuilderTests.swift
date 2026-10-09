@@ -75,6 +75,58 @@ class WorkoutBuilderTests: XCTestCase {
         let invalidUnit = workout.copyWith(harmonized: workout.harmonized.copyWith(totalDistanceUnit: "kg"))
         assertInvalidValue(try { throw try XCTUnwrap(try saveWithBuilder(invalidUnit)) }())
     }
+    /// Samples, events, metadata and activities all convert into builder steps; validation errors arrive
+    /// synchronously, while the builder itself doesn't answer a test host without the HealthKit entitlement
+    func testSaveWorkoutWithEverythingPassesValidation() throws {
+        let heartRate = Quantity(
+            identifier: "HKQuantityTypeIdentifierHeartRate",
+            startTimestamp: startTimestamp,
+            endTimestamp: endTimestamp,
+            device: nil,
+            sourceRevision: sourceRevision,
+            harmonized: Quantity.Harmonized(value: 120, unit: "count/min", metadata: nil)
+        )
+        let pause = WorkoutEvent(
+            startTimestamp: startTimestamp,
+            endTimestamp: startTimestamp,
+            duration: 0,
+            harmonized: WorkoutEvent.Harmonized(
+                value: Int(HKWorkoutEventType.pause.rawValue),
+                description: "Pause",
+                metadata: nil
+            )
+        )
+        var full = workout.copyWith(workoutEvents: [pause])
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            full = full.copyWith(activities: [try WorkoutActivity.make(from: activityDictionary)])
+        }
+        let lock = NSLock()
+        var reported: Error?
+        HealthKitReporter().writer.saveWorkout(full, samples: [heartRate]) { _, error in
+            lock.lock()
+            reported = error
+            lock.unlock()
+        }
+        lock.lock()
+        defer { lock.unlock() }
+        XCTAssertFalse(
+            reported is HealthKitError,
+            "Unexpected validation error: \(String(describing: reported))"
+        )
+    }
+    func testSaveWorkoutWithInvalidActivity() throws {
+        guard #available(iOS 16.0, watchOS 9.0, *) else {
+            throw XCTSkip("Workout activities require iOS 16")
+        }
+        var unknownType = activityDictionary
+        unknownType["activityValue"] = 99_999
+        let unknown = workout.copyWith(activities: [try WorkoutActivity.make(from: unknownType)])
+        assertInvalidType(try { throw try XCTUnwrap(try saveWithBuilder(unknown)) }())
+        var endsEarly = activityDictionary
+        endsEarly["endTimestamp"] = startTimestamp - 60
+        let early = workout.copyWith(activities: [try WorkoutActivity.make(from: endsEarly)])
+        assertInvalidValue(try { throw try XCTUnwrap(try saveWithBuilder(early)) }())
+    }
     func testWorkoutEffort() throws {
         guard #available(iOS 18.0, watchOS 11.0, *) else {
             throw XCTSkip("Workout effort requires iOS 18")
@@ -115,10 +167,10 @@ class WorkoutBuilderTests: XCTestCase {
         wait(for: [relate, unrelate], timeout: 30)
     }
 
-    private func saveWithBuilder(_ workout: Workout) throws -> Error? {
+    private func saveWithBuilder(_ workout: Workout, samples: [Quantity] = []) throws -> Error? {
         let expectation = expectation(description: "save")
         var result: (workout: Workout?, error: Error?)?
-        HealthKitReporter().writer.saveWorkout(workout) { workout, error in
+        HealthKitReporter().writer.saveWorkout(workout, samples: samples) { workout, error in
             result = (workout, error)
             expectation.fulfill()
         }
