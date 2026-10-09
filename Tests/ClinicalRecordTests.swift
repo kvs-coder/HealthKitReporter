@@ -103,8 +103,10 @@ class ClinicalRecordTests: XCTestCase {
             try json(sut.harmonized, excluding: ["displayName"])
         )
     }
-    func testCollectSkipsNonDictionaryElements() throws {
-        let sut = try ClinicalRecord.collect(from: [dictionary, "invalid", 1, dictionary])
+    func testCollectRejectsNonDictionaryElements() throws {
+        assertInvalidValue(try ClinicalRecord.collect(from: [dictionary, "invalid"]))
+        assertInvalidValue(try ClinicalRecord.collect(from: [dictionary, 1]))
+        let sut = try ClinicalRecord.collect(from: [dictionary, dictionary])
         XCTAssertEqual(sut.count, 2)
         assertClinicalRecord(sut[0])
         assertClinicalRecord(sut[1])

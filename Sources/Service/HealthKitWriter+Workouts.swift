@@ -62,7 +62,7 @@ extension HealthKitWriter {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = activityType
         if #available(iOS 16.0, watchOS 9.0, *), let activity = workout.activities?.first {
-            activity.configure(configuration)
+            try activity.configure(configuration)
         }
         return HKWorkoutBuilder(
             healthStore: healthStore,

@@ -53,8 +53,8 @@ class StatisticsTests: XCTestCase {
         let sut = try Statistics.make(from: dictionary)
         assertStatistics(sut)
         XCTAssertEqual(try json(sut), try json(try decode(Statistics.self, from: dictionary)))
-        let collected = try Statistics.collect(from: [dictionary, "invalid"])
-        XCTAssertEqual(collected.count, 1)
+        XCTAssertEqual(try Statistics.collect(from: [dictionary]).count, 1)
+        assertInvalidValue(try Statistics.collect(from: [dictionary, "invalid"]))
     }
     func testMakeFromInvalidDictionary() throws {
         assertEachKeyIsRequired(

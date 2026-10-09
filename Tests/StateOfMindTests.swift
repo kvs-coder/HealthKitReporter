@@ -73,7 +73,9 @@ class StateOfMindTests: XCTestCase {
             sut.harmonized.copyWith(valence: 2),
             sut.harmonized.copyWith(kind: 3),
             sut.harmonized.copyWith(labels: [99]),
-            sut.harmonized.copyWith(associations: [0])
+            sut.harmonized.copyWith(labels: [1, 39]),
+            sut.harmonized.copyWith(associations: [0]),
+            sut.harmonized.copyWith(associations: [1, 19])
         ]
         for harmonized in invalid {
             assertInvalidValue(try { throw try XCTUnwrap(try save(sut.copyWith(harmonized: harmonized))) }())

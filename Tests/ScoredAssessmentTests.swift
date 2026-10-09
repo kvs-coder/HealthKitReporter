@@ -70,7 +70,9 @@ class ScoredAssessmentTests: XCTestCase {
         let invalidValues = [
             gad7.copyWith(harmonized: gad7.harmonized.copyWith(answers: [0, 1])),
             gad7.copyWith(harmonized: gad7.harmonized.copyWith(answers: [4, 0, 0, 0, 0, 0, 0])),
-            phq9.copyWith(harmonized: phq9.harmonized.copyWith(answers: [4, 0, 0, 0, 0, 0, 0, 0, 0]))
+            gad7.copyWith(harmonized: gad7.harmonized.copyWith(answers: [-1, 0, 0, 0, 0, 0, 0])),
+            phq9.copyWith(harmonized: phq9.harmonized.copyWith(answers: [4, 0, 0, 0, 0, 0, 0, 0, 0])),
+            phq9.copyWith(harmonized: phq9.harmonized.copyWith(answers: [0, 0, 0, 0, 0, 0, 0, 0, 5]))
         ]
         for sample in invalidValues {
             assertInvalidValue(try { throw try XCTUnwrap(try save(sample)) }())

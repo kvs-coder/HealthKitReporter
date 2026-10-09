@@ -192,8 +192,10 @@ class QuantityTests: XCTestCase {
             try json(sut.harmonized, excluding: ["value"])
         )
     }
-    func testCollectSkipsNonDictionaryElements() throws {
-        let sut = try Quantity.collect(from: [dictionary, "invalid", 1, dictionary])
+    func testCollectRejectsNonDictionaryElements() throws {
+        assertInvalidValue(try Quantity.collect(from: [dictionary, "invalid"]))
+        assertInvalidValue(try Quantity.collect(from: [dictionary, 1]))
+        let sut = try Quantity.collect(from: [dictionary, dictionary])
         XCTAssertEqual(sut.count, 2)
         XCTAssertEqual(sut[0].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")
         XCTAssertEqual(sut[1].identifier, "HKQuantityTypeIdentifierDistanceWalkingRunning")

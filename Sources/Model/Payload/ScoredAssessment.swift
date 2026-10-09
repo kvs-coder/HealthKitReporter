@@ -142,7 +142,7 @@ extension ScoredAssessment: Original {
             }
             return HKGAD7Assessment(
                 date: startTimestamp.asDate,
-                answers: answers.compactMap { HKGAD7Assessment.Answer(rawValue: $0) },
+                answers: try answers.map(HKGAD7Assessment.Answer.init(knownRawValue:)),
                 metadata: metadata
             )
         case .phq9:
@@ -157,7 +157,7 @@ extension ScoredAssessment: Original {
             }
             return HKPHQ9Assessment(
                 date: startTimestamp.asDate,
-                answers: answers.compactMap { HKPHQ9Assessment.Answer(rawValue: $0) },
+                answers: try answers.map(HKPHQ9Assessment.Answer.init(knownRawValue:)),
                 metadata: metadata
             )
         case nil:

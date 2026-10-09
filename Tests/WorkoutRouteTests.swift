@@ -246,10 +246,10 @@ class WorkoutRouteTests: XCTestCase {
         XCTAssertNil(sut.floor)
         XCTAssertNil(sut.speedAccuracy)
     }
-    func testCollectSkipsNonDictionaryElements() throws {
-        let locations = try WorkoutRoute.Location.collect(
-            from: [locationDictionary, "invalid", 1, locationDictionary]
-        )
+    func testCollectRejectsNonDictionaryElements() throws {
+        assertInvalidValue(try WorkoutRoute.Location.collect(from: [locationDictionary, "invalid"]))
+        assertInvalidValue(try WorkoutRoute.Route.collect(from: [routeDictionary, 1]))
+        let locations = try WorkoutRoute.Location.collect(from: [locationDictionary, locationDictionary])
         XCTAssertEqual(locations.count, 2)
         XCTAssertEqual(locations[0].latitude, 52.52, accuracy: 0.001)
         XCTAssertEqual(locations[0].longitude, 13.405, accuracy: 0.001)
@@ -262,9 +262,7 @@ class WorkoutRouteTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(locations[0].speedAccuracy), 0.5, accuracy: 0.001)
         XCTAssertEqual(locations[0].timestamp, 1626884800, accuracy: 0.001)
         XCTAssertEqual(locations[0].verticalAccuracy, 3, accuracy: 0.001)
-        let routes = try WorkoutRoute.Route.collect(
-            from: [routeDictionary, "invalid", 1, routeDictionary]
-        )
+        let routes = try WorkoutRoute.Route.collect(from: [routeDictionary, routeDictionary])
         XCTAssertEqual(routes.count, 2)
         XCTAssertEqual(routes[0].locations.count, 1)
         XCTAssertTrue(routes[0].done)

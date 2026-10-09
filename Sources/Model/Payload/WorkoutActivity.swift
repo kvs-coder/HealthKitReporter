@@ -147,7 +147,7 @@ extension WorkoutActivity: Original {
         }
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = activityType
-        configure(configuration)
+        try configure(configuration)
         return HKWorkoutActivity(
             workoutConfiguration: configuration,
             start: startTimestamp.asDate,
@@ -160,13 +160,8 @@ extension WorkoutActivity: Original {
 @available(iOS 16.0, watchOS 9.0, *)
 extension WorkoutActivity {
     /// Sets the location, swimming location and lap length of the activity on a workout configuration
-    func configure(_ configuration: HKWorkoutConfiguration) {
-        if let locationType = HKWorkoutSessionLocationType(knownRawValue: locationValue) {
-            configuration.locationType = locationType
-        }
-        if let swimmingLocationType = HKWorkoutSwimmingLocationType(knownRawValue: swimmingLocationValue) {
-            configuration.swimmingLocationType = swimmingLocationType
-        }
+    func configure(_ configuration: HKWorkoutConfiguration) throws {
+        try configuration.setLocations(location: locationValue, swimmingLocation: swimmingLocationValue)
         configuration.lapLength = lapLength.map { HKQuantity(unit: .meter(), doubleValue: $0) }
     }
 }

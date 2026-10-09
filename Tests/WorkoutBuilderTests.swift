@@ -126,6 +126,17 @@ class WorkoutBuilderTests: XCTestCase {
         endsEarly["endTimestamp"] = startTimestamp - 60
         let early = workout.copyWith(activities: [try WorkoutActivity.make(from: endsEarly)])
         assertInvalidValue(try { throw try XCTUnwrap(try saveWithBuilder(early)) }())
+        let unknownLocations = [
+            ("locationValue", 99),
+            ("swimmingLocationValue", 99),
+            ("swimmingLocationValue", 0)
+        ]
+        for (key, value) in unknownLocations {
+            var unknownLocation = activityDictionary
+            unknownLocation[key] = value
+            let located = workout.copyWith(activities: [try WorkoutActivity.make(from: unknownLocation)])
+            assertInvalidValue(try { throw try XCTUnwrap(try saveWithBuilder(located)) }())
+        }
     }
     func testWorkoutEffort() throws {
         guard #available(iOS 18.0, watchOS 11.0, *) else {

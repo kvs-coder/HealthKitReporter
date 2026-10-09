@@ -122,9 +122,10 @@ class VisionPrescriptionTests: XCTestCase {
         )
     }
     func testCollectFromArray() throws {
-        let sut = try VisionPrescription.collect(from: [dictionary, "not a dictionary"])
+        let sut = try VisionPrescription.collect(from: [dictionary])
         XCTAssertEqual(sut.count, 1)
         assertVisionPrescription(sut[0])
+        assertInvalidValue(try VisionPrescription.collect(from: [dictionary, "not a dictionary"]))
     }
     func testCopyWithNoArgumentsKeepsAllFields() throws {
         let sut = try VisionPrescription.make(from: dictionary)

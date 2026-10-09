@@ -199,8 +199,10 @@ class CategoryTests: XCTestCase {
             try json(sut.harmonized, excluding: ["detail"])
         )
     }
-    func testCollectSkipsNonDictionaryElements() throws {
-        let sut = try Category.collect(from: [dictionary, "invalid", 1, dictionary])
+    func testCollectRejectsNonDictionaryElements() throws {
+        assertInvalidValue(try Category.collect(from: [dictionary, "invalid"]))
+        assertInvalidValue(try Category.collect(from: [dictionary, 1]))
+        let sut = try Category.collect(from: [dictionary, dictionary])
         XCTAssertEqual(sut.count, 2)
         XCTAssertEqual(sut[0].identifier, "HKCategoryTypeIdentifierSleepAnalysis")
         XCTAssertEqual(sut[1].identifier, "HKCategoryTypeIdentifierSleepAnalysis")

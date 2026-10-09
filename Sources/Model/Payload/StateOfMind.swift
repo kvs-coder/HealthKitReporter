@@ -139,8 +139,6 @@ extension StateOfMind: Original {
         guard
             (1...2).contains(harmonized.kind),
             (-1...1).contains(harmonized.valence),
-            harmonized.labels.allSatisfy({ (1...38).contains($0) }),
-            harmonized.associations.allSatisfy({ (1...18).contains($0) }),
             let kind = HKStateOfMind.Kind(rawValue: harmonized.kind)
         else {
             throw HealthKitError.invalidValue("Invalid state of mind: \(harmonized)")
@@ -149,8 +147,8 @@ extension StateOfMind: Original {
             date: startTimestamp.asDate,
             kind: kind,
             valence: harmonized.valence,
-            labels: harmonized.labels.compactMap { HKStateOfMind.Label(rawValue: $0) },
-            associations: harmonized.associations.compactMap { HKStateOfMind.Association(rawValue: $0) },
+            labels: try harmonized.labels.map(HKStateOfMind.Label.init(knownRawValue:)),
+            associations: try harmonized.associations.map(HKStateOfMind.Association.init(knownRawValue:)),
             metadata: try harmonized.metadata?.asOriginal()
         )
     }

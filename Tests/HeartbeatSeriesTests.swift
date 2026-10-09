@@ -337,9 +337,10 @@ extension HeartbeatSeriesTests {
         let sut = try HeartbeatSeries.make(from: dictionary)
         XCTAssertNil(sut.device)
     }
-    func testCollectMeasurementsSkipsNonDictionaryElements() throws {
+    func testCollectMeasurementsRejectsNonDictionaryElements() throws {
+        assertInvalidValue(try HeartbeatSeries.Measurement.collect(from: [measurementDictionary, "invalid"]))
         let sut = try HeartbeatSeries.Measurement.collect(
-            from: [measurementDictionary, "invalid", 1, measurementDictionary]
+            from: [measurementDictionary, measurementDictionary]
         )
         XCTAssertEqual(sut.count, 2)
         XCTAssertEqual(sut[0].timeSinceSeriesStart, 0.5, accuracy: 0.001)

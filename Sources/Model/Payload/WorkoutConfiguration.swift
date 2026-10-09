@@ -83,12 +83,7 @@ extension WorkoutConfiguration: Original {
         }
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = activityType
-        if let locationType = HKWorkoutSessionLocationType(knownRawValue: locationValue) {
-            configuration.locationType = locationType
-        }
-        if let swimmingLocationType = HKWorkoutSwimmingLocationType(knownRawValue: swimmingValue) {
-            configuration.swimmingLocationType = swimmingLocationType
-        }
+        try configuration.setLocations(location: locationValue, swimmingLocation: swimmingValue)
         configuration.lapLength = HKQuantity(
             unit: try HKQuantityType(.distanceSwimming).compatibleUnit(from: harmonized.unit),
             doubleValue: harmonized.value

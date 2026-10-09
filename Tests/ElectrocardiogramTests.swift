@@ -269,9 +269,14 @@ class ElectrocardiogramTests: XCTestCase {
             make: Electrocardiogram.VoltageMeasurement.Harmonized.make
         )
     }
-    func testCreateFromDictionarySkipsNonDictionaryVoltageMeasurements() throws {
+    func testCreateFromDictionaryRejectsNonDictionaryVoltageMeasurements() throws {
+        var invalid = harmonizedDictionary
+        invalid["voltageMeasurements"] = [voltageMeasurementDictionary, "invalid"]
+        var invalidDictionary = dictionary
+        invalidDictionary["harmonized"] = invalid
+        assertInvalidValue(try Electrocardiogram.make(from: invalidDictionary))
         var harmonized = harmonizedDictionary
-        harmonized["voltageMeasurements"] = [voltageMeasurementDictionary, "invalid", 1]
+        harmonized["voltageMeasurements"] = [voltageMeasurementDictionary]
         harmonized.removeValue(forKey: "averageHeartRate")
         var dictionary = dictionary
         dictionary.removeValue(forKey: "device")

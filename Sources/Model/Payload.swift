@@ -19,11 +19,16 @@ public protocol Payload {
 
 public extension Payload {
     /**
-     Makes a payload of every dictionary in the array; elements that aren't dictionaries are skipped.
+     Makes a payload of every dictionary in the array.
      - Parameter array: **[Any]** array of dictionaries
-     - Throws: HealthKitError.invalidValue when a dictionary is invalid
+     - Throws: HealthKitError.invalidValue when an element isn't a dictionary or a dictionary is invalid
      */
     static func collect(from array: [Any]) throws -> [Self] {
-        return try array.compactMap { $0 as? [String: Any] }.map(make)
+        return try array.map { element in
+            guard let dictionary = element as? [String: Any] else {
+                throw HealthKitError.invalidValue("\(Self.self) element is not a dictionary: \(element)")
+            }
+            return try make(from: dictionary)
+        }
     }
 }
