@@ -19,4 +19,4 @@ these pages disagree, the code wins and the page is a bug.
 | 11 | [Risks and Technical Debt](11-risks-and-technical-debt.md) | Known risks and debt |
 | 12 | [Glossary](12-glossary.md) | Ubiquitous language |
 
-Diagrams are C4 in PlantUML (`C4-PlantUML` standard library) and render in any PlantUML-aware viewer.
+Diagrams are Mermaid (C4-style flowcharts and sequence diagrams) and render inline on GitHub.

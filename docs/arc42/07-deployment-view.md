@@ -2,25 +2,23 @@
 
 ## 7.1 Distribution
 
-```plantuml
-@startuml
-!include <C4/C4_Deployment>
+```mermaid
+flowchart LR
+    subgraph gh["GitHub: VictorKachalov/HealthKitReporter"]
+        tag["Tag X.Y.Z + GitHub Release<br/>SwiftPM release"]
+    end
+    subgraph dev["Consumer build: Xcode / SwiftPM"]
+        pkg["HealthKitReporter<br/>Swift library, resolved via .package(url:from:)"]
+        app["Consumer app<br/>iOS 15+ / watchOS 8+"]
+    end
+    subgraph device["iPhone / Apple Watch"]
+        bin["App binary<br/>statically linked library"]
+        store[("Health database<br/>HealthKit")]
+    end
 
-Deployment_Node(gh, "GitHub", "VictorKachalov/HealthKitReporter") {
-    Container(tag, "Tag X.Y.Z + GitHub Release", "git", "SwiftPM release")
-}
-Deployment_Node(dev, "Consumer build", "Xcode / SwiftPM") {
-    Container(pkg, "HealthKitReporter", "Swift library", "Resolved via .package(url:from:)")
-    Container(app, "Consumer app", "iOS 15+ / watchOS 8+")
-}
-Deployment_Node(device, "iPhone / Apple Watch", "iOS / watchOS") {
-    Container(bin, "App binary", "statically linked library")
-    ContainerDb(store, "Health database", "HealthKit")
-}
-Rel(pkg, tag, "Fetches")
-Rel(app, pkg, "Links")
-Rel(bin, store, "HealthKit framework")
-@enduml
+    pkg -->|Fetches| tag
+    app -->|Links| pkg
+    bin -->|HealthKit framework| store
 ```
 
 - The package ships as source and is compiled into the consumer app; there is no binary framework and no runtime

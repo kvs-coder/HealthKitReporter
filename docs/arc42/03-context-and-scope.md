@@ -2,22 +2,19 @@
 
 ## 3.1 Business Context
 
-```plantuml
-@startuml
-!include <C4/C4_Context>
+```mermaid
+flowchart LR
+    user(["End user<br/>Owns the health data and grants authorization"])
+    app["Consumer app<br/>Swift iOS / watchOS app"]
+    flutter["health_kit_reporter<br/>Flutter plugin; talks JSON over a method channel"]
+    hkr["HealthKitReporter<br/>Swift package: typed, Codable wrapper over HealthKit"]
+    health[("Apple Health / HealthKit<br/>HKHealthStore, authorization UI, background delivery")]
 
-Person(user, "End user", "Owns the health data and grants authorization")
-System_Ext(app, "Consumer app", "Swift iOS / watchOS app")
-System_Ext(flutter, "health_kit_reporter", "Flutter plugin; talks JSON over a method channel")
-System(hkr, "HealthKitReporter", "Swift package: typed, Codable wrapper over HealthKit")
-System_Ext(health, "Apple Health / HealthKit", "HKHealthStore, authorization UI, background delivery")
-
-Rel(user, app, "Uses")
-Rel(app, hkr, "Reads, writes, observes", "Swift API, payload structs")
-Rel(flutter, hkr, "Reads, writes, observes", "encoded() JSON / make(from:) dictionaries")
-Rel(hkr, health, "Queries, saves, observes", "HealthKit framework")
-Rel(user, health, "Grants / denies access", "System authorization sheet")
-@enduml
+    user -->|Uses| app
+    app -->|"Reads, writes, observes<br/>Swift API, payload structs"| hkr
+    flutter -->|"Reads, writes, observes<br/>encoded() JSON / make(from:) dictionaries"| hkr
+    hkr -->|"Queries, saves, observes<br/>HealthKit framework"| health
+    user -->|"Grants / denies access<br/>System authorization sheet"| health
 ```
 
 | Partner | Input to HealthKitReporter | Output from HealthKitReporter |

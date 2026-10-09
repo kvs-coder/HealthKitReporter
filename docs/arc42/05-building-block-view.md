@@ -2,32 +2,29 @@
 
 ## 5.1 Level 1 — Whitebox HealthKitReporter
 
-```plantuml
-@startuml
-!include <C4/C4_Component>
+```mermaid
+flowchart TB
+    consumer["Consumer<br/>Swift app / Flutter plugin"]
+    hk[("HealthKit<br/>HKHealthStore")]
 
-Container_Ext(consumer, "Consumer", "Swift app / Flutter plugin")
-System_Ext(hk, "HealthKit", "HKHealthStore")
+    subgraph lib["HealthKitReporter package"]
+        facade["HealthKitReporter<br/>Facade: owns one HKHealthStore, exposes the four services"]
+        services["Services<br/>Sources/Service: Reader, Writer, Observer, Manager (+ Retrievers)"]
+        types["Types<br/>Sources/Model/Type: enums mapping to HKObjectType"]
+        payloads["Payloads<br/>Sources/Model/Payload: Codable structs mapping to HKObject"]
+        decorators["Decorators<br/>Sources/Decorator: HK → payload harmonization, helpers"]
+        core["Model protocols & error<br/>Original, Harmonizable, Payload, Metadata, HealthKitError"]
+    end
 
-Container_Boundary(lib, "HealthKitReporter package") {
-    Component(facade, "HealthKitReporter", "Facade", "Owns one HKHealthStore, exposes the four services")
-    Component(services, "Services", "Sources/Service", "Reader, Writer, Observer, Manager (+ Retrievers)")
-    Component(types, "Types", "Sources/Model/Type", "Enums mapping to HKObjectType")
-    Component(payloads, "Payloads", "Sources/Model/Payload", "Codable structs mapping to HKObject")
-    Component(decorators, "Decorators", "Sources/Decorator", "HK → payload harmonization, helpers")
-    Component(core, "Model protocols & error", "Sources/Model, HealthKitError", "Original, Harmonizable, Payload, Metadata, HealthKitError")
-}
-
-Rel(consumer, facade, "Instantiates")
-Rel(consumer, services, "Calls")
-Rel(facade, services, "Creates, injects store")
-Rel(services, types, "Resolves HK types")
-Rel(services, payloads, "Collects results into")
-Rel(services, hk, "Builds queries for / saves to")
-Rel(payloads, decorators, "Converted by")
-Rel(decorators, core, "Implements")
-Rel(payloads, core, "Conforms to")
-@enduml
+    consumer -->|Instantiates| facade
+    consumer -->|Calls| services
+    facade -->|Creates, injects store| services
+    services -->|Resolves HK types| types
+    services -->|Collects results into| payloads
+    services -->|Builds queries for / saves to| hk
+    payloads -->|Converted by| decorators
+    decorators -->|Implements| core
+    payloads -->|Conforms to| core
 ```
 
 | Building block | Responsibility | Location |
