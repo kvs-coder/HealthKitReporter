@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.1.1](https://github.com/kvs-coder/HealthKitReporter/compare/4.1.0...4.1.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **decorator:** format and parse fixed-format dates with the POSIX locale ([95b4bed](https://github.com/kvs-coder/HealthKitReporter/commit/95b4bed61f86840d7b790e930535e539a39cc9da))
+* **metadata:** express concentration, clinical and vision metadata quantities ([f045ed2](https://github.com/kvs-coder/HealthKitReporter/commit/f045ed289a4973e33896bedbf735f89de5698b2c))
+* **payload:** reject input that can't be converted instead of dropping it ([16ba71f](https://github.com/kvs-coder/HealthKitReporter/commit/16ba71f8ec38dbaf5e50f0461af7083c536f238f))
+* **payload:** report entries that fail to convert instead of skipping them ([2b14d97](https://github.com/kvs-coder/HealthKitReporter/commit/2b14d9753735c2e0d5cd3bf8be987715ae2a8621))
+* **reader:** report samples that fail to parse instead of skipping them ([f8a8231](https://github.com/kvs-coder/HealthKitReporter/commit/f8a82314bd713ac2d5ac8b8f2356f821ad2cc0a2))
+
 ## [4.1.0] - 09.10.2026.
 
 
