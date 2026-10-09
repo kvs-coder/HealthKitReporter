@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/kvs-coder/HealthKitReporter/compare/4.0.0...4.1.0) (2026-10-09)
+
+
+### Features
+
+* **reader:** workout routes by workout uuid ([dbd8fae](https://github.com/kvs-coder/HealthKitReporter/commit/dbd8fae02d53bd7945fc1705bd8520ca7868e455))
+
 ## [4.0.0] - 08.10.2026.
 
 
