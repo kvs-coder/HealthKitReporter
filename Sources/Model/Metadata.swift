@@ -182,8 +182,18 @@ extension Metadata.Value {
             .liter(),
             .millimeterOfMercury(),
             .decibelAWeightedSoundPressureLevel(),
-            .literUnit(with: .milli).unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute()))
+            .literUnit(with: .milli).unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute())),
+            .gramUnit(with: .milli).unitDivided(by: .literUnit(with: .deci)),
+            HKUnit(from: "mmol/L"),
+            .internationalUnit(),
+            .siemen(),
+            .volt(),
+            .liter().unitDivided(by: .minute()),
+            .decibelHearingLevel()
         ]
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            units += [.degreeAngle(), .diopter(), .prismDiopter()]
+        }
         if #available(iOS 17.0, watchOS 10.0, *) {
             units += [.lux(), .watt()]
         }

@@ -34,7 +34,8 @@ extension Dictionary where Key == String, Value == Any {
     func bool(_ key: String) -> Bool? {
         return (self[key] as? NSNumber)?.boolValue
     }
-    /// HealthKit metadata as **Metadata**; values of unsupported types are skipped
+    /// HealthKit metadata as **Metadata**. A value no **Metadata.Value** can express is skipped on its own,
+    /// so one unreadable metadata field doesn't hide the sample it describes (ADR 0002)
     var asMetadata: Metadata? {
         return Metadata(compactMapValues { Metadata.Value($0) })
     }

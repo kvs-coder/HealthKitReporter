@@ -55,13 +55,63 @@ class MetadataTests: XCTestCase {
             "HKWeatherHumidity": .quantity(value: 0.4, unit: "%")
         ]
         XCTAssertEqual(sut, expected)
+        let amount = HKQuantity(unit: HKUnit(from: "mmol"), doubleValue: 1)
+        assertInvalidValue(try Metadata.make(from: ["amount": amount]))
+    }
+    /// Concentrations, clinical and vision units have a unit to be expressed in too
+    func testCreateFromHealthKitConcentrationsAndClinicalUnits() throws {
         let glucose = HKQuantity(
             unit: HKUnit
                 .moleUnit(with: .milli, molarMass: HKUnitMolarMassBloodGlucose)
                 .unitDivided(by: .liter()),
             doubleValue: 5.5
         )
-        assertInvalidValue(try Metadata.make(from: ["HKBloodGlucoseMealTime": glucose]))
+        var quantities: [String: Any] = [
+            "glucose": glucose,
+            "glucoseMass": HKQuantity(unit: HKUnit(from: "mg/dL"), doubleValue: 99),
+            "molar": HKQuantity(unit: HKUnit(from: "mmol/L"), doubleValue: 5.5),
+            "insulin": HKQuantity(unit: .internationalUnit(), doubleValue: 4),
+            "conductance": HKQuantity(unit: .siemen(), doubleValue: 2),
+            "voltage": HKQuantity(unit: .voltUnit(with: .milli), doubleValue: 1),
+            "flow": HKQuantity(unit: HKUnit(from: "mL/min"), doubleValue: 300),
+            "hearing": HKQuantity(unit: .decibelHearingLevel(), doubleValue: 20)
+        ]
+        var expected: Metadata = [
+            "glucoseMass": .quantity(value: 99, unit: "mg/dL"),
+            "molar": .quantity(value: 5.5, unit: "mmol/L"),
+            "insulin": .quantity(value: 4, unit: "IU"),
+            "conductance": .quantity(value: 2, unit: "S"),
+            "voltage": .quantity(value: 0.001, unit: "V"),
+            "flow": .quantity(value: 0.3, unit: "L/min"),
+            "hearing": .quantity(value: 20, unit: "dBHL")
+        ]
+        if #available(iOS 16.0, watchOS 9.0, *) {
+            quantities["angle"] = HKQuantity(unit: .degreeAngle(), doubleValue: 30)
+            quantities["sphere"] = HKQuantity(unit: .diopter(), doubleValue: -1.5)
+            quantities["prism"] = HKQuantity(unit: .prismDiopter(), doubleValue: 0.5)
+            expected = Metadata(expected.values.merging([
+                "angle": .quantity(value: 30, unit: "deg"),
+                "sphere": .quantity(value: -1.5, unit: "D"),
+                "prism": .quantity(value: 0.5, unit: "pD")
+            ]) { _, new in new })
+        }
+        let sut = try Metadata.make(from: quantities)
+        for (key, value) in expected.values {
+            guard
+                case .quantity(let expectedValue, let expectedUnit) = value,
+                case .quantity(let actualValue, let actualUnit)? = sut[key]
+            else {
+                XCTFail("\(key) is not a quantity: \(String(describing: sut[key]))")
+                continue
+            }
+            XCTAssertEqual(actualValue, expectedValue, accuracy: 0.000001, key)
+            XCTAssertEqual(actualUnit, expectedUnit, key)
+        }
+        guard case .quantity(let value, let unit)? = sut["glucose"] else {
+            return XCTFail("glucose is not a quantity: \(String(describing: sut["glucose"]))")
+        }
+        XCTAssertEqual(value, 99.086, accuracy: 0.001)
+        XCTAssertEqual(unit, "mg/dL")
     }
     func testCreateFromDictionary() throws {
         let sut = try Metadata.make(from: dictionary)

@@ -28,8 +28,8 @@ The synthesized `Codable` encoding also nested the values as `{"string": {"dicti
 
 - `Metadata` encodes as one flat JSON object, so the Flutter side reads it as a plain `Map<String, dynamic>`.
 - `Metadata.make(from:)` accepts the same shapes from a dictionary and throws `HealthKitError.invalidValue` on any other value. Payload `make(from:)` methods propagate that error instead of dropping metadata.
-- On the read path, values HealthKit stores in a type outside the table are skipped one by one, not the whole dictionary.
-- `HKQuantity` doesn't expose its unit, so a read quantity is expressed in the first compatible unit of a fixed list (count/min, m/s, m, kcal/hr·kg, degC, %, s, kcal, kg, L, mmHg, dBASPL, count).
+- On the read path, a value no table entry can express is skipped on its own, not the whole dictionary and not the sample: one unreadable metadata field must not hide the sample it describes. Since 4.1.1 this is the only conversion that skips instead of reporting `HealthKitError.parsingFailed`.
+- `HKQuantity` doesn't expose its unit, so a read quantity is expressed in the first compatible unit of a fixed list (count/min, m/s, m, kcal/hr·kg, degC, %, s, kcal, kg, L, mmHg, dBASPL, mL/kg·min, mg/dL, mmol/L, IU, S, V, L/min, dBHL; deg, D, pD on iOS 16+; lux, W on iOS 17+; count). 4.1.1 added the concentration, clinical and vision units, so in practice only an amount without a volume (e.g. mmol) is still skipped.
 - Writing converts back to `String`, `NSNumber`, `Date` and `HKQuantity`; a malformed quantity unit throws `HealthKitError.invalidValue`.
 - Dictionary literals keep working: `["HKWasUserEntered": true, "HKTimeZone": "Europe/Berlin"]`.
 
