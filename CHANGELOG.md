@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.1.1](https://github.com/kvs-coder/HealthKitReporter/compare/4.1.0...4.1.1) (2026-10-09)
+## [4.1.1] - 09.10.2026.
 
 
 ### Bug Fixes
