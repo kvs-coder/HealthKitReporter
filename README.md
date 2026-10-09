@@ -555,6 +555,17 @@ The app lists every public method of the reader, writer, observer and manager, g
 - **Read-only data** (ECGs, characteristics, activity summaries, clinical records, medications) can't be written by apps; heartbeat series and routes come from their own write demos, not from seeding. On the simulator, enter characteristics in the Health app's profile, add sample clinical records under Health › Browse › Health Records, and pair an Apple Watch simulator for watch-recorded data; on a device, record them with Apple Watch. Their rows show an empty result until then.
 - **Watch companion:** **Start a run on the watch** calls `startWatchApp`, which launches the embedded watch app (`HealthKitReporterWatch`) on a paired Apple Watch or watch simulator. It runs the workout live and saves it on End; the **Workouts** row then shows it.
 
+## Behavior changes in 4.1.1
+
+4.1.1 keeps every signature and JSON shape, but no longer drops data silently, so a few calls now fail where they used to return less:
+
+- a query whose sample, statistics entry, ECG voltage or nested member (correlation member, workout event, statistics or activity, effort sample) fails to convert reports `HealthKitError.parsingFailed` naming it, with no results, instead of a shorter list;
+- on any error, anchored queries and `workoutEffortRelationshipQuery` hand back the anchor they started from, so keep using the anchor you have and the next run delivers the same changes again;
+- `collect(from:)` throws `HealthKitError.invalidValue` for an element that isn't a dictionary instead of skipping it;
+- saving a workout, a workout activity or starting the watch app with an unknown location or swimming location, or a swimming workout outside a pool or open water, throws `HealthKitError.invalidValue` instead of using HealthKit's default or crashing;
+- date strings (`ActivitySummary.date`, `Characteristic.birthday`, a verifiable record's date of birth) always use 24-hour digits, also on devices set to the 12-hour clock;
+- metadata quantities in mg/dL, mmol/L, IU, S, V, L/min, dBHL, and deg, D, pD on iOS 16+ are read instead of left out. A metadata value no unit can express is still skipped on its own, so it never hides its sample.
+
 ## Migrating to 4.0.0
 
 4.0.0 removes HealthKit types from the public API and fixes several wrong outputs, so it changes code and JSON:
