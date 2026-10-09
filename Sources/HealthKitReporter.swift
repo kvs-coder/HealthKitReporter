@@ -171,7 +171,8 @@ public typealias SampleResultsHandler = (
     - query: the anchored object query
     - samples: sample array. Empty by default
     - deletedObjects: samples array that has been deleted
-    - anchor: anchor to pass to the next anchored object query, so it only delivers changes
+    - anchor: anchor to pass to the next anchored object query, so it only delivers changes.
+    On an error, the anchor the query started from, so the next run delivers the same changes again
     - error: error (optional)
  */
 public typealias AnchoredResultsHandler = (

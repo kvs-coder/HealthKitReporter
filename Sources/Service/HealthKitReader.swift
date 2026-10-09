@@ -191,7 +191,8 @@ public class HealthKitReader {
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
      By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter resultsHandler: returns a block with samples
+     - Parameter resultsHandler: returns a block with samples.
+     No samples and HealthKitError.parsingFailed when a sample can't be parsed
      - Throws: HealthKitError.invalidType
      */
     public func sampleQuery(
@@ -228,20 +229,11 @@ public class HealthKitReader {
                 )
                 return
             }
-            var samples = [Sample]()
-            for element in result {
-                do {
-                    let sample = try element.parsed()
-                    samples.append(sample)
-                } catch {
-                    continue
-                }
+            do {
+                resultsHandler(QueryHandle(query), try result.parsedSamples(), nil)
+            } catch {
+                resultsHandler(QueryHandle(query), [], error)
             }
-            resultsHandler(
-                QueryHandle(query),
-                samples,
-                nil
-            )
         }
         return QueryHandle(query)
     }
@@ -251,7 +243,8 @@ public class HealthKitReader {
      - Parameter sortDescriptors: array of **NSSortDescriptor** sort descriptors.
      By default sorting by startDate, descending
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
-     - Parameter resultsHandler: returns a block with samples of every type
+     - Parameter resultsHandler: returns a block with samples of every type.
+     No samples and HealthKitError.parsingFailed when a sample can't be parsed
      - Throws: HealthKitError.invalidType
      */
     public func sampleQuery(
@@ -277,7 +270,11 @@ public class HealthKitReader {
                 resultsHandler(QueryHandle(query), [], error)
                 return
             }
-            resultsHandler(QueryHandle(query), results.compactMap { try? $0.parsed() }, nil)
+            do {
+                resultsHandler(QueryHandle(query), try results.parsedSamples(), nil)
+            } catch {
+                resultsHandler(QueryHandle(query), [], error)
+            }
         })
     }
     /// Sample query whose results are converted with **collect**; the shared body of the typed queries

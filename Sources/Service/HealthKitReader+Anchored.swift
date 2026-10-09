@@ -17,7 +17,8 @@ extension HealthKitReader {
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
-     - Parameter completionHandler: returns a block with samples
+     - Parameter completionHandler: returns a block with samples. On an error, no samples and the **anchor**
+     passed in; HealthKitError.parsingFailed when a sample can't be parsed
      - Throws: HealthKitError.invalidType, HealthKitError.invalidOption,
      HealthKitError.invalidValue for anchor data that doesn't hold a HealthKit anchor
      */
@@ -37,7 +38,7 @@ extension HealthKitReader {
         guard !monitorUpdates || limit == HKObjectQueryNoLimit else {
             throw HealthKitError.invalidOption("monitorUpdates requires limit HKObjectQueryNoLimit: \(limit)")
         }
-        let resultsHandler = anchoredResultsHandler(completionHandler)
+        let resultsHandler = anchoredResultsHandler(anchor: anchor, completionHandler)
         let query = HKAnchoredObjectQuery(
             type: sampleType,
             predicate: predicate,
@@ -90,7 +91,8 @@ extension HealthKitReader {
      - Parameter limit: **Int** limit of the elements. HKObjectQueryNoLimit by default
      - Parameter monitorUpdates: **Bool** set true to monitor updates. False by default.
      Requires **limit** to be HKObjectQueryNoLimit.
-     - Parameter completionHandler: returns a block with samples of every type
+     - Parameter completionHandler: returns a block with samples of every type. On an error, no samples
+     and the **anchor** passed in; HealthKitError.parsingFailed when a sample can't be parsed
      - Throws: HealthKitError.invalidType, HealthKitError.invalidOption,
      HealthKitError.invalidValue for anchor data that doesn't hold a HealthKit anchor
      */
@@ -104,7 +106,7 @@ extension HealthKitReader {
         guard !monitorUpdates || limit == HKObjectQueryNoLimit else {
             throw HealthKitError.invalidOption("monitorUpdates requires limit HKObjectQueryNoLimit: \(limit)")
         }
-        let resultsHandler = anchoredResultsHandler(completionHandler)
+        let resultsHandler = anchoredResultsHandler(anchor: anchor, completionHandler)
         let query = HKAnchoredObjectQuery(
             queryDescriptors: try descriptors.map { try $0.asOriginal() },
             anchor: try anchor?.asOriginal(),
@@ -117,7 +119,9 @@ extension HealthKitReader {
         return QueryHandle(query)
     }
 
+    /// Hands back the caller's **anchor** on an error, so a sample that fails to parse is delivered again
     private func anchoredResultsHandler(
+        anchor callerAnchor: Anchor?,
         _ completionHandler: @escaping AnchoredResultsHandler
     ) -> AnchoredObjectQueryHandler {
         return { (query, data, deletedData, anchor, error) in
@@ -125,16 +129,20 @@ extension HealthKitReader {
                 error == nil,
                 let result = data
             else {
-                completionHandler(QueryHandle(query), [], [], Anchor(anchor), error)
+                completionHandler(QueryHandle(query), [], [], callerAnchor, error)
                 return
             }
-            completionHandler(
-                QueryHandle(query),
-                result.compactMap { try? $0.parsed() },
-                DeletedObject.collect(deletedObjects: deletedData),
-                Anchor(anchor),
-                nil
-            )
+            do {
+                completionHandler(
+                    QueryHandle(query),
+                    try result.parsedSamples(),
+                    DeletedObject.collect(deletedObjects: deletedData),
+                    Anchor(anchor),
+                    nil
+                )
+            } catch {
+                completionHandler(QueryHandle(query), [], [], callerAnchor, error)
+            }
         }
     }
 }

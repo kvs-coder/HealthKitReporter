@@ -68,6 +68,27 @@ class QueryResultsTests: XCTestCase {
             }
         }
     }
+    /// A failed run hands back the caller's anchor, so the next run delivers the same changes again
+    func testAnchoredQueriesKeepTheCallerAnchorOnError() throws {
+        let reader = sut.reader
+        let anchor = try storedAnchor()
+        try assertReports { done in
+            try reader.anchoredObjectQuery(
+                type: QuantityType.stepCount,
+                anchor: anchor
+            ) { _, samples, deleted, newAnchor, error in
+                done(samples.isEmpty && deleted.isEmpty && newAnchor == anchor, error)
+            }
+        }
+        try assertReports { done in
+            try reader.anchoredObjectQuery(
+                descriptors: [QueryDescriptor(type: QuantityType.stepCount)],
+                anchor: anchor
+            ) { _, samples, deleted, newAnchor, error in
+                done(samples.isEmpty && deleted.isEmpty && newAnchor == anchor, error)
+            }
+        }
+    }
     func testCorruptAnchorThrows() throws {
         let reader = sut.reader
         let corrupt = Anchor(data: Data("not an anchor".utf8))
