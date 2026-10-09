@@ -23,4 +23,13 @@ class FoundationExtensionsTests: XCTestCase {
         )
         XCTAssertNil(sut.asDate(format: "dd.MM.yyyy", timezone: utc))
     }
+    /// Fails without the POSIX locale on a device or simulator set to the 12-hour clock
+    func testFixedFormatDatesUseTwentyFourHourDigits() throws {
+        let utc = try XCTUnwrap(TimeZone(identifier: "UTC"))
+        let sut = Date(timeIntervalSince1970: 1626884800)
+        let string = sut.formatted(with: Date.iso8601, timezone: utc)
+        XCTAssertEqual(string, "2021-07-21T16:26:40.000Z")
+        XCTAssertEqual(string.asDate(format: Date.iso8601, timezone: utc), sut)
+        XCTAssertEqual("2021-07-21T16:26:40.000Z".asDate(format: Date.iso8601, timezone: utc), sut)
+    }
 }

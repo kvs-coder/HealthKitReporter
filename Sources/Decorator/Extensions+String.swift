@@ -57,6 +57,7 @@ public extension String {
         timezone: TimeZone = TimeZone.current
     ) -> Date? {
         let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = format
         dateFormatter.timeZone = timezone
         let date = dateFormatter.date(from: self)
