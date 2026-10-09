@@ -104,6 +104,58 @@ extension HealthKitReader {
         ))
     }
     /**
+     Queries the routes of one stored workout.
+     The query looks the workout up by its uuid, then reads its routes with their locations.
+     Stopping it before the workout is found stops both steps;
+     once found, the routes are read to the end.
+     - Requires: CLLocation permissions:
+     “Privacy - Location Always and When In Use Usage Description”
+     and “Privacy - Location When In Use Usage Description”.
+     - Parameter workoutUUID: **String** uuid of the stored workout
+     - Parameter limit: **Int** limit of the routes. HKObjectQueryNoLimit by default
+     - Parameter resultsHandler: returns a block with the workout's routes, sorted by startDate, descending.
+     HealthKitError.invalidIdentifier when no workout with that uuid is stored
+     - Throws: HealthKitError.invalidValue on a malformed uuid
+     */
+    public func workoutRouteQuery(
+        workoutUUID: String,
+        limit: Int = HKObjectQueryNoLimit,
+        resultsHandler: @escaping WorkoutRouteResultsDataHandler
+    ) throws -> QueryHandle {
+        let retriever = SeriesSampleRetriever()
+        let routeQuery = { [healthStore] (workout: HKWorkout) in
+            try retriever.makeWorkoutRouteQuery(
+                healthStore: healthStore,
+                predicate: HKQuery.predicateForObjects(from: workout),
+                sortDescriptors: [
+                    NSSortDescriptor(
+                        key: HKSampleSortIdentifierStartDate,
+                        ascending: false
+                    )
+                ],
+                limit: limit,
+                resultsHandler: resultsHandler
+            )
+        }
+        return QueryHandle(try StoredSampleRetriever().makeStoredSamplesQuery(
+            of: WorkoutType.workoutType,
+            uuids: [workoutUUID]
+        ) { [healthStore] samples, error in
+            guard error == nil, let workout = samples.first as? HKWorkout else {
+                resultsHandler(
+                    [],
+                    error ?? HealthKitError.invalidType("Samples \(samples) are not HKWorkout")
+                )
+                return
+            }
+            do {
+                healthStore.execute(try routeQuery(workout))
+            } catch {
+                resultsHandler([], error)
+            }
+        })
+    }
+    /**
      Queries the individual quantities inside quantity series samples, e.g. step counts recorded as a series.
      - Parameter type: **QuantityType** type
      - Parameter unit: **String** unit compatible with the type

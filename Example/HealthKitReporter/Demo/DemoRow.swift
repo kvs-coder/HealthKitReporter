@@ -33,6 +33,7 @@ enum DemoRow: String, CaseIterable {
     case electrocardiogramQuery
     case heartbeatSeriesQuery
     case workoutRouteQuery
+    case workoutRoutesOfWorkout
     case quantitySeriesQuery
     case supportsHealthRecords
     case clinicalRecordQuery
@@ -110,6 +111,7 @@ enum DemoRow: String, CaseIterable {
         case .electrocardiogramQuery,
              .heartbeatSeriesQuery,
              .workoutRouteQuery,
+             .workoutRoutesOfWorkout,
              .quantitySeriesQuery:
             return .series
         case .supportsHealthRecords,
@@ -232,6 +234,8 @@ extension DemoRow {
             return "Heartbeat series"
         case .workoutRouteQuery:
             return "Workout routes"
+        case .workoutRoutesOfWorkout:
+            return "Routes of the latest workout"
         case .quantitySeriesQuery:
             return "Step series values"
         case .supportsHealthRecords:
@@ -380,6 +384,8 @@ extension DemoRow {
             return "reader.heartbeatSeriesQuery()"
         case .workoutRouteQuery:
             return "reader.workoutRouteQuery()"
+        case .workoutRoutesOfWorkout:
+            return "reader.workoutRouteQuery(workoutUUID:)"
         case .quantitySeriesQuery:
             return "reader.quantitySeriesQuery(type:unit:)"
         case .supportsHealthRecords:

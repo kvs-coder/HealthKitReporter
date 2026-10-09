@@ -50,6 +50,8 @@ final class StatisticsDemos: DemoPerformer {
                     completion(error.map { .failure($0) } ?? .success(routes.summary("workout routes")))
                 }
                 reporter.manager.executeQuery(query)
+            case .workoutRoutesOfWorkout:
+                try routesOfLatestWorkout(completion: completion)
             case .quantitySeriesQuery:
                 let query = try reader.quantitySeriesQuery(
                     type: .stepCount,
@@ -63,6 +65,29 @@ final class StatisticsDemos: DemoPerformer {
                 throw HealthKitError.invalidOption("\(row) is not a statistics or series demo")
             }
         }
+    }
+
+    /// The routes of the latest stored workout, looked up by its uuid
+    private func routesOfLatestWorkout(completion: @escaping DemoCompletion) throws {
+        let query = try reporter.reader.workoutQuery(limit: 1) { [unowned self] workouts, error in
+            guard let workout = workouts.first else {
+                completion(.failure(error ?? HealthKitError.invalidValue("Save a workout first")))
+                return
+            }
+            do {
+                let routes = try reporter.reader.workoutRouteQuery(
+                    workoutUUID: workout.uuid
+                ) { routes, error in
+                    completion(
+                        error.map { .failure($0) } ?? .success(routes.summary("routes of the workout"))
+                    )
+                }
+                reporter.manager.executeQuery(routes)
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        reporter.manager.executeQuery(query)
     }
 
     /// A quantity type read in **unit**, optionally split by source

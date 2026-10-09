@@ -107,3 +107,30 @@ C --> Consumer : notify → ([Electrocardiogram] in sample order, first error)
 `SampleResultsCollector` serializes writes from concurrent HealthKit callbacks on a private queue, keeps results in
 sample order and reports the first failure. Heartbeat series and workout routes use the same collector via
 `SeriesSampleRetriever`.
+
+## 6.6 Chained lookup (routes of one workout)
+
+```plantuml
+@startuml
+participant Consumer
+participant HealthKitReader as R
+participant StoredSampleRetriever as T
+participant SeriesSampleRetriever as Q
+participant HKHealthStore as S
+Consumer -> R : workoutRouteQuery(workoutUUID:limit:resultsHandler:)
+R -> T : makeStoredSamplesQuery(workoutType, [uuid])
+R --> Consumer : QueryHandle (lookup, not running) | throws invalidValue
+Consumer -> S : executeQuery(handle)
+S -> T : [HKWorkout] | error
+alt workout found
+  T -> Q : makeWorkoutRouteQuery(predicateForObjects(from: workout))
+  Q -> S : execute(route query) → per-route HKWorkoutRouteQuery (6.5)
+  Q --> Consumer : resultsHandler([WorkoutRoute], first error)
+else not stored / HealthKit error
+  T --> Consumer : resultsHandler([], invalidIdentifier | error)
+end
+@enduml
+```
+
+The handle wraps the lookup only; `stopQuery` before the workout is found stops the chain, afterwards the route
+queries run to the end (ADR 0006).

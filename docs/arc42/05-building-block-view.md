@@ -50,7 +50,7 @@ Payloads and types never reference services; decorators never run queries.
 | `HealthKitWriter` | Converts payloads to `HK*` and saves/deletes; builder-based workout save; series builders; workout effort relations. | `HealthKitWriter.swift`, `+Series`, `+Workouts` |
 | `HealthKitObserver` | Builds observer queries (per type or per `QueryDescriptor` list); enables/disables background delivery. | `HealthKitObserver.swift` |
 | `HealthKitManager` | Authorization and its request status, `executeQuery` / `stopQuery`, preferred units, watch app start, earliest permitted sample date, estimate recalibration, attachments. | `HealthKitManager.swift`, `+Attachments` |
-| Retrievers | Multi-step queries that fan out per sample and join results; the lookup of stored samples by uuid for deletes, relations and attachments. | `Retriever/ElectrocardiogramRetriever.swift`, `Retriever/SeriesSampleRetriever.swift`, `Retriever/StoredSampleRetriever.swift`, `Retriever/SampleResultsCollector.swift` |
+| Retrievers | Multi-step queries that fan out per sample and join results; the lookup of stored samples by uuid for deletes, relations, attachments and the routes of one workout (ADR 0006). | `Retriever/ElectrocardiogramRetriever.swift`, `Retriever/SeriesSampleRetriever.swift`, `Retriever/StoredSampleRetriever.swift`, `Retriever/SampleResultsCollector.swift` |
 
 Each service is a `public class` holding a single `let healthStore: HKHealthStore` received through an
 `internal init(healthStore:)`, so consumers cannot construct a service against a different store. The store is

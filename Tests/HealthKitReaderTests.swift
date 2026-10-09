@@ -71,7 +71,14 @@ class HealthKitReaderTests: XCTestCase {
             assertInvalidType(try sut.sourceQuery(type: type) { _, _ in })
         }
     }
-
+    func testWorkoutRouteQueryWithInvalidWorkoutUUID() throws {
+        for uuid in ["", "not-a-uuid", "8B1F9C1E-4E0A-4C38-9D57"] {
+            assertInvalidValue(try sut.workoutRouteQuery(workoutUUID: uuid) { _, _ in })
+        }
+        XCTAssertNoThrow(
+            try sut.workoutRouteQuery(workoutUUID: storedUUID.lowercased(), limit: 1) { _, _ in }
+        )
+    }
 }
 // MARK: - Units
 extension HealthKitReaderTests {

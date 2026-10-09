@@ -449,6 +449,17 @@ reporter.writer.saveWorkout(workout, samples: heartRates, route: locations) { sa
 }
 ```
 
+Read the routes of a stored workout, with their locations, by the workout's uuid (4.1.0+):
+
+```swift
+let query = try reporter.reader.workoutRouteQuery(workoutUUID: workout.uuid) { routes, error in
+    routes.forEach { print($0.harmonized.count, $0.harmonized.routes.flatMap(\.locations).count) }
+}
+reporter.manager.executeQuery(query)
+```
+
+A malformed uuid throws `HealthKitError.invalidValue`; a uuid with no stored workout reports `HealthKitError.invalidIdentifier` in the handler.
+
 Workout effort (iOS 18): read the effort samples related to workouts with `reader.workoutEffortRelationshipQuery`, and relate one with `writer.relateWorkoutEffort(_:toWorkout:activity:completion:)`.
 
 Live workout sessions and Swift async/await variants are out of scope; see `docs/adr/0003-workout-and-query-scope.md`.

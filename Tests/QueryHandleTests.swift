@@ -72,6 +72,7 @@ class QueryHandleTests: XCTestCase {
             try reader.electrocardiogramQuery(withVoltageMeasurements: true) { _, _ in },
             try reader.heartbeatSeriesQuery { _, _ in },
             try reader.workoutRouteQuery { _, _ in },
+            try reader.workoutRouteQuery(workoutUUID: storedUUID) { _, _ in },
             try reader.quantitySeriesQuery(type: .stepCount, unit: "count") { _, _ in }
         ])
     }

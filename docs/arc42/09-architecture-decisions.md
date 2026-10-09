@@ -11,6 +11,7 @@ sequential number there and a row here.
 | [0003](../adr/0003-workout-and-query-scope.md) | Scope of workout and query wrappers | Accepted | Wrap the iOS 16+ workout model, builder-based saving, workout effort and descriptor/series/attachment APIs; leave live sessions and async/await out. |
 | [0004](../adr/0004-contract-changes-for-the-next-major-release.md) | Contract changes for the next major release | Accepted | Batch metadata shape, vision prescription seconds, non-finite encoding and description fixes into one major release coordinated with the Flutter plugin. |
 | [0005](../adr/0005-query-handles-and-codable-anchors.md) | Query handles and codable anchors | Accepted (breaking, 4.0.0) | Reader and observer return an opaque `QueryHandle`; anchors are a `Codable` `Anchor`; no `HK*` type in the public API, enforced by a swiftlint rule. |
+| [0006](../adr/0006-chained-queries-behind-one-query-handle.md) | Chained queries behind one query handle | Accepted (4.1.0) | A query needing a stored object first (workout routes by workout uuid) returns a handle on the lookup; its handler runs the follow-up query. |
 
 Decisions embodied in the code but not (yet) recorded as ADRs — candidates if they are ever revisited:
 

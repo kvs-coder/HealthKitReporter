@@ -123,6 +123,9 @@ class QueryResultsTests: XCTestCase {
         try assertReports { done in try reader.heartbeatSeriesQuery { done($0.isEmpty, $1) } }
         try assertReports { done in try reader.workoutRouteQuery { done($0.isEmpty, $1) } }
         try assertReports { done in
+            try reader.workoutRouteQuery(workoutUUID: storedUUID) { done($0.isEmpty, $1) }
+        }
+        try assertReports { done in
             try reader.quantitySeriesQuery(type: .stepCount, unit: "count") { done($0.isEmpty, $1) }
         }
     }

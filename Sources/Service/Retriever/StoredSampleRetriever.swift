@@ -17,15 +17,26 @@ class StoredSampleRetriever {
         uuids: [String],
         completion: @escaping ([HKSample], Error?) -> Void
     ) {
+        do {
+            healthStore.execute(try makeStoredSamplesQuery(of: type, uuids: uuids, completion: completion))
+        } catch {
+            completion([], error)
+        }
+    }
+    /// The query looking up the stored samples of one type with these uuids, built but not executed
+    func makeStoredSamplesQuery(
+        of type: ObjectType,
+        uuids: [String],
+        completion: @escaping ([HKSample], Error?) -> Void
+    ) throws -> HKSampleQuery {
         let identifiers = uuids.compactMap(UUID.init(uuidString:))
         guard
             let sampleType = type.hkObjectType as? HKSampleType,
             identifiers.count == uuids.count
         else {
-            completion([], HealthKitError.invalidValue("Invalid samples \(type) \(uuids)"))
-            return
+            throw HealthKitError.invalidValue("Invalid samples \(type) \(uuids)")
         }
-        let query = HKSampleQuery(
+        return HKSampleQuery(
             sampleType: sampleType,
             predicate: HKQuery.predicateForObjects(with: Set(identifiers)),
             limit: identifiers.count,
@@ -38,7 +49,6 @@ class StoredSampleRetriever {
             }
             completion(samples, nil)
         }
-        healthStore.execute(query)
     }
     /// The stored sample of the type with this uuid
     func storedSample(
